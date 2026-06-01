@@ -1,0 +1,32 @@
+{
+  "name": "registrystack-org",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check:content": "node scripts/check-content.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "check:a11y": "node scripts/check-a11y.mjs",
+    "check:visual": "node scripts/check-visual.mjs",
+    "check": "npm run check:content && astro check && npm run build && npm run check:links && npm run check:a11y && npm run check:visual"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.2",
+    "@fontsource/ibm-plex-mono": "^5.2.7",
+    "@fontsource/public-sans": "^5.2.7",
+    "astro": "^6.3.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@axe-core/playwright": "^4.10.2",
+    "playwright": "^1.55.0",
+    "typescript": "^5.9.3"
+  }
+}
