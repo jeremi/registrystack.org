@@ -81,6 +81,39 @@ for (const viewport of viewports) {
     failures.push(`${viewport.name}: text extends outside viewport`);
   }
 
+  // On desktop the four use-case cards sit in one row and must read as an
+  // aligned comparison: equal height, and every field label sharing a baseline
+  // across cards regardless of how long each question wraps.
+  if (viewport.name === 'desktop') {
+    const align = await page.evaluate(() => {
+      const cards = [...document.querySelectorAll('.use-case')];
+      const labelTops = cards.map((card) => {
+        const label = card.querySelector('.use-case-label');
+        return label ? Math.round(label.getBoundingClientRect().top) : null;
+      });
+      const cardHeights = cards.map((card) => Math.round(card.getBoundingClientRect().height));
+      return { count: cards.length, labelTops, cardHeights };
+    });
+
+    if (align.count < 4) {
+      failures.push(`desktop: expected at least 4 use-case cards, found ${align.count}`);
+    } else {
+      const tops = align.labelTops.filter((value) => value !== null);
+      if (tops.length < 4) {
+        failures.push(`desktop: expected 4 use-case "Evidence returned" labels, found ${tops.length}`);
+      } else {
+        const topSpread = Math.max(...tops) - Math.min(...tops);
+        if (topSpread > 2) {
+          failures.push(`desktop: use-case field labels are misaligned (top spread ${topSpread}px)`);
+        }
+      }
+      const heightSpread = Math.max(...align.cardHeights) - Math.min(...align.cardHeights);
+      if (heightSpread > 2) {
+        failures.push(`desktop: use-case cards have unequal heights (spread ${heightSpread}px)`);
+      }
+    }
+  }
+
   await page.close();
 }
 

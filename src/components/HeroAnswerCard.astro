@@ -1,0 +1,185 @@
+---
+// A hero anchor that loops through the same registry answers shown in the
+// use-cases section below: one question in, one minimal answer out, never a
+// copied record. Progressive enhancement: with no JavaScript or a reduced-motion
+// preference the first answer is shown statically, with no rotation.
+interface Answer {
+  domain: string;
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  answers: Answer[];
+}
+
+const { answers } = Astro.props;
+---
+
+<div class="answer-card" data-answer-card>
+  <span class="answer-card-kicker">Registry answer</span>
+  <div class="answer-card-stage">
+    {answers.map((item, index) => (
+      <div class:list={['answer-slide', index === 0 && 'is-active']} data-answer-slide>
+        <span class="answer-card-domain">{item.domain}</span>
+        <p class="answer-card-q">{item.question}</p>
+        <p class="answer-card-a"><span class="answer-card-check">&#10003;</span> {item.answer}</p>
+      </div>
+    ))}
+  </div>
+  <ul class="answer-card-meta">
+    <li>A verified answer, not a copied record</li>
+    <li>Purpose checked at the gate</li>
+    <li>Request logged for audit</li>
+  </ul>
+</div>
+
+<style>
+  .answer-card {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    border-top: 3px solid var(--registry-teal);
+    box-shadow: 0 18px 40px -28px rgba(16, 42, 86, 0.45);
+    display: grid;
+    gap: 16px;
+    max-width: 360px;
+    padding: clamp(20px, 2.4vw, 28px);
+    width: 100%;
+  }
+
+  .answer-card-kicker {
+    color: var(--registry-teal);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* All answers occupy the same grid cell, so the card height is fixed to the
+     tallest answer and never jumps as it rotates. */
+  .answer-card-stage {
+    display: grid;
+  }
+
+  .answer-slide {
+    display: grid;
+    gap: 10px;
+    grid-area: 1 / 1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .answer-slide.is-active {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  .answer-card-domain {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .answer-card-q {
+    color: var(--registry-body);
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .answer-card-a {
+    align-items: center;
+    color: var(--registry-ink);
+    display: flex;
+    font-size: 28px;
+    font-weight: 700;
+    gap: 12px;
+    line-height: 1.12;
+    margin: 0;
+  }
+
+  .answer-card-check {
+    align-items: center;
+    background: var(--registry-active);
+    border-radius: 50%;
+    color: var(--registry-teal);
+    display: inline-flex;
+    flex: none;
+    font-size: 18px;
+    height: 34px;
+    justify-content: center;
+    width: 34px;
+  }
+
+  .answer-card-meta {
+    display: grid;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .answer-card-meta li {
+    color: var(--registry-body);
+    font-size: 13px;
+    padding-left: 18px;
+    position: relative;
+  }
+
+  .answer-card-meta li::before {
+    background: var(--registry-teal);
+    border-radius: 50%;
+    content: '';
+    height: 6px;
+    left: 0;
+    position: absolute;
+    top: 7px;
+    width: 6px;
+  }
+</style>
+
+<script>
+  // Loop the hero card through its answers. Pure progressive enhancement: the
+  // static markup already shows the first answer, so with no JavaScript or a
+  // reduced-motion preference the card simply stays on that answer.
+  const ROTATE_MS = 3200;
+
+  const prefersReducedMotion = () =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const cards = document.querySelectorAll<HTMLElement>('[data-answer-card]');
+
+  for (const card of cards) {
+    const slides = Array.from(card.querySelectorAll<HTMLElement>('[data-answer-slide]'));
+    if (slides.length < 2 || prefersReducedMotion()) continue;
+
+    let index = slides.findIndex((slide) => slide.classList.contains('is-active'));
+    if (index < 0) index = 0;
+
+    let timer = 0;
+
+    const advance = () => {
+      slides[index].classList.remove('is-active');
+      index = (index + 1) % slides.length;
+      slides[index].classList.add('is-active');
+    };
+
+    const start = () => {
+      if (!timer) timer = window.setInterval(advance, ROTATE_MS);
+    };
+
+    const stop = () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = 0;
+      }
+    };
+
+    start();
+
+    // Pause while a visitor is reading a particular answer.
+    card.addEventListener('mouseenter', stop);
+    card.addEventListener('mouseleave', start);
+  }
+</script>

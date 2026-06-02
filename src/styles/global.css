@@ -127,11 +127,11 @@ a:hover {
   align-items: center;
   display: flex;
   flex-direction: column;
-  gap: clamp(28px, 5vw, 54px);
+  gap: clamp(24px, 3.5vw, 40px);
   margin: 0 auto;
   max-width: var(--registry-max);
   min-height: auto;
-  padding: clamp(70px, 10vw, 126px) clamp(16px, 4vw, 42px) clamp(48px, 8vw, 84px);
+  padding: clamp(40px, 5vw, 72px) clamp(16px, 4vw, 42px) clamp(40px, 5vw, 64px);
 }
 
 .hero-copy {
@@ -156,9 +156,9 @@ p {
 
 h1 {
   color: var(--registry-ink);
-  font-size: clamp(42px, 6vw, 76px);
-  line-height: 1.02;
-  margin-bottom: 24px;
+  font-size: clamp(38px, 4.8vw, 62px);
+  line-height: 1.04;
+  margin-bottom: 20px;
   max-width: 880px;
 }
 
@@ -270,6 +270,35 @@ p {
   margin: 0;
 }
 
+.hero-top {
+  align-items: center;
+  display: grid;
+  gap: clamp(28px, 5vw, 56px);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  width: 100%;
+}
+
+/* In the two-column hero the copy reads left, with the answer card as anchor. */
+.hero-copy {
+  max-width: none;
+  text-align: left;
+}
+
+.hero-lead {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.hero-actions {
+  justify-content: flex-start;
+}
+
+.hero-figure {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
 .assurance-band {
   background: var(--registry-blue);
   color: #ffffff;
@@ -289,6 +318,11 @@ p {
   line-height: 1.12;
   margin: 0;
   max-width: 900px;
+}
+
+.partner-strip {
+  background: #ffffff;
+  border-bottom: 1px solid var(--registry-rule);
 }
 
 .partner-strip-inner {
@@ -425,7 +459,7 @@ code {
 .quiet-card p,
 .audience-card p,
 .capability-card span,
-.use-case dd,
+.use-case-text,
 .ecosystem-grid p,
 .principle-card p,
 .implementation-grid p {
@@ -493,6 +527,11 @@ code {
   margin-top: 24px;
 }
 
+.inline-cta {
+  color: var(--registry-blue);
+  font-weight: 700;
+}
+
 .flow-diagram {
   align-items: stretch;
   display: grid;
@@ -526,19 +565,32 @@ code {
 }
 
 .flow-node ol {
+  counter-reset: flow-step;
   display: grid;
-  gap: 8px;
+  gap: 12px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+/* The four steps read as a numbered lifecycle, not the funnel's data chips. */
 .flow-node li {
-  background: var(--registry-active);
-  color: var(--registry-blue);
+  border-top: 2px solid var(--registry-blue);
+  color: var(--registry-ink);
+  font-size: 14px;
   font-weight: 700;
-  padding: 10px;
+  padding: 8px 0 0;
+}
+
+.flow-node li::before {
+  color: var(--registry-blue);
+  content: counter(flow-step, decimal-leading-zero);
+  counter-increment: flow-step;
+  display: block;
+  font-family: var(--registry-mono);
+  font-size: 12px;
+  margin-bottom: 6px;
 }
 
 .flow-arrow {
@@ -549,16 +601,35 @@ code {
   text-transform: uppercase;
 }
 
+/* Five shared rows (domain, question, result, evidence field, not-shared
+   field). Each card spans all five and inherits them with grid-template-rows:
+   subgrid, so labels and values line up across the four cards no matter how
+   long each question wraps. */
 .use-case-grid {
+  column-gap: clamp(16px, 2vw, 24px);
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(5, auto);
+  row-gap: 0;
 }
 
-.use-case p {
+.use-case {
+  display: grid;
+  grid-row: 1 / -1;
+  grid-template-rows: subgrid;
+  row-gap: 14px;
+}
+
+.use-case-domain {
   color: var(--registry-teal);
   font-family: var(--registry-mono);
   font-size: 12px;
-  margin-bottom: 14px;
+  letter-spacing: 0.04em;
+  margin: 0;
   text-transform: uppercase;
+}
+
+.use-case h3 {
+  margin: 0;
 }
 
 .use-case-result {
@@ -566,7 +637,7 @@ code {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 14px 0;
+  margin: 0;
 }
 
 .evidence-type {
@@ -589,21 +660,20 @@ code {
   text-transform: none;
 }
 
-.use-case dl,
-.use-case dd {
-  margin: 0;
-}
-
-.use-case dl {
+.use-case-field {
   display: grid;
-  gap: 14px;
+  gap: 4px;
 }
 
-.use-case dt {
+.use-case-label {
   color: var(--registry-muted);
   font-size: 13px;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin: 0;
+}
+
+.use-case-text {
+  margin: 0;
 }
 
 .ecosystem-grid {
@@ -636,6 +706,12 @@ code {
 
 .boundary-list {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* The "what it is not" caveats read as secondary, just before the CTA. */
+.boundary-list li {
+  color: var(--registry-muted);
+  font-size: 15px;
 }
 
 .final-cta {
@@ -698,6 +774,7 @@ code {
   }
 
   .hero-inner,
+  .hero-top,
   .split {
     grid-template-columns: 1fr;
   }
@@ -721,6 +798,18 @@ code {
   .principle-grid,
   .implementation-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Cards wrap to more than one row here, so drop the single-row subgrid and
+     let each card lay out its own fields. */
+  .use-case-grid {
+    grid-template-rows: none;
+    row-gap: clamp(16px, 2vw, 24px);
+  }
+
+  .use-case {
+    grid-row: auto;
+    grid-template-rows: none;
   }
 
   .flow-diagram {

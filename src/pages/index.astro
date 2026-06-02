@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import MinimizationFunnel from '../components/MinimizationFunnel.astro';
+import HeroAnswerCard from '../components/HeroAnswerCard.astro';
 
 const pageTitle = 'Registry Stack | Trusted registry data for public services';
 const pageDescription =
@@ -24,7 +25,7 @@ const heroReasons = [
 const problemBlocks = [
   {
     title: 'Data exists, but use is hard to govern',
-    body: 'Important registry data often sits across departments, files, databases, and older systems without a clear service contract.',
+    body: 'Registry data sits across departments, files, databases, and older systems, with no clear service contract.',
   },
   {
     title: 'Programs need answers, not whole files',
@@ -39,7 +40,7 @@ const problemBlocks = [
 const beneficiaryGroups = [
   {
     name: 'People and businesses',
-    body: 'Spend less time carrying documents between services when a trusted answer can be checked directly.',
+    body: 'Carry fewer documents between services when a trusted answer can be checked directly.',
   },
   {
     name: 'Public administrations',
@@ -85,6 +86,14 @@ const useCases = [
     output: 'Registered farmer · 2.5 ha',
   },
 ];
+
+// The hero card loops through the same answers shown in the use-cases grid, so
+// the two can never drift apart.
+const heroAnswers = useCases.map((item) => ({
+  domain: item.domain,
+  question: item.question,
+  answer: item.output,
+}));
 
 const ecosystemItems = [
   ['X-Road', 'Carries trusted service calls between institutions.'],
@@ -139,17 +148,23 @@ const boundaries = [
   <main>
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-inner">
-        <div class="hero-copy">
-          <p class="eyebrow">For country digital teams and partners</p>
-          <h1 id="hero-title">Public service delivery with registry data people can trust.</h1>
-          <p class="hero-lead">
-            Registry Stack helps governments and partners use existing registry data for service
-            delivery with clearer safeguards, less over-sharing, and a practical path from pilot to
-            scale.
-          </p>
-          <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="mailto:hello@registrystack.org?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
-            <a class="button button-secondary" href="https://docs.registrystack.org/">Read the docs</a>
+        <div class="hero-top">
+          <div class="hero-copy">
+            <p class="eyebrow">For country digital teams and partners</p>
+            <h1 id="hero-title">Public service delivery with registry data people can trust.</h1>
+            <p class="hero-lead">
+              Registry Stack helps governments and partners use existing registry data for service
+              delivery with clearer safeguards, less over-sharing, and a practical path from pilot to
+              scale.
+            </p>
+            <div class="hero-actions" aria-label="Primary actions">
+              <a class="button button-primary" href="mailto:hello@registrystack.org?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
+              <a class="button button-secondary" href="https://docs.registrystack.org/">Read the docs</a>
+            </div>
+          </div>
+
+          <div class="hero-figure" aria-hidden="true">
+            <HeroAnswerCard answers={heroAnswers} />
           </div>
         </div>
 
@@ -161,6 +176,18 @@ const boundaries = [
             </article>
           ))}
         </div>
+      </div>
+    </section>
+
+    <section class="partner-strip" aria-label="Designed to work with existing public infrastructure">
+      <div class="partner-strip-inner">
+        <span>Works with</span>
+        <strong>X-Road</strong>
+        <strong>OpenCRVS</strong>
+        <strong>OpenSPP</strong>
+        <strong>DHIS2</strong>
+        <strong>OpenIMIS</strong>
+        <strong>OpenFn</strong>
       </div>
     </section>
 
@@ -262,24 +289,25 @@ const boundaries = [
         <div class="use-case-grid">
           {useCases.map((item) => (
             <article class="use-case">
-              <p>{item.domain}</p>
+              <p class="use-case-domain">{item.domain}</p>
               <h3>{item.question}</h3>
               <div class="use-case-result">
                 <span class="evidence-type">{item.evidenceType}</span>
                 <span class="use-case-output">{item.output}</span>
               </div>
-              <dl>
-                <div>
-                  <dt>Evidence returned</dt>
-                  <dd>{item.evidence}</dd>
-                </div>
-                <div>
-                  <dt>Record not over-shared</dt>
-                  <dd>{item.notShared}</dd>
-                </div>
-              </dl>
+              <div class="use-case-field">
+                <p class="use-case-label">Evidence returned</p>
+                <p class="use-case-text">{item.evidence}</p>
+              </div>
+              <div class="use-case-field">
+                <p class="use-case-label">Record not over-shared</p>
+                <p class="use-case-text">{item.notShared}</p>
+              </div>
             </article>
           ))}
+        </div>
+        <div class="centered-action">
+          <a class="inline-cta" href="mailto:hello@registrystack.org?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot for one registry &rarr;</a>
         </div>
       </div>
     </section>

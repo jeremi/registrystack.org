@@ -57,6 +57,7 @@ requireText('AI-assisted integration');
 requireText('Controlled requests');
 requireText('Narrow answers');
 requireText('Reviewable trail');
+requireText('class="partner-strip"', 'interop credibility strip');
 
 const heroMatch = source.match(/<section class="hero"[\s\S]*?<\/section>/);
 if (!heroMatch) {
@@ -68,6 +69,10 @@ if (!heroMatch) {
     if (heroSource.includes(signal)) {
       failures.push(`hero starts too technically: ${signal}`);
     }
+  }
+  // The hero carries a plain-language visual anchor (the looping answer card).
+  if (!heroSource.includes('HeroAnswerCard')) {
+    failures.push('hero is missing the answer-card visual anchor');
   }
 }
 
