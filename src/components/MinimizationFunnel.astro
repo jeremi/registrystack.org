@@ -1,0 +1,625 @@
+---
+// A scroll-triggered visual of data minimization: one source record is consulted
+// behind a policy gate, and different services each receive only their own narrow
+// claim. The record never leaves. The animation is progressive enhancement; with
+// no JavaScript or reduced motion the figure renders directly in its final,
+// fully legible state.
+const sourceFields = [
+  { id: 'name', label: 'name' },
+  { id: 'dob', label: 'date of birth' },
+  { id: 'sex', label: 'sex' },
+  { id: 'address', label: 'address' },
+  { id: 'marital', label: 'marital status' },
+  { id: 'parents', label: 'parents' },
+  { id: 'vital', label: 'vital status' },
+];
+
+// The same civil-registration record answers different questions for different
+// services. Each request reads one field but returns only a minimal claim, and
+// the gate refuses requests whose purpose is not allowed. The `reads` id links
+// each claim to the source field it derives from (see [data-field]).
+const claims = [
+  { requester: 'Pension service', asks: 'alive?', value: 'Alive', kind: 'confirmed', reads: 'vital' },
+  { requester: 'Licensing', asks: 'over 18?', value: 'Over 18', kind: 'confirmed', reads: 'dob' },
+  { requester: 'Local office', asks: 'where registered?', value: 'District: Kano', kind: 'value', reads: 'address' },
+  { requester: 'Data broker', asks: 'marital status?', value: 'Not permitted', kind: 'denied', reads: 'marital' },
+];
+
+const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, field.label]));
+---
+
+<figure class="funnel" data-funnel>
+  <div class="funnel-panel">
+    <div class="funnel-head">
+      <span class="funnel-head-label">One registry record, many minimal answers</span>
+      <button type="button" class="funnel-replay" data-funnel-replay aria-label="Replay the animation">
+        Replay
+      </button>
+    </div>
+
+    <div class="funnel-diagram" aria-hidden="true">
+      <div class="funnel-zone funnel-source funnel-anim">
+        <span class="funnel-zone-label">Source record</span>
+        <ul class="funnel-fields">
+          {sourceFields.map((field) => (
+            <li class="funnel-anim" data-field={field.id}>{field.label}</li>
+          ))}
+        </ul>
+      </div>
+
+      <span class="funnel-arrow funnel-anim">&rarr;</span>
+
+      <div class="funnel-gate">
+        <div class="funnel-gate-shape funnel-anim">
+          <svg class="funnel-gate-svg" viewBox="0 0 120 100" focusable="false" aria-hidden="true">
+            <polygon points="2,2 118,30 118,70 2,98"></polygon>
+          </svg>
+          <span class="funnel-gate-mark">policy</span>
+        </div>
+        <span class="funnel-gate-note funnel-anim">checked per request</span>
+      </div>
+
+      <span class="funnel-arrow funnel-anim">&rarr;</span>
+
+      <div class="funnel-zone funnel-claims">
+        <span class="funnel-zone-label">Evidence out, per request</span>
+        {claims.map((claim) => (
+          <div class:list={['funnel-claim', 'funnel-anim', `funnel-claim-${claim.kind}`]} data-source={claim.reads}>
+            <span class="funnel-claim-req">{claim.requester} · {claim.asks}</span>
+            <span class="funnel-claim-answer">
+              {claim.kind === 'denied' ? (
+                <span class="funnel-claim-mark">&#10007;</span>
+              ) : (
+                <span class="funnel-claim-check">&#10003;</span>
+              )}
+              {claim.value}
+            </span>
+            <span class="funnel-claim-derived">
+              {claim.kind === 'denied'
+                ? 'purpose not allowed'
+                : `reads: ${fieldLabels[claim.reads]}`}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="funnel-footer">
+      <div class="funnel-stays funnel-anim" aria-hidden="true">
+        <span class="funnel-stays-label">Stays with the data owner</span>
+        <ul class="funnel-stays-fields">
+          {sourceFields.map((field) => <li>{field.label}</li>)}
+        </ul>
+      </div>
+      <p class="funnel-audit funnel-anim" aria-hidden="true">
+        Logged: who asked, and why. Never the record.
+      </p>
+    </div>
+  </div>
+
+  <figcaption class="funnel-caption">
+    The same source record answers different questions for different services. Each
+    request returns only the evidence a service needs; the rest stays with the data
+    owner, and every request is logged.
+  </figcaption>
+</figure>
+
+<style>
+  .funnel {
+    margin: clamp(28px, 4vw, 44px) auto 0;
+    max-width: 980px;
+  }
+
+  .funnel-panel {
+    background: var(--registry-sidebar);
+    border: 1px solid var(--registry-rule);
+    overflow: hidden;
+    padding: clamp(20px, 3vw, 30px);
+  }
+
+  .funnel-head {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    margin-bottom: clamp(18px, 2.6vw, 26px);
+  }
+
+  .funnel-head-label {
+    color: var(--registry-teal);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .funnel-replay {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    color: var(--registry-blue);
+    cursor: pointer;
+    display: none;
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    padding: 7px 14px;
+    text-transform: uppercase;
+  }
+
+  .funnel-replay:hover {
+    border-color: var(--registry-blue);
+  }
+
+  .funnel-diagram {
+    align-items: center;
+    display: grid;
+    gap: clamp(12px, 2.4vw, 26px);
+    grid-template-columns: auto auto auto auto auto;
+    justify-content: center;
+  }
+
+  .funnel-zone {
+    min-width: 0;
+  }
+
+  .funnel-zone-label {
+    color: var(--registry-teal);
+    display: block;
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .funnel-source {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    padding: 18px;
+    width: clamp(190px, 22vw, 224px);
+  }
+
+  .funnel-fields {
+    display: grid;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .funnel-fields li {
+    background: var(--registry-active);
+    color: var(--registry-blue);
+    font-family: var(--registry-mono);
+    font-size: 13px;
+    padding: 7px 10px;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* A field lights up while the gate is reading it for a claim. */
+  .funnel-fields li.consulting {
+    background: #d7e4ff;
+    box-shadow: inset 0 0 0 1px var(--registry-blue);
+  }
+
+  .funnel-fields li.consulting.consulting-deny {
+    background: #f4ecd6;
+    box-shadow: inset 0 0 0 1px var(--registry-amber);
+  }
+
+  .funnel-arrow {
+    align-self: center;
+    color: var(--registry-muted);
+    font-size: 22px;
+    justify-self: center;
+  }
+
+  .funnel-gate {
+    align-self: center;
+    display: grid;
+    gap: 10px;
+    justify-items: center;
+    position: relative;
+    text-align: center;
+  }
+
+  .funnel-gate-shape {
+    position: relative;
+    width: 116px;
+  }
+
+  .funnel-gate-svg {
+    display: block;
+    height: auto;
+    width: 100%;
+  }
+
+  .funnel-gate-svg polygon {
+    fill: var(--registry-active);
+    stroke: var(--registry-blue);
+    stroke-width: 1.5;
+  }
+
+  .funnel-gate-mark {
+    color: var(--registry-blue);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    left: 38%;
+    letter-spacing: 0.05em;
+    position: absolute;
+    text-transform: uppercase;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .funnel-gate-note {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+  }
+
+  /*
+   * On desktop the gate sits in a 5-column flow row. Lift the note out of the
+   * centered group so the trapezoid's vertical middle lines up with the arrows.
+   */
+  @media (min-width: 901px) {
+    .funnel-gate-note {
+      left: 50%;
+      margin-top: 8px;
+      position: absolute;
+      top: 100%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+  }
+
+  .funnel-claims {
+    width: clamp(220px, 26vw, 280px);
+  }
+
+  .funnel-claim {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    border-left-width: 3px;
+    display: grid;
+    gap: 4px;
+    padding: 10px 14px;
+  }
+
+  .funnel-claim + .funnel-claim {
+    margin-top: 10px;
+  }
+
+  .funnel-claim-confirmed {
+    border-left-color: var(--registry-teal);
+  }
+
+  .funnel-claim-value {
+    border-left-color: var(--registry-blue);
+  }
+
+  .funnel-claim-denied {
+    border-left-color: var(--registry-amber);
+  }
+
+  .funnel-claim-req {
+    color: var(--registry-teal);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+  }
+
+  .funnel-claim .funnel-claim-answer {
+    align-items: baseline;
+    color: var(--registry-ink);
+    display: flex;
+    font-size: 17px;
+    font-weight: 700;
+    gap: 8px;
+  }
+
+  .funnel-claim-denied .funnel-claim-answer {
+    color: var(--registry-amber);
+  }
+
+  .funnel-claim-check {
+    color: var(--registry-teal);
+    font-size: 16px;
+  }
+
+  .funnel-claim-mark {
+    color: var(--registry-amber);
+    font-size: 16px;
+  }
+
+  .funnel-claim-derived {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+  }
+
+  .funnel-footer {
+    border-top: 1px solid var(--registry-rule);
+    margin-top: clamp(20px, 2.6vw, 26px);
+    padding-top: 16px;
+  }
+
+  .funnel-stays {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+
+  .funnel-stays-label {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  .funnel-stays-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .funnel-stays-fields li {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    text-decoration: line-through;
+  }
+
+  .funnel-audit {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    margin: 12px 0 0;
+  }
+
+  .funnel-audit::before {
+    background: var(--registry-teal);
+    border-radius: 50%;
+    content: '';
+    display: inline-block;
+    height: 7px;
+    margin-right: 8px;
+    vertical-align: middle;
+    width: 7px;
+  }
+
+  .funnel-caption {
+    color: var(--registry-muted);
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 18px auto 0;
+    max-width: 760px;
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .funnel-diagram {
+      gap: 20px;
+      grid-template-columns: 1fr;
+      justify-content: stretch;
+    }
+
+    .funnel-source,
+    .funnel-claims {
+      width: auto;
+    }
+
+    .funnel-arrow {
+      display: none;
+    }
+
+    .funnel-gate-shape {
+      transform: rotate(90deg);
+    }
+  }
+
+  @keyframes funnelRise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes funnelSettle {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes funnelWipe {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /*
+   * Motion is opt-in. The static markup above is the accessible baseline, shown
+   * verbatim when JavaScript is off or the reader prefers reduced motion. Only
+   * when both JS is present (html.js) and motion is welcome do we hide the
+   * animated parts and replay them when the figure scrolls into view.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .funnel-replay {
+      display: inline-flex;
+    }
+
+    :global(html.js) .funnel:not(.in-view) .funnel-anim {
+      opacity: 0;
+    }
+
+    :global(html.js) .funnel.in-view .funnel-source {
+      animation: funnelRise 0.5s ease-out both;
+    }
+
+    :global(html.js) .funnel.in-view .funnel-fields li {
+      animation: funnelRise 0.45s ease-out both;
+    }
+
+    :global(html.js) .funnel.in-view .funnel-fields li:nth-child(1) {
+      animation-delay: 0.05s;
+    }
+    :global(html.js) .funnel.in-view .funnel-fields li:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+    :global(html.js) .funnel.in-view .funnel-fields li:nth-child(3) {
+      animation-delay: 0.15s;
+    }
+    :global(html.js) .funnel.in-view .funnel-fields li:nth-child(4) {
+      animation-delay: 0.2s;
+    }
+    :global(html.js) .funnel.in-view .funnel-fields li:nth-child(5) {
+      animation-delay: 0.25s;
+    }
+    :global(html.js) .funnel.in-view .funnel-fields li:nth-child(6) {
+      animation-delay: 0.3s;
+    }
+    :global(html.js) .funnel.in-view .funnel-fields li:nth-child(7) {
+      animation-delay: 0.35s;
+    }
+
+    :global(html.js) .funnel.in-view .funnel-arrow:nth-of-type(1) {
+      animation: funnelRise 0.4s ease-out 0.4s both;
+    }
+    :global(html.js) .funnel.in-view .funnel-gate-shape {
+      animation: funnelRise 0.5s ease-out 0.45s both;
+    }
+    :global(html.js) .funnel.in-view .funnel-gate-note {
+      animation: funnelRise 0.5s ease-out 0.55s both;
+    }
+    :global(html.js) .funnel.in-view .funnel-arrow:nth-of-type(2) {
+      animation: funnelRise 0.4s ease-out 0.7s both;
+    }
+
+    :global(html.js) .funnel.in-view .funnel-claim {
+      animation: funnelRise 0.5s ease-out both;
+    }
+    :global(html.js) .funnel.in-view .funnel-claim:nth-of-type(1) {
+      animation-delay: 0.9s;
+    }
+    :global(html.js) .funnel.in-view .funnel-claim:nth-of-type(2) {
+      animation-delay: 1.2s;
+    }
+    :global(html.js) .funnel.in-view .funnel-claim:nth-of-type(3) {
+      animation-delay: 1.5s;
+    }
+    :global(html.js) .funnel.in-view .funnel-claim:nth-of-type(4) {
+      animation-delay: 1.8s;
+    }
+
+    :global(html.js) .funnel.in-view .funnel-stays {
+      animation: funnelSettle 0.5s ease-out 2.15s both;
+    }
+    :global(html.js) .funnel.in-view .funnel-audit {
+      animation: funnelWipe 0.45s ease-out 2.35s both;
+    }
+  }
+</style>
+
+<script>
+  const figures = document.querySelectorAll<HTMLElement>('figure.funnel[data-funnel]');
+
+  // The pulse timing mirrors the per-claim reveal delays in the stylesheet:
+  // each claim lands at REVEAL_BASE + index * REVEAL_STEP. Keep them in sync.
+  const REVEAL_BASE_MS = 900;
+  const REVEAL_STEP_MS = 300;
+  const CONSULT_HOLD_MS = 700;
+
+  const prefersReducedMotion = () =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const setConsulting = (field: Element | null, on: boolean, denied: boolean) => {
+    if (!field) return;
+    field.classList.toggle('consulting', on);
+    field.classList.toggle('consulting-deny', on && denied);
+  };
+
+  const timers = new WeakMap<Element, number[]>();
+
+  const clearPulses = (figure: Element) => {
+    for (const id of timers.get(figure) ?? []) clearTimeout(id);
+    timers.set(figure, []);
+    for (const field of figure.querySelectorAll('[data-field]')) setConsulting(field, false, false);
+  };
+
+  const runPulses = (figure: Element) => {
+    clearPulses(figure);
+    if (prefersReducedMotion()) return;
+    const pending: number[] = [];
+    figure.querySelectorAll('.funnel-claim[data-source]').forEach((claim, index) => {
+      const field = figure.querySelector(`[data-field="${claim.getAttribute('data-source')}"]`);
+      const denied = claim.classList.contains('funnel-claim-denied');
+      const at = REVEAL_BASE_MS + index * REVEAL_STEP_MS;
+      pending.push(window.setTimeout(() => setConsulting(field, true, denied), at));
+      pending.push(window.setTimeout(() => setConsulting(field, false, denied), at + CONSULT_HOLD_MS));
+    });
+    timers.set(figure, pending);
+  };
+
+  const reveal = (figure: Element) => {
+    figure.classList.add('in-view');
+    runPulses(figure);
+  };
+
+  const reset = (figure: Element) => {
+    figure.classList.remove('in-view');
+    clearPulses(figure);
+  };
+
+  const replay = (figure: HTMLElement) => {
+    figure.classList.remove('in-view');
+    // Force reflow so re-adding the class restarts the CSS animations.
+    void figure.offsetWidth;
+    reveal(figure);
+  };
+
+  for (const figure of figures) {
+    const button = figure.querySelector('[data-funnel-replay]');
+    if (button) button.addEventListener('click', () => replay(figure));
+
+    // Hover a claim to spotlight the source field it derives from.
+    for (const claim of figure.querySelectorAll('.funnel-claim[data-source]')) {
+      const field = figure.querySelector(`[data-field="${claim.getAttribute('data-source')}"]`);
+      const denied = claim.classList.contains('funnel-claim-denied');
+      claim.addEventListener('mouseenter', () => setConsulting(field, true, denied));
+      claim.addEventListener('mouseleave', () => setConsulting(field, false, denied));
+    }
+  }
+
+  if ('IntersectionObserver' in window && figures.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.intersectionRatio >= 0.25) reveal(entry.target);
+          else if (entry.intersectionRatio === 0) reset(entry.target);
+        }
+      },
+      { threshold: [0, 0.25] }
+    );
+
+    for (const figure of figures) observer.observe(figure);
+  } else {
+    for (const figure of figures) figure.classList.add('in-view');
+  }
+</script>

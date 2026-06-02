@@ -483,7 +483,8 @@ code {
 .implementation-grid {
   margin-left: auto;
   margin-right: auto;
-  max-width: 920px;
+  margin-top: clamp(28px, 4vw, 40px);
+  max-width: 980px;
 }
 
 .centered-action {
@@ -558,6 +559,34 @@ code {
   font-size: 12px;
   margin-bottom: 14px;
   text-transform: uppercase;
+}
+
+.use-case-result {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.evidence-type {
+  background: var(--registry-active);
+  color: var(--registry-blue);
+  font-family: var(--registry-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  text-transform: uppercase;
+}
+
+.use-case .use-case-output {
+  color: var(--registry-ink);
+  font-family: var(--registry-font);
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+  text-transform: none;
 }
 
 .use-case dl,

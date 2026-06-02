@@ -15,7 +15,8 @@
     "check:links": "node scripts/check-links.mjs",
     "check:a11y": "node scripts/check-a11y.mjs",
     "check:visual": "node scripts/check-visual.mjs",
-    "check": "npm run check:content && astro check && npm run build && npm run check:links && npm run check:a11y && npm run check:visual"
+    "check:funnel": "node scripts/check-funnel.mjs",
+    "check": "npm run check:content && astro check && npm run build && npm run check:links && npm run check:a11y && npm run check:visual && npm run check:funnel"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import MinimizationFunnel from '../components/MinimizationFunnel.astro';
 
 const pageTitle = 'Registry Stack | Trusted registry data for public services';
 const pageDescription =
@@ -53,27 +54,35 @@ const beneficiaryGroups = [
 const useCases = [
   {
     domain: 'Civil registration',
+    evidenceType: 'Credential',
     question: 'Is this person alive?',
-    evidence: 'Confirm alive status for the requesting service.',
+    evidence: 'Issue a signed proof-of-life the person can hold and present.',
     notShared: 'Do not disclose the full civil-registration record.',
+    output: 'Alive · proof of life',
   },
   {
     domain: 'Social protection',
+    evidenceType: 'Decision',
     question: 'Is this household eligible?',
-    evidence: 'Confirm eligibility for a benefit or service.',
+    evidence: 'Return an eligibility decision for the benefit or service.',
     notShared: 'Do not expose the household case file.',
+    output: 'Eligible',
   },
   {
     domain: 'Business registry',
+    evidenceType: 'Status',
     question: 'Is this supplier actively registered?',
-    evidence: 'Confirm active registration status.',
+    evidence: 'Return active registration status.',
     notShared: 'Do not disclose filing history or broader ownership data.',
+    output: 'Active',
   },
   {
     domain: 'Farmer registry',
-    question: 'Is this farmer registered in the district?',
-    evidence: 'Confirm district registration.',
-    notShared: 'Do not expose unrelated farm or household records.',
+    evidenceType: 'Bounded value set',
+    question: 'Is this a registered farmer, and what is the farm size?',
+    evidence: 'Confirm registration and return farm size (for example, 2.5 ha).',
+    notShared: 'Do not expose plot location, household roster, crop history, or financial records.',
+    output: 'Registered farmer · 2.5 ha',
   },
 ];
 
@@ -249,11 +258,16 @@ const boundaries = [
             Each starting point is small enough for a pilot.
           </p>
         </div>
+        <MinimizationFunnel />
         <div class="use-case-grid">
           {useCases.map((item) => (
             <article class="use-case">
               <p>{item.domain}</p>
               <h3>{item.question}</h3>
+              <div class="use-case-result">
+                <span class="evidence-type">{item.evidenceType}</span>
+                <span class="use-case-output">{item.output}</span>
+              </div>
               <dl>
                 <div>
                   <dt>Evidence returned</dt>
