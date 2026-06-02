@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const pagePath = resolve('src/pages/index.astro');
@@ -145,6 +145,22 @@ for (const term of forbidden) {
 
 if (source.includes('lab.registrystack.org')) {
   failures.push('lab link is present even though the hosted lab is not verified reachable');
+}
+
+// Social sharing: the layout declares a large-image card, so it must point at a
+// real OG image asset that actually exists.
+const layoutPath = resolve('src/layouts/Base.astro');
+const layoutSource = readFileSync(layoutPath, 'utf8');
+for (const tag of ['og:image', 'twitter:image']) {
+  if (!layoutSource.includes(tag)) {
+    failures.push(`layout is missing social image tag: ${tag}`);
+  }
+}
+if (!layoutSource.includes('og-image.png')) {
+  failures.push('layout does not reference the og-image.png asset');
+}
+if (!existsSync(resolve('public/og-image.png'))) {
+  failures.push('public/og-image.png is missing (run npm run build:og)');
 }
 
 if (failures.length > 0) {
