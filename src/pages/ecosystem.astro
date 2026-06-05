@@ -1,0 +1,211 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocsHandoff from '../components/DocsHandoff.astro';
+
+const pageTitle = 'Ecosystem fit | Registry Stack';
+const pageDescription =
+  'Registry Stack is complementary, not competitive. It sits behind exchange layers, beside workflow engines and domain platforms, and in front of wallets and service portals, giving them safer registry-facing services to call.';
+
+// Neighbor-system categories from the docs ecosystem page, reframed as
+// positioning. Each names what the neighbor owns and what Registry Stack adds.
+const neighbors = [
+  {
+    category: 'Domain registry platforms',
+    examples: 'OpenCRVS, OpenSPP, DHIS2, OpenIMIS',
+    owns: 'Storage, business rules, correction workflows, user interfaces, and a domain runtime API.',
+    adds: 'Standards-shaped metadata, scoped read-only routes, configured evidence responses, and tamper-evident audit.',
+  },
+  {
+    category: 'Workflow engines',
+    examples: 'OpenFn, Camunda, Flowable',
+    owns: 'Process state, task assignment, timers, branching, retries, escalation, and history.',
+    adds: 'A stable registry contract a workflow step can call without learning source tables, raw SQL, or full records.',
+  },
+  {
+    category: 'Exchange layers',
+    examples: 'X-Road, GovStack-style reference exchanges',
+    owns: 'Participant onboarding, message transport, mutual trust, routing, addressing, and cross-institution policy.',
+    adds: 'The registry-facing surface behind the exchange: route-level scopes, field projection, and source access controls.',
+  },
+  {
+    category: 'Wallets',
+    examples: 'SD-JWT VC and OID4VCI-compatible wallets',
+    owns: 'Key management, credential storage, holder consent, and presentation to relying parties.',
+    adds: 'The server-side issuance path: claim evaluation against registry data, and discoverable evidence offerings.',
+  },
+  {
+    category: 'Public-service platforms',
+    examples: 'Citizen portals, casework systems, service catalogues',
+    owns: 'The user journey: forms, case queues, notifications, payments, and channels.',
+    adds: 'The narrow registry-facing surface those journeys call: entity routes, evidence responses, and audit records.',
+  },
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="ecosystem" />
+
+  <main>
+    <section class="hero" aria-labelledby="eco-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Ecosystem fit</p>
+          <h1 id="eco-hero-title">Designed to work with the infrastructure governments already choose.</h1>
+          <p class="hero-lead">
+            Registry Stack assumes a wider ecosystem and is designed to fit into it, not
+            replicate it. It does not replace exchange layers, workflow engines, wallets,
+            public-service platforms, or domain registry systems. It gives them safer
+            registry-facing services to call.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="neighbors-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Neighbor systems</p>
+          <h2 id="neighbors-title">Complementary, not competitive.</h2>
+          <p>
+            Each neighbor keeps what it owns. Registry Stack adds the narrow registry surface
+            that was missing: described, scoped, evidence-shaped, and auditable.
+          </p>
+        </div>
+        <div class="neighbor-grid">
+          {neighbors.map((item) => (
+            <article class="neighbor-card">
+              <h3>{item.category}</h3>
+              <p class="neighbor-examples">{item.examples}</p>
+              <div class="use-case-field">
+                <p class="use-case-label">The neighbor owns</p>
+                <p class="use-case-text">{item.owns}</p>
+              </div>
+              <div class="use-case-field">
+                <p class="use-case-label">Registry Stack adds</p>
+                <p class="use-case-text">{item.adds}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="layered-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">A layered example</p>
+          <h2 id="layered-title">Behind an exchange layer, in front of a registry source.</h2>
+          <p>
+            An exchange layer such as X-Road handles network trust between institutions. The
+            registry endpoint behind it still needs route-level scopes, field projection, and
+            source-specific access controls. The two layers do different jobs.
+          </p>
+        </div>
+        <div class="flow-diagram" aria-label="Registry Stack behind an exchange layer">
+          <div class="flow-node">
+            <span>Exchange layer</span>
+            <p>X-Road or a GovStack-style exchange handles trust, transport, routing, and addressing between participants.</p>
+          </div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node flow-node-strong">
+            <span>Registry Stack</span>
+            <ol>
+              <li>Scope the caller</li>
+              <li>Project fields</li>
+              <li>Return evidence</li>
+              <li>Record audit</li>
+            </ol>
+          </div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node">
+            <span>Registry source</span>
+            <p>The legacy database, extract, or domain platform stays where it is, under institutional control.</p>
+          </div>
+        </div>
+        <p class="layered-note">
+          A request forwarded by the exchange layer arrives at a registry surface that can return
+          a configured evidence response instead of a copied record, and log who asked and why.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="standards-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">Standards we adopt</p>
+          <h2 id="standards-title">Established standards, not a new ontology.</h2>
+          <p>
+            Registry Stack adopts standards rather than inventing them. Claim levels vary by
+            standard; the docs carry the full register before assuming conformance. No universal
+            registry ontology is claimed.
+          </p>
+        </div>
+        <ul class="check-list">
+          <li>Metadata: DCAT, BRegDCAT-AP, CPSV-AP, ODRL.</li>
+          <li>Shape: SHACL, JSON Schema, OpenAPI.</li>
+          <li>Evidence: CCCEV (JSON-LD), SD-JWT VC, OID4VCI.</li>
+          <li>Sector: SP-DCI, OGC API Records, OGC API Features, GovStack Digital Registries.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <DocsHandoff
+    eyebrow="Read the docs"
+    heading="See the integration patterns in detail."
+    primaryLabel="Read the docs"
+  />
+  <SiteFooter />
+</Base>
+
+<style>
+  .neighbor-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .neighbor-card {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+    padding: 22px;
+  }
+
+  .neighbor-card h3 {
+    margin: 0;
+  }
+
+  .neighbor-examples {
+    color: var(--registry-teal);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+
+  .layered-note {
+    color: var(--registry-muted);
+    font-size: 15px;
+    line-height: 1.55;
+    margin: clamp(20px, 3vw, 28px) auto 0;
+    max-width: 760px;
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .neighbor-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .neighbor-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

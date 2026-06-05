@@ -1,0 +1,896 @@
+---
+// Registry Relay visual: an existing spreadsheet-like source stays whole while
+// callers receive scoped, narrow responses. The animation is progressive
+// enhancement; without JavaScript or with reduced motion, the first consultation
+// remains visible and fully legible.
+type ColumnId = 'record' | 'district' | 'program' | 'status' | 'size' | 'updated';
+
+type Column = {
+  id: ColumnId;
+  label: string;
+};
+
+type Row = Record<ColumnId, string>;
+
+const columns: Column[] = [
+  { id: 'record', label: 'record_id' },
+  { id: 'district', label: 'district' },
+  { id: 'program', label: 'program' },
+  { id: 'status', label: 'status' },
+  { id: 'size', label: 'farm_size_ha' },
+  { id: 'updated', label: 'updated_at' },
+];
+
+const rows: Row[] = [
+  {
+    record: 'FMR-1042',
+    district: 'Kano',
+    program: 'Input grant',
+    status: 'Registered',
+    size: '2.5',
+    updated: '2026-05-12',
+  },
+  {
+    record: 'FMR-1088',
+    district: 'Lagos',
+    program: 'Market access',
+    status: 'Active',
+    size: '1.8',
+    updated: '2026-05-14',
+  },
+  {
+    record: 'FMR-1130',
+    district: 'Kano',
+    program: 'Seed support',
+    status: 'Review',
+    size: '3.1',
+    updated: '2026-05-18',
+  },
+];
+
+const consultations = [
+  {
+    name: 'Metadata',
+    short: 'Schema and fields',
+    icon: 'metadata',
+    fields: ['record', 'district', 'program', 'status', 'size', 'updated'],
+    control: 'scope: metadata',
+  },
+  {
+    name: 'Fields',
+    short: 'Only approved columns',
+    icon: 'fields',
+    fields: ['record', 'status', 'size'],
+    control: 'projection: approved fields',
+  },
+  {
+    name: 'Aggregate',
+    short: 'Summary, not rows',
+    icon: 'aggregate',
+    fields: ['district', 'status'],
+    control: 'disclosure controls checked',
+  },
+  {
+    name: 'SP-DCI',
+    short: 'Adapter view',
+    icon: 'adapter',
+    fields: ['record', 'program', 'status', 'updated'],
+    control: 'adapter: SP-DCI',
+  },
+  {
+    name: 'Audit',
+    short: 'Request recorded',
+    icon: 'audit',
+    fields: [],
+    control: 'audit envelope recorded',
+  },
+];
+---
+
+<figure class="relay-answers" data-relay-answers>
+  <div class="relay-mode-rail" role="tablist" aria-label="Bounded response modes">
+    {consultations.map((item, index) => (
+      <button
+        class:list={['relay-mode-button', index === 0 && 'is-active']}
+        type="button"
+        role="tab"
+        id={`relay-tab-${index}`}
+        aria-controls={`relay-panel-${index}`}
+        aria-selected={index === 0 ? 'true' : 'false'}
+        tabindex={index === 0 ? '0' : '-1'}
+        data-relay-mode={index}
+      >
+        <span class:list={['relay-mode-icon', `relay-icon-${item.icon}`]} aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+        <span>{item.name}</span>
+      </button>
+    ))}
+  </div>
+
+  <div class="relay-answers-stage">
+    <div class="relay-sheet" aria-hidden="true">
+      <div class="relay-sheet-top">
+        <span>Spreadsheet source</span>
+        <strong>farmer_registry.xlsx</strong>
+      </div>
+      <div class="relay-table" role="presentation">
+        <div class="relay-row relay-row-head">
+          {columns.map((column) => <span data-column={column.id}>{column.label}</span>)}
+        </div>
+        {rows.map((row, rowIndex) => (
+          <div class:list={['relay-row', rowIndex === 0 && 'relay-row-focus']}>
+            {columns.map((column) => <span data-column={column.id}>{row[column.id]}</span>)}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="relay-gateway" aria-hidden="true">
+      <span class="relay-gateway-label">Registry-facing gateway</span>
+      <div class="relay-gateway-core">
+        <span>scope</span>
+        <span>projection</span>
+        <span>filter</span>
+        <span>audit</span>
+      </div>
+      <p data-relay-control>{consultations[0].control}</p>
+    </div>
+
+    <div class="relay-response">
+      <span class="relay-response-label">Bounded response</span>
+      <div class="relay-response-stack">
+        {consultations.map((item, index) => (
+          <div
+            class:list={['relay-response-card', index === 0 && 'is-active']}
+            role="tabpanel"
+            id={`relay-panel-${index}`}
+            aria-labelledby={`relay-tab-${index}`}
+            hidden={index !== 0}
+            data-relay-card
+            data-fields={item.fields.join(' ')}
+            data-control={item.control}
+          >
+            <div class="relay-response-head">
+              <span class:list={['relay-response-icon', `relay-icon-${item.icon}`]} aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+              <div class="relay-response-copy">
+                <span>{item.name}</span>
+                <p>{item.short}</p>
+              </div>
+            </div>
+            <div class:list={['relay-mini-preview', `relay-mini-${item.icon}`]} aria-hidden="true">
+              {item.icon === 'metadata' && (
+                <>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </>
+              )}
+              {item.icon === 'fields' && (
+                <>
+                  <span></span>
+                  <span class="is-selected"></span>
+                  <span></span>
+                  <span class="is-selected"></span>
+                  <span class="is-selected"></span>
+                </>
+              )}
+              {item.icon === 'aggregate' && (
+                <>
+                  <span style="--bar-height: 72%"></span>
+                  <span style="--bar-height: 48%"></span>
+                  <span style="--bar-height: 62%"></span>
+                </>
+              )}
+              {item.icon === 'adapter' && (
+                <>
+                  <span>SP</span>
+                  <span></span>
+                  <span>DCI</span>
+                </>
+              )}
+              {item.icon === 'audit' && (
+                <>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    The source stays intact. Each caller receives a scoped consultation surface:
+    metadata, selected fields, aggregate results, a standards-shaped view, or an
+    audit record.
+  </figcaption>
+</figure>
+
+<style>
+  .relay-answers {
+    margin: clamp(30px, 4vw, 44px) auto 0;
+    max-width: var(--registry-max);
+  }
+
+  .relay-mode-rail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+
+  .relay-mode-button {
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    color: var(--registry-body);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 700;
+    gap: 8px;
+    min-height: 38px;
+    padding: 7px 10px;
+  }
+
+  .relay-mode-button.is-active {
+    border-color: var(--registry-blue);
+    color: var(--registry-blue);
+  }
+
+  .relay-mode-icon,
+  .relay-response-icon {
+    border: 1px solid currentColor;
+    color: var(--registry-blue);
+    display: inline-grid;
+    flex: none;
+    height: 24px;
+    place-items: center;
+    position: relative;
+    width: 24px;
+  }
+
+  .relay-response-icon {
+    height: 42px;
+    width: 42px;
+  }
+
+  .relay-icon-metadata span,
+  .relay-icon-fields span,
+  .relay-icon-aggregate span,
+  .relay-icon-adapter span,
+  .relay-icon-audit span {
+    display: block;
+    position: absolute;
+  }
+
+  .relay-icon-metadata span {
+    background: currentColor;
+    height: 1px;
+    left: 5px;
+    right: 5px;
+  }
+
+  .relay-icon-metadata span:nth-child(1) {
+    top: 8px;
+  }
+
+  .relay-icon-metadata span:nth-child(2) {
+    top: 13px;
+  }
+
+  .relay-icon-metadata span:nth-child(3) {
+    top: 18px;
+  }
+
+  .relay-response-icon.relay-icon-metadata span:nth-child(1) {
+    top: 13px;
+  }
+
+  .relay-response-icon.relay-icon-metadata span:nth-child(2) {
+    top: 21px;
+  }
+
+  .relay-response-icon.relay-icon-metadata span:nth-child(3) {
+    top: 29px;
+  }
+
+  .relay-icon-fields span {
+    background: currentColor;
+    bottom: 5px;
+    top: 5px;
+    width: 2px;
+  }
+
+  .relay-icon-fields span:nth-child(1) {
+    left: 7px;
+  }
+
+  .relay-icon-fields span:nth-child(2) {
+    left: 12px;
+  }
+
+  .relay-icon-fields span:nth-child(3) {
+    left: 17px;
+  }
+
+  .relay-response-icon.relay-icon-fields span:nth-child(1) {
+    left: 13px;
+  }
+
+  .relay-response-icon.relay-icon-fields span:nth-child(2) {
+    left: 20px;
+  }
+
+  .relay-response-icon.relay-icon-fields span:nth-child(3) {
+    left: 27px;
+  }
+
+  .relay-icon-aggregate span {
+    background: currentColor;
+    bottom: 5px;
+    width: 3px;
+  }
+
+  .relay-icon-aggregate span:nth-child(1) {
+    height: 8px;
+    left: 6px;
+  }
+
+  .relay-icon-aggregate span:nth-child(2) {
+    height: 13px;
+    left: 11px;
+  }
+
+  .relay-icon-aggregate span:nth-child(3) {
+    height: 10px;
+    left: 16px;
+  }
+
+  .relay-response-icon.relay-icon-aggregate span {
+    bottom: 10px;
+    width: 5px;
+  }
+
+  .relay-response-icon.relay-icon-aggregate span:nth-child(1) {
+    height: 14px;
+    left: 12px;
+  }
+
+  .relay-response-icon.relay-icon-aggregate span:nth-child(2) {
+    height: 22px;
+    left: 20px;
+  }
+
+  .relay-response-icon.relay-icon-aggregate span:nth-child(3) {
+    height: 17px;
+    left: 28px;
+  }
+
+  .relay-icon-adapter span:nth-child(1),
+  .relay-icon-adapter span:nth-child(3) {
+    border: 1px solid currentColor;
+    height: 6px;
+    top: 8px;
+    width: 6px;
+  }
+
+  .relay-icon-adapter span:nth-child(1) {
+    left: 4px;
+  }
+
+  .relay-icon-adapter span:nth-child(2) {
+    background: currentColor;
+    height: 1px;
+    left: 10px;
+    right: 10px;
+    top: 11px;
+  }
+
+  .relay-icon-adapter span:nth-child(3) {
+    right: 4px;
+  }
+
+  .relay-response-icon.relay-icon-adapter span:nth-child(1),
+  .relay-response-icon.relay-icon-adapter span:nth-child(3) {
+    height: 10px;
+    top: 15px;
+    width: 10px;
+  }
+
+  .relay-response-icon.relay-icon-adapter span:nth-child(1) {
+    left: 8px;
+  }
+
+  .relay-response-icon.relay-icon-adapter span:nth-child(2) {
+    left: 18px;
+    right: 18px;
+    top: 20px;
+  }
+
+  .relay-response-icon.relay-icon-adapter span:nth-child(3) {
+    right: 8px;
+  }
+
+  .relay-icon-audit span {
+    border-bottom: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    height: 5px;
+    left: 8px;
+    top: 7px;
+    transform: rotate(45deg);
+    width: 9px;
+  }
+
+  .relay-icon-audit span:nth-child(2),
+  .relay-icon-audit span:nth-child(3) {
+    background: currentColor;
+    border: 0;
+    height: 1px;
+    left: 6px;
+    right: 6px;
+    transform: none;
+    width: auto;
+  }
+
+  .relay-icon-audit span:nth-child(2) {
+    top: 16px;
+  }
+
+  .relay-icon-audit span:nth-child(3) {
+    top: 20px;
+  }
+
+  .relay-response-icon.relay-icon-audit span:nth-child(1) {
+    height: 8px;
+    left: 16px;
+    top: 11px;
+    width: 14px;
+  }
+
+  .relay-response-icon.relay-icon-audit span:nth-child(2) {
+    top: 26px;
+  }
+
+  .relay-response-icon.relay-icon-audit span:nth-child(3) {
+    top: 32px;
+  }
+
+  .relay-answers-stage {
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    display: grid;
+    gap: clamp(18px, 2.8vw, 28px);
+    grid-template-columns: minmax(500px, 1.35fr) minmax(170px, 0.52fr) minmax(250px, 0.8fr);
+    overflow: hidden;
+    padding: clamp(18px, 3vw, 30px);
+  }
+
+  .relay-sheet {
+    border: 1px solid var(--registry-rule);
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .relay-sheet-top {
+    align-items: center;
+    background: var(--registry-sidebar);
+    border-bottom: 1px solid var(--registry-rule);
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    padding: 11px 12px;
+  }
+
+  .relay-sheet-top span,
+  .relay-response-label,
+  .relay-gateway-label {
+    color: var(--registry-teal);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  .relay-sheet-top strong {
+    color: var(--registry-ink);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .relay-table {
+    display: grid;
+    overflow-x: auto;
+  }
+
+  .relay-row {
+    display: grid;
+    grid-template-columns: 1.05fr 0.8fr 1.1fr 0.9fr 1fr 1fr;
+    min-width: 0;
+  }
+
+  .relay-row span {
+    border-bottom: 1px solid var(--registry-rule);
+    border-right: 1px solid var(--registry-rule);
+    color: var(--registry-body);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    min-height: 34px;
+    overflow: hidden;
+    padding: 9px 10px;
+    text-overflow: ellipsis;
+    transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    white-space: nowrap;
+  }
+
+  .relay-row span:last-child {
+    border-right: 0;
+  }
+
+  .relay-row:last-child span {
+    border-bottom: 0;
+  }
+
+  .relay-row-head span {
+    background: var(--registry-active);
+    color: var(--registry-blue);
+    font-weight: 700;
+  }
+
+  .relay-row-focus span {
+    color: var(--registry-ink);
+  }
+
+  .relay-row span.is-consulted {
+    background: #dce8ff;
+    box-shadow: inset 0 0 0 1px var(--registry-blue);
+    color: var(--registry-blue);
+  }
+
+  .relay-gateway {
+    display: grid;
+    gap: 14px;
+    justify-items: center;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .relay-gateway-core {
+    border: 2px solid var(--registry-blue);
+    display: grid;
+    gap: 8px;
+    padding: 18px;
+    position: relative;
+    width: 100%;
+  }
+
+  .relay-gateway-core::before,
+  .relay-gateway-core::after {
+    background: var(--registry-blue);
+    content: '';
+    height: 2px;
+    position: absolute;
+    top: 50%;
+    width: clamp(18px, 3vw, 28px);
+  }
+
+  .relay-gateway-core::before {
+    right: 100%;
+  }
+
+  .relay-gateway-core::after {
+    left: 100%;
+  }
+
+  .relay-gateway-core span {
+    background: var(--registry-active);
+    color: var(--registry-blue);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .relay-gateway p {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    margin: 0;
+    min-height: 38px;
+  }
+
+  .relay-response {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .relay-response-stack {
+    display: grid;
+  }
+
+  .relay-response-card {
+    background: var(--registry-sidebar);
+    border: 1px solid var(--registry-rule);
+    border-left: 3px solid var(--registry-teal);
+    display: grid;
+    gap: 16px;
+    grid-area: 1 / 1;
+    min-height: 210px;
+    opacity: 0;
+    padding: 18px;
+    transform: translateY(8px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .relay-response-card.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    z-index: 1;
+  }
+
+  .relay-response-head {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+  }
+
+  .relay-response-copy span {
+    color: var(--registry-teal);
+    display: block;
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .relay-response-head p {
+    color: var(--registry-body);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .relay-mini-preview {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    display: grid;
+    min-height: 88px;
+    padding: 12px;
+  }
+
+  .relay-mini-metadata {
+    gap: 8px;
+  }
+
+  .relay-mini-metadata span {
+    background: var(--registry-active);
+    border-left: 3px solid var(--registry-blue);
+    display: block;
+  }
+
+  .relay-mini-fields {
+    gap: 7px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .relay-mini-fields span {
+    background: var(--registry-code-bg);
+    border: 1px solid var(--registry-rule);
+  }
+
+  .relay-mini-fields .is-selected {
+    background: var(--registry-active);
+    border-color: var(--registry-blue);
+  }
+
+  .relay-mini-aggregate {
+    align-items: end;
+    gap: 12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .relay-mini-aggregate span {
+    background: var(--registry-blue);
+    display: block;
+    height: var(--bar-height);
+    min-height: 28px;
+  }
+
+  .relay-mini-adapter {
+    align-items: center;
+    gap: 10px;
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .relay-mini-adapter span:first-child,
+  .relay-mini-adapter span:last-child {
+    border: 1px solid var(--registry-blue);
+    color: var(--registry-blue);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .relay-mini-adapter span:nth-child(2) {
+    background: var(--registry-blue);
+    height: 2px;
+  }
+
+  .relay-mini-audit {
+    align-content: center;
+    gap: 9px;
+  }
+
+  .relay-mini-audit span {
+    background: var(--registry-active);
+    border-left: 3px solid var(--registry-teal);
+    display: block;
+    height: 11px;
+  }
+
+  .relay-answers figcaption {
+    color: var(--registry-muted);
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 14px auto 0;
+    max-width: 760px;
+    text-align: center;
+  }
+
+  @media (max-width: 1120px) {
+    .relay-answers-stage {
+      grid-template-columns: 1fr;
+    }
+
+    .relay-gateway-core::before,
+    .relay-gateway-core::after {
+      display: none;
+    }
+
+    .relay-gateway-core {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .relay-sheet-top {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .relay-table {
+      overflow-x: scroll;
+    }
+
+    .relay-row {
+      min-width: 520px;
+    }
+
+    .relay-gateway-core {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .relay-response-card {
+      min-height: 230px;
+    }
+
+    .relay-mode-rail {
+      justify-content: flex-start;
+    }
+  }
+</style>
+
+<script>
+  const ROTATE_MS = 6500;
+
+  const prefersReducedMotion = () =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const figures = document.querySelectorAll<HTMLElement>('[data-relay-answers]');
+
+  for (const figure of figures) {
+    const cards = Array.from(figure.querySelectorAll<HTMLElement>('[data-relay-card]'));
+    const modes = Array.from(figure.querySelectorAll<HTMLButtonElement>('[data-relay-mode]'));
+    const control = figure.querySelector<HTMLElement>('[data-relay-control]');
+    const cells = Array.from(figure.querySelectorAll<HTMLElement>('[data-column]'));
+
+    let index = cards.findIndex((card) => card.classList.contains('is-active'));
+    if (index < 0) index = 0;
+    let timer = 0;
+
+    const apply = (nextIndex: number) => {
+      cards[index].classList.remove('is-active');
+      cards[index].hidden = true;
+      index = nextIndex;
+      const active = cards[index];
+      active.hidden = false;
+      active.classList.add('is-active');
+
+      for (const [modeIndex, mode] of modes.entries()) {
+        const isActive = modeIndex === index;
+        mode.classList.toggle('is-active', isActive);
+        mode.setAttribute('aria-selected', String(isActive));
+        mode.tabIndex = isActive ? 0 : -1;
+      }
+
+      const activeFields = active.dataset.fields?.split(' ').filter(Boolean) ?? [];
+      const activeFieldSet = new Set(activeFields);
+
+      for (const cell of cells) {
+        const column = cell.dataset.column;
+        cell.classList.toggle('is-consulted', Boolean(column && activeFieldSet.has(column)));
+      }
+
+      if (control) {
+        control.textContent = active.dataset.control ?? '';
+      }
+    };
+
+    apply(index);
+
+    const advance = () => {
+      apply((index + 1) % cards.length);
+    };
+
+    const start = () => {
+      if (!timer && cards.length > 1 && !prefersReducedMotion()) {
+        timer = window.setInterval(advance, ROTATE_MS);
+      }
+    };
+
+    const stop = () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = 0;
+      }
+    };
+
+    for (const mode of modes) {
+      mode.addEventListener('click', () => {
+        stop();
+        apply(Number(mode.dataset.relayMode ?? 0));
+      });
+      mode.addEventListener('keydown', (event) => {
+        const currentIndex = modes.indexOf(mode);
+        let nextIndex = currentIndex;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+          nextIndex = (currentIndex + 1) % modes.length;
+        } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+          nextIndex = (currentIndex - 1 + modes.length) % modes.length;
+        } else if (event.key === 'Home') {
+          nextIndex = 0;
+        } else if (event.key === 'End') {
+          nextIndex = modes.length - 1;
+        } else {
+          return;
+        }
+
+        event.preventDefault();
+        stop();
+        apply(nextIndex);
+        modes[nextIndex].focus();
+      });
+    }
+
+    figure.addEventListener('mouseenter', stop);
+    figure.addEventListener('mouseleave', start);
+
+    start();
+  }
+</script>

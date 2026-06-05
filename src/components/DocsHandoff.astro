@@ -1,0 +1,27 @@
+---
+// Shared closing CTA. Every marketing page ends with a clear handoff to the
+// docs for the "how", plus a pilot-conversation route. Copy can be tuned per
+// page through props while keeping the band consistent.
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  primaryLabel?: string;
+}
+
+const {
+  eyebrow = 'Read the docs',
+  heading = 'See how it works, end to end.',
+  primaryLabel = 'Read the docs',
+} = Astro.props;
+---
+
+<section class="final-cta" aria-labelledby="handoff-title">
+  <div class="section-inner">
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 id="handoff-title">{heading}</h2>
+    <div class="hero-actions">
+      <a class="button button-primary" href="https://docs.registrystack.org/">{primaryLabel}</a>
+      <a class="button button-secondary" href="mailto:hello@registrystack.org?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
+    </div>
+  </div>
+</section>

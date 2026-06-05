@@ -1,0 +1,28 @@
+---
+// Shared top navigation for every marketing page. The homepage keeps its own
+// inline header so the single-page content contract can still assert on its
+// source; this component carries the same brand mark and nav links for the
+// deeper pages, with the current page marked aria-current.
+const { current } = Astro.props;
+
+const links = [
+  { href: '/why/', label: 'Why it matters', key: 'why' },
+  { href: '/use-cases/', label: 'Use cases', key: 'use-cases' },
+  { href: '/ecosystem/', label: 'Ecosystem', key: 'ecosystem' },
+  { href: '/why-now/', label: 'Why now', key: 'why-now' },
+  { href: '/status/', label: 'Status', key: 'status' },
+];
+---
+
+<header class="site-header">
+  <a class="brand" href="/" aria-label="Registry Stack home">
+    <span class="brand-mark" aria-hidden="true">RS</span>
+    <span>Registry Stack</span>
+  </a>
+  <nav class="top-nav" aria-label="Main navigation">
+    {links.map((link) => (
+      <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
+    ))}
+    <a class="nav-emphasis" href="https://docs.registrystack.org/">Read the docs</a>
+  </nav>
+</header>

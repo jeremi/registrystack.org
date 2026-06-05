@@ -1,0 +1,168 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocsHandoff from '../components/DocsHandoff.astro';
+
+const pageTitle = 'Why it matters | Registry Stack';
+const pageDescription =
+  'The recurring registry problems Registry Stack is built around: data that is not service-ready, APIs that over-share, safeguards that live only on paper, and integrations that never compound.';
+
+// Condensed from the docs-site problem framings. Each card names the recurring
+// failure, a short concrete illustration, and what Registry Stack changes.
+const problems = [
+  {
+    title: 'Data exists, but is not service-ready',
+    illustration:
+      'A school directory lives in one focal point’s spreadsheet. Three teams email for copies, and three months later nobody can say which list is authoritative.',
+    change:
+      'The source stays where it is. A public contract describes who may ask, for what, with what freshness, and on what authority.',
+  },
+  {
+    title: 'APIs over-share records',
+    illustration:
+      'A licensing counter needs a yes or no. The only available API returns the full record: date of birth, address, and ten years of history the clerk never asked for.',
+    change:
+      'A route can return "licence valid" or "actively registered" without exposing the underlying record. The caller gets the fact; the rest stays with the owner.',
+  },
+  {
+    title: 'Safeguards need technical enforcement',
+    illustration:
+      'A data-sharing agreement is signed for one purpose. The API has no purpose field, no scope, and an access log a reviewer cannot read. A year later, an inspector has nowhere to look.',
+    change:
+      'Purpose, scope, and disclosure limits are checked at the point of access, and each trust-critical request leaves a reviewable audit record.',
+  },
+  {
+    title: 'Integrations become one-off negotiations',
+    illustration:
+      'A national registry has integrated three partners. Each started with the same questions in a fresh email thread. The fourth partner asks them again next week.',
+    change:
+      'The answers are published once, as artifacts every partner can read. The negotiation starts from a shared contract instead of from scratch.',
+  },
+  {
+    title: 'Capabilities are hard to discover',
+    illustration:
+      'A registry exists, but what it offers lives in a PDF refreshed nine months ago and the memory of two engineers. The first technical decision is made before any artifact exists.',
+    change:
+      'A registry publishes machine-readable metadata: which entities, fields, policies, and evidence offerings it actually exposes, before any code is written.',
+  },
+  {
+    title: 'Semantics do not line up',
+    illustration:
+      'Two registries both expose a field called status with a code active, but mean different things by it. The integration code quietly becomes the definition.',
+    change:
+      'Each registry publishes what its fields and codes mean, so an integrator can see both definitions and decide, instead of discovering the mismatch in production.',
+  },
+  {
+    title: 'Identity and matching are unclear',
+    illustration:
+      'A cadastral service answers "owner confirmed" without saying which record it matched, on what fields, or how confident the match was. The assessment goes out anyway.',
+    change:
+      'The match becomes part of the contract: a signed answer carries which record was matched and on what basis, instead of a hidden join inside integration code.',
+  },
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="why" />
+
+  <main>
+    <section class="hero" aria-labelledby="why-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Why it matters</p>
+          <h1 id="why-hero-title">Registry data exists. The service contract around it often does not.</h1>
+          <p class="hero-lead">
+            Governments already hold the data needed for faster, fairer services. The missing
+            layer is usually the governed service model around that data: who can ask, what
+            answer is appropriate, what should not be shared, and how trust-critical use is
+            reviewed. These are the recurring problems Registry Stack is built around.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="problems-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">The recurring problems</p>
+          <h2 id="problems-title">The same failures show up across very different registries.</h2>
+          <p>
+            Each one is independent of any single domain. They appear in civil registration,
+            social protection, business registries, farmer registries, health facility
+            registries, and more. Registry Stack changes the runtime and metadata surface around
+            the data; it does not replace the source.
+          </p>
+        </div>
+        <div class="problem-grid problem-grid-why">
+          {problems.map((problem) => (
+            <article class="quiet-card problem-card">
+              <h3>{problem.title}</h3>
+              <p class="problem-illustration">{problem.illustration}</p>
+              <p class="problem-change-label">What changes</p>
+              <p class="problem-change">{problem.change}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="not-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">What this is not</p>
+          <h2 id="not-title">Some of these problems are not Registry Stack’s to solve.</h2>
+          <p>
+            Being honest about the edges is part of the trust model. Registry Stack makes
+            registry use explicit, governed, and reviewable. It does not make the institutional
+            decisions for you.
+          </p>
+        </div>
+        <ul class="check-list">
+          <li>It does not decide whether a caller is legally entitled to a fact.</li>
+          <li>It does not reconcile two registries that genuinely mean different things.</li>
+          <li>It is not a foundational identity, deduplication, or master-data system.</li>
+          <li>It does not replace semantic review, authorization policy, or human accountability.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <DocsHandoff
+    eyebrow="Read the docs"
+    heading="See how each safeguard is enforced at runtime."
+    primaryLabel="Read the docs"
+  />
+  <SiteFooter />
+</Base>
+
+<style>
+  .problem-grid-why {
+    gap: 20px;
+  }
+
+  .problem-card {
+    display: grid;
+    gap: 8px;
+  }
+
+  .problem-illustration {
+    color: var(--registry-body);
+    margin: 0;
+  }
+
+  .problem-change-label {
+    color: var(--registry-teal);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    margin: 6px 0 0;
+    text-transform: uppercase;
+  }
+
+  .problem-change {
+    color: var(--registry-ink);
+    font-weight: 600;
+    margin: 0;
+  }
+</style>

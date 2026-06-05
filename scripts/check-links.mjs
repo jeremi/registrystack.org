@@ -20,9 +20,20 @@ if (!existsSync(dist)) {
 
 walk(dist);
 
+// The site's own origin. Absolute links to it (canonical tags, self-referencing
+// nav) are resolved against the freshly built dist/ rather than fetched over the
+// network: they are this build's own pages, which need not be deployed yet for
+// the build to be correct.
+const siteOrigin = 'https://registrystack.org';
+
 const externalLinks = new Set();
 const mailtoLinks = new Set();
 const mailtoAddresses = new Set();
+
+const resolveInternal = (pathname, file) => {
+  const target = pathname.endsWith('/') ? join(dist, pathname, 'index.html') : join(dist, pathname);
+  if (!existsSync(target)) failures.push(`missing internal link target ${pathname} from ${file}`);
+};
 
 for (const file of htmlFiles) {
   const html = readFileSync(file, 'utf8');
@@ -32,13 +43,18 @@ for (const file of htmlFiles) {
       mailtoLinks.add(href);
       continue;
     }
+    if (href === siteOrigin || href.startsWith(`${siteOrigin}/`)) {
+      const { pathname } = new URL(href);
+      resolveInternal(pathname, file);
+      continue;
+    }
     if (href.startsWith('http://') || href.startsWith('https://')) {
       externalLinks.add(href);
       continue;
     }
     if (href.startsWith('/')) {
-      const target = href.endsWith('/') ? join(dist, href, 'index.html') : join(dist, href);
-      if (!existsSync(target)) failures.push(`missing internal link target ${href} from ${file}`);
+      const { pathname } = new URL(href, siteOrigin);
+      resolveInternal(pathname, file);
     }
   }
 }

@@ -30,6 +30,7 @@ html {
   background: #ffffff;
   color: var(--registry-body);
   font-family: var(--registry-font);
+  scroll-padding-top: 78px;
   scroll-behavior: smooth;
 }
 
@@ -329,7 +330,7 @@ p {
   align-items: center;
   display: grid;
   gap: 14px;
-  grid-template-columns: 1.1fr repeat(6, minmax(0, 1fr));
+  grid-template-columns: 1.1fr repeat(9, minmax(0, 1fr));
   margin: 0 auto;
   max-width: var(--registry-max);
   padding: 20px clamp(16px, 4vw, 42px);
@@ -393,6 +394,7 @@ code {
 .section {
   background: #ffffff;
   border-bottom: 1px solid var(--registry-rule);
+  scroll-margin-top: 78px;
 }
 
 .section-muted {
@@ -764,9 +766,17 @@ code {
 }
 
 @media (max-width: 900px) {
+  html {
+    scroll-padding-top: 150px;
+  }
+
   .site-header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .section {
+    scroll-margin-top: 150px;
   }
 
   .top-nav {
