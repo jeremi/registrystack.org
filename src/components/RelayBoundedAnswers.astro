@@ -88,9 +88,18 @@ const consultations = [
 ---
 
 <figure class="relay-answers" data-relay-answers>
-  <div class="relay-mode-rail" aria-label="Bounded response modes">
+  <div class="relay-mode-rail" role="tablist" aria-label="Bounded response modes">
     {consultations.map((item, index) => (
-      <button class:list={['relay-mode-button', index === 0 && 'is-active']} type="button" data-relay-mode={index} aria-pressed={index === 0 ? 'true' : 'false'}>
+      <button
+        class:list={['relay-mode-button', index === 0 && 'is-active']}
+        type="button"
+        role="tab"
+        id={`relay-tab-${index}`}
+        aria-controls={`relay-panel-${index}`}
+        aria-selected={index === 0 ? 'true' : 'false'}
+        tabindex={index === 0 ? '0' : '-1'}
+        data-relay-mode={index}
+      >
         <span class:list={['relay-mode-icon', `relay-icon-${item.icon}`]} aria-hidden="true">
           <span></span>
           <span></span>
@@ -130,11 +139,20 @@ const consultations = [
       <p data-relay-control>{consultations[0].control}</p>
     </div>
 
-    <div class="relay-response" aria-hidden="true">
+    <div class="relay-response">
       <span class="relay-response-label">Bounded response</span>
       <div class="relay-response-stack">
         {consultations.map((item, index) => (
-          <article class:list={['relay-response-card', index === 0 && 'is-active']} data-relay-card data-fields={item.fields.join(' ')} data-control={item.control}>
+          <div
+            class:list={['relay-response-card', index === 0 && 'is-active']}
+            role="tabpanel"
+            id={`relay-panel-${index}`}
+            aria-labelledby={`relay-tab-${index}`}
+            hidden={index !== 0}
+            data-relay-card
+            data-fields={item.fields.join(' ')}
+            data-control={item.control}
+          >
             <div class="relay-response-head">
               <span class:list={['relay-response-icon', `relay-icon-${item.icon}`]} aria-hidden="true">
                 <span></span>
@@ -146,7 +164,7 @@ const consultations = [
                 <p>{item.short}</p>
               </div>
             </div>
-            <div class:list={['relay-mini-preview', `relay-mini-${item.icon}`]}>
+            <div class:list={['relay-mini-preview', `relay-mini-${item.icon}`]} aria-hidden="true">
               {item.icon === 'metadata' && (
                 <>
                   <span></span>
@@ -186,7 +204,7 @@ const consultations = [
                 </>
               )}
             </div>
-          </article>
+          </div>
         ))}
       </div>
     </div>
@@ -798,14 +816,17 @@ const consultations = [
 
     const apply = (nextIndex: number) => {
       cards[index].classList.remove('is-active');
+      cards[index].hidden = true;
       index = nextIndex;
       const active = cards[index];
+      active.hidden = false;
       active.classList.add('is-active');
 
       for (const [modeIndex, mode] of modes.entries()) {
         const isActive = modeIndex === index;
         mode.classList.toggle('is-active', isActive);
-        mode.setAttribute('aria-pressed', String(isActive));
+        mode.setAttribute('aria-selected', String(isActive));
+        mode.tabIndex = isActive ? 0 : -1;
       }
 
       const activeFields = active.dataset.fields?.split(' ').filter(Boolean) ?? [];
@@ -844,6 +865,26 @@ const consultations = [
       mode.addEventListener('click', () => {
         stop();
         apply(Number(mode.dataset.relayMode ?? 0));
+      });
+      mode.addEventListener('keydown', (event) => {
+        const currentIndex = modes.indexOf(mode);
+        let nextIndex = currentIndex;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+          nextIndex = (currentIndex + 1) % modes.length;
+        } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+          nextIndex = (currentIndex - 1 + modes.length) % modes.length;
+        } else if (event.key === 'Home') {
+          nextIndex = 0;
+        } else if (event.key === 'End') {
+          nextIndex = modes.length - 1;
+        } else {
+          return;
+        }
+
+        event.preventDefault();
+        stop();
+        apply(nextIndex);
+        modes[nextIndex].focus();
       });
     }
 

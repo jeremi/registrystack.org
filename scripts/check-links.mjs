@@ -53,7 +53,8 @@ for (const file of htmlFiles) {
       continue;
     }
     if (href.startsWith('/')) {
-      resolveInternal(href, file);
+      const { pathname } = new URL(href, siteOrigin);
+      resolveInternal(pathname, file);
     }
   }
 }
