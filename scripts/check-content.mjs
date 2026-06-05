@@ -39,12 +39,15 @@ requireText('Prepare and describe');
 requireText('Expose');
 requireText('Verify');
 requireText('Audit');
-requireText('X-Road');
-requireText('OpenFn');
-requireText('OpenCRVS');
-requireText('OpenSPP');
-requireText('DHIS2');
-requireText('OpenIMIS');
+requireText('CSV');
+requireText('XLSX');
+requireText('Parquet');
+requireText('PostgreSQL');
+requireText('DCAT-AP');
+requireText('OGC APIs');
+requireText('SP-DCI');
+requireText('PublicSchema');
+requireText('GovStack');
 requireText('wallets');
 requireText('Not a registry replacement');
 requireText('Not an open-data portal');
@@ -57,6 +60,9 @@ requireText('AI-assisted integration');
 requireText('Controlled requests');
 requireText('Narrow answers');
 requireText('Reviewable trail');
+requireText('One registry source, many bounded answers.');
+requireText('Protected consultation');
+requireText('RelayBoundedAnswers');
 requireText('class="partner-strip"', 'interop credibility strip');
 
 const heroMatch = source.match(/<section class="hero"[\s\S]*?<\/section>/);
@@ -104,6 +110,7 @@ requireOrder([
   'id="why-it-matters"',
   'id="who-benefits"',
   'id="stack"',
+  'id="bounded-answers"',
   'id="use-cases"',
   'id="ecosystem"',
   'id="why-adopt"',

@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import MinimizationFunnel from '../components/MinimizationFunnel.astro';
 import HeroAnswerCard from '../components/HeroAnswerCard.astro';
+import RelayBoundedAnswers from '../components/RelayBoundedAnswers.astro';
 
 const pageTitle = 'Registry Stack | Trusted registry data for public services';
 const pageDescription =
@@ -95,13 +96,18 @@ const heroAnswers = useCases.map((item) => ({
   answer: item.output,
 }));
 
+const worksWithItems = ['CSV', 'XLSX', 'Parquet', 'PostgreSQL', 'DCAT-AP', 'OGC APIs', 'SP-DCI', 'PublicSchema', 'GovStack patterns'];
+
 const ecosystemItems = [
-  ['X-Road', 'Carries trusted service calls between institutions.'],
-  ['OpenFn', 'Automates workflows that can call governed registry services.'],
-  ['OpenCRVS', 'Runs civil registration workflows and source data.'],
-  ['OpenSPP', 'Runs social protection programs and case processes.'],
-  ['DHIS2', 'Runs health information and facility data workflows.'],
-  ['OpenIMIS', 'Runs insurance and health-financing workflows.'],
+  ['CSV', 'Reads configured local tabular files into protected entity APIs.'],
+  ['XLSX', 'Supports spreadsheet-based registry extracts and working datasets.'],
+  ['Parquet', 'Supports columnar data extracts for analytics and integration workflows.'],
+  ['PostgreSQL', 'Supports bounded snapshot sources and live structured table reads.'],
+  ['DCAT-AP', 'Publishes standards-facing catalog metadata for discovery and validation.'],
+  ['OGC APIs', 'Optional adapters expose records, features, and EDR surfaces.'],
+  ['SP-DCI', 'Optional sync routes serve configured social protection registry views.'],
+  ['PublicSchema', 'Optional mapping support connects registry data to VC-facing schemas.'],
+  ['GovStack', 'Explores a protected consultation gateway pattern for Digital Registries.'],
   ['Digital wallets', 'Hold and present credentials issued from evidence flows.'],
   ['Service portals', 'Request bounded facts for people and caseworkers.'],
 ];
@@ -182,12 +188,7 @@ const boundaries = [
     <section class="partner-strip" aria-label="Designed to work with existing public infrastructure">
       <div class="partner-strip-inner">
         <span>Works with</span>
-        <strong>X-Road</strong>
-        <strong>OpenCRVS</strong>
-        <strong>OpenSPP</strong>
-        <strong>DHIS2</strong>
-        <strong>OpenIMIS</strong>
-        <strong>OpenFn</strong>
+        {worksWithItems.map((item) => <strong>{item}</strong>)}
       </div>
     </section>
 
@@ -273,6 +274,21 @@ const boundaries = [
             </article>
           ))}
         </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="bounded-answers" aria-labelledby="bounded-answers-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Protected consultation</p>
+          <h2 id="bounded-answers-title">One registry source, many bounded answers.</h2>
+          <p>
+            An existing spreadsheet, Parquet file, CSV, or bounded database table can serve
+            metadata, selected fields, aggregate results, standards-shaped views, and audit records
+            without becoming a bulk data-sharing pipeline.
+          </p>
+        </div>
+        <RelayBoundedAnswers />
       </div>
     </section>
 

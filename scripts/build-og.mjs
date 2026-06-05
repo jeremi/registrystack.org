@@ -83,7 +83,7 @@ const html = `<!doctype html>
     </div>
     <div class="foot">
       <span class="url">registrystack.org</span>
-      <span class="works">Works with X-Road &middot; OpenCRVS &middot; OpenSPP &middot; DHIS2 &middot; OpenIMIS &middot; OpenFn</span>
+      <span class="works">Works with CSV &middot; XLSX &middot; Parquet &middot; PostgreSQL &middot; DCAT-AP &middot; OGC APIs &middot; SP-DCI &middot; PublicSchema &middot; GovStack patterns</span>
     </div>
   </body>
 </html>`;
