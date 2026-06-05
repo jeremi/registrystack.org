@@ -1,9 +1,18 @@
 # registrystack.org
 
-Static Astro site for `registrystack.org`, the single-page institutional
-marketing site for Registry Stack.
+Static Astro site for `registrystack.org`, the institutional marketing site for
+Registry Stack.
 
-The implementation follows `../registrystack-org-marketing-site-spec.md`.
+The homepage follows `../registrystack-org-marketing-site-spec.md`. The site has
+grown to multiple pages to absorb the persuasion layer migrated out of the docs
+site (see `../registry-stack-docs-marketing-split-plan-2026-06-05.md`):
+
+- `/` home: condensed hero, highlights, and links out to the deeper pages.
+- `/why` the recurring registry problems.
+- `/use-cases` the sell gallery (question, bounded answer, what is not shared).
+- `/ecosystem` positioning, complementary-not-competitive.
+- `/why-now` AI and automation as urgency for safeguards (context, not product).
+- `/status` maturity, what is built today, and pitch-form boundaries.
 
 ## Commands
 

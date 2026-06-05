@@ -1,0 +1,188 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocsHandoff from '../components/DocsHandoff.astro';
+import MinimizationFunnel from '../components/MinimizationFunnel.astro';
+
+const pageTitle = 'Use cases | Registry Stack';
+const pageDescription =
+  'Worked registry scenarios: the domain, the question a service asks, the bounded answer returned, and the record that is never over-shared.';
+
+// A sell gallery. The first four mirror the homepage cards (keeping the two in
+// sync conceptually); the rest expand the docs-site use-case scenarios into the
+// same domain / question / bounded answer / not-shared shape. Each scenario also
+// names the smallest plausible pilot.
+const useCases = [
+  {
+    domain: 'Civil registration',
+    evidenceType: 'Credential',
+    question: 'Is this person alive?',
+    answer: 'Alive · proof of life',
+    evidence: 'Issue a signed proof-of-life the person can hold and present.',
+    notShared: 'Do not disclose the full civil-registration record.',
+    pilot: 'A pension authority confirms vital status for continuations without a database credential.',
+  },
+  {
+    domain: 'Social protection',
+    evidenceType: 'Decision',
+    question: 'Is this household eligible?',
+    answer: 'Eligible',
+    evidence: 'Return a signed eligibility decision for the benefit or service.',
+    notShared: 'Do not expose the household case file, income tier, or transfer history.',
+    pilot: 'A school-feeding programme confirms a child’s household is enrolled in a separate ministry’s cash transfer.',
+  },
+  {
+    domain: 'Business registry',
+    evidenceType: 'Status',
+    question: 'Is this supplier actively registered?',
+    answer: 'Active',
+    evidence: 'Return active registration status tied to the national business number.',
+    notShared: 'Do not disclose filing history, registered address, or beneficial ownership.',
+    pilot: 'A procurement platform checks supplier status before processing a tender submission.',
+  },
+  {
+    domain: 'Farmer registry',
+    evidenceType: 'Bounded value set',
+    question: 'Is this a registered farmer, and what is the farm size?',
+    answer: 'Registered farmer · 2.5 ha',
+    evidence: 'Confirm registration and return farm size (for example, 2.5 ha).',
+    notShared: 'Do not expose plot location, household roster, crop history, or financial records.',
+    pilot: 'A subsidy programme confirms registration and size band for an input grant.',
+  },
+  {
+    domain: 'Legacy registry',
+    evidenceType: 'Selected fields',
+    question: 'Can a partner read this nightly Access export safely?',
+    answer: 'Scoped read path',
+    evidence: 'Expose only the policy-allowed fields through an authorized, audited route.',
+    notShared: 'Do not hand out database credentials or the full record and correction history.',
+    pilot: 'A registrar wraps a legacy source with a governed read boundary instead of replacing it.',
+  },
+  {
+    domain: 'Registry metadata',
+    evidenceType: 'Published description',
+    question: 'What does this registry actually offer?',
+    answer: 'Inspectable contract',
+    evidence: 'Publish catalog, schema, policy, and evidence-offering metadata partners can read.',
+    notShared: 'Do not open record-level access to answer discovery questions.',
+    pilot: 'A ministry gives three integration teams one canonical description before any agreement is signed.',
+  },
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="use-cases" />
+
+  <main>
+    <section class="hero" aria-labelledby="uc-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Use cases</p>
+          <h1 id="uc-hero-title">Ask for the evidence a service needs, not the whole record.</h1>
+          <p class="hero-lead">
+            Each scenario starts from a registry that already exists and ends with a bounded
+            answer instead of a copied file. The pattern is the same across domains: a question
+            asked, the evidence returned, and the record that is never over-shared. Every one is
+            small enough for a single pilot.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="funnel-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">One source, many bounded answers</p>
+          <h2 id="funnel-title">The same registry answers different questions for different services.</h2>
+          <p>
+            Each request reads only what it needs and returns a minimal answer; the rest stays
+            with the data owner, and every request is logged.
+          </p>
+        </div>
+        <MinimizationFunnel />
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="gallery-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Scenario gallery</p>
+          <h2 id="gallery-title">Worked scenarios across domains.</h2>
+          <p>
+            From foundational registries to business and sector data. The shape is registry-generic.
+          </p>
+        </div>
+        <div class="case-gallery">
+          {useCases.map((item) => (
+            <article class="case-card">
+              <p class="use-case-domain">{item.domain}</p>
+              <h3>{item.question}</h3>
+              <div class="use-case-result">
+                <span class="evidence-type">{item.evidenceType}</span>
+                <span class="use-case-output">{item.answer}</span>
+              </div>
+              <div class="use-case-field">
+                <p class="use-case-label">Evidence returned</p>
+                <p class="use-case-text">{item.evidence}</p>
+              </div>
+              <div class="use-case-field">
+                <p class="use-case-label">Record not over-shared</p>
+                <p class="use-case-text">{item.notShared}</p>
+              </div>
+              <div class="use-case-field">
+                <p class="use-case-label">Smallest pilot</p>
+                <p class="use-case-text">{item.pilot}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div class="centered-action">
+          <a class="inline-cta" href="mailto:hello@registrystack.org?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot for one registry &rarr;</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <DocsHandoff
+    eyebrow="Read the docs"
+    heading="See the configuration behind each scenario."
+    primaryLabel="Read the docs"
+  />
+  <SiteFooter />
+</Base>
+
+<style>
+  /* A flexible card gallery rather than the homepage's single-row subgrid, since
+     six cards wrap across rows. Cards reuse the homepage use-case typography. */
+  .case-gallery {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .case-card {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+    padding: 22px;
+  }
+
+  .case-card h3 {
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .case-gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .case-gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

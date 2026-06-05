@@ -144,14 +144,145 @@ const forbidden = [
   'FIXME',
 ];
 
-for (const term of forbidden) {
-  if (source.includes(term)) {
-    failures.push(`forbidden term present: ${term}`);
+// The copy-quality sweep (banned SaaS terms, em dashes, scaffolding markers) now
+// runs across the homepage, every marketing page, and the shared components, so
+// the multi-page site holds the same copy bar the single page did.
+const copyCheckedSources = {
+  'src/pages/index.astro': source,
+  'src/pages/why.astro': '',
+  'src/pages/use-cases.astro': '',
+  'src/pages/ecosystem.astro': '',
+  'src/pages/why-now.astro': '',
+  'src/pages/status.astro': '',
+  'src/components/SiteHeader.astro': '',
+  'src/components/SiteFooter.astro': '',
+  'src/components/DocsHandoff.astro': '',
+};
+for (const relativePath of Object.keys(copyCheckedSources)) {
+  if (relativePath === 'src/pages/index.astro') continue;
+  const fullPath = resolve(relativePath);
+  copyCheckedSources[relativePath] = existsSync(fullPath) ? readFileSync(fullPath, 'utf8') : '';
+}
+
+// Strip scoped <style> blocks before the copy sweep: properties like
+// `text-transform` are legitimate CSS, not marketing copy, and the banned terms
+// only apply to reader-facing prose.
+const stripStyleBlocks = (text) => text.replace(/<style>[\s\S]*?<\/style>/g, '');
+
+for (const [relativePath, rawText] of Object.entries(copyCheckedSources)) {
+  const text = stripStyleBlocks(rawText);
+  for (const term of forbidden) {
+    if (text.includes(term)) {
+      failures.push(`forbidden term present in ${relativePath}: ${term}`);
+    }
+  }
+  if (text.includes('lab.registrystack.org')) {
+    failures.push(`lab link present in ${relativePath} even though the hosted lab is not verified reachable`);
   }
 }
 
-if (source.includes('lab.registrystack.org')) {
-  failures.push('lab link is present even though the hosted lab is not verified reachable');
+// The homepage routes to the deeper marketing pages instead of carrying the full
+// persuasion layer itself, so the top nav must reach each new page.
+for (const route of ['/why/', '/use-cases/', '/ecosystem/', '/why-now/', '/status/']) {
+  if (!source.includes(`href="${route}"`)) {
+    failures.push(`homepage nav is missing a link to ${route}`);
+  }
+}
+
+// Multi-page contract: the persuasion layer migrated from the docs site lives on
+// dedicated pages now. Each page must still carry its key messaging on the right
+// route, end in a docs handoff, and keep the project registry-generic without
+// over-claiming. The forbidden-term and em-dash sweep below also runs against
+// every page source.
+const readPage = (relativePath) => {
+  const fullPath = resolve(relativePath);
+  if (!existsSync(fullPath)) {
+    failures.push(`missing page: ${relativePath}`);
+    return '';
+  }
+  return readFileSync(fullPath, 'utf8');
+};
+
+const pageContracts = {
+  'src/pages/why.astro': [
+    'Registry data exists. The service contract around it often does not.',
+    'Data exists, but is not service-ready',
+    'APIs over-share records',
+    'Safeguards need technical enforcement',
+    'Integrations become one-off negotiations',
+    'Capabilities are hard to discover',
+    'Semantics do not line up',
+    'Identity and matching are unclear',
+  ],
+  'src/pages/use-cases.astro': [
+    'Ask for the evidence a service needs, not the whole record.',
+    'Civil registration',
+    'Social protection',
+    'Business registry',
+    'Farmer registry',
+    'Record not over-shared',
+    'Smallest pilot',
+    'MinimizationFunnel',
+  ],
+  'src/pages/ecosystem.astro': [
+    'Designed to work with the infrastructure governments already choose.',
+    'Complementary, not competitive.',
+    'Domain registry platforms',
+    'Workflow engines',
+    'Exchange layers',
+    'Wallets',
+    // The plan calls for the layered exchange-layer example (Relay behind X-Road).
+    'Behind an exchange layer, in front of a registry source.',
+    'X-Road',
+  ],
+  'src/pages/why-now.astro': [
+    // AI is context and urgency, not the product. Both must be present.
+    'Registry Stack is not an AI product.',
+    'is not to open registries to AI',
+    'controlled answer',
+    'is this request legitimate?',
+  ],
+  'src/pages/status.astro': [
+    'What is built today',
+    'no claimed production integrations',
+    'Not a registry replacement.',
+    'Not an open-data portal.',
+    'Not a national data exchange layer.',
+    'Not a workflow engine.',
+    'Not a wallet.',
+    'Not an AI decision system.',
+    'Not a solution to foundational identity',
+  ],
+};
+
+const pageSources = {};
+for (const [relativePath, needles] of Object.entries(pageContracts)) {
+  const pageSource = readPage(relativePath);
+  pageSources[relativePath] = pageSource;
+  if (!pageSource) continue;
+  for (const needle of needles) {
+    if (!pageSource.includes(needle)) {
+      failures.push(`${relativePath} missing: ${needle}`);
+    }
+  }
+  // Every marketing page must hand off to the docs for the "how", via the shared
+  // DocsHandoff band.
+  if (!pageSource.includes('DocsHandoff')) {
+    failures.push(`${relativePath} is missing the docs handoff CTA (DocsHandoff)`);
+  }
+}
+
+// The shared handoff band must actually point at the docs.
+const handoffSource = readPage('src/components/DocsHandoff.astro');
+if (handoffSource && !handoffSource.includes('https://docs.registrystack.org/')) {
+  failures.push('DocsHandoff component does not link to the docs site');
+}
+
+// At least one non-social-protection example must remain on the use-cases sell
+// gallery (the plan's claim boundary: keep it registry-generic).
+const useCasesSource = pageSources['src/pages/use-cases.astro'] ?? '';
+if (useCasesSource && !useCasesSource.includes('Business registry')) {
+  failures.push('use-cases page lost its non-social-protection (business registry) example');
 }
 
 // Social sharing: the layout declares a large-image card, so it must point at a
