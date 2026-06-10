@@ -1,0 +1,195 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocsHandoff from '../components/DocsHandoff.astro';
+import HarnessDiagram from '../components/HarnessDiagram.astro';
+
+const pageTitle = 'Registry Manifest | Describe the registry you already run, once';
+const pageDescription =
+  'Registry Manifest is a portable metadata contract: one validated file that says what a registry holds, what it may answer, and under which policy, rendered into the standard formats partners already read.';
+
+const problems = [
+  {
+    title: 'Capabilities live in PDFs and memory',
+    body:
+      'What a registry can offer sits in a PDF refreshed a year ago and in two engineers’ heads. Partners make their first technical decisions before any reliable description exists.',
+  },
+  {
+    title: 'Every catalog wants a different format',
+    body:
+      'The national portal wants DCAT-AP, a standards body wants service descriptions, a partner wants schemas. Hand-maintaining each one guarantees they drift apart.',
+  },
+  {
+    title: 'Metadata dies with the platform',
+    body:
+      'Descriptions locked inside one product disappear at replatforming time. A registry’s public contract should outlive whichever software currently serves it.',
+  },
+];
+
+const scenarioSteps = [
+  [
+    'Write one description',
+    'A civil registration team writes a single metadata manifest: which datasets and entities exist, what each field means, which evidence the registry can offer, under which policy.',
+  ],
+  [
+    'Validate and render',
+    'The manifest is validated, then rendered into DCAT-AP, SHACL, JSON Schema, and the other formats catalogs and partners expect. No hand-maintained copies.',
+  ],
+  [
+    'Publish as static files',
+    'The output is a plain directory of files at well-known paths. Any web server can host it; harvesters and partners discover it; no new runtime is adopted.',
+  ],
+];
+
+// Open-standards facts and fit, stated positively: what one manifest produces
+// and why it outlives any platform.
+const openPoints = [
+  'Renders DCAT-AP, BRegDCAT-AP, CPSV-AP, SHACL, JSON Schema, OGC API Records, and policy documents from one description.',
+  'Publishes as plain static files: any web server can host them, and there is no runtime to operate.',
+  'Feeds the catalogs and harvesters that already exist; descriptions travel, records never do.',
+  'The same manifest can later drive Registry Relay and Registry Notary, with no rework.',
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="manifest" />
+
+  <main>
+    <section class="hero" aria-labelledby="manifest-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Registry Manifest &middot; Describe</p>
+          <h1 id="manifest-hero-title">Describe the registry you already run, once.</h1>
+          <p class="hero-lead">
+            Registry Manifest is a portable metadata contract: one validated file that says what a
+            registry holds, what it may answer, and under which policy, rendered into the standard
+            formats catalogs and partners already read. It works as plain static files, without
+            adopting anything else.
+          </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href="https://lab.registrystack.org/#services">See published metadata in the lab</a>
+            <a class="button button-secondary" href="https://github.com/jeremi/registry-manifest">View on GitHub</a>
+          </div>
+          <p class="hero-note">
+            The live lab includes a static metadata publisher serving exactly this kind of output,
+            on synthetic data.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="manifest-problem-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">The problem it solves</p>
+          <h2 id="manifest-problem-title">Nobody can use a registry they cannot see.</h2>
+          <p>
+            Before any data flows, partners need to know what a registry holds, what it may
+            answer, and on what authority. That description is infrastructure in its own right.
+          </p>
+        </div>
+        <div class="problem-grid">
+          {problems.map((item) => (
+            <article class="quiet-card">
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="manifest-how-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">How it works</p>
+          <h2 id="manifest-how-title">One manifest in, every required format out.</h2>
+        </div>
+        <div class="flow-diagram" aria-label="Registry Manifest operating model">
+          <div class="flow-node">
+            <span>One manifest</span>
+            <p>A reviewed metadata file describing datasets, entities, fields, policies, and evidence offerings. No server required.</p>
+          </div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node flow-node-strong">
+            <span>Registry Manifest</span>
+            <ol>
+              <li>Validate the description</li>
+              <li>Compile the model</li>
+              <li>Render each standard</li>
+              <li>Publish static files</li>
+            </ol>
+          </div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node">
+            <span>Standard artifacts</span>
+            <p>DCAT-AP, BRegDCAT-AP, CPSV-AP, SHACL, JSON Schema, OGC API Records, and policy documents at well-known paths.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="manifest-scenario-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Worked scenario</p>
+          <h2 id="manifest-scenario-title">An existing registry becomes legible without changing.</h2>
+        </div>
+        <div class="implementation-grid">
+          {scenarioSteps.map(([name, body]) => (
+            <article>
+              <h3>{name}</h3>
+              <p>{body}</p>
+            </article>
+          ))}
+        </div>
+        <div class="centered-action">
+          <a class="inline-cta" href="https://lab.registrystack.org/#services">See the static metadata publisher in the live lab &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="manifest-open-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">Open by design</p>
+          <h2 id="manifest-open-title">One open format, every standard partners ask for.</h2>
+          <p>
+            A registry&rsquo;s public description should outlive whichever software currently
+            serves it. Registry Manifest keeps that description in one open, reviewable file and
+            renders the rest.
+          </p>
+        </div>
+        <ul class="check-list">
+          {openPoints.map((point) => (
+            <li>{point}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="manifest-stack-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">In the stack</p>
+          <h2 id="manifest-stack-title">Where Registry Manifest sits.</h2>
+          <p>
+            The answering point runs three checks on every request. Registry Manifest owns the
+            middle one: the shared description that lets both sides agree on what the fields
+            mean. Each product runs on its own; together they share one answering point.
+          </p>
+        </div>
+        <HarnessDiagram highlight="manifest" />
+      </div>
+    </section>
+
+    <DocsHandoff
+      eyebrow="For your technical team"
+      heading="The manifest contract, renderers, and publication layout live in the docs."
+      primaryLabel="Read the Manifest docs"
+    />
+  </main>
+
+  <SiteFooter />
+</Base>

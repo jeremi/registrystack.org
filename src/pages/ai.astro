@@ -1,0 +1,136 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocsHandoff from '../components/DocsHandoff.astro';
+import HarnessDiagram from '../components/HarnessDiagram.astro';
+
+const pageTitle = 'A harness for AI in public services | Registry Stack';
+const pageDescription =
+  'AI agents and automation connect public systems faster than they can be governed. Registry Stack gives every asker, human or AI, a signed, minimized answer instead of the record.';
+
+// The review questions from the docs "safer registry surfaces" page, kept as
+// the practical shift in what interoperability has to answer.
+const reviewQuestions = [
+  'Which entity or evidence response is being requested?',
+  'Which purpose, policy, and scope apply?',
+  'Which fields or claims can leave the source boundary?',
+  'Which semantic definition is being used?',
+  'Which audit event records the access or evidence decision?',
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="ai" />
+
+  <main>
+    <section class="hero" aria-labelledby="ai-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">AI in public services</p>
+          <h1 id="ai-hero-title">No AI agent is safer than the access it is given.</h1>
+          <p class="hero-lead">
+            Better models and better prompts reduce how often AI errs, not what a mistake can
+            reach when one lands. Public services need a harness: infrastructure that decides
+            what any asker can discover, may ask, gets back, and leaves behind. Registry Stack
+            is that harness for registry data.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="harness-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">The harness</p>
+          <h2 id="harness-title">Built into the infrastructure once, inherited by every integration.</h2>
+          <p>
+            A harness governs every model, every vendor, and every well-meaning builder,
+            including the ones who arrive after the safety review. Each request passes one
+            answering point that checks authority, meaning, and criteria, then answers narrowly
+            instead of exposing everything the registry holds.
+          </p>
+        </div>
+        <HarnessDiagram variant="ai" />
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="example-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">A worked example</p>
+          <h2 id="example-title">Two ways to build the same integration.</h2>
+          <p>
+            A housing-benefit program needs to know whether applicants fall under an income
+            threshold. Automation makes both versions of this integration cheap to build. Only
+            one of them is safe to run.
+          </p>
+        </div>
+        <div class="problem-grid">
+          <article class="quiet-card">
+            <h3>Copy the records</h3>
+            <p>
+              The obvious integration asks the income registry for the household&rsquo;s records, and
+              gets them: income history, employer, every family member, copied into a second
+              system. The copy goes stale the day it lands, nobody checked that the
+              registry&rsquo;s gross monthly income means the rule&rsquo;s net annual, and when a
+              family is wrongly refused, the denial traces back to a join no one can explain.
+            </p>
+          </article>
+          <article class="quiet-card">
+            <h3>Ask the question</h3>
+            <p>
+              The program asks what it actually needs to know: does this household sit below
+              the threshold for this scheme? Authority is checked before any data is read, the
+              fields are validated against a shared vocabulary, the criteria are evaluated
+              where the data lives, and what returns is a signed yes-or-no with a validity
+              window. The family can see the exchange in the audit trail and challenge it.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="question-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">The question shifts</p>
+          <h2 id="question-title">From "can these systems connect?" to "is this request legitimate?"</h2>
+          <p>
+            AI-assisted integration lets teams build connections faster than they can understand
+            the data, the authority for access, or the meaning of each field. "Can two systems
+            connect?" is too weak a question for that world. A registry surface should be able
+            to answer practical review questions, for every caller, human or automated.
+          </p>
+        </div>
+        <ul class="check-list">
+          {reviewQuestions.map((question) => (
+            <li>{question}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="not-ai-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <p class="eyebrow">To be clear</p>
+          <h2 id="not-ai-title">Registry Stack is not an AI product.</h2>
+          <p>
+            AI is the context that makes safer surfaces urgent, not the promise. Registry Stack
+            does not make AI eligibility decisions, automate governance, or replace semantic
+            review, authorization policy, human accountability, appeal, or recourse. It gives
+            every caller, human or automated, a controlled answer instead of a raw record.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <DocsHandoff
+    eyebrow="Read the docs"
+    heading="See how policy becomes a runtime check."
+    primaryLabel="Read the docs"
+  />
+  <SiteFooter />
+</Base>

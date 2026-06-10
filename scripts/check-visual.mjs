@@ -17,7 +17,8 @@ const server = createServer(async (request, response) => {
   const { readFile } = await import('node:fs/promises');
   const { extname, join, normalize } = await import('node:path');
   const url = new URL(request.url ?? '/', 'http://127.0.0.1');
-  const relative = normalize(url.pathname === '/' ? '/index.html' : url.pathname).replace(/^\/+/, '');
+  const pathname = url.pathname.endsWith('/') ? `${url.pathname}index.html` : url.pathname;
+  const relative = normalize(pathname).replace(/^\/+/, '');
   const filePath = join(resolve('dist'), relative);
   const type = {
     '.css': 'text/css',
@@ -26,8 +27,9 @@ const server = createServer(async (request, response) => {
     '.svg': 'image/svg+xml',
   }[extname(filePath)] ?? 'application/octet-stream';
   try {
+    const body = await readFile(filePath);
     response.writeHead(200, { 'content-type': type });
-    response.end(await readFile(filePath));
+    response.end(body);
   } catch {
     response.writeHead(404);
     response.end('not found');
@@ -43,13 +45,22 @@ const viewports = [
   { name: 'desktop', width: 1440, height: 1200 },
 ];
 
+const routes = [
+  { name: 'home', path: '/' },
+  { name: 'notary', path: '/notary/' },
+  { name: 'relay', path: '/relay/' },
+  { name: 'manifest', path: '/manifest/' },
+];
+
 const failures = [];
 const browser = await chromium.launch();
 
+for (const route of routes) {
 for (const viewport of viewports) {
+  const label = `${route.name} ${viewport.name}`;
   const page = await browser.newPage({ viewport });
-  await page.goto(`http://127.0.0.1:${port}/`);
-  await page.screenshot({ path: resolve(outputDir, `${viewport.name}.png`), fullPage: true });
+  await page.goto(`http://127.0.0.1:${port}${route.path}`);
+  await page.screenshot({ path: resolve(outputDir, `${route.name}-${viewport.name}.png`), fullPage: true });
 
   const metrics = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
@@ -69,22 +80,22 @@ for (const viewport of viewports) {
   }));
 
   if (metrics.scrollWidth > metrics.clientWidth + 1) {
-    failures.push(`${viewport.name}: horizontal scroll ${metrics.scrollWidth} > ${metrics.clientWidth}`);
+    failures.push(`${label}: horizontal scroll ${metrics.scrollWidth} > ${metrics.clientWidth}`);
   }
   if (metrics.clippedButtons > 0) {
-    failures.push(`${viewport.name}: ${metrics.clippedButtons} clipped interactive element(s)`);
+    failures.push(`${label}: ${metrics.clippedButtons} clipped interactive element(s)`);
   }
   if (metrics.undersizedNavTargets > 0) {
-    failures.push(`${viewport.name}: ${metrics.undersizedNavTargets} nav/footer link target(s) below 36px`);
+    failures.push(`${label}: ${metrics.undersizedNavTargets} nav/footer link target(s) below 36px`);
   }
   if (metrics.overlappingText) {
-    failures.push(`${viewport.name}: text extends outside viewport`);
+    failures.push(`${label}: text extends outside viewport`);
   }
 
   // On desktop the four use-case cards sit in one row and must read as an
   // aligned comparison: equal height, and every field label sharing a baseline
   // across cards regardless of how long each question wraps.
-  if (viewport.name === 'desktop') {
+  if (route.path === '/' && viewport.name === 'desktop') {
     const align = await page.evaluate(() => {
       const cards = [...document.querySelectorAll('.use-case')];
       const labelTops = cards.map((card) => {
@@ -115,6 +126,7 @@ for (const viewport of viewports) {
   }
 
   await page.close();
+}
 }
 
 const page = await browser.newPage({ viewport: { width: 390, height: 900 } });

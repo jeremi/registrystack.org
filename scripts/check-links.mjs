@@ -61,6 +61,7 @@ for (const file of htmlFiles) {
 
 const requiredExternal = [
   'https://docs.registrystack.org/',
+  'https://lab.registrystack.org/',
   'https://github.com/jeremi/registry-relay',
   'https://github.com/jeremi/registry-notary',
   'https://github.com/jeremi/registry-manifest',
@@ -86,11 +87,19 @@ for (const href of requiredMailto) {
 }
 
 for (const href of externalLinks) {
-  const response = await fetch(href, { method: 'HEAD', redirect: 'follow' }).catch((error) => ({
+  // Some hosts (the lab among them) reject HEAD outright, so fall back to GET
+  // before declaring the link dead.
+  let response = await fetch(href, { method: 'HEAD', redirect: 'follow' }).catch((error) => ({
     ok: false,
     status: `fetch failed: ${error.message}`,
   }));
-  if (!response.ok && response.status !== 405) {
+  if (!response.ok) {
+    response = await fetch(href, { method: 'GET', redirect: 'follow' }).catch((error) => ({
+      ok: false,
+      status: `fetch failed: ${error.message}`,
+    }));
+  }
+  if (!response.ok) {
     failures.push(`external link failed ${href}: ${response.status}`);
   }
 }

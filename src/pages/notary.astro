@@ -1,0 +1,198 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocsHandoff from '../components/DocsHandoff.astro';
+import HarnessDiagram from '../components/HarnessDiagram.astro';
+
+const pageTitle = 'Registry Notary | Signed answers and credentials from registries';
+const pageDescription =
+  'Registry Notary answers a precise question against a registry and returns a signed result: a yes or no, a bounded value, or a credential a person can hold in a wallet.';
+
+// What makes the product different, in the reader's terms rather than the
+// implementation's.
+const differences = [
+  {
+    title: 'Answers, not records',
+    body:
+      'A pension system asks "is this person alive?" and receives exactly that answer, signed by the authority. No date of birth, no address, no record dump to store and protect.',
+  },
+  {
+    title: 'Proofs people can carry',
+    body:
+      'An answer can be issued as a digital credential in open wallet standards. A person collects a proof once and presents it to another service themselves, instead of asking two administrations to talk to each other.',
+  },
+  {
+    title: 'The data stays home',
+    body:
+      'A notary can delegate a question to the authority that owns the registry and pass back only the signed verdict. Registries cooperate on answers without pooling their data.',
+  },
+];
+
+const scenarioSteps = [
+  [
+    'The question is agreed',
+    'The civil registration authority configures one claim: "is this person alive?". The disclosure policy says only the verdict leaves the registry.',
+  ],
+  [
+    'The proof is collected',
+    'A pensioner signs in and receives a signed proof of life into a wallet, valid for a bounded time. The pension agency can also ask the notary directly, under its own access rule.',
+  ],
+  [
+    'The service accepts it',
+    'The pension agency verifies the signature and pays. What it learns is "alive, said the civil registry, ten minutes ago", and the audit trail shows exactly that request.',
+  ],
+];
+
+// Open-standards facts and fit, stated positively: what it builds on and where
+// responsibility stays with the institution.
+const openPoints = [
+  'Credentials follow open standards: SD-JWT VC issued over OpenID4VCI, signed with Ed25519, valid for a bounded time.',
+  'Issues to the wallets people already hold; there is no new wallet to roll out.',
+  'Answers from the registries you already run; the registry owner decides what each proof may say.',
+  'Reports what the registry says; entitlement and policy decisions stay with the institution.',
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="notary" />
+
+  <main>
+    <section class="hero" aria-labelledby="notary-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Registry Notary &middot; Verify</p>
+          <h1 id="notary-hero-title">Registry facts become proofs people and systems can trust.</h1>
+          <p class="hero-lead">
+            Registry Notary answers a precise question against a registry and returns a signed
+            result: a yes or no, a bounded value, or a credential a person can hold in a wallet.
+            The service gets its proof; the record stays with the registry.
+          </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href="https://lab.registrystack.org/#wallet">Try the wallet demo</a>
+            <a class="button button-secondary" href="https://github.com/jeremi/registry-notary">View on GitHub</a>
+          </div>
+          <p class="hero-note">
+            The live lab issues a real signed proof of life into a hosted wallet, on synthetic
+            data, with nothing to install.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="notary-diff-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">What is new here</p>
+          <h2 id="notary-diff-title">Verification as a service the registry owner controls.</h2>
+          <p>
+            Today, proving a fact usually means handing over a record or a paper certificate.
+            Registry Notary makes the proof itself the product, and keeps the registry in charge
+            of what each proof may say.
+          </p>
+        </div>
+        <div class="problem-grid">
+          {differences.map((item) => (
+            <article class="quiet-card">
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="notary-how-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">How it works</p>
+          <h2 id="notary-how-title">A governed question in, a signed answer out.</h2>
+        </div>
+        <div class="flow-diagram" aria-label="Registry Notary operating model">
+          <div class="flow-node">
+            <span>A governed question</span>
+            <p>A service, wallet, or workflow asks a configured question, under an agreed purpose and access rule.</p>
+          </div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node flow-node-strong">
+            <span>Registry Notary</span>
+            <ol>
+              <li>Check the claim against the registry</li>
+              <li>Apply the disclosure policy</li>
+              <li>Sign the answer or issue the credential</li>
+              <li>Record the audit event</li>
+            </ol>
+          </div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node">
+            <span>A signed answer</span>
+            <p>A yes or no, a bounded value, an attestation, or a wallet credential, with a reviewable trail.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="notary-scenario-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Worked scenario</p>
+          <h2 id="notary-scenario-title">Proof of life, without the queue at the counter.</h2>
+        </div>
+        <div class="implementation-grid">
+          {scenarioSteps.map(([name, body]) => (
+            <article>
+              <h3>{name}</h3>
+              <p>{body}</p>
+            </article>
+          ))}
+        </div>
+        <div class="centered-action">
+          <a class="inline-cta" href="https://lab.registrystack.org/#wallet">Run this exact flow in the live lab &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="notary-open-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">Open by design</p>
+          <h2 id="notary-open-title">Open source, on the standards wallets already speak.</h2>
+          <p>
+            Proofs are only useful if other systems can verify them. Registry Notary builds on
+            the credential standards governments and wallet vendors are adopting, so nothing it
+            issues locks anyone in.
+          </p>
+        </div>
+        <ul class="check-list">
+          {openPoints.map((point) => (
+            <li>{point}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="notary-stack-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">In the stack</p>
+          <h2 id="notary-stack-title">Where Registry Notary sits.</h2>
+          <p>
+            The answering point runs three checks on every request. Registry Notary owns the
+            last one, and signs what goes back: the case met the criteria, says the registry,
+            and nothing more. Each product runs on its own; together they share one answering
+            point.
+          </p>
+        </div>
+        <HarnessDiagram highlight="notary" />
+      </div>
+    </section>
+
+    <DocsHandoff
+      eyebrow="For your technical team"
+      heading="The contracts, connectors, and conformance profile live in the docs."
+      primaryLabel="Read the Notary docs"
+    />
+  </main>
+
+  <SiteFooter />
+</Base>

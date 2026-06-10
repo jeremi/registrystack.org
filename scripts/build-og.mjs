@@ -22,7 +22,7 @@ const html = `<!doctype html>
       @font-face { font-family: 'IBM Plex Mono'; font-weight: 500; src: url(data:font/woff2;base64,${mono500}) format('woff2'); }
       :root {
         --blue: #173b7a;
-        --teal: #0f766e;
+        --stamp: #9d2c1d;
         --ink: #161616;
         --muted: #6a6a6a;
         --rule: #e5e5e5;
@@ -31,7 +31,7 @@ const html = `<!doctype html>
       html, body { height: 630px; width: 1200px; }
       body {
         background: #ffffff;
-        border-top: 10px solid var(--teal);
+        border-top: 10px solid var(--blue);
         display: flex;
         flex-direction: column;
         font-family: 'Public Sans', sans-serif;
@@ -42,7 +42,7 @@ const html = `<!doctype html>
       .mark { height: 64px; width: 64px; }
       .wordmark { color: var(--ink); font-size: 34px; font-weight: 800; letter-spacing: -0.01em; }
       .kicker {
-        color: var(--teal);
+        color: var(--stamp);
         font-family: 'IBM Plex Mono', monospace;
         font-size: 18px;
         font-weight: 500;
@@ -79,7 +79,7 @@ const html = `<!doctype html>
     </div>
     <div>
       <p class="kicker">For country digital teams and partners</p>
-      <h1>Public service delivery with registry data people can trust.</h1>
+      <h1>Prove facts from registries without sharing the records.</h1>
     </div>
     <div class="foot">
       <span class="url">registrystack.org</span>

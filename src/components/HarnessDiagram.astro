@@ -1,0 +1,318 @@
+---
+// The harness diagram: the one picture of the core transaction. An asker poses
+// a precise question, the answering point runs every check, and a signed,
+// minimized answer comes back. The record never leaves the registry.
+// The 'home' variant tells that one story with plain questions; 'ai' names the
+// open standards behind each check and foregrounds the automated asker; the
+// highlight prop (used on the product pages) names the product behind one
+// check and dims the other two, so each page shows the same machine with its
+// own part lit up.
+interface Props {
+  variant?: 'home' | 'ai';
+  highlight?: 'relay' | 'manifest' | 'notary';
+}
+
+const { variant = 'home', highlight } = Astro.props;
+
+const baseChecks = [
+  {
+    product: 'relay',
+    question: 'May this service ask, for this purpose?',
+    aiQuestion: 'May this asker ask, for this purpose?',
+    standard: 'ODRL',
+    name: 'Registry Relay',
+  },
+  {
+    product: 'manifest',
+    question: 'Do the fields mean the same thing?',
+    standard: 'SHACL',
+    name: 'Registry Manifest',
+  },
+  {
+    product: 'notary',
+    question: 'Does the case meet the criteria?',
+    standard: 'CCCEV',
+    name: 'Registry Notary',
+  },
+];
+
+const checks = baseChecks.map((check) => ({
+  question: variant === 'ai' ? (check.aiQuestion ?? check.question) : check.question,
+  tag: variant === 'ai' ? check.standard : highlight === check.product ? check.name : null,
+  dimmed: Boolean(highlight) && highlight !== check.product,
+  highlighted: highlight === check.product,
+}));
+
+const askerName =
+  variant === 'ai'
+    ? 'AI agent, workflow engine, or caseworker tool'
+    : 'Program · caseworker · AI agent';
+
+const auditLine =
+  'Audit trail · who asked, for what purpose, under what authority, what was answered';
+
+const highlightedName = baseChecks.find((check) => check.product === highlight)?.name;
+
+const figureLabel =
+  'How Registry Stack answers a question: a program, caseworker, or AI agent asks a ' +
+  'precise question and never sees the record. The answering point, run by the ' +
+  "registry's own steward, checks who may ask, whether the fields mean the same " +
+  'thing, and whether the case meets the criteria, then returns a signed, minimized ' +
+  'answer. The record never leaves the registry, and an audit trail records who ' +
+  'asked, for what purpose, under what authority, and what was answered.' +
+  (highlightedName
+    ? ` ${highlightedName} runs the highlighted check: ${checks.find((check) => check.tag)?.question}`
+    : '');
+---
+
+<figure class="harness" data-harness role="img" aria-label={figureLabel}>
+  <div class="harness-flow" aria-hidden="true">
+    <div class="harness-box harness-asker">
+      <p class="harness-label">The asker</p>
+      <p class="harness-name">{askerName}</p>
+      <p class="harness-stamp-note">Never sees the record</p>
+    </div>
+
+    <div class="harness-channel">
+      <p class="harness-ask">asks a precise question <span class="harness-arrow">&rarr;</span></p>
+      <p class="harness-reply"><span class="harness-arrow">&larr;</span> signed, minimized answer</p>
+    </div>
+
+    <div class="harness-steward">
+      <p class="harness-steward-label">One per registry &middot; run by the registry&rsquo;s own steward</p>
+      <div class="harness-steward-row">
+        <div class="harness-box harness-point">
+          <p class="harness-label">The answering point</p>
+          <ul class="harness-checks">
+            {checks.map((check) => (
+              <li class:list={[{ 'harness-check-dim': check.dimmed, 'harness-check-hot': check.highlighted }]}>
+                <span class="harness-check-mark">&check;</span>
+                <span>{check.question}{check.tag && <> <span class="harness-tag">{check.tag}</span></>}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="harness-every">Every check, every request</p>
+        </div>
+        <div class="harness-box harness-registry">
+          <p class="harness-label">The registry</p>
+          <svg class="harness-lock" viewBox="0 0 24 24" width="22" height="22" fill="none">
+            <rect x="5" y="10.5" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.8" />
+            <path d="M8 10.5 V 7.5 a 4 4 0 0 1 8 0 V 10.5" stroke="currentColor" stroke-width="1.8" />
+          </svg>
+          <p class="harness-name">Records stay where they are</p>
+        </div>
+      </div>
+      <p class="harness-keep">The record never leaves</p>
+    </div>
+  </div>
+
+  <p class="harness-audit" aria-hidden="true">{auditLine}</p>
+</figure>
+
+<style>
+  .harness {
+    margin: 0;
+  }
+
+  .harness-flow {
+    align-items: center;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 215px minmax(170px, auto) 1fr;
+  }
+
+  .harness-box {
+    background: #ffffff;
+    border: 1.5px solid var(--registry-ink);
+    padding: 16px 18px;
+  }
+
+  .harness-label {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+  }
+
+  .harness-name {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .harness-stamp-note {
+    color: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin: 10px 0 0;
+    text-transform: uppercase;
+  }
+
+  .harness-channel p {
+    font-size: 13.5px;
+    line-height: 1.4;
+    margin: 0;
+    text-align: center;
+  }
+
+  .harness-ask {
+    color: var(--registry-blue);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .harness-reply {
+    color: var(--registry-stamp);
+    font-weight: 700;
+    margin-top: 14px;
+  }
+
+  .harness-arrow {
+    font-size: 18px;
+  }
+
+  .harness-steward {
+    border: 1.5px dashed var(--registry-ink);
+    padding: 12px 14px 10px;
+  }
+
+  .harness-steward-label {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+  }
+
+  .harness-steward-row {
+    align-items: stretch;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1.6fr 1fr;
+  }
+
+  .harness-point {
+    background: #eef3ff;
+    border-color: var(--registry-blue);
+  }
+
+  .harness-checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .harness-checks li {
+    display: flex;
+    font-size: 13.5px;
+    gap: 8px;
+    line-height: 1.4;
+    margin: 0 0 8px;
+  }
+
+  .harness-check-mark {
+    color: var(--registry-blue);
+    font-weight: 700;
+  }
+
+  .harness-tag {
+    color: var(--registry-blue);
+    font-family: var(--registry-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* On product pages one check is the page's subject; the other two stay
+     legible but recede. */
+  .harness-check-dim,
+  .harness-check-dim .harness-check-mark {
+    color: var(--registry-muted);
+  }
+
+  .harness-check-hot span:last-child {
+    font-weight: 600;
+  }
+
+  .harness-every {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    margin: 4px 0 0;
+    text-transform: uppercase;
+  }
+
+  .harness-registry {
+    align-items: flex-start;
+    background: var(--registry-paper);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .harness-lock {
+    color: var(--registry-ink);
+  }
+
+  .harness-registry .harness-name {
+    font-size: 13.5px;
+  }
+
+  .harness-keep {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 10px 0 0;
+    text-align: right;
+  }
+
+  .harness-audit {
+    background: var(--registry-paper);
+    border: 1px solid #c2cce0;
+    color: var(--registry-ink);
+    font-family: var(--registry-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    margin: 18px 0 0;
+    padding: 10px 16px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 920px) {
+    .harness-flow {
+      grid-template-columns: 1fr;
+    }
+
+    .harness-channel {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+    }
+
+    .harness-channel p {
+      margin: 0;
+    }
+
+    .harness-keep {
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .harness-steward-row {
+      grid-template-columns: 1fr;
+    }
+
+    .harness-channel {
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
+</style>

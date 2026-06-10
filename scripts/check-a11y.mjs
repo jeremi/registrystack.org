@@ -14,7 +14,8 @@ const server = createServer(async (request, response) => {
   const { readFile } = await import('node:fs/promises');
   const { extname, join, normalize } = await import('node:path');
   const url = new URL(request.url ?? '/', 'http://127.0.0.1');
-  const relative = normalize(url.pathname === '/' ? '/index.html' : url.pathname).replace(/^\/+/, '');
+  const pathname = url.pathname.endsWith('/') ? `${url.pathname}index.html` : url.pathname;
+  const relative = normalize(pathname).replace(/^\/+/, '');
   const filePath = join(resolve('dist'), relative);
   const type = {
     '.css': 'text/css',
@@ -23,8 +24,9 @@ const server = createServer(async (request, response) => {
     '.svg': 'image/svg+xml',
   }[extname(filePath)] ?? 'application/octet-stream';
   try {
+    const body = await readFile(filePath);
     response.writeHead(200, { 'content-type': type });
-    response.end(await readFile(filePath));
+    response.end(body);
   } catch {
     response.writeHead(404);
     response.end('not found');
@@ -35,22 +37,26 @@ await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen
 const { port } = server.address();
 
 const browser = await chromium.launch();
-const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
-const page = await context.newPage();
-await page.goto(`http://127.0.0.1:${port}/`);
+const failures = [];
 
-const results = await new AxeBuilder({ page }).analyze();
-await context.close();
+for (const path of ['/', '/notary/', '/relay/', '/manifest/']) {
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
+  const page = await context.newPage();
+  await page.goto(`http://127.0.0.1:${port}${path}`);
+
+  const results = await new AxeBuilder({ page }).analyze();
+  for (const violation of results.violations) {
+    failures.push(`- ${path} ${violation.id} (${violation.impact}): ${violation.help}`);
+  }
+  await context.close();
+}
+
 await browser.close();
 server.close();
 
-if (results.violations.length > 0) {
-  console.error(
-    results.violations
-      .map((violation) => `- ${violation.id} (${violation.impact}): ${violation.help}`)
-      .join('\n')
-  );
+if (failures.length > 0) {
+  console.error(failures.join('\n'));
   process.exit(1);
 }
 
-console.log('axe check passed (0 violations)');
+console.log('axe check passed (0 violations on 4 pages)');

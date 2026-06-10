@@ -7,7 +7,6 @@
   color-scheme: light;
   --registry-blue: #173b7a; /* Intentional global override for docs blue #000091. */
   --registry-blue-dark: #102a56;
-  --registry-teal: #0f766e;
   --registry-amber: #855b00;
   --registry-ink: #161616;
   --registry-body: #3a3a3a;
@@ -16,6 +15,12 @@
   --registry-sidebar: #fafafa;
   --registry-active: #eef3ff;
   --registry-code-bg: #f3f4f6;
+  /* Civic-print palette: the visual language of official records. Quiet paper,
+     ink bands, a stamp red used sparingly for seals and register numbers. */
+  --registry-paper: #f7f6f1;
+  --registry-ink-band-deep: #0c1b3a;
+  --registry-stamp: #9d2c1d;
+  --registry-brass: #d4af4e;
   --registry-max: 1120px;
   --registry-font: 'Public Sans', system-ui, sans-serif;
   --registry-mono: 'IBM Plex Mono', ui-monospace, monospace;
@@ -111,17 +116,22 @@ a:hover {
   font-size: 14px;
   font-weight: 600;
   min-height: 36px;
+  min-width: 36px;
   align-items: center;
   display: inline-flex;
+  justify-content: center;
 }
 
 .top-nav .nav-emphasis {
   color: var(--registry-blue);
 }
 
+/* Every hero sits on quiet paper. */
 .hero {
   border-bottom: 1px solid var(--registry-rule);
-  background: #ffffff;
+  background: var(--registry-paper);
+  overflow: hidden;
+  position: relative;
 }
 
 .hero-inner {
@@ -141,11 +151,19 @@ a:hover {
 }
 
 .eyebrow {
-  color: var(--registry-teal);
+  color: var(--registry-blue);
   font-family: var(--registry-mono);
   font-size: 12px;
   margin: 0 0 14px;
   text-transform: uppercase;
+}
+
+/* Register numbers inside eyebrows: each major section reads as a numbered
+   entry in a register, stamped in red. */
+.reg-no {
+  color: var(--registry-stamp);
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 h1,
@@ -242,19 +260,19 @@ p {
   color: var(--registry-blue);
 }
 
+/* Three slim rule-topped pillars under the hero, set like ledger column
+   headings rather than boxed cards. */
 .hero-proof-grid {
   display: grid;
-  gap: 16px;
+  gap: clamp(20px, 3vw, 40px);
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  max-width: 980px;
   width: 100%;
 }
 
 .hero-proof-grid article {
-  background: var(--registry-sidebar);
-  border: 1px solid var(--registry-rule);
+  border-top: 2px solid var(--registry-ink);
   min-width: 0;
-  padding: 20px;
+  padding: 14px 0 0;
 }
 
 .hero-proof-grid h2 {
@@ -298,6 +316,82 @@ p {
   display: flex;
   justify-content: center;
   min-width: 0;
+  position: relative;
+}
+
+/* The seal sits on the answer card's top-right corner, like a stamp across
+   the edge of a certificate. The wrapper matches the card's footprint so the
+   seal anchors to the card, not to the hero column. */
+.hero-card-wrap {
+  max-width: 360px;
+  position: relative;
+  width: 100%;
+}
+
+.hero-seal {
+  pointer-events: none;
+  position: absolute;
+  right: -26px;
+  top: -30px;
+  z-index: 2;
+}
+
+/* Cover variant: the homepage hero set like the cover of the Registry Stack
+   brief. Solid civic blue, white extra-bold display type. */
+.hero-cover {
+  background: var(--registry-blue);
+  border-bottom: 0;
+}
+
+.hero-cover .eyebrow {
+  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: 0.08em;
+}
+
+.hero-cover h1 {
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.hero-cover .hero-lead {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.hero-cover .hero-note {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.hero-cover .button-primary {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: var(--registry-blue);
+}
+
+.hero-cover .button-primary:hover {
+  background: var(--registry-paper);
+}
+
+.hero-cover .button-secondary {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.85);
+  color: #ffffff;
+}
+
+.hero-cover :focus-visible {
+  outline-color: #ffffff;
+}
+
+.hero-cover .hero-proof-grid article {
+  border-top-color: rgba(255, 255, 255, 0.55);
+}
+
+.hero-cover .hero-proof-grid h2 {
+  color: #ffffff;
+}
+
+.hero-cover .hero-proof-grid p {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .assurance-band {
@@ -328,12 +422,13 @@ p {
 
 .partner-strip-inner {
   align-items: center;
-  display: grid;
-  gap: 14px;
-  grid-template-columns: 1.1fr repeat(9, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  justify-content: center;
   margin: 0 auto;
   max-width: var(--registry-max);
-  padding: 20px clamp(16px, 4vw, 42px);
+  padding: 18px clamp(16px, 4vw, 42px);
 }
 
 .partner-strip-inner.compact {
@@ -345,18 +440,17 @@ p {
   color: var(--registry-muted);
   font-family: var(--registry-mono);
   font-size: 12px;
+  margin-right: 8px;
   text-transform: uppercase;
 }
 
 .partner-strip-inner strong {
-  align-items: center;
-  border-left: 1px solid var(--registry-rule);
+  border: 1px solid var(--registry-rule);
   color: var(--registry-ink);
-  display: flex;
-  font-size: 14px;
-  justify-content: center;
-  min-height: 38px;
-  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 12px;
+  white-space: nowrap;
 }
 
 .signal-row {
@@ -509,7 +603,7 @@ code {
 }
 
 .capability-card p {
-  color: var(--registry-teal);
+  color: var(--registry-blue);
   font-family: var(--registry-mono);
   font-size: 12px;
   margin: 0;
@@ -527,6 +621,116 @@ code {
   display: flex;
   justify-content: center;
   margin-top: 24px;
+}
+
+/* Product cards: the three products in priority order, each carrying a small
+   concrete artifact instead of a screenshot. Cards share four rows via
+   subgrid so situation, answer, artifact, and link align across the row. */
+.product-grid {
+  display: grid;
+  gap: clamp(16px, 2vw, 24px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(4, auto);
+}
+
+.product-card {
+  background: #ffffff;
+  border: 1px solid var(--registry-rule);
+  display: grid;
+  grid-row: 1 / -1;
+  grid-template-rows: subgrid;
+  min-width: 0;
+  padding: 26px;
+  row-gap: 16px;
+}
+
+.product-card h3 {
+  font-size: 24px;
+  margin: 0;
+}
+
+/* Door headings: the steward's own sentence, set as a quote the visitor
+   recognizes before any product is named. */
+.product-card h3.door-situation {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.product-card > p {
+  color: var(--registry-body);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* The service-side aside under the doors: the secondary audience gets a
+   route without a card of its own. */
+.door-aside {
+  color: var(--registry-muted);
+  margin: 32px auto 0;
+  max-width: 640px;
+  text-align: center;
+}
+
+/* Each artifact reads as a record slip: ledger paper, perforated edge. */
+.product-artifact {
+  align-content: start;
+  background: var(--registry-paper);
+  border: 1px dashed #c2cce0;
+  display: grid;
+  font-family: var(--registry-mono);
+  font-size: 13px;
+  gap: 8px;
+  padding: 16px;
+}
+
+.artifact-flow {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.artifact-chip {
+  background: #ffffff;
+  border: 1px solid var(--registry-rule);
+  color: var(--registry-ink);
+  padding: 4px 8px;
+}
+
+.artifact-chip-strong {
+  border-color: var(--registry-blue);
+  color: var(--registry-blue);
+  font-weight: 700;
+}
+
+.artifact-arrow {
+  color: var(--registry-muted);
+}
+
+.artifact-title {
+  color: var(--registry-ink);
+  font-weight: 700;
+}
+
+.artifact-meta {
+  color: var(--registry-muted);
+}
+
+/* Product attribution inside the lifecycle diagram steps. */
+.flow-product {
+  color: var(--registry-muted);
+  display: block;
+  font-family: var(--registry-mono);
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+.hero-note {
+  color: var(--registry-muted);
+  font-size: 14px;
+  margin: 12px 0 0;
 }
 
 .inline-cta {
@@ -597,10 +801,9 @@ code {
 
 .flow-arrow {
   align-self: center;
-  color: var(--registry-muted);
+  color: var(--registry-ink);
   font-family: var(--registry-mono);
-  font-size: 12px;
-  text-transform: uppercase;
+  font-size: 22px;
 }
 
 /* Five shared rows (domain, question, result, evidence field, not-shared
@@ -622,7 +825,7 @@ code {
 }
 
 .use-case-domain {
-  color: var(--registry-teal);
+  color: var(--registry-blue);
   font-family: var(--registry-mono);
   font-size: 12px;
   letter-spacing: 0.04em;
@@ -716,25 +919,134 @@ code {
   font-size: 15px;
 }
 
+/* Tinted divider band, in the style of the Registry Stack brief's section
+   dividers: a pill label, a large heading, body set on a pale civic-blue
+   tint. */
+.claim-band {
+  background: #dbe4f3;
+}
+
+.claim-band h2 {
+  color: var(--registry-ink);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.claim-band .section-heading p:not(.eyebrow) {
+  color: #26375c;
+}
+
+.claim-band a {
+  color: var(--registry-ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.claim-body {
+  align-self: center;
+}
+
+.claim-body p {
+  color: #26375c;
+  font-size: 18px;
+  margin-bottom: 18px;
+}
+
+/* Pill label: the brief's divider marker, and the one rounded element in the
+   whole identity. */
+.pill {
+  align-self: flex-start;
+  border: 1.5px solid var(--registry-ink);
+  border-radius: 999px;
+  color: var(--registry-ink);
+  display: inline-block;
+  font-family: var(--registry-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  margin: 0 0 22px;
+  padding: 6px 16px;
+  text-transform: uppercase;
+}
+
+/* Deep ink proof band. */
+.proof-band {
+  background: var(--registry-ink-band-deep);
+  color: #ffffff;
+}
+
+.proof-band .eyebrow {
+  color: var(--registry-brass);
+}
+
+.proof-band h2,
+.proof-band p {
+  color: #ffffff;
+}
+
+.proof-band .section-heading p:not(.eyebrow) {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.proof-band a {
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Proof columns: rule-topped, like the hero pillars but reversed out. */
+.proof-grid {
+  display: grid;
+  gap: clamp(20px, 3vw, 40px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: clamp(28px, 4vw, 44px);
+}
+
+.proof-grid article {
+  border-top: 2px solid rgba(255, 255, 255, 0.55);
+  min-width: 0;
+  padding: 14px 0 0;
+}
+
+.proof-grid h3 {
+  color: #ffffff;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.proof-grid p {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 15px;
+  line-height: 1.55;
+  margin: 0 0 8px;
+}
+
+.proof-grid .proof-fact {
+  color: var(--registry-brass);
+  font-family: var(--registry-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.proof-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  margin-top: clamp(28px, 4vw, 44px);
+}
+
+/* The closing call to action mirrors the claim band's divider tint, so the
+   two tinted bands bookend the white body of the page. */
 .final-cta {
-  background: var(--registry-blue);
-  color: #ffffff;
+  background: #dbe4f3;
 }
 
-.final-cta .eyebrow,
 .final-cta h2 {
-  color: #ffffff;
-}
-
-.final-cta .button-primary {
-  background: #ffffff;
-  color: var(--registry-blue);
-}
-
-.final-cta .button-secondary {
-  border-color: #ffffff;
-  color: #ffffff;
-  background: transparent;
+  color: var(--registry-ink);
+  font-weight: 800;
+  letter-spacing: -0.015em;
 }
 
 .site-footer {
@@ -790,13 +1102,8 @@ code {
   }
 
   .hero-proof-grid,
-  .partner-strip-inner {
+  .proof-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .partner-strip span {
-    grid-column: 1 / -1;
-    text-align: center;
   }
 
   .problem-grid,
@@ -818,6 +1125,16 @@ code {
   }
 
   .use-case {
+    grid-row: auto;
+    grid-template-rows: none;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+
+  .product-card {
     grid-row: auto;
     grid-template-rows: none;
   }
@@ -853,8 +1170,12 @@ code {
   .principle-grid,
   .implementation-grid,
   .hero-proof-grid,
-  .partner-strip-inner {
+  .proof-grid {
     grid-template-columns: 1fr;
+  }
+
+  .hero-seal {
+    display: none;
   }
 
   .hero-copy {

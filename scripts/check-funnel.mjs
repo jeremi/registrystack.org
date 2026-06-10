@@ -3,17 +3,19 @@ import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
 
-const htmlPath = resolve('dist/index.html');
-if (!existsSync(htmlPath)) {
-  console.error('dist/index.html does not exist. Run npm run build first.');
-  process.exit(1);
+for (const relative of ['dist/index.html', 'dist/use-cases/index.html']) {
+  if (!existsSync(resolve(relative))) {
+    console.error(`${relative} does not exist. Run npm run build first.`);
+    process.exit(1);
+  }
 }
 
 const server = createServer(async (request, response) => {
   const { readFile } = await import('node:fs/promises');
   const { extname, join, normalize } = await import('node:path');
   const url = new URL(request.url ?? '/', 'http://127.0.0.1');
-  const relative = normalize(url.pathname === '/' ? '/index.html' : url.pathname).replace(/^\/+/, '');
+  const pathname = url.pathname.endsWith('/') ? `${url.pathname}index.html` : url.pathname;
+  const relative = normalize(pathname).replace(/^\/+/, '');
   const filePath = join(resolve('dist'), relative);
   const type = {
     '.css': 'text/css',
@@ -32,7 +34,10 @@ const server = createServer(async (request, response) => {
 
 await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen));
 const { port } = server.address();
-const url = `http://127.0.0.1:${port}/`;
+// The funnel lives on the use-cases page; the homepage keeps the four-card
+// grid and must NOT carry a second mechanism diagram.
+const homeUrl = `http://127.0.0.1:${port}/`;
+const url = `http://127.0.0.1:${port}/use-cases/`;
 
 // Evidence-type spectrum the use-case grid must demonstrate (sorted).
 const EXPECTED_TYPES = ['Bounded value set', 'Credential', 'Decision', 'Status'];
@@ -103,6 +108,22 @@ const failures = [];
     if (!caption.toLowerCase().includes(needle)) {
       failures.push(`funnel caption missing phrase: "${needle}"`);
     }
+  }
+
+  await context.close();
+}
+
+// 1b. Homepage: the four-card use-case grid demonstrates the evidence-type
+//     spectrum, and the mechanism is drawn exactly once (the harness diagram),
+//     so no funnel figure appears there.
+{
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
+  const page = await context.newPage();
+  await page.goto(homeUrl);
+
+  const homeFunnelCount = await page.locator('figure.funnel').count();
+  if (homeFunnelCount !== 0) {
+    failures.push(`expected no funnel figure on the homepage (it lives on /use-cases/), found ${homeFunnelCount}`);
   }
 
   const badges = (await page.locator('.use-case .evidence-type').allTextContents())

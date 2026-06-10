@@ -1,0 +1,211 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocsHandoff from '../components/DocsHandoff.astro';
+import RelayBoundedAnswers from '../components/RelayBoundedAnswers.astro';
+import HarnessDiagram from '../components/HarnessDiagram.astro';
+
+const pageTitle = 'Registry Relay | A protected service surface for the registry you already have';
+const pageDescription =
+  'Registry Relay reads the files and tables a registry already lives in, CSV, XLSX, Parquet, or PostgreSQL, and publishes a protected, read-only API with access rules and audit built in.';
+
+const problems = [
+  {
+    title: 'Registries live in files',
+    body:
+      'Many real registries are a spreadsheet on a focal point’s laptop or a periodic database extract. Sharing them means emailing copies nobody can scope, revoke, or review.',
+  },
+  {
+    title: 'Full access or no access',
+    body:
+      'Without a service layer in between, the institution’s choice is handing over the whole file or refusing the request. Either the partner over-receives or the service never launches.',
+  },
+  {
+    title: 'Every integration starts over',
+    body:
+      'Each partner negotiates a custom export with its own format, refresh, and side agreements. A year later nobody can say who holds which copy of what.',
+  },
+];
+
+const scenarioSteps = [
+  [
+    'Describe what the file holds',
+    'The social protection agency’s household register is an XLSX workbook. A configuration names the real-world entities in it: households, individuals, and the fields each caller may see.',
+  ],
+  [
+    'Bind it and set the rules',
+    'Registry Relay reads the workbook and serves it as entities, not cells. Access rules say which system may ask which question, with API keys or the government’s own identity provider.',
+  ],
+  [
+    'Callers get answers, owners keep the file',
+    'A benefits portal checks household eligibility through the API. The workbook never leaves the agency, every request is audited, and the export-by-email era ends.',
+  ],
+];
+
+// Open-standards facts and fit, stated positively: what it reads, what it
+// speaks, and where authority stays.
+const openPoints = [
+  'Reads CSV, XLSX, Parquet, and PostgreSQL sources where they already live.',
+  'Speaks the formats partners expect: DCAT-AP catalogs, OGC API Features and Records, SP-DCI sync, PublicSchema mapping.',
+  'Follows the protected consultation pattern of the GovStack Digital Registries building block.',
+  'Read-only by design: provisioning and updates stay in the source system, which remains authoritative.',
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="relay" />
+
+  <main>
+    <section class="hero" aria-labelledby="relay-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Registry Relay &middot; Expose</p>
+          <h1 id="relay-hero-title">The registry in your spreadsheet becomes a governed service.</h1>
+          <p class="hero-lead">
+            Registry Relay reads the files and tables a registry already lives in, CSV, XLSX,
+            Parquet, or PostgreSQL, and publishes a protected, read-only API shaped around
+            real-world entities, with access rules, field limits, and audit built in.
+          </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href="https://lab.registrystack.org/#services">See it running in the lab</a>
+            <a class="button button-secondary" href="https://github.com/jeremi/registry-relay">View on GitHub</a>
+          </div>
+          <p class="hero-note">
+            The live lab runs three Relay authorities on synthetic data, one of them straight from
+            an XLSX workbook.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="relay-problem-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">The problem it solves</p>
+          <h2 id="relay-problem-title">The most common registry platform is a spreadsheet.</h2>
+          <p>
+            That is not a failure to fix by replatforming. It is the starting point to serve
+            safely, today, while bigger modernization takes its time.
+          </p>
+        </div>
+        <div class="problem-grid">
+          {problems.map((item) => (
+            <article class="quiet-card">
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="relay-how-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">How it works</p>
+          <h2 id="relay-how-title">The source stays put. The service goes in front of it.</h2>
+        </div>
+        <div class="flow-diagram" aria-label="Registry Relay operating model">
+          <div class="flow-node">
+            <span>Your existing source</span>
+            <p>A CSV, XLSX workbook, Parquet file, or bounded PostgreSQL table stays where the institution keeps it.</p>
+          </div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node flow-node-strong">
+            <span>Registry Relay</span>
+            <ol>
+              <li>Describe the entities</li>
+              <li>Bind the source</li>
+              <li>Set who may ask what</li>
+              <li>Serve and audit</li>
+            </ol>
+          </div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node">
+            <span>A protected consultation API</span>
+            <p>Read-only, scoped to fields and purposes, with standards-shaped views where partners need them.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="relay-bounded-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Protected consultation</p>
+          <h2 id="relay-bounded-title">One registry source, many bounded answers.</h2>
+          <p>
+            Registry Relay serves metadata, selected fields, aggregate results, standards-shaped
+            views, and audit records from an existing spreadsheet, Parquet file, CSV, or bounded
+            database table, without becoming a bulk data-sharing pipeline.
+          </p>
+        </div>
+        <RelayBoundedAnswers />
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="relay-scenario-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Worked scenario</p>
+          <h2 id="relay-scenario-title">From a household register workbook to an eligibility service.</h2>
+        </div>
+        <div class="implementation-grid">
+          {scenarioSteps.map(([name, body]) => (
+            <article>
+              <h3>{name}</h3>
+              <p>{body}</p>
+            </article>
+          ))}
+        </div>
+        <div class="centered-action">
+          <a class="inline-cta" href="https://lab.registrystack.org/#services">See the XLSX-backed authority in the live lab &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="relay-open-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">Open by design</p>
+          <h2 id="relay-open-title">Works with the data and the standards you already have.</h2>
+          <p>
+            Registry Relay is open source and adopts the formats and patterns the digital
+            government ecosystem already uses, so the service you stand up today still fits the
+            architecture you choose tomorrow.
+          </p>
+        </div>
+        <ul class="check-list">
+          {openPoints.map((point) => (
+            <li>{point}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="relay-stack-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">In the stack</p>
+          <h2 id="relay-stack-title">Where Registry Relay sits.</h2>
+          <p>
+            The answering point runs three checks on every request. Registry Relay owns the
+            first one: who may ask, for which purpose, over a protected, read-only surface,
+            with every request in the audit trail. Each product runs on its own; together they
+            share one answering point.
+          </p>
+        </div>
+        <HarnessDiagram highlight="relay" />
+      </div>
+    </section>
+
+    <DocsHandoff
+      eyebrow="For your technical team"
+      heading="Configuration, the API contract, and the hardening checklist live in the docs."
+      primaryLabel="Read the Relay docs"
+    />
+  </main>
+
+  <SiteFooter />
+</Base>

@@ -1,0 +1,95 @@
+---
+// A circular seal in the tradition of notary and registry stamps: serrated
+// outer ring, circular microtext, monogram center. Decorative only; always
+// rendered with aria-hidden by the page that places it. The text ring turns
+// very slowly, and stays still under a reduced-motion preference.
+interface Props {
+  size?: number;
+}
+
+const { size = 150 } = Astro.props;
+const ringText = 'REGISTRY STACK · SIGNED ANSWERS · OPEN SOURCE · ';
+---
+
+<span class="registry-seal" style={`width:${size}px;height:${size}px`}>
+  <svg viewBox="0 0 150 150" role="presentation" focusable="false">
+    <circle class="seal-serration" cx="75" cy="75" r="71" />
+    <circle class="seal-ring" cx="75" cy="75" r="64" />
+    <g class="seal-text-ring">
+      <path id="seal-text-path" d="M 21 75 a 54 54 0 1 1 108 0 a 54 54 0 1 1 -108 0" fill="none" />
+      <text class="seal-text">
+        <textPath href="#seal-text-path" startOffset="0">{ringText}</textPath>
+      </text>
+    </g>
+    <circle class="seal-ring seal-ring-inner" cx="75" cy="75" r="36" />
+    <text class="seal-monogram" x="75" y="83" text-anchor="middle">RS</text>
+  </svg>
+</span>
+
+<style>
+  .registry-seal {
+    display: inline-block;
+    opacity: 0.88;
+    rotate: -8deg;
+  }
+
+  .registry-seal svg {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
+  .seal-serration {
+    fill: none;
+    stroke: var(--registry-stamp);
+    stroke-dasharray: 2 3;
+    stroke-width: 3;
+  }
+
+  .seal-ring {
+    fill: none;
+    stroke: var(--registry-stamp);
+    stroke-width: 1.5;
+  }
+
+  .seal-ring-inner {
+    fill: none;
+  }
+
+  .seal-text {
+    fill: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 10.4px;
+    letter-spacing: 1.9px;
+  }
+
+  .seal-monogram {
+    fill: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  .seal-text-ring {
+    animation: seal-turn 90s linear infinite;
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .seal-text-ring {
+      animation: none;
+    }
+  }
+
+  @keyframes seal-turn {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

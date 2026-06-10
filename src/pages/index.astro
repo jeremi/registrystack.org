@@ -1,12 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
-import MinimizationFunnel from '../components/MinimizationFunnel.astro';
 import HeroAnswerCard from '../components/HeroAnswerCard.astro';
-import RelayBoundedAnswers from '../components/RelayBoundedAnswers.astro';
+import HarnessDiagram from '../components/HarnessDiagram.astro';
+import RegistrySeal from '../components/RegistrySeal.astro';
 
-const pageTitle = 'Registry Stack | Trusted registry data for public services';
+const pageTitle = 'Registry Stack | Prove facts from registries without sharing the records';
 const pageDescription =
-  'Registry Stack helps governments and partners improve public service delivery with governed registry use, minimal evidence sharing, and reviewable safeguards.';
+  'Registry Stack is three open-source products that let public services prove facts from existing registries: signed answers and credentials instead of copies of records.';
 
 const heroReasons = [
   {
@@ -20,36 +20,6 @@ const heroReasons = [
   {
     label: 'Practical path to scale',
     body: 'Start with one registry and one service need, then expand through a repeatable operating model.',
-  },
-];
-
-const problemBlocks = [
-  {
-    title: 'Data exists, but use is hard to govern',
-    body: 'Registry data sits across departments, files, databases, and older systems, with no clear service contract.',
-  },
-  {
-    title: 'Programs need answers, not whole files',
-    body: 'Many services need one status, eligibility decision, or registration fact, not a broad copy of a source record.',
-  },
-  {
-    title: 'Safeguards need operating support',
-    body: 'Policy agreements matter, but institutions also need practical ways to enforce purpose, minimization, review, and audit.',
-  },
-];
-
-const beneficiaryGroups = [
-  {
-    name: 'People and businesses',
-    body: 'Carry fewer documents between services when a trusted answer can be checked directly.',
-  },
-  {
-    name: 'Public administrations',
-    body: 'Improve service delivery while keeping registry ownership, purpose limits, and review responsibilities clear.',
-  },
-  {
-    name: 'Programs and partners',
-    body: 'Connect benefits, licensing, health, finance, and case systems to narrower registry evidence.',
   },
 ];
 
@@ -98,41 +68,22 @@ const heroAnswers = useCases.map((item) => ({
 
 const worksWithItems = ['CSV', 'XLSX', 'Parquet', 'PostgreSQL', 'DCAT-AP', 'OGC APIs', 'SP-DCI', 'PublicSchema', 'GovStack patterns'];
 
-const ecosystemItems = [
-  ['CSV', 'Reads configured local tabular files into protected entity APIs.'],
-  ['XLSX', 'Supports spreadsheet-based registry extracts and working datasets.'],
-  ['Parquet', 'Supports columnar data extracts for analytics and integration workflows.'],
-  ['PostgreSQL', 'Supports bounded snapshot sources and live structured table reads.'],
-  ['DCAT-AP', 'Publishes standards-facing catalog metadata for discovery and validation.'],
-  ['OGC APIs', 'Optional adapters expose records, features, and EDR surfaces.'],
-  ['SP-DCI', 'Optional sync routes serve configured social protection registry views.'],
-  ['PublicSchema', 'Optional mapping support connects registry data to VC-facing schemas.'],
-  ['GovStack', 'Explores a protected consultation gateway pattern for Digital Registries.'],
-  ['Digital wallets', 'Hold and present credentials issued from evidence flows.'],
-  ['Service portals', 'Request bounded facts for people and caseworkers.'],
-];
-
-const adoptionReasons = [
-  'Start from existing data without requiring full source-system replacement.',
-  'Keep source data under the owner control where possible.',
-  'Make metadata, access, disclosure, and audit more reviewable.',
-  'Give AI-assisted integration and automated workflows controlled answers instead of raw records.',
-];
-
-const implementationNotes = [
-  ['Controlled requests', 'Define who can ask for registry information, for which service, and under which institutional rules.'],
-  ['Narrow answers', 'Return a status, confirmation, selected value, attestation, or credential instead of a broad record.'],
-  ['Reviewable trail', 'Keep the service contract, access decisions, and audit trail visible enough for oversight.'],
-];
-
-const boundaries = [
-  'Not a registry replacement.',
-  'Not an open-data portal.',
-  'Not a national data exchange layer.',
-  'Not a workflow engine.',
-  'Not a wallet.',
-  'Not an AI decision system.',
-  'Not a solution to foundational identity, deduplication, legal authority, or institutional approval by itself.',
+const proofPoints = [
+  {
+    title: 'Open source, end to end',
+    body: 'All three products are open source. Inspect the code, run them on your own infrastructure, and keep every safeguard auditable.',
+    fact: 'No license fees, no vendor gate',
+  },
+  {
+    title: 'A demo you can use right now',
+    body: 'The hosted lab issues a real signed proof to a wallet in minutes, on synthetic data. What this site claims, the demo shows.',
+    fact: 'lab.registrystack.org',
+  },
+  {
+    title: 'The standards wallets and catalogs speak',
+    body: 'Credentials issue in the formats the European Digital Identity Wallet ecosystem uses, catalogs render to DCAT-AP, and sync follows SP-DCI and the GovStack pattern. Built by contributors active in GovStack and DCI standards work.',
+    fact: 'SD-JWT VC · OpenID4VCI · no lock-in',
+  },
 ];
 ---
 
@@ -143,35 +94,44 @@ const boundaries = [
       <span>Registry Stack</span>
     </a>
     <nav class="top-nav" aria-label="Main navigation">
+      <a href="/notary/">Notary</a>
+      <a href="/relay/">Relay</a>
+      <a href="/manifest/">Manifest</a>
       <a href="/why/">Why it matters</a>
       <a href="/use-cases/">Use cases</a>
-      <a href="/ecosystem/">Ecosystem</a>
-      <a href="/why-now/">Why now</a>
-      <a href="/status/">Status</a>
+      <a href="/ai/">AI</a>
       <a class="nav-emphasis" href="https://docs.registrystack.org/">Read the docs</a>
     </nav>
   </header>
 
   <main>
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="hero hero-cover" aria-labelledby="hero-title">
       <div class="hero-inner">
         <div class="hero-top">
           <div class="hero-copy">
-            <p class="eyebrow">For country digital teams and partners</p>
-            <h1 id="hero-title">Public service delivery with registry data people can trust.</h1>
+            <p class="eyebrow">Open source &middot; For governments and their partners</p>
+            <h1 id="hero-title">Prove facts from registries without sharing the records.</h1>
             <p class="hero-lead">
-              Registry Stack helps governments and partners use existing registry data for service
-              delivery with clearer safeguards, less over-sharing, and a practical path from pilot to
-              scale.
+              Registry Stack turns the registries a government already holds, from spreadsheets to
+              source systems, into services that answer questions and issue signed proofs. A
+              pensioner proves they are alive without a trip to the counter; the registry answers
+              without handing over its records.
             </p>
             <div class="hero-actions" aria-label="Primary actions">
-              <a class="button button-primary" href="mailto:hello@registrystack.org?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
-              <a class="button button-secondary" href="https://docs.registrystack.org/">Read the docs</a>
+              <a class="button button-primary" href="https://lab.registrystack.org/">Try the live demo</a>
+              <a class="button button-secondary" href="mailto:hello@registrystack.org?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
             </div>
+            <p class="hero-note">
+              The lab runs on synthetic data. No install, no account: receive a signed proof in a
+              hosted wallet within minutes.
+            </p>
           </div>
 
           <div class="hero-figure" aria-hidden="true">
-            <HeroAnswerCard answers={heroAnswers} />
+            <div class="hero-card-wrap">
+              <HeroAnswerCard answers={heroAnswers} />
+              <div class="hero-seal"><RegistrySeal size={110} /></div>
+            </div>
           </div>
         </div>
 
@@ -193,119 +153,116 @@ const boundaries = [
       </div>
     </section>
 
-    <section class="section" id="why-it-matters" aria-labelledby="why-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">Why it matters</p>
-          <h2 id="why-title">Registry data exists. The service contract around it often does not.</h2>
+    <section class="claim-band" id="why-it-matters" aria-labelledby="why-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="pill">Why it matters</p>
+          <h2 id="why-title">The answers already exist. Services just cannot ask for them yet.</h2>
+        </div>
+        <div class="claim-body">
           <p>
-            Governments already hold data needed for faster and fairer services. The missing layer
-            is often the governed service model around that data: who can ask, what answer is
-            appropriate, what should not be shared, and how trust-critical use is reviewed.
+            Governments already hold the data for faster, fairer services. What is missing is
+            rarely the data: it is a safe way to ask. Who may ask, what answer comes back, what
+            stays private, and how use is reviewed. Registry Stack supplies that asking layer:
+            faster for people, safer for registries, simpler for programs.
           </p>
-        </div>
-        <div class="problem-grid">
-          {problemBlocks.map((item) => (
-            <article class="quiet-card">
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </article>
-          ))}
-        </div>
-        <div class="centered-action">
           <a class="inline-cta" href="/why/">See the recurring registry problems &rarr;</a>
         </div>
       </div>
     </section>
 
-    <section class="section" id="who-benefits" aria-labelledby="benefits-title">
+    <section class="section section-muted" id="products" aria-labelledby="products-title">
       <div class="section-inner">
-        <div class="section-heading">
-          <p class="eyebrow">Who benefits</p>
-          <h2 id="benefits-title">Better registry use can benefit everyone in the service chain.</h2>
+        <div class="section-heading center">
+          <p class="eyebrow"><span class="reg-no">No. 01</span> &middot; Where you start</p>
+          <h2 id="products-title">Start from the problem on your desk.</h2>
           <p>
-            The case for Registry Stack is not only technical interoperability. It is about making
-            public services easier to deliver, easier to trust, and easier to review.
+            Each situation below ends in one product. Every product is open source, runs on its
+            own, and has a narrow job: adopt one, or compose them.
           </p>
         </div>
-        <div class="audience-grid">
-          {beneficiaryGroups.map((group) => (
-            <article class="audience-card">
-              <h3>{group.name}</h3>
-              <p>{group.body}</p>
-            </article>
-          ))}
+        <div class="product-grid">
+          <article class="product-card">
+            <h3 class="door-situation">&ldquo;Services keep asking us to send the whole record.&rdquo;</h3>
+            <p>
+              Answer the one question instead, with proof: a signed yes or no, a bounded value,
+              or a credential the person can carry in a wallet. The record itself never leaves
+              the registry.
+            </p>
+            <div class="product-artifact" aria-hidden="true">
+              <span class="artifact-title">Proof of life</span>
+              <span class="artifact-meta">Civil registry &middot; signed &middot; valid 10 minutes</span>
+              <span class="artifact-meta">Held in the citizen&rsquo;s wallet &middot; shows only: alive</span>
+            </div>
+            <a class="inline-cta" href="/notary/">That&rsquo;s Registry Notary &rarr;</a>
+          </article>
+          <article class="product-card">
+            <h3 class="door-situation">&ldquo;Our registry lives in a spreadsheet someone emails around.&rdquo;</h3>
+            <p>
+              Serve the source you already have, a spreadsheet, CSV, Parquet file, or database,
+              as a protected, read-only API with access rules and audit built in. Nothing
+              migrates.
+            </p>
+            <div class="product-artifact" aria-hidden="true">
+              <div class="artifact-flow">
+                <span class="artifact-chip">household-register.xlsx</span>
+                <span class="artifact-arrow">&rarr;</span>
+                <span class="artifact-chip artifact-chip-strong">protected registry API</span>
+              </div>
+              <span class="artifact-meta">Read-only &middot; scoped fields &middot; every request audited</span>
+            </div>
+            <a class="inline-cta" href="/relay/">That&rsquo;s Registry Relay &rarr;</a>
+          </article>
+          <article class="product-card">
+            <h3 class="door-situation">&ldquo;Partners cannot tell what our registry holds, or what the fields mean.&rdquo;</h3>
+            <p>
+              Describe the registry once in a portable metadata file, validated and rendered into
+              the standard formats catalogs and partners expect. Works as plain static files,
+              without adopting anything else.
+            </p>
+            <div class="product-artifact" aria-hidden="true">
+              <div class="artifact-flow">
+                <span class="artifact-chip">metadata.yaml</span>
+                <span class="artifact-arrow">&rarr;</span>
+                <span class="artifact-chip">DCAT-AP</span>
+                <span class="artifact-chip">SHACL</span>
+                <span class="artifact-chip">JSON Schema</span>
+              </div>
+              <span class="artifact-meta">One description, rendered into the formats partners expect</span>
+            </div>
+            <a class="inline-cta" href="/manifest/">That&rsquo;s Registry Manifest &rarr;</a>
+          </article>
         </div>
+        <p class="door-aside">
+          On the other side of the counter, running the program that needs the answers?
+          <a class="inline-cta" href="/use-cases/">See what a minimized answer looks like &rarr;</a>
+        </p>
       </div>
     </section>
 
     <section class="section" id="stack" aria-labelledby="stack-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">The Registry Stack</p>
+          <p class="eyebrow"><span class="reg-no">No. 02</span> &middot; The operating model</p>
           <h2 id="stack-title">A governance layer between registries and public services.</h2>
           <p>
             A governed path from source data to a service answer, with a record of every
             trust-critical request.
           </p>
         </div>
-        <div class="flow-diagram" aria-label="Registry Stack operating model">
-          <div class="flow-node">
-            <span>Existing registry sources</span>
-            <p>Files, extracts, databases, and source systems remain under institutional control.</p>
-          </div>
-          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
-          <div class="flow-node flow-node-strong">
-            <span>Registry Stack</span>
-            <ol>
-              <li>Prepare and describe</li>
-              <li>Expose</li>
-              <li>Verify</li>
-              <li>Audit</li>
-            </ol>
-          </div>
-          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
-          <div class="flow-node">
-            <span>Public service systems</span>
-            <p>Workflow engines, exchange layers, wallets, portals, case tools</p>
-          </div>
-        </div>
-        <div class="implementation-grid">
-          {implementationNotes.map(([name, body]) => (
-            <article>
-              <h3>{name}</h3>
-              <p>{body}</p>
-            </article>
-          ))}
-        </div>
+        <HarnessDiagram />
       </div>
     </section>
 
-    <section class="section section-muted" id="bounded-answers" aria-labelledby="bounded-answers-title">
+    <section class="section section-muted" id="use-cases" aria-labelledby="use-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">Protected consultation</p>
-          <h2 id="bounded-answers-title">One registry source, many bounded answers.</h2>
-          <p>
-            An existing spreadsheet, Parquet file, CSV, or bounded database table can serve
-            metadata, selected fields, aggregate results, standards-shaped views, and audit records
-            without becoming a bulk data-sharing pipeline.
-          </p>
-        </div>
-        <RelayBoundedAnswers />
-      </div>
-    </section>
-
-    <section class="section" id="use-cases" aria-labelledby="use-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">Use cases</p>
+          <p class="eyebrow"><span class="reg-no">No. 03</span> &middot; Use cases</p>
           <h2 id="use-title">Ask for the evidence a service needs, not the whole record.</h2>
           <p>
             Each starting point is small enough for a pilot.
           </p>
         </div>
-        <MinimizationFunnel />
         <div class="use-case-grid">
           {useCases.map((item) => (
             <article class="use-case">
@@ -332,77 +289,38 @@ const boundaries = [
       </div>
     </section>
 
-    <section class="section section-muted" id="ecosystem" aria-labelledby="ecosystem-title">
+    <section class="proof-band" id="built-in-the-open" aria-labelledby="proof-title">
       <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">Ecosystem fit</p>
-          <h2 id="ecosystem-title">Designed to work with the infrastructure governments already choose.</h2>
+        <div class="section-heading">
+          <p class="eyebrow">Built in the open</p>
+          <h2 id="proof-title">Open source, on open standards, with a demo you can use today.</h2>
           <p>
-            Registry Stack does not replace exchange layers, workflow engines, wallets, public-service
-            platforms, or domain registry systems. It gives them safer registry-facing services to call.
+            Public services are converging on the once-only principle: people should not have to
+            prove the same fact twice. Registry Stack is built for that direction.
           </p>
         </div>
-        <div class="ecosystem-grid">
-          {ecosystemItems.map(([name, body]) => (
+        <div class="proof-grid">
+          {proofPoints.map((point) => (
             <article>
-              <h3>{name}</h3>
-              <p>{body}</p>
+              <h3>{point.title}</h3>
+              <p>{point.body}</p>
+              <p class="proof-fact">{point.fact}</p>
             </article>
           ))}
         </div>
-        <div class="centered-action">
-          <a class="inline-cta" href="/ecosystem/">See how Registry Stack fits the ecosystem &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" id="why-adopt" aria-labelledby="adopt-title">
-      <div class="section-inner split">
-        <div class="section-heading compact">
-          <p class="eyebrow">Why adopt it</p>
-          <h2 id="adopt-title">Incremental modernization, stronger safeguards.</h2>
-          <p>
-            As AI-assisted integration makes it cheaper to connect systems, public institutions need
-            stronger controls over what systems can read, what they can infer, what they can return,
-            and what gets audited.
-          </p>
-        </div>
-        <ul class="check-list">
-          {adoptionReasons.map((reason) => (
-            <li>{reason}</li>
-          ))}
-          <li><a class="inline-cta" href="/why-now/">Why safer registry surfaces matter now &rarr;</a></li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="section" id="boundaries" aria-labelledby="boundaries-title">
-      <div class="section-inner">
-        <div class="section-heading compact">
-          <p class="eyebrow">Boundaries</p>
-          <h2 id="boundaries-title">Focused infrastructure, not another whole platform.</h2>
-          <p>
-            The limits are part of the trust model. Registry Stack is a registry-facing access,
-            evidence, metadata, and audit layer.
-          </p>
-        </div>
-        <ul class="boundary-list">
-          {boundaries.map((boundary) => (
-            <li>{boundary}</li>
-          ))}
-        </ul>
-        <div class="centered-action">
-          <a class="inline-cta" href="/status/">See current status and boundaries &rarr;</a>
+        <div class="proof-links">
+          <a href="/ai/">Give AI agents answers, not records &rarr;</a>
+          <a href="/ecosystem/">How Registry Stack fits the ecosystem &rarr;</a>
         </div>
       </div>
     </section>
 
     <section class="final-cta" aria-labelledby="final-title">
       <div class="section-inner">
-        <p class="eyebrow">Start small</p>
+        <p class="pill">Start small</p>
         <h2 id="final-title">Start with one registry, one evidence need, and one governed service surface.</h2>
         <div class="hero-actions">
-          <a class="button button-primary" href="https://docs.registrystack.org/">Read the docs</a>
+          <a class="button button-primary" href="https://lab.registrystack.org/">Try the live demo</a>
           <a class="button button-secondary" href="mailto:hello@registrystack.org?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
         </div>
       </div>
@@ -412,13 +330,15 @@ const boundaries = [
   <footer class="site-footer">
     <div>
       <strong>Registry Stack</strong>
-      <p>Open infrastructure for registries, evidence services, and safer interoperability.</p>
+      <p>Open-source infrastructure that lets public registries answer questions, issue proofs, and keep their records.</p>
     </div>
     <nav aria-label="Footer links">
+      <a href="/notary/">Registry Notary</a>
+      <a href="/relay/">Registry Relay</a>
+      <a href="/manifest/">Registry Manifest</a>
+      <a href="/ecosystem/">Ecosystem</a>
       <a href="https://docs.registrystack.org/">Docs</a>
-      <a href="https://github.com/jeremi/registry-relay">Registry Relay</a>
-      <a href="https://github.com/jeremi/registry-notary">Registry Notary</a>
-      <a href="https://github.com/jeremi/registry-manifest">Registry Manifest</a>
+      <a href="https://lab.registrystack.org/">Live demo</a>
     </nav>
   </footer>
 </Base>
