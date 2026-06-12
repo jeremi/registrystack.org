@@ -45,13 +45,13 @@ const ogImageUrl = new URL('/og-image.png', 'https://registrystack.org').toStrin
       // Progressive enhancement only: the nav disclosure works without it,
       // this just closes it on an outside click or Escape.
       document.addEventListener('click', (event) => {
-        for (const menu of document.querySelectorAll('.nav-products[open]')) {
+        for (const menu of document.querySelectorAll('.nav-group[open]')) {
           if (!menu.contains(event.target)) menu.removeAttribute('open');
         }
       });
       document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
-        for (const menu of document.querySelectorAll('.nav-products[open]')) {
+        for (const menu of document.querySelectorAll('.nav-group[open]')) {
           menu.removeAttribute('open');
         }
       });

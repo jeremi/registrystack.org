@@ -3,6 +3,16 @@ import { extname, join, resolve } from "node:path";
 
 const dist = resolve("dist");
 const failures = [];
+const warnings = [];
+
+// The lab redeploys on its own schedule, and while it is down the links on the
+// already-deployed site are just as dead: blocking this build would not protect
+// anyone. Unreachability there warns; everywhere else it fails.
+const warnOnlyOrigins = ["https://lab.registrystack.org"];
+const isWarnOnly = (href) =>
+  warnOnlyOrigins.some(
+    (origin) => href === origin || href.startsWith(`${origin}/`),
+  );
 
 const htmlFiles = [];
 const walk = (dir) => {
@@ -110,8 +120,16 @@ for (const href of externalLinks) {
     );
   }
   if (!response.ok) {
-    failures.push(`external link failed ${href}: ${response.status}`);
+    if (isWarnOnly(href)) {
+      warnings.push(`external link unreachable ${href}: ${response.status}`);
+    } else {
+      failures.push(`external link failed ${href}: ${response.status}`);
+    }
   }
+}
+
+if (warnings.length > 0) {
+  console.warn(warnings.map((warning) => `! ${warning}`).join("\n"));
 }
 
 if (failures.length > 0) {

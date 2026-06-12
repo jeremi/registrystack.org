@@ -11,16 +11,21 @@ const products = [
   { href: '/manifest/', label: 'Registry Manifest', role: 'Describe', blurb: 'Portable standards-facing metadata', key: 'manifest' },
 ];
 
+// Supporting reading folds into one disclosure so the bar itself stays the
+// journey: problem, products, practice, price, pilot.
+const practice = [
+  { href: '/use-cases/', label: 'Use cases', blurb: 'Worked scenarios, question to signed answer', key: 'use-cases' },
+  { href: '/ecosystem/', label: 'Ecosystem', blurb: 'Beside the platforms governments already run', key: 'ecosystem' },
+  { href: '/ai/', label: 'AI in public services', blurb: 'Governed answers for human and AI askers', key: 'ai' },
+];
+
 const links = [
-  { href: '/why/', label: 'Why it matters', key: 'why' },
-  { href: '/use-cases/', label: 'Use cases', key: 'use-cases' },
-  { href: '/ecosystem/', label: 'Ecosystem', key: 'ecosystem' },
-  { href: '/ai/', label: 'AI', key: 'ai' },
   { href: '/pricing/', label: 'Pricing', key: 'pricing' },
   { href: '/pilot/', label: 'Start a pilot', key: 'pilot' },
 ];
 
 const onProductPage = products.some((product) => product.key === current);
+const onPracticePage = practice.some((page) => page.key === current);
 ---
 
 <header class="site-header">
@@ -29,13 +34,25 @@ const onProductPage = products.some((product) => product.key === current);
     <span>Registry Stack</span>
   </a>
   <nav class="top-nav" aria-label="Main navigation">
-    <details class="nav-products">
+    <a href="/problem/" aria-current={current === 'problem' ? 'page' : undefined}>The problem</a>
+    <details class="nav-group">
       <summary aria-current={onProductPage ? 'page' : undefined}>Products</summary>
-      <div class="nav-products-panel">
+      <div class="nav-group-panel">
         {products.map((product) => (
           <a href={product.href} aria-current={current === product.key ? 'page' : undefined}>
-            <span class="nav-product-name">{product.label} <span class="nav-product-role">{product.role}</span></span>
-            <span class="nav-product-blurb">{product.blurb}</span>
+            <span class="nav-entry-name">{product.label} <span class="nav-entry-role">{product.role}</span></span>
+            <span class="nav-entry-blurb">{product.blurb}</span>
+          </a>
+        ))}
+      </div>
+    </details>
+    <details class="nav-group">
+      <summary aria-current={onPracticePage ? 'page' : undefined}>In practice</summary>
+      <div class="nav-group-panel">
+        {practice.map((page) => (
+          <a href={page.href} aria-current={current === page.key ? 'page' : undefined}>
+            <span class="nav-entry-name">{page.label}</span>
+            <span class="nav-entry-blurb">{page.blurb}</span>
           </a>
         ))}
       </div>

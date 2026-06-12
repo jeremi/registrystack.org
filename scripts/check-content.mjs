@@ -114,7 +114,7 @@ if (!homeSource.includes('https://lab.registrystack.org/')) {
 }
 
 // 3. Site wiring: the homepage nav reaches every marketing route.
-for (const route of ['/notary/', '/relay/', '/manifest/', '/why/', '/use-cases/', '/ai/']) {
+for (const route of ['/notary/', '/relay/', '/manifest/', '/problem/', '/use-cases/', '/ai/']) {
   if (!homeSource.includes(`href="${route}"`)) {
     failures.push(`homepage is missing a link to ${route}`);
   }

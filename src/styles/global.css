@@ -162,13 +162,13 @@ a:hover {
   color: var(--registry-blue);
 }
 
-/* The three products fold into one disclosure, keeping the nav at five
-   entries. Plain <details>, so it works without JavaScript. */
-.nav-products {
+/* Related pages fold into disclosures (Products, In practice), keeping the
+   nav at six entries. Plain <details>, so it works without JavaScript. */
+.nav-group {
   position: relative;
 }
 
-.nav-products summary {
+.nav-group summary {
   align-items: center;
   color: var(--registry-muted);
   cursor: pointer;
@@ -183,27 +183,27 @@ a:hover {
   user-select: none;
 }
 
-.nav-products summary::-webkit-details-marker {
+.nav-group summary::-webkit-details-marker {
   display: none;
 }
 
-.nav-products summary::after {
+.nav-group summary::after {
   content: '▾';
   font-size: 11px;
   margin-left: 6px;
 }
 
-.nav-products summary:hover {
+.nav-group summary:hover {
   color: var(--registry-ink);
 }
 
-.nav-products summary[aria-current='page'],
-.nav-products[open] summary {
+.nav-group summary[aria-current='page'],
+.nav-group[open] summary {
   box-shadow: inset 0 -2px 0 var(--registry-stamp);
   color: var(--registry-ink);
 }
 
-.nav-products-panel {
+.nav-group-panel {
   background: #ffffff;
   border: 1px solid var(--registry-ink);
   box-shadow: 4px 4px 0 rgba(12, 27, 58, 0.15);
@@ -217,7 +217,7 @@ a:hover {
   z-index: 20;
 }
 
-.nav-products-panel a {
+.nav-group-panel a {
   display: grid;
   gap: 2px;
   justify-content: start;
@@ -227,22 +227,22 @@ a:hover {
   transition: background var(--registry-ease);
 }
 
-.nav-products-panel a:hover {
+.nav-group-panel a:hover {
   background: var(--registry-active);
   text-decoration: none;
 }
 
-.nav-products-panel a[aria-current='page'] .nav-product-name {
+.nav-group-panel a[aria-current='page'] .nav-entry-name {
   color: var(--registry-stamp);
 }
 
-.nav-product-name {
+.nav-entry-name {
   color: var(--registry-ink);
   font-size: 14px;
   font-weight: 700;
 }
 
-.nav-product-role {
+.nav-entry-role {
   color: var(--registry-blue);
   font-family: var(--registry-mono);
   font-size: 11px;
@@ -251,7 +251,7 @@ a:hover {
   text-transform: uppercase;
 }
 
-.nav-product-blurb {
+.nav-entry-blurb {
   color: var(--registry-muted);
   font-size: 13px;
   font-weight: 400;
@@ -1312,7 +1312,7 @@ code {
   }
 
   /* In the stacked header the product panel opens in flow, not floating. */
-  .nav-products-panel {
+  .nav-group-panel {
     left: 0;
     min-width: 0;
     position: static;

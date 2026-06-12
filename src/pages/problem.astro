@@ -4,7 +4,7 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import DocsHandoff from '../components/DocsHandoff.astro';
 
-const pageTitle = 'Why it matters | Registry Stack';
+const pageTitle = 'The problem | Registry Stack';
 const pageDescription =
   'The registry problems Registry Stack is built around: data not service-ready, APIs that over-share, safeguards on paper, integrations that never compound.';
 
@@ -64,13 +64,13 @@ const problems = [
 ---
 
 <Base title={pageTitle} description={pageDescription}>
-  <SiteHeader current="why" />
+  <SiteHeader current="problem" />
 
   <main>
     <section class="hero" aria-labelledby="why-hero-title">
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="eyebrow">Why it matters</p>
+          <p class="eyebrow">The problem</p>
           <h1 id="why-hero-title">The answers already exist. Asking for them safely is the hard part.</h1>
           <p class="hero-lead">
             Governments already hold the data for faster, fairer services. What is usually
@@ -79,6 +79,32 @@ const problems = [
             Stack is built around.
           </p>
         </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="payoff-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">The payoff</p>
+          <h2 id="payoff-title">Fix the asking, and three things change.</h2>
+        </div>
+        <div class="problem-grid payoff-grid">
+          <article class="quiet-card">
+            <h3>People stop re-proving facts</h3>
+            <p>A fact the government already holds is answered by the registry that holds it. Fewer certified copies, fewer queues, fewer reasons to drop out of a service.</p>
+          </article>
+          <article class="quiet-card">
+            <h3>Safeguards become infrastructure</h3>
+            <p>Purpose, scope, and disclosure limits are checked on every request, and every trust-critical request leaves an audit record a reviewer can actually read.</p>
+          </article>
+          <article class="quiet-card">
+            <h3>Every integration compounds</h3>
+            <p>Each connection leaves behind a described, governed registry surface the next program reuses, instead of code two people understand.</p>
+          </article>
+        </div>
+        <p class="payoff-cta">
+          <a class="inline-cta" href="/pilot/">What a pilot delivers &rarr;</a>
+        </p>
       </div>
     </section>
 
@@ -138,6 +164,15 @@ const problems = [
 </Base>
 
 <style>
+  .payoff-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .payoff-cta {
+    margin: 18px 0 0;
+    text-align: center;
+  }
+
   .problem-grid-why {
     gap: 20px;
   }
@@ -165,5 +200,13 @@ const problems = [
     color: var(--registry-ink);
     font-weight: 600;
     margin: 0;
+  }
+
+  /* Three short payoff cards: one row on desktop, a single column once the
+     row would crowd, mirroring the pilot page's phase cards. */
+  @media (max-width: 900px) {
+    .payoff-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

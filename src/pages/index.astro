@@ -102,27 +102,41 @@ const proofPoints = [
       <span>Registry Stack</span>
     </a>
     <nav class="top-nav" aria-label="Main navigation">
-      <details class="nav-products">
+      <a href="/problem/">The problem</a>
+      <details class="nav-group">
         <summary>Products</summary>
-        <div class="nav-products-panel">
+        <div class="nav-group-panel">
           <a href="/notary/">
-            <span class="nav-product-name">Registry Notary <span class="nav-product-role">Verify</span></span>
-            <span class="nav-product-blurb">Signed answers and wallet credentials</span>
+            <span class="nav-entry-name">Registry Notary <span class="nav-entry-role">Verify</span></span>
+            <span class="nav-entry-blurb">Signed answers and wallet credentials</span>
           </a>
           <a href="/relay/">
-            <span class="nav-product-name">Registry Relay <span class="nav-product-role">Expose</span></span>
-            <span class="nav-product-blurb">Protected APIs over existing files and tables</span>
+            <span class="nav-entry-name">Registry Relay <span class="nav-entry-role">Expose</span></span>
+            <span class="nav-entry-blurb">Protected APIs over existing files and tables</span>
           </a>
           <a href="/manifest/">
-            <span class="nav-product-name">Registry Manifest <span class="nav-product-role">Describe</span></span>
-            <span class="nav-product-blurb">Portable standards-facing metadata</span>
+            <span class="nav-entry-name">Registry Manifest <span class="nav-entry-role">Describe</span></span>
+            <span class="nav-entry-blurb">Portable standards-facing metadata</span>
           </a>
         </div>
       </details>
-      <a href="/why/">Why it matters</a>
-      <a href="/use-cases/">Use cases</a>
-      <a href="/ecosystem/">Ecosystem</a>
-      <a href="/ai/">AI</a>
+      <details class="nav-group">
+        <summary>In practice</summary>
+        <div class="nav-group-panel">
+          <a href="/use-cases/">
+            <span class="nav-entry-name">Use cases</span>
+            <span class="nav-entry-blurb">Worked scenarios, question to signed answer</span>
+          </a>
+          <a href="/ecosystem/">
+            <span class="nav-entry-name">Ecosystem</span>
+            <span class="nav-entry-blurb">Beside the platforms governments already run</span>
+          </a>
+          <a href="/ai/">
+            <span class="nav-entry-name">AI in public services</span>
+            <span class="nav-entry-blurb">Governed answers for human and AI askers</span>
+          </a>
+        </div>
+      </details>
       <a href="/pricing/">Pricing</a>
       <a href="/pilot/">Start a pilot</a>
       <a class="nav-emphasis" href="https://docs.registrystack.org/">Read the docs</a>
@@ -198,7 +212,7 @@ const proofPoints = [
             stays private, and how use is reviewed. Registry Stack supplies that asking layer:
             faster for people, safer for registries, simpler for programs.
           </p>
-          <a class="inline-cta" href="/why/">See the recurring registry problems &rarr;</a>
+          <a class="inline-cta" href="/problem/">See the recurring registry problems &rarr;</a>
         </div>
       </div>
     </section>

@@ -51,6 +51,7 @@ const routes = [
   { name: 'relay', path: '/relay/' },
   { name: 'manifest', path: '/manifest/' },
   { name: 'pricing', path: '/pricing/' },
+  { name: 'problem', path: '/problem/' },
 ];
 
 const failures = [];
@@ -97,24 +98,25 @@ for (const viewport of viewports) {
     failures.push(`${label}: text extends outside viewport`);
   }
 
-  // The Products disclosure must actually present its three product links at
-  // tappable size once opened, on every checked route and viewport.
+  // Each nav disclosure (Products, In practice) must actually present its
+  // three links at tappable size once opened, on every checked route and
+  // viewport.
   {
-    const menu = await page.evaluate(() => {
-      const details = document.querySelector('.nav-products');
-      if (!details) return null;
-      details.setAttribute('open', '');
-      const links = [...details.querySelectorAll('a')].map((link) => {
-        const rect = link.getBoundingClientRect();
-        return { width: rect.width, height: rect.height };
-      });
-      details.removeAttribute('open');
-      return links;
-    });
-    if (!menu || menu.length < 3) {
-      failures.push(`${label}: Products menu is missing or has fewer than 3 product links`);
-    } else if (menu.some((rect) => rect.width < 36 || rect.height < 36)) {
-      failures.push(`${label}: open Products menu links are below 36px`);
+    const menus = await page.evaluate(() =>
+      [...document.querySelectorAll('.nav-group')].map((details) => {
+        details.setAttribute('open', '');
+        const links = [...details.querySelectorAll('a')].map((link) => {
+          const rect = link.getBoundingClientRect();
+          return { width: rect.width, height: rect.height };
+        });
+        details.removeAttribute('open');
+        return links;
+      }),
+    );
+    if (menus.length < 2 || menus.some((links) => links.length < 3)) {
+      failures.push(`${label}: a nav disclosure is missing or has fewer than 3 links`);
+    } else if (menus.flat().some((rect) => rect.width < 36 || rect.height < 36)) {
+      failures.push(`${label}: open nav menu links are below 36px`);
     }
   }
 

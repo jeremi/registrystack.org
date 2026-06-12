@@ -39,7 +39,8 @@ const { port } = server.address();
 const browser = await chromium.launch();
 const failures = [];
 
-for (const path of ['/', '/notary/', '/relay/', '/manifest/', '/pricing/']) {
+const paths = ['/', '/notary/', '/relay/', '/manifest/', '/pricing/', '/problem/'];
+for (const path of paths) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
   const page = await context.newPage();
   await page.goto(`http://127.0.0.1:${port}${path}`);
@@ -59,4 +60,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log('axe check passed (0 violations on 5 pages)');
+console.log(`axe check passed (0 violations on ${paths.length} pages)`);
