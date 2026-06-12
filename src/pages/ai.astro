@@ -28,12 +28,12 @@ const reviewQuestions = [
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">AI in public services</p>
-          <h1 id="ai-hero-title">No AI agent is safer than the access it is given.</h1>
+          <h1 id="ai-hero-title">An AI agent is only as safe as the access you give it.</h1>
           <p class="hero-lead">
-            Better models and better prompts reduce how often AI errs, not what a mistake can
-            reach when one lands. Public services need a harness: infrastructure that decides
-            what any asker can discover, may ask, gets back, and leaves behind. Registry Stack
-            is that harness for registry data.
+            Better models and better prompts make mistakes rarer. They do not change what a
+            mistake can reach when it happens. Public services need a harness: infrastructure
+            that decides what any asker can discover, what it may ask, what it gets back, and
+            what trace it leaves. Registry Stack is that harness for registry data.
           </p>
         </div>
       </div>
@@ -49,7 +49,7 @@ const reviewQuestions = [
             including the ones who arrive after the safety review. Each request passes one
             answering point that checks authority, meaning, and criteria, then answers narrowly
             instead of exposing everything the registry holds. The harness is the same
-            governance layer the rest of this site describes; AI only raises the stakes.
+            governance layer the rest of this site describes; AI only increases what a mistake can cost.
           </p>
         </div>
         <HarnessDiagram variant="ai" />
@@ -62,7 +62,7 @@ const reviewQuestions = [
           <p class="eyebrow">A worked example</p>
           <h2 id="example-title">Two ways to build the same integration.</h2>
           <p>
-            A housing-benefit program needs to know whether applicants fall under an income
+            A housing-benefit program needs to know whether applicants fall below an income
             threshold. Automation makes both versions of this integration cheap to build. Only
             one of them is safe to run.
           </p>
@@ -73,9 +73,10 @@ const reviewQuestions = [
             <p>
               The obvious integration asks the income registry for the household&rsquo;s records, and
               gets them: income history, employer, every family member, copied into a second
-              system. The copy goes stale the day it lands, nobody checked that the
-              registry&rsquo;s gross monthly income means the rule&rsquo;s net annual, and when a
-              family is wrongly refused, the denial traces back to a join no one can explain.
+              system. The copy is out of date the day it arrives. Nobody noticed that the
+              registry records gross monthly income while the rule needs net annual income.
+              And when a family is wrongly refused, no one can explain how the copied data
+              produced the denial.
             </p>
           </article>
           <article class="quiet-card">
@@ -84,8 +85,8 @@ const reviewQuestions = [
               The program asks what it actually needs to know: does this household sit below
               the threshold for this scheme? Authority is checked before any data is read, the
               fields are validated against a shared vocabulary, the criteria are evaluated
-              where the data lives, and what returns is a signed yes-or-no with a validity
-              window. The family can see the exchange in the audit trail and challenge it.
+              where the data lives, and what comes back is a signed yes-or-no answer with a
+              validity window. The family can see the exchange in the audit trail and challenge it.
             </p>
           </article>
         </div>
@@ -100,7 +101,7 @@ const reviewQuestions = [
           <p>
             AI-assisted integration lets teams build connections faster than they can understand
             the data, the authority for access, or the meaning of each field. "Can two systems
-            connect?" is too weak a question for that world. A registry surface should be able
+            connect?" is no longer a strong enough question. A registry surface should be able
             to answer practical review questions, for every caller, human or automated.
           </p>
         </div>
@@ -112,15 +113,65 @@ const reviewQuestions = [
       </div>
     </section>
 
-    <section class="section section-muted" aria-labelledby="not-ai-title">
+    <section class="section section-muted" aria-labelledby="zero-trust-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Zero trust</p>
+          <h2 id="zero-trust-title">The security world has a name for this approach.</h2>
+          <p>
+            Zero trust: no caller is trusted because of where it comes from or what credential
+            it carries, and every request is verified at the moment of use. Recent joint
+            guidance on adopting AI agents from the US, UK, Australian, Canadian, and New
+            Zealand cyber security agencies reaches the same conclusion: govern agents inside
+            existing security frameworks, give them the least access they need, and never
+            broad access to sensitive data or critical systems. Registry Stack is where that principle becomes
+            enforceable for registry data, and an AI agent gets no special status: it is one
+            more untrusted caller.
+          </p>
+        </div>
+        <div class="problem-grid">
+          <article class="quiet-card">
+            <h3>Never trust by default</h3>
+            <p>
+              A request arriving through a trusted exchange channel, from a known ministry
+              system, or with a valid token is still a claim to be checked, not a fact.
+              Authority, purpose, and scope are verified on every request, including requests
+              from systems that were trusted yesterday.
+            </p>
+          </article>
+          <article class="quiet-card">
+            <h3>Least privilege, by construction</h3>
+            <p>
+              The classic failure is the over-permissioned integration: a service account that
+              can read everything in case it ever needs something. Here the only thing
+              available is the narrow answer: a claim, an aggregate, an evidence response. A
+              caller that is compromised, or simply wrong, can leak only what it was given,
+              never the registry.
+            </p>
+          </article>
+          <article class="quiet-card">
+            <h3>Assume failure, keep the proof</h3>
+            <p>
+              Zero trust plans for the day a caller misbehaves. Every answer is signed, scoped,
+              and time-limited, and every decision leaves an audit record, so a reviewer can
+              reconstruct exactly what left the registry, for whom, and under which policy, and
+              the people affected can challenge it.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="not-ai-title">
       <div class="section-inner">
         <div class="section-heading compact">
           <p class="eyebrow">To be clear</p>
           <h2 id="not-ai-title">Registry Stack is not an AI product.</h2>
           <p>
-            AI is the context that makes safer surfaces urgent, not the promise. Registry Stack
-            does not make AI eligibility decisions, automate governance, or replace semantic
-            review, authorization policy, human accountability, appeal, or recourse. It gives
+            AI is what makes safer registry surfaces urgent; it is not what Registry Stack
+            sells. Registry Stack does not make eligibility decisions, automate governance, or
+            replace semantic review, authorization policy, human accountability, appeal, or
+            recourse. It gives
             every caller, human or automated, a controlled answer instead of a raw record.
           </p>
           <a class="inline-cta" href="/pilot/">What a pilot looks like &rarr;</a>
