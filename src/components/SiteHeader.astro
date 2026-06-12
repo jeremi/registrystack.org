@@ -5,14 +5,19 @@
 // deeper pages, with the current page marked aria-current.
 const { current } = Astro.props;
 
+const products = [
+  { href: '/notary/', label: 'Registry Notary', role: 'Verify', blurb: 'Signed answers and wallet credentials', key: 'notary' },
+  { href: '/relay/', label: 'Registry Relay', role: 'Expose', blurb: 'Protected APIs over existing files and tables', key: 'relay' },
+  { href: '/manifest/', label: 'Registry Manifest', role: 'Describe', blurb: 'Portable standards-facing metadata', key: 'manifest' },
+];
+
 const links = [
-  { href: '/notary/', label: 'Notary', key: 'notary' },
-  { href: '/relay/', label: 'Relay', key: 'relay' },
-  { href: '/manifest/', label: 'Manifest', key: 'manifest' },
   { href: '/why/', label: 'Why it matters', key: 'why' },
   { href: '/use-cases/', label: 'Use cases', key: 'use-cases' },
   { href: '/ai/', label: 'AI', key: 'ai' },
 ];
+
+const onProductPage = products.some((product) => product.key === current);
 ---
 
 <header class="site-header">
@@ -21,6 +26,17 @@ const links = [
     <span>Registry Stack</span>
   </a>
   <nav class="top-nav" aria-label="Main navigation">
+    <details class="nav-products">
+      <summary aria-current={onProductPage ? 'page' : undefined}>Products</summary>
+      <div class="nav-products-panel">
+        {products.map((product) => (
+          <a href={product.href} aria-current={current === product.key ? 'page' : undefined}>
+            <span class="nav-product-name">{product.label} <span class="nav-product-role">{product.role}</span></span>
+            <span class="nav-product-blurb">{product.blurb}</span>
+          </a>
+        ))}
+      </div>
+    </details>
     {links.map((link) => (
       <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
     ))}

@@ -243,6 +243,21 @@ const consultations = [
     gap: 8px;
     min-height: 38px;
     padding: 7px 10px;
+    transition: border-color var(--registry-ease), color var(--registry-ease),
+      box-shadow var(--registry-ease), transform var(--registry-ease);
+  }
+
+  .relay-mode-button:hover {
+    border-color: var(--registry-blue);
+    box-shadow: 3px 3px 0 rgba(23, 59, 122, 0.12);
+    color: var(--registry-blue);
+    transform: translate(-1px, -1px);
+  }
+
+  .relay-mode-button:active,
+  .relay-mode-button.is-active {
+    box-shadow: none;
+    transform: translate(0, 0);
   }
 
   .relay-mode-button.is-active {
@@ -532,7 +547,8 @@ const consultations = [
     overflow: hidden;
     padding: 9px 10px;
     text-overflow: ellipsis;
-    transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    transition: background var(--registry-ease), color var(--registry-ease),
+      box-shadow var(--registry-ease);
     white-space: nowrap;
   }
 
@@ -631,8 +647,8 @@ const consultations = [
     min-height: 210px;
     opacity: 0;
     padding: 18px;
-    transform: translateY(8px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    transform: translateY(6px);
+    transition: opacity var(--registry-ease), transform var(--registry-ease);
   }
 
   .relay-response-card.is-active {

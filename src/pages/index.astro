@@ -15,11 +15,11 @@ const heroReasons = [
   },
   {
     label: 'Trust and safeguards',
-    body: 'Reduce over-sharing, keep data owners in control, and make access decisions easier to review.',
+    body: 'Records never leave the registry that owns them. Every answer is scoped to a stated purpose, signed, and recorded in an audit trail reviewers can read.',
   },
   {
     label: 'Practical path to scale',
-    body: 'Start with one registry and one service need, then expand through a repeatable operating model.',
+    body: 'Start with one registry and one question, even a spreadsheet, and add services one at a time. No replatforming required first.',
   },
 ];
 
@@ -66,7 +66,15 @@ const heroAnswers = useCases.map((item) => ({
   answer: item.output,
 }));
 
-const worksWithItems = ['CSV', 'XLSX', 'Parquet', 'PostgreSQL', 'DCAT-AP', 'OGC APIs', 'SP-DCI', 'PublicSchema', 'GovStack patterns'];
+// Neighbor platforms shown as monochrome marks. Display sizes are tuned per
+// logo for visual parity, not taken from the source files.
+const worksAlongside = [
+  { name: 'OpenCRVS', src: '/logos/opencrvs.svg', width: 128, height: 24 },
+  { name: 'OpenSPP', src: '/logos/openspp.svg', width: 114, height: 24 },
+  { name: 'DHIS2', src: '/logos/dhis2.svg', width: 92, height: 28 },
+  { name: 'MOSIP', src: '/logos/mosip.png', width: 75, height: 34 },
+  { name: 'OpenFn', src: '/logos/openfn.png', width: 81, height: 30 },
+];
 
 const proofPoints = [
   {
@@ -76,12 +84,12 @@ const proofPoints = [
   },
   {
     title: 'A demo you can use right now',
-    body: 'The hosted lab issues a real signed proof to a wallet in minutes, on synthetic data. What this site claims, the demo shows.',
+    body: 'The hosted lab issues a real signed proof to a wallet in minutes, on synthetic data, and runs live integrations with OpenCRVS, DHIS2, MOSIP eSignet, and OpenFn. What this site claims, the demo shows.',
     fact: 'lab.registrystack.org',
   },
   {
     title: 'The standards wallets and catalogs speak',
-    body: 'Credentials issue in the formats the European Digital Identity Wallet ecosystem uses, catalogs render to DCAT-AP, and sync follows SP-DCI and the GovStack pattern. Built by contributors active in GovStack and DCI standards work.',
+    body: 'Credentials issue in the formats the European Digital Identity Wallet ecosystem uses, catalogs render to DCAT-AP, and registry sync follows SP-DCI. Built by contributors who help write the GovStack and DCI standards.',
     fact: 'SD-JWT VC · OpenID4VCI · no lock-in',
   },
 ];
@@ -94,9 +102,23 @@ const proofPoints = [
       <span>Registry Stack</span>
     </a>
     <nav class="top-nav" aria-label="Main navigation">
-      <a href="/notary/">Notary</a>
-      <a href="/relay/">Relay</a>
-      <a href="/manifest/">Manifest</a>
+      <details class="nav-products">
+        <summary>Products</summary>
+        <div class="nav-products-panel">
+          <a href="/notary/">
+            <span class="nav-product-name">Registry Notary <span class="nav-product-role">Verify</span></span>
+            <span class="nav-product-blurb">Signed answers and wallet credentials</span>
+          </a>
+          <a href="/relay/">
+            <span class="nav-product-name">Registry Relay <span class="nav-product-role">Expose</span></span>
+            <span class="nav-product-blurb">Protected APIs over existing files and tables</span>
+          </a>
+          <a href="/manifest/">
+            <span class="nav-product-name">Registry Manifest <span class="nav-product-role">Describe</span></span>
+            <span class="nav-product-blurb">Portable standards-facing metadata</span>
+          </a>
+        </div>
+      </details>
       <a href="/why/">Why it matters</a>
       <a href="/use-cases/">Use cases</a>
       <a href="/ai/">AI</a>
@@ -119,7 +141,7 @@ const proofPoints = [
             </p>
             <div class="hero-actions" aria-label="Primary actions">
               <a class="button button-primary" href="https://lab.registrystack.org/">Try the live demo</a>
-              <a class="button button-secondary" href="mailto:hello@registrystack.org?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
+              <a class="button button-secondary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
             </div>
             <p class="hero-note">
               The lab runs on synthetic data. No install, no account: receive a signed proof in a
@@ -146,10 +168,17 @@ const proofPoints = [
       </div>
     </section>
 
-    <section class="partner-strip" aria-label="Designed to work with existing public infrastructure">
+    <section class="partner-strip" aria-label="Platforms Registry Stack works alongside">
       <div class="partner-strip-inner">
-        <span>Works with</span>
-        {worksWithItems.map((item) => <strong>{item}</strong>)}
+        <span>Works alongside</span>
+        <ul class="partner-logos">
+          {worksAlongside.map((item) => (
+            <li>
+              <img src={item.src} alt={item.name} width={item.width} height={item.height} loading="lazy" />
+            </li>
+          ))}
+        </ul>
+        <a class="inline-cta" href="/ecosystem/">How it fits &rarr;</a>
       </div>
     </section>
 
@@ -321,24 +350,26 @@ const proofPoints = [
         <h2 id="final-title">Start with one registry, one evidence need, and one governed service surface.</h2>
         <div class="hero-actions">
           <a class="button button-primary" href="https://lab.registrystack.org/">Try the live demo</a>
-          <a class="button button-secondary" href="mailto:hello@registrystack.org?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
+          <a class="button button-secondary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div>
-      <strong>Registry Stack</strong>
-      <p>Open-source infrastructure that lets public registries answer questions, issue proofs, and keep their records.</p>
+    <div class="site-footer-inner">
+      <div>
+        <strong>Registry Stack</strong>
+        <p>Open-source infrastructure that lets public registries answer questions, issue proofs, and keep their records.</p>
+      </div>
+      <nav aria-label="Footer links">
+        <a href="/notary/">Registry Notary</a>
+        <a href="/relay/">Registry Relay</a>
+        <a href="/manifest/">Registry Manifest</a>
+        <a href="/ecosystem/">Ecosystem</a>
+        <a href="https://docs.registrystack.org/">Docs</a>
+        <a href="https://lab.registrystack.org/">Live demo</a>
+      </nav>
     </div>
-    <nav aria-label="Footer links">
-      <a href="/notary/">Registry Notary</a>
-      <a href="/relay/">Registry Relay</a>
-      <a href="/manifest/">Registry Manifest</a>
-      <a href="/ecosystem/">Ecosystem</a>
-      <a href="https://docs.registrystack.org/">Docs</a>
-      <a href="https://lab.registrystack.org/">Live demo</a>
-    </nav>
   </footer>
 </Base>

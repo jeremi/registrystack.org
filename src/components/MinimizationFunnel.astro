@@ -111,8 +111,8 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
   }
 
   .funnel-panel {
-    background: var(--registry-sidebar);
-    border: 1px solid var(--registry-rule);
+    background: var(--registry-paper);
+    border: 1px solid var(--registry-ink);
     overflow: hidden;
     padding: clamp(20px, 3vw, 30px);
   }
@@ -130,7 +130,7 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
     color: var(--registry-blue);
     font-family: var(--registry-mono);
     font-size: 12px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
@@ -145,10 +145,19 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
     letter-spacing: 0.04em;
     padding: 7px 14px;
     text-transform: uppercase;
+    transition: border-color var(--registry-ease), box-shadow var(--registry-ease),
+      transform var(--registry-ease);
   }
 
   .funnel-replay:hover {
     border-color: var(--registry-blue);
+    box-shadow: 2px 2px 0 rgba(23, 59, 122, 0.15);
+    transform: translate(-1px, -1px);
+  }
+
+  .funnel-replay:active {
+    box-shadow: none;
+    transform: translate(0, 0);
   }
 
   .funnel-diagram {
@@ -168,6 +177,7 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
     display: block;
     font-family: var(--registry-mono);
     font-size: 12px;
+    letter-spacing: 0.08em;
     margin-bottom: 12px;
     text-transform: uppercase;
   }
@@ -193,7 +203,7 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
     font-family: var(--registry-mono);
     font-size: 13px;
     padding: 7px 10px;
-    transition: background 0.2s ease, box-shadow 0.2s ease;
+    transition: background var(--registry-ease), box-shadow var(--registry-ease);
   }
 
   /* A field lights up while the gate is reading it for a claim. */
@@ -354,6 +364,7 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
     color: var(--registry-muted);
     font-family: var(--registry-mono);
     font-size: 12px;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
@@ -382,7 +393,6 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
 
   .funnel-audit::before {
     background: var(--registry-blue);
-    border-radius: 50%;
     content: '';
     display: inline-block;
     height: 7px;

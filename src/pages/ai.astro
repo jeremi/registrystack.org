@@ -57,7 +57,7 @@ const reviewQuestions = [
 
     <section class="section section-muted" aria-labelledby="example-title">
       <div class="section-inner">
-        <div class="section-heading">
+        <div class="section-heading center">
           <p class="eyebrow">A worked example</p>
           <h2 id="example-title">Two ways to build the same integration.</h2>
           <p>
@@ -66,7 +66,7 @@ const reviewQuestions = [
             one of them is safe to run.
           </p>
         </div>
-        <div class="problem-grid">
+        <div class="problem-grid problem-grid-ai">
           <article class="quiet-card">
             <h3>Copy the records</h3>
             <p>
@@ -134,3 +134,20 @@ const reviewQuestions = [
   />
   <SiteFooter />
 </Base>
+
+<style>
+  /* The worked example has two symmetric cards: override the global 3-col grid
+     so there is no empty third column. */
+  .problem-grid-ai {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 620px) {
+    .problem-grid-ai {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

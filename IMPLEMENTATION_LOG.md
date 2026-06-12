@@ -35,7 +35,7 @@
   by a hero `<aside>` inside `<main>`. The hero proof panel is now ordinary
   section content, and the accessibility script now fails on any axe violation.
 - Contact links are intentionally checked: the pilot CTA must include
-  `mailto:hello@registrystack.org`, and mailto addresses must match a basic
+  `mailto:jeremi@joslin.fr`, and mailto addresses must match a basic
   email-address shape.
 - Browser QA scripts must serve `dist/` over local HTTP. Opening
   `dist/index.html` through `file://` does not load Astro's absolute CSS asset

@@ -24,13 +24,14 @@ const html = `<!doctype html>
         --blue: #173b7a;
         --stamp: #9d2c1d;
         --ink: #161616;
+        --paper: #eef2ec;
         --muted: #6a6a6a;
-        --rule: #e5e5e5;
+        --rule: #dde3da;
       }
       * { box-sizing: border-box; margin: 0; }
       html, body { height: 630px; width: 1200px; }
       body {
-        background: #ffffff;
+        background: var(--paper);
         border-top: 10px solid var(--blue);
         display: flex;
         flex-direction: column;
@@ -78,12 +79,12 @@ const html = `<!doctype html>
       <span class="wordmark">Registry Stack</span>
     </div>
     <div>
-      <p class="kicker">For country digital teams and partners</p>
+      <p class="kicker">Open source &middot; For governments and their partners</p>
       <h1>Prove facts from registries without sharing the records.</h1>
     </div>
     <div class="foot">
       <span class="url">registrystack.org</span>
-      <span class="works">Works with CSV &middot; XLSX &middot; Parquet &middot; PostgreSQL &middot; DCAT-AP &middot; OGC APIs &middot; SP-DCI &middot; PublicSchema &middot; GovStack patterns</span>
+      <span class="works">Works alongside OpenCRVS &middot; OpenSPP &middot; DHIS2 &middot; MOSIP &middot; OpenFn</span>
     </div>
   </body>
 </html>`;

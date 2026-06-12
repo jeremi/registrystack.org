@@ -15,15 +15,19 @@
   --registry-sidebar: #fafafa;
   --registry-active: #eef3ff;
   --registry-code-bg: #f3f4f6;
-  /* Civic-print palette: the visual language of official records. Quiet paper,
-     ink bands, a stamp red used sparingly for seals and register numbers. */
-  --registry-paper: #f7f6f1;
-  --registry-ink-band-deep: #0c1b3a;
+  /* Civic-print palette: the visual language of official records. Quiet
+     ledger-green paper, ink bands, a stamp red used sparingly for seals and
+     register numbers. */
+  --registry-paper: #eef2ec;
+  --registry-ink-band-deep: #161616;
   --registry-stamp: #9d2c1d;
   --registry-brass: #d4af4e;
   --registry-max: 1120px;
   --registry-font: 'Public Sans', system-ui, sans-serif;
   --registry-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  /* One shared timing for the whole interaction layer; reduced motion
+     disables it wholesale below. */
+  --registry-ease: 150ms ease;
 }
 
 * {
@@ -50,13 +54,32 @@ textarea {
   font: inherit;
 }
 
+::selection {
+  background: var(--registry-blue);
+  color: #ffffff;
+}
+
 a {
   color: var(--registry-blue);
   text-decoration: none;
+  text-underline-offset: 3px;
 }
 
 a:hover {
   text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 :focus-visible {
@@ -64,10 +87,13 @@ a:hover {
   outline-offset: 3px;
 }
 
+/* Masthead rule: a strong ink line under the site name, in the manner of a
+   broadsheet nameplate. */
 .site-header {
   align-items: center;
-  background: rgba(255, 255, 255, 0.98);
-  border-bottom: 1px solid var(--registry-rule);
+  backdrop-filter: blur(8px) saturate(1.4);
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 2px solid var(--registry-ink);
   display: flex;
   gap: 24px;
   justify-content: space-between;
@@ -120,16 +146,122 @@ a:hover {
   align-items: center;
   display: inline-flex;
   justify-content: center;
+  transition: color var(--registry-ease);
+}
+
+.top-nav a:hover {
+  color: var(--registry-ink);
+}
+
+/* The open page is ticked in the register: ink text, stamp-red underline. */
+.top-nav a[aria-current='page'] {
+  box-shadow: inset 0 -2px 0 var(--registry-stamp);
+  color: var(--registry-ink);
 }
 
 .top-nav .nav-emphasis {
   color: var(--registry-blue);
 }
 
-/* Every hero sits on quiet paper. */
+/* The three products fold into one disclosure, keeping the nav at five
+   entries. Plain <details>, so it works without JavaScript. */
+.nav-products {
+  position: relative;
+}
+
+.nav-products summary {
+  align-items: center;
+  color: var(--registry-muted);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 600;
+  justify-content: center;
+  list-style: none;
+  min-height: 36px;
+  min-width: 36px;
+  transition: color var(--registry-ease);
+  user-select: none;
+}
+
+.nav-products summary::-webkit-details-marker {
+  display: none;
+}
+
+.nav-products summary::after {
+  content: '▾';
+  font-size: 11px;
+  margin-left: 6px;
+}
+
+.nav-products summary:hover {
+  color: var(--registry-ink);
+}
+
+.nav-products summary[aria-current='page'],
+.nav-products[open] summary {
+  box-shadow: inset 0 -2px 0 var(--registry-stamp);
+  color: var(--registry-ink);
+}
+
+.nav-products-panel {
+  background: #ffffff;
+  border: 1px solid var(--registry-ink);
+  box-shadow: 4px 4px 0 rgba(12, 27, 58, 0.15);
+  display: grid;
+  left: 50%;
+  min-width: 320px;
+  padding: 6px;
+  position: absolute;
+  top: calc(100% + 10px);
+  transform: translateX(-50%);
+  z-index: 20;
+}
+
+.nav-products-panel a {
+  display: grid;
+  gap: 2px;
+  justify-content: start;
+  justify-items: start;
+  padding: 10px 12px;
+  text-align: left;
+  transition: background var(--registry-ease);
+}
+
+.nav-products-panel a:hover {
+  background: var(--registry-active);
+  text-decoration: none;
+}
+
+.nav-products-panel a[aria-current='page'] .nav-product-name {
+  color: var(--registry-stamp);
+}
+
+.nav-product-name {
+  color: var(--registry-ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.nav-product-role {
+  color: var(--registry-blue);
+  font-family: var(--registry-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  margin-left: 6px;
+  text-transform: uppercase;
+}
+
+.nav-product-blurb {
+  color: var(--registry-muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* Every hero sits on quiet, unruled paper. */
 .hero {
   border-bottom: 1px solid var(--registry-rule);
-  background: var(--registry-paper);
+  background-color: var(--registry-paper);
   overflow: hidden;
   position: relative;
 }
@@ -154,6 +286,7 @@ a:hover {
   color: var(--registry-blue);
   font-family: var(--registry-mono);
   font-size: 12px;
+  letter-spacing: 0.08em;
   margin: 0 0 14px;
   text-transform: uppercase;
 }
@@ -176,17 +309,21 @@ p {
 h1 {
   color: var(--registry-ink);
   font-size: clamp(38px, 4.8vw, 62px);
+  letter-spacing: -0.01em;
   line-height: 1.04;
   margin-bottom: 20px;
   max-width: 880px;
+  text-wrap: balance;
 }
 
 h2 {
   color: var(--registry-ink);
   font-size: clamp(30px, 4.2vw, 54px);
-  line-height: 1;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
   margin-bottom: 18px;
   max-width: 860px;
+  text-wrap: balance;
 }
 
 h3 {
@@ -240,10 +377,21 @@ p {
   font-weight: 700;
   min-height: 44px;
   padding: 10px 16px;
+  transition: background var(--registry-ease), box-shadow var(--registry-ease),
+    transform var(--registry-ease);
 }
 
+/* Hover lifts the button off the page with a hard offset shadow, like a
+   letterpress block, not a soft app glow. */
 .button:hover {
+  box-shadow: 3px 3px 0 rgba(12, 27, 58, 0.25);
   text-decoration: none;
+  transform: translate(-1px, -1px);
+}
+
+.button:active {
+  box-shadow: none;
+  transform: translate(0, 0);
 }
 
 .button-primary {
@@ -297,18 +445,19 @@ p {
   width: 100%;
 }
 
-/* In the two-column hero the copy reads left, with the answer card as anchor. */
-.hero-copy {
+/* In the two-column hero the copy reads left, with the answer card as anchor.
+   Scoped to .hero-top so the single-column inner-page heroes stay centered. */
+.hero-top .hero-copy {
   max-width: none;
   text-align: left;
 }
 
-.hero-lead {
+.hero-top .hero-lead {
   margin-left: 0;
   margin-right: 0;
 }
 
-.hero-actions {
+.hero-top .hero-actions {
   justify-content: flex-start;
 }
 
@@ -337,9 +486,11 @@ p {
 }
 
 /* Cover variant: the homepage hero set like the cover of the Registry Stack
-   brief. Solid civic blue, white extra-bold display type. */
+   brief. Civic blue deepening toward the foot of the page, white extra-bold
+   display type. */
 .hero-cover {
-  background: var(--registry-blue);
+  background-color: var(--registry-blue);
+  background-image: linear-gradient(180deg, var(--registry-blue) 38%, #132f63 100%);
   border-bottom: 0;
 }
 
@@ -424,16 +575,11 @@ p {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 12px;
+  gap: 12px clamp(16px, 3vw, 28px);
   justify-content: center;
   margin: 0 auto;
   max-width: var(--registry-max);
-  padding: 18px clamp(16px, 4vw, 42px);
-}
-
-.partner-strip-inner.compact {
-  margin-bottom: 20px;
-  padding: 0;
+  padding: 20px clamp(16px, 4vw, 42px);
 }
 
 .partner-strip-inner span {
@@ -444,13 +590,29 @@ p {
   text-transform: uppercase;
 }
 
-.partner-strip-inner strong {
-  border: 1px solid var(--registry-rule);
-  color: var(--registry-ink);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 7px 12px;
-  white-space: nowrap;
+.partner-logos {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px clamp(20px, 3vw, 36px);
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.partner-logos img {
+  display: block;
+  /* Five brand palettes would fight the page; every neighbor mark prints in
+     the same ink. */
+  filter: brightness(0);
+  opacity: 0.62;
+}
+
+/* The OpenFn mark is white type inside a solid box; flattening it to ink
+   erases the type, so it desaturates instead. */
+.partner-logos img[src$='openfn.png'] {
+  filter: grayscale(1) brightness(0.6);
 }
 
 .signal-row {
@@ -515,6 +677,18 @@ code {
 .section-heading.center p:not(.eyebrow) {
   margin-left: auto;
   margin-right: auto;
+}
+
+/* Oxford rule: the short double rule under centered headings, a classic
+   print device separating a heading from its standfirst. */
+.section-heading.center h2::after {
+  border-bottom: 1px solid var(--registry-ink);
+  border-top: 3px solid var(--registry-ink);
+  content: '';
+  display: block;
+  height: 3px;
+  margin: 22px auto 0;
+  width: 64px;
 }
 
 .section-heading p:not(.eyebrow) {
@@ -642,6 +816,14 @@ code {
   min-width: 0;
   padding: 26px;
   row-gap: 16px;
+  transition: border-color var(--registry-ease), box-shadow var(--registry-ease);
+}
+
+/* Each door card carries one route in; hovering anywhere on the card lifts
+   it like a pulled record slip. */
+.product-card:hover {
+  border-color: var(--registry-blue);
+  box-shadow: 4px 4px 0 rgba(23, 59, 122, 0.12);
 }
 
 .product-card h3 {
@@ -804,6 +986,12 @@ code {
   color: var(--registry-ink);
   font-family: var(--registry-mono);
   font-size: 22px;
+}
+
+/* Four cards across need more room than the standard column, or every
+   question wraps to three lines. */
+#use-cases .section-inner {
+  max-width: 1360px;
 }
 
 /* Five shared rows (domain, question, result, evidence field, not-shared
@@ -1049,19 +1237,35 @@ code {
   letter-spacing: -0.015em;
 }
 
+/* The footer is a deep ink band, bookending the civic-blue cover: the site
+   opens on the cover and closes on the ledger. */
 .site-footer {
+  background: var(--registry-ink-band-deep);
+  color: #ffffff;
+}
+
+.site-footer-inner {
   align-items: start;
   display: flex;
   gap: 24px;
   justify-content: space-between;
   margin: 0 auto;
   max-width: var(--registry-max);
-  padding: 32px clamp(16px, 4vw, 42px);
+  padding: 40px clamp(16px, 4vw, 42px);
+}
+
+.site-footer strong {
+  color: var(--registry-brass);
+  font-family: var(--registry-mono);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .site-footer p {
-  color: var(--registry-muted);
+  color: rgba(255, 255, 255, 0.72);
   margin: 8px 0 0;
+  max-width: 420px;
 }
 
 .site-footer nav {
@@ -1073,26 +1277,52 @@ code {
 
 .site-footer nav a {
   align-items: center;
+  color: #ffffff;
   display: inline-flex;
   min-height: 36px;
 }
 
+.site-footer :focus-visible {
+  outline-color: #ffffff;
+}
+
 @media (max-width: 900px) {
   html {
-    scroll-padding-top: 150px;
+    scroll-padding-top: 16px;
   }
 
+  /* On small screens the header gives the space back: it stacks, tightens,
+     and scrolls away with the page instead of pinning two rows of chrome. */
   .site-header {
     align-items: flex-start;
     flex-direction: column;
+    gap: 10px;
+    padding: 12px 16px;
+    position: static;
   }
 
   .section {
-    scroll-margin-top: 150px;
+    scroll-margin-top: 16px;
   }
 
   .top-nav {
+    gap: 2px 18px;
     justify-content: flex-start;
+  }
+
+  /* In the stacked header the product panel opens in flow, not floating. */
+  .nav-products-panel {
+    left: 0;
+    min-width: 0;
+    position: static;
+    transform: none;
+  }
+
+  /* The lifecycle flow stacks vertically here, so its arrows turn to point
+     down the page. */
+  .flow-arrow {
+    transform: rotate(90deg);
+    width: 22px;
   }
 
   .hero-inner,
@@ -1154,11 +1384,11 @@ code {
   }
 
   h1 {
-    font-size: clamp(36px, 11vw, 50px);
+    font-size: clamp(32px, 9.5vw, 44px);
   }
 
   h2 {
-    font-size: clamp(28px, 10vw, 40px);
+    font-size: clamp(26px, 8.5vw, 36px);
   }
 
   .problem-grid,
@@ -1191,7 +1421,7 @@ code {
     grid-template-columns: 1fr;
   }
 
-  .site-footer {
+  .site-footer-inner {
     flex-direction: column;
   }
 

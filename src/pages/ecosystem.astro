@@ -41,6 +41,12 @@ const neighbors = [
     owns: 'The user journey: forms, case queues, notifications, payments, and channels.',
     adds: 'The narrow registry-facing surface those journeys call: entity routes, evidence responses, and audit records.',
   },
+  {
+    category: 'Foundational ID and identity providers',
+    examples: 'MOSIP, eSignet',
+    owns: 'Identity enrolment, deduplication, authentication, e-KYC, and assurance levels for who a person is.',
+    adds: 'The registry-facing side of that question: signed answers about what is true of that person in a specific registry (alive, eligible, registered), issued after the identity layer has done its job.',
+  },
 ];
 ---
 
@@ -92,7 +98,43 @@ const neighbors = [
       </div>
     </section>
 
-    <section class="section section-muted" aria-labelledby="layered-title">
+    <section class="section section-muted" aria-labelledby="lab-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Demonstrated, not promised</p>
+          <h2 id="lab-title">Four of these integrations already run in the lab.</h2>
+          <p>
+            The homepage names five platforms. This list states what exists today for each:
+            four run in <a href="https://lab.registrystack.org/">the hosted lab</a>, where you
+            can check them yourself, and one is in progress.
+          </p>
+        </div>
+        <dl class="lab-list">
+          <div class="lab-entry">
+            <dt>OpenFn</dt>
+            <dd>Registry Notary ships an OpenFn sidecar. It runs in the hosted lab and is covered by performance tests.</dd>
+          </div>
+          <div class="lab-entry">
+            <dt>DHIS2</dt>
+            <dd>The lab runs a DHIS2 health scenario through the OpenFn sidecar against a live DHIS2 demo instance, with its own smoke test.</dd>
+          </div>
+          <div class="lab-entry">
+            <dt>OpenCRVS</dt>
+            <dd>The lab runs an OpenCRVS DCI notary. A step-by-step tutorial issues a verifiable credential (SD-JWT VC) from an OpenCRVS DCI test birth record.</dd>
+          </div>
+          <div class="lab-entry">
+            <dt>MOSIP</dt>
+            <dd>The lab runs MOSIP eSignet for a citizen self-attestation login flow.</dd>
+          </div>
+          <div class="lab-entry">
+            <dt>OpenSPP</dt>
+            <dd>A Registry Manifest metadata profile for OpenSPP is in progress, and the stack already speaks SP-DCI, the interface OpenSPP uses.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="layered-title">
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">A layered example</p>
@@ -131,7 +173,7 @@ const neighbors = [
       </div>
     </section>
 
-    <section class="section" aria-labelledby="standards-title">
+    <section class="section section-muted" aria-labelledby="standards-title">
       <div class="section-inner split">
         <div class="section-heading compact">
           <p class="eyebrow">Standards we adopt</p>
@@ -184,8 +226,52 @@ const neighbors = [
     color: var(--registry-blue);
     font-family: var(--registry-mono);
     font-size: 12px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
     margin: 0;
+  }
+
+  .lab-list {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .lab-entry {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    padding: 20px 22px;
+  }
+
+  .lab-entry dt {
+    color: var(--registry-ink);
+    font-family: var(--registry-mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .lab-entry dd {
+    color: var(--registry-muted);
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .lab-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .lab-list {
+      grid-template-columns: 1fr;
+    }
   }
 
   .layered-note {

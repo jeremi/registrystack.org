@@ -65,11 +65,15 @@ for (const viewport of viewports) {
   const metrics = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     clientWidth: document.documentElement.clientWidth,
+    // Links inside a closed <details> disclosure (the Products menu) are
+    // intentionally hidden, not clipped.
     clippedButtons: [...document.querySelectorAll('a, button')].filter((element) => {
+      if (element.closest('details:not([open])')) return false;
       const rect = element.getBoundingClientRect();
       return rect.width <= 0 || rect.height <= 0;
     }).length,
     undersizedNavTargets: [...document.querySelectorAll('.top-nav a, .site-footer nav a')].filter((element) => {
+      if (element.closest('details:not([open])')) return false;
       const rect = element.getBoundingClientRect();
       return rect.width < 36 || rect.height < 36;
     }).length,
@@ -90,6 +94,27 @@ for (const viewport of viewports) {
   }
   if (metrics.overlappingText) {
     failures.push(`${label}: text extends outside viewport`);
+  }
+
+  // The Products disclosure must actually present its three product links at
+  // tappable size once opened, on every checked route and viewport.
+  {
+    const menu = await page.evaluate(() => {
+      const details = document.querySelector('.nav-products');
+      if (!details) return null;
+      details.setAttribute('open', '');
+      const links = [...details.querySelectorAll('a')].map((link) => {
+        const rect = link.getBoundingClientRect();
+        return { width: rect.width, height: rect.height };
+      });
+      details.removeAttribute('open');
+      return links;
+    });
+    if (!menu || menu.length < 3) {
+      failures.push(`${label}: Products menu is missing or has fewer than 3 product links`);
+    } else if (menu.some((rect) => rect.width < 36 || rect.height < 36)) {
+      failures.push(`${label}: open Products menu links are below 36px`);
+    }
   }
 
   // On desktop the four use-case cards sit in one row and must read as an
