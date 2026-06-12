@@ -6,12 +6,14 @@ interface Props {
   eyebrow?: string;
   heading?: string;
   primaryLabel?: string;
+  emphasis?: 'docs' | 'pilot';
 }
 
 const {
   eyebrow = 'Read the docs',
   heading = 'See how it works, end to end.',
   primaryLabel = 'Read the docs',
+  emphasis = 'docs',
 } = Astro.props;
 ---
 
@@ -20,8 +22,17 @@ const {
     <p class="eyebrow">{eyebrow}</p>
     <h2 id="handoff-title">{heading}</h2>
     <div class="hero-actions">
-      <a class="button button-primary" href="https://docs.registrystack.org/">{primaryLabel}</a>
-      <a class="button button-secondary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
+      {emphasis === 'pilot' ? (
+        <>
+          <a class="button button-primary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
+          <a class="button button-secondary" href="https://docs.registrystack.org/">{primaryLabel}</a>
+        </>
+      ) : (
+        <>
+          <a class="button button-primary" href="https://docs.registrystack.org/">{primaryLabel}</a>
+          <a class="button button-secondary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
+        </>
+      )}
     </div>
   </div>
 </section>

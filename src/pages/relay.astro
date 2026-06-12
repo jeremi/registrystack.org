@@ -6,9 +6,9 @@ import DocsHandoff from '../components/DocsHandoff.astro';
 import RelayBoundedAnswers from '../components/RelayBoundedAnswers.astro';
 import HarnessDiagram from '../components/HarnessDiagram.astro';
 
-const pageTitle = 'Registry Relay | A protected service surface for the registry you already have';
+const pageTitle = 'Registry Relay | Protected APIs over existing files and tables';
 const pageDescription =
-  'Registry Relay reads the files and tables a registry already lives in, CSV, XLSX, Parquet, or PostgreSQL, and publishes a protected, read-only API with access rules and audit built in.';
+  'Registry Relay reads the files and tables a registry already lives in and publishes a protected, read-only API with access rules and audit built in.';
 
 const problems = [
   {
@@ -47,7 +47,7 @@ const scenarioSteps = [
 // speaks, and where authority stays.
 const openPoints = [
   'Reads CSV, XLSX, Parquet, and PostgreSQL sources where they already live.',
-  'Speaks the formats partners expect: DCAT-AP catalogs, OGC API Features and Records, SP-DCI sync, PublicSchema mapping.',
+  'Speaks the formats partners expect: DCAT-AP catalogs, OGC API Features and Records, sync over SP-DCI (the social protection data-exchange interface), and field mapping to the PublicSchema shared vocabulary.',
   'Follows the protected consultation pattern of the GovStack Digital Registries building block.',
   'Read-only by design: provisioning and updates stay in the source system, which remains authoritative.',
 ];

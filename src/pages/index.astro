@@ -6,7 +6,7 @@ import RegistrySeal from '../components/RegistrySeal.astro';
 
 const pageTitle = 'Registry Stack | Prove facts from registries without sharing the records';
 const pageDescription =
-  'Registry Stack is three open-source products that let public services prove facts from existing registries: signed answers and credentials instead of copies of records.';
+  'Registry Stack is three open-source products that let public services prove facts from registries: signed answers and credentials instead of copies of records.';
 
 const heroReasons = [
   {
@@ -78,9 +78,9 @@ const worksAlongside = [
 
 const proofPoints = [
   {
-    title: 'Open source, end to end',
+    title: 'Three products, all open source',
     body: 'All three products are open source. Inspect the code, run them on your own infrastructure, and keep every safeguard auditable.',
-    fact: 'No license fees, no vendor gate',
+    fact: 'No product license fees, no vendor gate',
   },
   {
     title: 'A demo you can use right now',
@@ -89,7 +89,7 @@ const proofPoints = [
   },
   {
     title: 'The standards wallets and catalogs speak',
-    body: 'Credentials issue in the formats the European Digital Identity Wallet ecosystem uses, catalogs render to DCAT-AP, and registry sync follows SP-DCI. Built by contributors who help write the GovStack and DCI standards.',
+    body: 'Credentials issue in the formats the European Digital Identity Wallet ecosystem uses, catalogs render to DCAT-AP, and registry sync follows SP-DCI, the social protection data-exchange interface. Built by contributors who help write the GovStack and DCI standards.',
     fact: 'SD-JWT VC · OpenID4VCI · no lock-in',
   },
 ];
@@ -121,7 +121,10 @@ const proofPoints = [
       </details>
       <a href="/why/">Why it matters</a>
       <a href="/use-cases/">Use cases</a>
+      <a href="/ecosystem/">Ecosystem</a>
       <a href="/ai/">AI</a>
+      <a href="/pricing/">Pricing</a>
+      <a href="/pilot/">Start a pilot</a>
       <a class="nav-emphasis" href="https://docs.registrystack.org/">Read the docs</a>
     </nav>
   </header>
@@ -131,7 +134,7 @@ const proofPoints = [
       <div class="hero-inner">
         <div class="hero-top">
           <div class="hero-copy">
-            <p class="eyebrow">Open source &middot; For governments and their partners</p>
+            <p class="eyebrow">Open-source products &middot; For governments and their partners</p>
             <h1 id="hero-title">Prove facts from registries without sharing the records.</h1>
             <p class="hero-lead">
               Registry Stack turns the registries a government already holds, from spreadsheets to
@@ -141,7 +144,7 @@ const proofPoints = [
             </p>
             <div class="hero-actions" aria-label="Primary actions">
               <a class="button button-primary" href="https://lab.registrystack.org/">Try the live demo</a>
-              <a class="button button-secondary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
+              <a class="button button-secondary" href="/pilot/">Start a pilot</a>
             </div>
             <p class="hero-note">
               The lab runs on synthetic data. No install, no account: receive a signed proof in a
@@ -322,10 +325,11 @@ const proofPoints = [
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Built in the open</p>
-          <h2 id="proof-title">Open source, on open standards, with a demo you can use today.</h2>
+          <h2 id="proof-title">Open source, on open standards, running live in the lab.</h2>
           <p>
             Public services are converging on the once-only principle: people should not have to
-            prove the same fact twice. Registry Stack is built for that direction.
+            prove the same fact twice. Registry Stack is digital public infrastructure built for
+            that direction: shared rails any program can reuse, not another one-off integration.
           </p>
         </div>
         <div class="proof-grid">
@@ -338,6 +342,7 @@ const proofPoints = [
           ))}
         </div>
         <div class="proof-links">
+          <a href="/pilot/">What a pilot looks like &rarr;</a>
           <a href="/ai/">Give AI agents answers, not records &rarr;</a>
           <a href="/ecosystem/">How Registry Stack fits the ecosystem &rarr;</a>
         </div>
@@ -360,13 +365,15 @@ const proofPoints = [
     <div class="site-footer-inner">
       <div>
         <strong>Registry Stack</strong>
-        <p>Open-source infrastructure that lets public registries answer questions, issue proofs, and keep their records.</p>
+        <p>Open-source products that let public registries answer questions, issue proofs, and keep their records.</p>
       </div>
       <nav aria-label="Footer links">
         <a href="/notary/">Registry Notary</a>
         <a href="/relay/">Registry Relay</a>
         <a href="/manifest/">Registry Manifest</a>
         <a href="/ecosystem/">Ecosystem</a>
+        <a href="/pricing/">Pricing</a>
+        <a href="/pilot/">Start a pilot</a>
         <a href="https://docs.registrystack.org/">Docs</a>
         <a href="https://lab.registrystack.org/">Live demo</a>
       </nav>

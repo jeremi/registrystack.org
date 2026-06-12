@@ -6,7 +6,7 @@ import DocsHandoff from '../components/DocsHandoff.astro';
 
 const pageTitle = 'Why it matters | Registry Stack';
 const pageDescription =
-  'The recurring registry problems Registry Stack is built around: data that is not service-ready, APIs that over-share, safeguards that live only on paper, and integrations that never compound.';
+  'The registry problems Registry Stack is built around: data not service-ready, APIs that over-share, safeguards on paper, integrations that never compound.';
 
 // Condensed from the docs-site problem framings. Each card names the recurring
 // failure, a short concrete illustration, and what Registry Stack changes.
@@ -23,7 +23,7 @@ const problems = [
     illustration:
       'A licensing counter needs a yes or no. The only available API returns the full record: date of birth, address, and ten years of history the clerk never asked for.',
     change:
-      'A route can return "licence valid" or "actively registered" without exposing the underlying record. The caller gets the fact; the rest stays with the owner.',
+      'A route can return "license valid" or "actively registered" without exposing the underlying record. The caller gets the fact; the rest stays with the owner.',
   },
   {
     title: 'Safeguards need technical enforcement',
@@ -110,12 +110,13 @@ const problems = [
     <section class="section section-muted" aria-labelledby="not-title">
       <div class="section-inner split">
         <div class="section-heading compact">
-          <p class="eyebrow">Division of labour</p>
+          <p class="eyebrow">Division of labor</p>
           <h2 id="not-title">The technology does its part. Institutions keep theirs.</h2>
           <p>
             Registry Stack makes registry use explicit, governed, and reviewable. The decisions
             that belong to institutions stay with institutions, on purpose.
           </p>
+          <a class="inline-cta" href="/pilot/">What a pilot looks like &rarr;</a>
         </div>
         <ul class="check-list">
           <li>Whether a caller is legally entitled to a fact remains an institutional decision.</li>
@@ -131,6 +132,7 @@ const problems = [
     eyebrow="Read the docs"
     heading="See how each safeguard is enforced at runtime."
     primaryLabel="Read the docs"
+    emphasis="pilot"
   />
   <SiteFooter />
 </Base>

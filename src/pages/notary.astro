@@ -7,7 +7,7 @@ import HarnessDiagram from '../components/HarnessDiagram.astro';
 
 const pageTitle = 'Registry Notary | Signed answers and credentials from registries';
 const pageDescription =
-  'Registry Notary answers a precise question against a registry and returns a signed result: a yes or no, a bounded value, or a credential a person can hold in a wallet.';
+  'Registry Notary answers a precise question against a registry and returns a signed answer: a yes or no, a bounded value, or a credential held in a wallet.';
 
 // What makes the product different, in the reader's terms rather than the
 // implementation's.
@@ -25,14 +25,14 @@ const differences = [
   {
     title: 'The data stays home',
     body:
-      'A notary can delegate a question to the authority that owns the registry and pass back only the signed verdict. Registries cooperate on answers without pooling their data.',
+      'A notary can delegate a question to the authority that owns the registry and pass back only the signed answer. Registries cooperate on proofs without pooling their data.',
   },
 ];
 
 const scenarioSteps = [
   [
     'The question is agreed',
-    'The civil registration authority configures one claim: "is this person alive?". The disclosure policy says only the verdict leaves the registry.',
+    'The civil registration authority configures one claim: "is this person alive?". The disclosure policy says only the answer leaves the registry.',
   ],
   [
     'The proof is collected',
@@ -48,7 +48,7 @@ const scenarioSteps = [
 // responsibility stays with the institution.
 const openPoints = [
   'Credentials follow open standards: SD-JWT VC issued over OpenID4VCI, signed with Ed25519, valid for a bounded time.',
-  'Issues to the wallets people already hold; there is no new wallet to roll out.',
+  'Issues to any wallet that implements these standards; there is no proprietary wallet to roll out.',
   'Answers from the registries you already run; the registry owner decides what each proof may say.',
   'Reports what the registry says; entitlement and policy decisions stay with the institution.',
 ];
@@ -65,7 +65,7 @@ const openPoints = [
           <h1 id="notary-hero-title">Registry facts become proofs people and systems can trust.</h1>
           <p class="hero-lead">
             Registry Notary answers a precise question against a registry and returns a signed
-            result: a yes or no, a bounded value, or a credential a person can hold in a wallet.
+            answer: a yes or no, a bounded value, or a credential a person can hold in a wallet.
             The service gets its proof; the record stays with the registry.
           </p>
           <div class="hero-actions" aria-label="Primary actions">

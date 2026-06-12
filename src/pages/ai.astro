@@ -7,7 +7,7 @@ import HarnessDiagram from '../components/HarnessDiagram.astro';
 
 const pageTitle = 'A harness for AI in public services | Registry Stack';
 const pageDescription =
-  'AI agents and automation connect public systems faster than they can be governed. Registry Stack gives every asker, human or AI, a signed, minimized answer instead of the record.';
+  'AI connects public systems faster than they can be governed. Registry Stack gives every asker, human or AI, a signed, minimized answer instead of the record.';
 
 // The review questions from the docs "safer registry surfaces" page, kept as
 // the practical shift in what interoperability has to answer.
@@ -48,7 +48,8 @@ const reviewQuestions = [
             A harness governs every model, every vendor, and every well-meaning builder,
             including the ones who arrive after the safety review. Each request passes one
             answering point that checks authority, meaning, and criteria, then answers narrowly
-            instead of exposing everything the registry holds.
+            instead of exposing everything the registry holds. The harness is the same
+            governance layer the rest of this site describes; AI only raises the stakes.
           </p>
         </div>
         <HarnessDiagram variant="ai" />
@@ -122,6 +123,7 @@ const reviewQuestions = [
             review, authorization policy, human accountability, appeal, or recourse. It gives
             every caller, human or automated, a controlled answer instead of a raw record.
           </p>
+          <a class="inline-cta" href="/pilot/">What a pilot looks like &rarr;</a>
         </div>
       </div>
     </section>
@@ -131,6 +133,7 @@ const reviewQuestions = [
     eyebrow="Read the docs"
     heading="See how policy becomes a runtime check."
     primaryLabel="Read the docs"
+    emphasis="pilot"
   />
   <SiteFooter />
 </Base>

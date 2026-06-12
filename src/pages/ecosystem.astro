@@ -6,7 +6,7 @@ import DocsHandoff from '../components/DocsHandoff.astro';
 
 const pageTitle = 'Ecosystem fit | Registry Stack';
 const pageDescription =
-  'Registry Stack is complementary, not competitive. It sits behind exchange layers, beside workflow engines and domain platforms, and in front of wallets and service portals, giving them safer registry-facing services to call.';
+  'Registry Stack sits behind exchange layers, beside workflow engines and domain platforms, and in front of wallets and portals. Complementary, not competitive.';
 
 // Neighbor-system categories from the docs ecosystem page, reframed as
 // positioning. Each names what the neighbor owns and what Registry Stack adds.
@@ -31,20 +31,20 @@ const neighbors = [
   },
   {
     category: 'Wallets',
-    examples: 'SD-JWT VC and OID4VCI-compatible wallets',
+    examples: 'SD-JWT VC and OpenID4VCI-compatible wallets',
     owns: 'Key management, credential storage, holder consent, and presentation to relying parties.',
     adds: 'The server-side issuance path: claim evaluation against registry data, and discoverable evidence offerings.',
   },
   {
     category: 'Public-service platforms',
-    examples: 'Citizen portals, casework systems, service catalogues',
+    examples: 'Citizen portals, casework systems, service catalogs',
     owns: 'The user journey: forms, case queues, notifications, payments, and channels.',
     adds: 'The narrow registry-facing surface those journeys call: entity routes, evidence responses, and audit records.',
   },
   {
     category: 'Foundational ID and identity providers',
     examples: 'MOSIP, eSignet',
-    owns: 'Identity enrolment, deduplication, authentication, e-KYC, and assurance levels for who a person is.',
+    owns: 'Identity enrollment, deduplication, authentication, e-KYC, and assurance levels for who a person is.',
     adds: 'The registry-facing side of that question: signed answers about what is true of that person in a specific registry (alive, eligible, registered), issued after the identity layer has done its job.',
   },
 ];
@@ -66,6 +66,41 @@ const neighbors = [
             registry-facing services to call.
           </p>
         </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="is-not-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">In plain terms</p>
+          <h2 id="is-not-title">Four things Registry Stack is not.</h2>
+          <p>
+            Categories matter when budgets are assigned and architecture diagrams are drawn. If
+            you are mapping Registry Stack to a program line, start from what it does not do.
+          </p>
+        </div>
+        <ul class="check-list">
+          <li>
+            <strong>Not an exchange layer.</strong> X-Road-style exchanges carry trust and
+            transport between institutions; Registry Stack is the governed registry surface
+            behind them.
+          </li>
+          <li>
+            <strong>Not a benefits or payments platform.</strong> Platforms such as OpenSPP own
+            enrollment, case management, and payments; Registry Stack lets the registries they
+            rely on answer their questions safely.
+          </li>
+          <li>
+            <strong>Not a foundational identity system.</strong> MOSIP and eSignet establish who
+            a person is; Registry Stack answers what is true about that person in a specific
+            registry.
+          </li>
+          <li>
+            <strong>Not master data management or a warehouse.</strong> No records are copied,
+            matched, or consolidated; every source stays where it is, under its owner&rsquo;s
+            control.
+          </li>
+        </ul>
       </div>
     </section>
 
@@ -141,8 +176,9 @@ const neighbors = [
           <h2 id="layered-title">Behind an exchange layer, in front of a registry source.</h2>
           <p>
             An exchange layer such as X-Road handles network trust between institutions. The
-            registry endpoint behind it still needs route-level scopes, field projection, and
-            source-specific access controls. The two layers do different jobs.
+            registry surface behind it assumes zero trust anyway: a request arriving through a
+            trusted channel is still checked for route-level scope, field projection, and source
+            access. The two layers do different jobs.
           </p>
         </div>
         <div class="flow-diagram" aria-label="Registry Stack behind an exchange layer">
@@ -185,9 +221,9 @@ const neighbors = [
           </p>
         </div>
         <ul class="check-list">
-          <li>Metadata: DCAT, BRegDCAT-AP, CPSV-AP, ODRL.</li>
+          <li>Metadata: DCAT-AP, BRegDCAT-AP, CPSV-AP, ODRL.</li>
           <li>Shape: SHACL, JSON Schema, OpenAPI.</li>
-          <li>Evidence: CCCEV (JSON-LD), SD-JWT VC, OID4VCI.</li>
+          <li>Evidence: CCCEV (JSON-LD), SD-JWT VC, OpenID4VCI.</li>
           <li>Sector: SP-DCI, OGC API Records, OGC API Features, GovStack Digital Registries.</li>
         </ul>
       </div>
@@ -198,6 +234,7 @@ const neighbors = [
     eyebrow="Read the docs"
     heading="See the integration patterns in detail."
     primaryLabel="Read the docs"
+    emphasis="pilot"
   />
   <SiteFooter />
 </Base>

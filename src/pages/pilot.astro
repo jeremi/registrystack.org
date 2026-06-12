@@ -1,0 +1,236 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocsHandoff from '../components/DocsHandoff.astro';
+
+const pageTitle = 'Start a pilot | Registry Stack';
+const pageDescription =
+  'What a Registry Stack pilot looks like: one registry, one question, safeguards enforced from the first request, built on the open-source products.';
+
+// Outcomes in the vocabulary funders and program owners use. Each card names
+// the result, not the mechanism; the product pages carry the mechanism.
+const outcomes = [
+  {
+    title: 'People stop re-proving facts',
+    body: 'The once-only principle, made operational: a fact the government already holds is answered by the registry that holds it, instead of being re-documented at every counter. Fewer certified copies, fewer queues, fewer reasons to drop out of a service.',
+  },
+  {
+    title: 'Safeguards become infrastructure',
+    body: 'A zero-trust posture for registry data: no caller is trusted by default, and purpose, scope, and disclosure limits are checked on every request, not promised in a signed agreement nobody can verify. Every trust-critical request leaves an audit record a reviewer, an inspector, or a court can actually read.',
+  },
+  {
+    title: 'Each integration compounds',
+    body: 'A one-off integration project leaves behind code two people understand. A pilot on shared rails leaves behind a described, governed registry surface that the next program reuses, which is the difference between an IT project and digital public infrastructure.',
+  },
+  {
+    title: 'Existing investments keep their place',
+    body: 'Registry Stack runs alongside the platforms governments already choose, including OpenCRVS, OpenSPP, DHIS2, and MOSIP, and behind X-Road-style exchange layers. Nothing is replaced and nothing migrates.',
+  },
+];
+
+const phases = [
+  {
+    name: 'Choose the registry and the question',
+    body: 'A civil register, a household register in a spreadsheet, a farmer registry export: any source counts. Pair it with one question a service keeps asking of it, with a yes-or-no or bounded answer.',
+  },
+  {
+    name: 'Prove it on synthetic data',
+    body: 'Stand up the same flow the hosted lab runs, on synthetic records shaped like yours. Stakeholders watch a signed answer land in a wallet before any real record is touched.',
+  },
+  {
+    name: 'Go live, governed from the first request',
+    body: 'Connect the real source read-only, scope the route to its stated purpose, and let the audit trail run from day one. The registry keeps its records; the service gets its answer.',
+  },
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="pilot" />
+
+  <main>
+    <section class="hero" aria-labelledby="pilot-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">For governments, funders, and implementing partners</p>
+          <h1 id="pilot-hero-title">A pilot starts with one registry and one question.</h1>
+          <p class="hero-lead">
+            Registry Stack&rsquo;s open-source products are digital public infrastructure: shared
+            rails that let the registries a government already holds answer questions safely. A pilot does not
+            begin with a replatforming program. It begins with one registry, one question a
+            service keeps asking, and safeguards enforced from the first request.
+          </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
+            <a class="button button-secondary" href="https://lab.registrystack.org/">Try the live demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="outcomes-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">What a pilot buys</p>
+          <h2 id="outcomes-title">Outcomes a program can point to, not a platform to maintain.</h2>
+        </div>
+        <div class="problem-grid outcome-grid">
+          {outcomes.map((outcome) => (
+            <article class="quiet-card">
+              <h3>{outcome.title}</h3>
+              <p>{outcome.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="shape-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">The shape of a pilot</p>
+          <h2 id="shape-title">Small enough to authorize, real enough to evaluate.</h2>
+          <p>
+            Three phases, each with something concrete to show. The scope is set by the registry
+            owner and the asking service, not by a product roadmap.
+          </p>
+        </div>
+        <ol class="phase-list">
+          {phases.map((phase, index) => (
+            <li class="phase-card">
+              <span class="phase-no" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <h3>{phase.name}</h3>
+              <p>{phase.body}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="brings-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">The division of work</p>
+          <h2 id="brings-title">What each side brings.</h2>
+        </div>
+        <div class="problem-grid brings-grid">
+          <article class="quiet-card">
+            <h3>You bring</h3>
+            <ul class="check-list">
+              <li>A registry, in whatever form it exists today: a database, a domain platform, or a spreadsheet.</li>
+              <li>One service that needs an answer from it, and the question it keeps asking.</li>
+              <li>An institutional owner with the authority to say who may ask, and for what purpose.</li>
+            </ul>
+          </article>
+          <article class="quiet-card">
+            <h3>The project brings</h3>
+            <ul class="check-list">
+              <li>Three open-source products with no license fees, run on your infrastructure or a partner&rsquo;s.</li>
+              <li>The deployment patterns the hosted lab already demonstrates, including live integrations you can inspect first.</li>
+              <li>Answers in the formats the ecosystem expects: SD-JWT VC and OpenID4VCI for wallets, DCAT-AP for catalogs, SP-DCI for registry exchange.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="stewardship" aria-labelledby="stewardship-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">Who is behind this</p>
+          <h2 id="stewardship-title">Built in the open, by people who help write the standards.</h2>
+        </div>
+        <div class="stewardship-body">
+          <p>
+            Registry Stack is an open-source project led by Jeremi Joslin, who leads OpenSPP,
+            the open-source social protection platform, serves on the DCI standards committee,
+            and contributes to the GovStack specifications. The code, the documentation, and the
+            hosted lab are public: what this site claims, you can check.
+          </p>
+          <p>
+            When you write to discuss a pilot, you are writing to the project lead, not a sales
+            team.
+          </p>
+          <a class="inline-cta" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20discussion">Write to the project lead &rarr;</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <DocsHandoff
+    eyebrow="For your technical team"
+    heading="The docs carry the tutorials, the deployment guides, and the conformance profiles."
+    primaryLabel="Read the docs"
+  />
+  <SiteFooter />
+</Base>
+
+<style>
+  /* Four outcome cards: two columns reads better than a 3+1 orphan row. */
+  .outcome-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brings-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 860px;
+  }
+
+  .brings-grid h3 {
+    margin-bottom: 10px;
+  }
+
+  .phase-list {
+    counter-reset: phase;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .phase-card {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    display: grid;
+    gap: 10px;
+    padding: 22px;
+  }
+
+  .phase-card h3 {
+    margin: 0;
+  }
+
+  .phase-card p {
+    color: var(--registry-body);
+    margin: 0;
+  }
+
+  .phase-no {
+    color: var(--registry-blue);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  .stewardship-body p {
+    color: var(--registry-body);
+    margin: 0 0 14px;
+  }
+
+  @media (max-width: 900px) {
+    .phase-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .outcome-grid,
+    .brings-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

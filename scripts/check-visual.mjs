@@ -50,6 +50,7 @@ const routes = [
   { name: 'notary', path: '/notary/' },
   { name: 'relay', path: '/relay/' },
   { name: 'manifest', path: '/manifest/' },
+  { name: 'pricing', path: '/pricing/' },
 ];
 
 const failures = [];
