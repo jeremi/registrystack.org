@@ -7,7 +7,6 @@
   color-scheme: light;
   --registry-blue: #173b7a; /* Intentional global override for docs blue #000091. */
   --registry-blue-dark: #102a56;
-  --registry-amber: #855b00;
   --registry-ink: #161616;
   --registry-body: #3a3a3a;
   --registry-muted: #6a6a6a;
@@ -654,7 +653,9 @@ code {
 }
 
 .section-muted {
-  background: var(--registry-sidebar);
+  /* Half-strength ledger paper, so the quiet sections sit in the same
+     family as the heroes instead of a neutral gray. */
+  background: #f6f8f5;
 }
 
 .section-inner {
