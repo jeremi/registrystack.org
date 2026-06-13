@@ -34,11 +34,11 @@ const useCases = [
   },
   {
     domain: 'Social protection',
-    evidenceType: 'Decision',
-    question: 'Is this household eligible?',
-    evidence: 'Return an eligibility decision for the benefit or service.',
-    notShared: 'Do not expose the household case file.',
-    output: 'Eligible',
+    evidenceType: 'Status',
+    question: 'Is this household enrolled?',
+    evidence: 'Confirm the household has an active entry in the social registry.',
+    notShared: 'Do not expose the household case file, income tier, or transfer history.',
+    output: 'Enrolled household',
   },
   {
     domain: 'Business registry',

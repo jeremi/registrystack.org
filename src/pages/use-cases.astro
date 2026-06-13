@@ -25,12 +25,12 @@ const useCases = [
   },
   {
     domain: 'Social protection',
-    evidenceType: 'Decision',
-    question: 'Is this household eligible?',
-    answer: 'Eligible',
-    evidence: 'Return a signed eligibility decision for the benefit or service.',
+    evidenceType: 'Status',
+    question: 'Is this household enrolled?',
+    answer: 'Enrolled household',
+    evidence: 'Confirm the household has an active entry in the social registry.',
     notShared: 'Do not expose the household case file, income tier, or transfer history.',
-    pilot: 'A school-feeding program confirms a child’s household is enrolled in a separate ministry’s cash transfer.',
+    pilot: 'A school-feeding program confirms a child’s household is already listed in a separate ministry’s registry.',
   },
   {
     domain: 'Business registry',

@@ -39,8 +39,8 @@ const { port } = server.address();
 const homeUrl = `http://127.0.0.1:${port}/`;
 const url = `http://127.0.0.1:${port}/use-cases/`;
 
-// Evidence-type spectrum the use-case grid must demonstrate (sorted).
-const EXPECTED_TYPES = ['Bounded value set', 'Credential', 'Decision', 'Status'];
+// The homepage cards stay grounded in concrete evidence returned by registries.
+const EXPECTED_TYPES = ['Bounded value set', 'Credential', 'Status', 'Status'];
 
 const claimOpacity = async (page) => {
   const claim = page.locator('.funnel-claim').first();
