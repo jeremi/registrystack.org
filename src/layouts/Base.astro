@@ -52,11 +52,57 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     <slot />
     <script is:inline>
       // Progressive enhancement only: the nav disclosure works without it,
-      // this just closes it on an outside click or Escape.
+      // and analytics is skipped when Umami is not loaded.
+      const journeyTargets = new Map([
+        ['docs.registrystack.org', 'docs'],
+        ['lab.registrystack.org', 'lab'],
+        ['github.com', 'github'],
+      ]);
+
+      const textLabel = (node) => (node.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 80);
+
+      const journeyUrl = (anchor, targetSite) => {
+        const url = new URL(anchor.href);
+        if (targetSite === 'docs' || targetSite === 'lab') {
+          url.searchParams.set('utm_source', 'registrystack');
+          url.searchParams.set('utm_medium', 'site');
+          url.searchParams.set('utm_campaign', 'cross_site');
+          url.searchParams.set('utm_content', window.location.pathname);
+        }
+        return url;
+      };
+
+      const trackJourneyClick = (anchor, targetSite) => {
+        if (!window.umami?.track) return;
+        const url = new URL(anchor.href);
+        window.umami.track('marketing_link_click', {
+          target_site: targetSite,
+          target_path: url.pathname,
+          source_path: window.location.pathname,
+          link_text: textLabel(anchor),
+        });
+      };
+
+      document.querySelectorAll('a[href]').forEach((anchor) => {
+        try {
+          const url = new URL(anchor.href);
+          const targetSite = journeyTargets.get(url.hostname);
+          if (!targetSite) return;
+          anchor.href = journeyUrl(anchor, targetSite).toString();
+        } catch (_error) {}
+      });
+
       document.addEventListener('click', (event) => {
         for (const menu of document.querySelectorAll('.nav-group[open]')) {
           if (!menu.contains(event.target)) menu.removeAttribute('open');
         }
+        const anchor = event.target instanceof Element ? event.target.closest('a[href]') : null;
+        if (!anchor) return;
+        try {
+          const url = new URL(anchor.href);
+          const targetSite = journeyTargets.get(url.hostname) || (url.protocol === 'mailto:' ? 'email' : '');
+          if (targetSite) trackJourneyClick(anchor, targetSite);
+        } catch (_error) {}
       });
       document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
