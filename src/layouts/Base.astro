@@ -13,6 +13,10 @@ const {
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, 'https://registrystack.org').toString();
 const ogImageUrl = new URL('/og-image.png', 'https://registrystack.org').toString();
+const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID?.trim();
+const umamiScriptSrc =
+  import.meta.env.PUBLIC_UMAMI_SCRIPT_SRC?.trim() || 'https://stats.registrystack.org/script.js';
+const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registrystack.org';
 ---
 
 <!doctype html>
@@ -38,6 +42,11 @@ const ogImageUrl = new URL('/og-image.png', 'https://registrystack.org').toStrin
     <meta property="og:image:alt" content="Registry Stack: prove facts from registries without sharing the records." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImageUrl} />
+    {
+      umamiWebsiteId && (
+        <script is:inline defer src={umamiScriptSrc} data-website-id={umamiWebsiteId} data-domains={umamiDomains}></script>
+      )
+    }
   </head>
   <body>
     <slot />
@@ -58,4 +67,3 @@ const ogImageUrl = new URL('/og-image.png', 'https://registrystack.org').toStrin
     </script>
   </body>
 </html>
-

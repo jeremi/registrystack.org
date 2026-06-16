@@ -40,6 +40,10 @@ jobs:
 
       - name: Validate and build
         run: npm run check
+        env:
+          PUBLIC_UMAMI_WEBSITE_ID: ${{ vars.PUBLIC_UMAMI_WEBSITE_ID }}
+          PUBLIC_UMAMI_SCRIPT_SRC: ${{ vars.PUBLIC_UMAMI_SCRIPT_SRC }}
+          PUBLIC_UMAMI_DOMAINS: ${{ vars.PUBLIC_UMAMI_DOMAINS }}
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
