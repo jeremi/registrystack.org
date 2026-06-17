@@ -44,6 +44,30 @@ const scenarioSteps = [
   ],
 ];
 
+const fhirSources = [
+  'FHIR-compatible electronic medical records, health information exchanges, and case-management systems.',
+  'Patient, Encounter, Observation, Condition, Immunization, Coverage, Organization, and Practitioner records.',
+  'Test and pilot deployments using public FHIR servers before connecting a production system.',
+];
+
+const fhirClaims = [
+  {
+    title: 'Eligibility and coverage',
+    body:
+      'Confirm that a person is registered, over a threshold age, actively covered, or linked to a program without exposing the full patient record.',
+  },
+  {
+    title: 'Care delivery',
+    body:
+      'Verify that an encounter, immunization, observation, referral, or diagnosis exists for the purpose and period the verifier is allowed to ask about.',
+  },
+  {
+    title: 'Program assurance',
+    body:
+      'Let partner systems, funders, or registries receive narrow signed claim results from health data while source systems keep control.',
+  },
+];
+
 // Open-standards facts and fit, stated positively: what it builds on and where
 // responsibility stays with the institution.
 const openPoints = [
@@ -128,6 +152,54 @@ const openPoints = [
             <span>A signed answer</span>
             <p>A yes or no, a bounded value, an attestation, or a wallet credential, with a reviewable trail.</p>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="notary-fhir-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">FHIR support</p>
+          <h2 id="notary-fhir-title">Prove health and service claims without sharing sensitive records.</h2>
+          <p>
+            Registry Notary can connect to FHIR APIs and turn structured health data into narrow,
+            purpose-bound claim results. FHIR stays the source interface. Notary becomes the proof
+            interface.
+          </p>
+        </div>
+
+        <div class="split">
+          <div>
+            <h3>What it can read from</h3>
+            <ul class="check-list">
+              {fhirSources.map((source) => (
+                <li>{source}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3>What it lets others prove</h3>
+            <p>
+              A verifier receives the smallest useful answer: a yes or no, a bounded value, or a
+              signed credential. They do not need direct database access, and they do not receive a
+              copy of the source FHIR resources.
+            </p>
+          </div>
+        </div>
+
+        <div class="implementation-grid">
+          {fhirClaims.map((claim) => (
+            <article>
+              <h3>{claim.title}</h3>
+              <p>{claim.body}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="centered-action">
+          <a class="inline-cta" href="https://github.com/jeremi/registry-notary/blob/main/docs/fhir-source-adapter-guide.md">
+            Read the FHIR adapter guide &rarr;
+          </a>
         </div>
       </div>
     </section>
