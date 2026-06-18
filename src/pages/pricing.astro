@@ -8,7 +8,7 @@ const pageTitle = 'Pricing | Registry Stack';
 const pageDescription =
   'Everything one registry needs is free forever. The subscription adds governance across many registry services. No per-citizen or per-credential fees, ever.';
 
-const mailto = 'mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pricing';
+const mailto = 'mailto:jeremi@joslin.fr?subject=Registry%20Stack%20package%20fit';
 
 // Bands count managed registry services: one registry behind one governed
 // answering point. Reference prices are for lower-middle-income deployments;
@@ -31,16 +31,16 @@ const plans = [
     name: 'First registry',
     price: '$7,500',
     term: 'per year',
-    tagline: 'One registry under management, with the project behind it.',
+    tagline: 'One registry under management, with packaged support behind it.',
     featured: true,
     flag: 'Most programs start here',
     includes: [
       'Up to 2 managed registry services in one environment',
       'Inventory, health, and posture history for the services under management',
       'An evidence pack a reviewer, an auditor, or a funder can read',
-      'Business-hours support from the people who build the stack',
+      'Business-hours maintainer support included in the package',
     ],
-    cta: { label: 'Talk to the project lead', href: null, kind: 'primary' },
+    cta: { label: 'Request scope confirmation', href: null, kind: 'primary' },
   },
   {
     name: 'Program',
@@ -53,14 +53,14 @@ const plans = [
       'Audit continuity tracked across every service, with evidence packs to match',
       'A browser console for governance decisions, and priority support',
     ],
-    cta: { label: 'Talk to the project lead', href: null, kind: 'secondary' },
+    cta: { label: 'Check package fit', href: null, kind: 'secondary' },
   },
 ];
 
 const scalePlans = [
   {
     name: 'National',
-    body: 'For programs that plug into a government’s identity, audit, and security estate, with longer retention and service-level commitments. Up to 15 managed registry services, scoped per engagement.',
+    body: 'For programs that plug into a government’s identity, audit, and security estate, with longer retention and service-level commitments. Up to 15 managed registry services, confirmed against a published annual band.',
   },
   {
     name: 'Country membership',
@@ -82,11 +82,11 @@ const scalePlans = [
             Registry Relay, Registry Notary, and Registry Manifest are open source,
             self-hosted, and complete: signed builds, a local self-check, no registration.
             Registry Trust Operations, the subscription, runs many registry services under
-            one governance discipline, with support from the people who build the stack.
+            one governance discipline, with maintainer support included in each package.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href="https://docs.registrystack.org/">Start with the free tier</a>
-            <a class="button button-secondary" href={mailto}>Talk to the project lead</a>
+            <a class="button button-secondary" href={mailto}>Check package fit</a>
           </div>
         </div>
       </div>
@@ -120,10 +120,10 @@ const scalePlans = [
           <h2 id="plans-title">Annual, per managed registry service, on your infrastructure.</h2>
           <p>
             A managed registry service is one registry behind one governed answering point.
-            The figures shown are reference prices for lower-middle-income countries: pricing
-            follows the World Bank income classification of the deploying country, lower for
-            low-income and humanitarian deployments, higher for high-income ones. Nonprofits
-            pay the low-income price.
+            The figures shown are published package prices for lower-middle-income countries.
+            The applicable package follows the World Bank income classification of the deploying
+            country: lower for low-income and humanitarian deployments, higher for high-income
+            ones. Nonprofits pay the low-income price.
           </p>
         </div>
         <div class="plan-grid">
@@ -151,7 +151,7 @@ const scalePlans = [
           {scalePlans.map((plan) => (
             <article class="plan-card scale-card">
               <h3>{plan.name}</h3>
-              <p class="plan-price plan-price-talk">Agreed with the project lead</p>
+              <p class="plan-price plan-price-talk">Fixed annual band</p>
               <p class="plan-tagline">{plan.body}</p>
             </article>
           ))}
@@ -162,16 +162,17 @@ const scalePlans = [
     <section class="section section-muted" aria-labelledby="direct-title">
       <div class="section-inner split">
         <div class="section-heading compact">
-          <p class="eyebrow">No sales team</p>
-          <h2 id="direct-title">Pricing conversations go to the project lead.</h2>
+          <p class="eyebrow">Fixed packages</p>
+          <h2 id="direct-title">Scope is confirmed before support starts.</h2>
         </div>
         <div class="direct-body">
           <p>
-            When you write about pricing, you are writing to the person who builds the stack
-            and answers for it. Ask for the band that fits, the budget line your program
-            needs, or what a pilot would cost: you get a direct answer.
+            Registry Stack support is packaged to keep procurement simple and avoid
+            open-ended sales cycles. If your use case fits a listed package, the price is
+            fixed. If it does not, we first confirm whether it belongs in a published support
+            band before scheduling implementation time.
           </p>
-          <a class="inline-cta" href={mailto}>Write to the project lead &rarr;</a>
+          <a class="inline-cta" href={mailto}>Request scope confirmation &rarr;</a>
         </div>
       </div>
     </section>
@@ -179,7 +180,7 @@ const scalePlans = [
 
   <DocsHandoff
     eyebrow="For your technical team"
-    heading="Everything in the free tier is in the docs. Evaluate it before any conversation."
+    heading="Everything in the free tier is in the docs. Evaluate it before requesting scope confirmation."
     primaryLabel="Read the docs"
     emphasis="pilot"
   />
@@ -283,7 +284,7 @@ const scalePlans = [
     justify-content: center;
   }
 
-  /* The negotiated bands print as record slips, not catalogue items: ledger
+  /* The fixed bands print as record slips, not catalogue items: ledger
      paper and a perforated edge, matching the product artifact cards. */
   .scale-card {
     background: var(--registry-paper);

@@ -1,7 +1,7 @@
 ---
 // Shared closing CTA. Every marketing page ends with a clear handoff to the
-// docs for the "how", plus a pilot-conversation route. Copy can be tuned per
-// page through props while keeping the band consistent.
+// docs for the "how", plus a pilot-scope route. Copy can be tuned per page
+// through props while keeping the band consistent.
 interface Props {
   eyebrow?: string;
   heading?: string;
@@ -24,13 +24,13 @@ const {
     <div class="hero-actions">
       {emphasis === 'pilot' ? (
         <>
-          <a class="button button-primary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
+          <a class="button button-primary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20scope">Request pilot scope</a>
           <a class="button button-secondary" href="https://docs.registrystack.org/">{primaryLabel}</a>
         </>
       ) : (
         <>
           <a class="button button-primary" href="https://docs.registrystack.org/">{primaryLabel}</a>
-          <a class="button button-secondary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20discussion">Discuss a pilot</a>
+          <a class="button button-secondary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20scope">Request pilot scope</a>
         </>
       )}
     </div>
