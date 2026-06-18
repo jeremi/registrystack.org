@@ -512,6 +512,22 @@ p {
   color: rgba(255, 255, 255, 0.8);
 }
 
+/* The thesis line: the faster/safer/simpler triad, set just under the H1 as
+   the page's promise before the longer lead. */
+.hero-thesis {
+  color: #ffffff;
+  font-size: clamp(17px, 1.8vw, 21px);
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0 0 18px;
+  max-width: 640px;
+}
+
+.hero-top .hero-thesis {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .hero-cover .button-primary {
   background: #ffffff;
   border-color: #ffffff;
@@ -898,6 +914,74 @@ code {
 
 .artifact-meta {
   color: var(--registry-muted);
+}
+
+/* The smallest-start strip: three steps (you bring, we do not touch, you get
+   back) reading left to right like the on-ramp it describes. Collapses to a
+   single column once the arrows would crowd. */
+.start-strip {
+  align-items: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.start-step {
+  background: #ffffff;
+  border: 1px solid var(--registry-rule);
+  display: grid;
+  flex: 1 1 220px;
+  gap: 10px;
+  justify-items: start;
+  max-width: 280px;
+  padding: 20px;
+}
+
+.start-step-label {
+  color: var(--registry-blue);
+  font-family: var(--registry-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.start-step .artifact-chip {
+  font-family: var(--registry-mono);
+  font-size: 13px;
+}
+
+.start-step-text {
+  color: var(--registry-body);
+  font-size: 14px;
+  margin: 0;
+}
+
+.start-arrow {
+  align-self: center;
+  color: var(--registry-muted);
+  font-size: 22px;
+}
+
+.start-reassure {
+  color: var(--registry-body);
+  margin: 24px auto 0;
+  max-width: 680px;
+  text-align: center;
+}
+
+/* The strip is a row on desktop; once it wraps, hide the inline arrows so the
+   stacked cards do not carry dangling connectors. */
+@media (max-width: 760px) {
+  .start-arrow {
+    display: none;
+  }
+
+  .start-step {
+    max-width: none;
+  }
 }
 
 /* Product attribution inside the lifecycle diagram steps. */

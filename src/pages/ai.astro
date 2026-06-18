@@ -7,7 +7,14 @@ import HarnessDiagram from '../components/HarnessDiagram.astro';
 
 const pageTitle = 'A harness for AI in public services | Registry Stack';
 const pageDescription =
-  'AI connects public systems faster than they can be governed. Registry Stack gives every asker, human or AI, a signed, minimized answer instead of the record.';
+  'AI makes public-service integrations cheaper to build and riskier when records leave their source. Registry Stack gives every asker, human or AI, a signed, minimized answer instead of the record.';
+
+const briefPoints = [
+  'Decide first whether AI belongs in the task at all.',
+  'Make field meaning explicit before systems connect.',
+  'Scale safeguards and recourse with real influence, not the system label.',
+  'Share answers, not records, when a program only needs a specific fact.',
+];
 
 // The review questions from the docs "safer registry surfaces" page, kept as
 // the practical shift in what interoperability has to answer.
@@ -17,6 +24,24 @@ const reviewQuestions = [
   'Which fields or claims can leave the source boundary?',
   'Which semantic definition is being used?',
   'Which audit event records the access or evidence decision?',
+];
+
+const institutionalLimits = [
+  {
+    title: 'Recourse still needs an owner',
+    body:
+      'A signed answer and audit trail can anchor an appeal, but the escalation path between the program and the registry still has to be staffed, funded, and understood by the people affected.',
+  },
+  {
+    title: 'Federation keeps power bounded',
+    body:
+      "One central gateway would see too much. The safer pattern is one answering point per registry, run by that registry's steward and federated with peers under explicit trust rules.",
+  },
+  {
+    title: 'Audit trails need safeguards too',
+    body:
+      'The fact that someone asked about a person can itself be sensitive. Audit logs need minimized access, usage policy, and oversight, just like the records they protect.',
+  },
 ];
 ---
 
@@ -36,6 +61,29 @@ const reviewQuestions = [
             what trace it leaves. Registry Stack is that harness for registry data.
           </p>
         </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="brief-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">Policy brief</p>
+          <h2 id="brief-title">The latest brief makes the frame wider.</h2>
+          <p>
+            <cite>Safeguarding Digital Public Infrastructure in the Age of AI</cite> separates
+            two pressures that are often blurred together: AI makes DPI easier to build, and
+            DPI can feed AI with sensitive records. This page focuses on the second risk. Once
+            a record leaves its source, AI can combine it, infer from it, and act on it at scale.
+          </p>
+          <a class="inline-cta" href="https://doi.org/10.5281/zenodo.20711166">
+            Read the v0.5 brief on Zenodo &rarr;
+          </a>
+        </div>
+        <ul class="check-list">
+          {briefPoints.map((point) => (
+            <li>{point}</li>
+          ))}
+        </ul>
       </div>
     </section>
 
@@ -158,6 +206,28 @@ const reviewQuestions = [
               the people affected can challenge it.
             </p>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="limits-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">What remains hard</p>
+          <h2 id="limits-title">Infrastructure can enforce safeguards. Institutions still carry accountability.</h2>
+          <p>
+            Registry Stack can check policy, meaning, scope, evidence, and audit trails at
+            runtime. It cannot replace legal authority, public oversight, meaningful appeal, or
+            the political choice of how much data should flow.
+          </p>
+        </div>
+        <div class="problem-grid">
+          {institutionalLimits.map((limit) => (
+            <article class="quiet-card">
+              <h3>{limit.title}</h3>
+              <p>{limit.body}</p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
