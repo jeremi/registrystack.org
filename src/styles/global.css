@@ -1317,43 +1317,77 @@ code {
 }
 
 .site-footer-inner {
-  align-items: start;
-  display: flex;
-  gap: 24px;
-  justify-content: space-between;
+  display: grid;
+  gap: clamp(28px, 5vw, 56px);
+  grid-template-columns: minmax(220px, 1fr) 2.4fr;
   margin: 0 auto;
   max-width: var(--registry-max);
-  padding: 40px clamp(16px, 4vw, 42px);
+  padding: 48px clamp(16px, 4vw, 42px) 32px;
 }
 
-.site-footer strong {
+.footer-brand-name {
   color: var(--registry-brass);
+  display: inline-block;
   font-family: var(--registry-mono);
   font-size: 14px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.site-footer p {
+.footer-brand p {
   color: rgba(255, 255, 255, 0.72);
-  margin: 8px 0 0;
-  max-width: 420px;
+  margin: 10px 0 0;
+  max-width: 360px;
 }
 
-.site-footer nav {
+.footer-nav {
+  display: grid;
+  gap: clamp(20px, 3vw, 40px);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.footer-col-title {
+  color: var(--registry-brass);
+  font-family: var(--registry-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.footer-col ul {
+  display: grid;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-col a {
+  align-items: center;
+  color: rgba(255, 255, 255, 0.86);
+  display: flex;
+  min-height: 36px;
+}
+
+.footer-col a:hover {
+  color: #ffffff;
+}
+
+.site-footer-base {
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 14px;
-  justify-content: flex-end;
+  gap: 6px 28px;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: var(--registry-max);
+  padding: 18px clamp(16px, 4vw, 42px) 30px;
 }
 
-.site-footer nav a {
-  align-items: center;
-  color: #ffffff;
-  display: inline-flex;
-  min-height: 36px;
-  /* Short labels such as "FAQ" still need a 36px tap target. */
-  min-width: 36px;
+.site-footer-base p {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 13px;
+  margin: 0;
 }
 
 .site-footer :focus-visible {
@@ -1495,10 +1529,16 @@ code {
   }
 
   .site-footer-inner {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .footer-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .site-footer nav {
-    justify-content: flex-start;
+  .site-footer-base {
+    flex-direction: column;
   }
 }

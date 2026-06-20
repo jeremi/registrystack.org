@@ -148,7 +148,10 @@ for (const route of [
   '/pricing/',
   '/pilot/',
 ]) {
-  if (!navigationSource.includes(`href="${route}"`)) {
+  // The nav and footer build their links from data arrays (single-quoted
+  // route strings) as well as literal href attributes (double-quoted), so a
+  // route counts as wired if it appears in either form.
+  if (!navigationSource.includes(`"${route}"`) && !navigationSource.includes(`'${route}'`)) {
     failures.push(`site navigation is missing a link to ${route}`);
   }
 }

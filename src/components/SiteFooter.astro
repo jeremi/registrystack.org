@@ -1,29 +1,69 @@
 ---
-// Shared footer for every marketing page, including the homepage.
+// Shared footer for every marketing page, including the homepage. The links are
+// grouped into columns that mirror the site's information architecture, so the
+// footer reads as a site map rather than one undifferentiated list.
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    title: 'Solutions',
+    links: [
+      { href: '/solutions/evidence-gateway/', label: 'Evidence Gateway' },
+      { href: '/solutions/protected-registry-apis/', label: 'Protected Registry APIs' },
+    ],
+  },
+  {
+    title: 'Products',
+    links: [
+      { href: '/notary/', label: 'Registry Notary' },
+      { href: '/relay/', label: 'Registry Relay' },
+      { href: '/manifest/', label: 'Registry Manifest' },
+    ],
+  },
+  {
+    title: 'Learn',
+    links: [
+      { href: '/problem/', label: 'The problem' },
+      { href: '/use-cases/', label: 'Use cases' },
+      { href: '/ecosystem/', label: 'Ecosystem' },
+      { href: '/ai/', label: 'AI in public services' },
+      { href: '/security/', label: 'Security' },
+      { href: '/faq/', label: 'FAQ' },
+    ],
+  },
+  {
+    title: 'Get started',
+    links: [
+      { href: '/pricing/', label: 'Pricing' },
+      { href: '/pilot/', label: 'Start a pilot' },
+      { href: 'https://docs.registrystack.org/', label: 'Documentation' },
+      { href: 'https://lab.registrystack.org/', label: 'Live demo' },
+    ],
+  },
+];
 ---
 
 <footer class="site-footer">
   <div class="site-footer-inner">
-    <div>
-      <strong>Registry Stack</strong>
+    <div class="footer-brand">
+      <a class="footer-brand-name" href="/">Registry Stack</a>
       <p>Open-source products that let registry authorities answer questions, issue proofs, and keep their records.</p>
     </div>
-    <nav aria-label="Footer links">
-      <a href="/solutions/evidence-gateway/">Evidence Gateway</a>
-      <a href="/solutions/protected-registry-apis/">Protected Registry APIs</a>
-      <a href="/notary/">Registry Notary</a>
-      <a href="/relay/">Registry Relay</a>
-      <a href="/manifest/">Registry Manifest</a>
-      <a href="/ecosystem/">Ecosystem</a>
-      <a href="/problem/">The problem</a>
-      <a href="/use-cases/">Use cases</a>
-      <a href="/ai/">AI in public services</a>
-      <a href="/security/">Security</a>
-      <a href="/faq/">FAQ</a>
-      <a href="/pricing/">Pricing</a>
-      <a href="/pilot/">Start a pilot</a>
-      <a href="https://docs.registrystack.org/">Docs</a>
-      <a href="https://lab.registrystack.org/">Live demo</a>
+    <nav class="footer-nav" aria-label="Footer">
+      {columns.map((column) => (
+        <div class="footer-col">
+          <p class="footer-col-title">{column.title}</p>
+          <ul>
+            {column.links.map((link) => (
+              <li><a href={link.href}>{link.label}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </nav>
+  </div>
+  <div class="site-footer-base">
+    <p>&copy; {year} Registry Stack. Built in the open.</p>
+    <p>Records stay with the authority that owns them.</p>
   </div>
 </footer>
