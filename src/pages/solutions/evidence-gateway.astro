@@ -7,46 +7,41 @@ import EvidenceGatewayFlow from '../../components/EvidenceGatewayFlow.astro';
 
 const pageTitle = 'Evidence Gateway | Registry Stack';
 const pageDescription =
-  'Govern evidence requests with policy, trust context, source binding, freshness, disclosure controls, and audit provenance.';
+  'A governed path between a service that needs proof and the registry that holds the records: who is asking is checked, the answer is current, and only what is allowed is returned.';
 
 const useCases = [
   'A service needs proof of a fact, not the full source record.',
-  'A cross-agency workflow needs purpose-limited evidence from a registry it does not operate.',
-  'A registry-backed issuer needs governed source reads before issuing a credential.',
-  'A steward needs permits, denials, and redactions to carry the same audit discipline.',
-  'A public service needs evidence exchange across institutions, borders, or service channels.',
+  'A workflow in one agency needs a fact from a registry another agency owns.',
+  'A credential needs to be issued from a registry, after the right checks, not from a copied record.',
+  'Approvals, refusals, and redactions all need to leave the same audit trail.',
+  'Evidence needs to move between institutions, across borders, or into a person’s wallet.',
 ];
 
 const controls = [
   'Purpose and policy',
-  'Trust context',
-  'Source binding',
-  'Source freshness',
-  'Disclosure and redaction',
-  'Audit provenance',
-  'Stable denial reasons',
+  'Who is asking',
+  'Which source answers',
+  'How current the answer is',
+  'What may be disclosed',
+  'A reviewable audit trail',
+  'A clear reason for a no',
 ];
 
 const products = [
   {
     title: 'Registry Notary',
-    body: 'Evaluates configured claims and issues attestations or credentials.',
+    body: 'Checks the question against the registry and signs the answer, or issues a credential.',
     href: '/notary/',
   },
   {
     title: 'Registry Relay',
-    body: 'Provides governed source reads over protected registry APIs.',
+    body: 'Provides the safe, read-only reads from the source the answer is based on.',
     href: '/relay/',
   },
   {
     title: 'Registry Manifest',
-    body: 'Describes evidence offerings, policies, metadata, and bindings.',
+    body: 'Describes what evidence the registry can offer, and under which policy.',
     href: '/manifest/',
-  },
-  {
-    title: 'Registry Platform',
-    body: 'Supplies shared PDP, audit, auth, crypto, and credential primitives.',
-    href: 'https://github.com/jeremi/registry-platform',
   },
 ];
 ---
@@ -61,14 +56,14 @@ const products = [
           <p class="eyebrow">Solution &middot; Evidence Gateway</p>
           <h1 id="evidence-gateway-title">Share verified evidence without sharing records.</h1>
           <p class="hero-lead">
-            Evidence Gateway gives registries a governed path for evidence requests. It checks
-            the requester, purpose, policy, trust context, source binding, freshness, disclosure
-            rules, and audit requirements before returning a minimized answer, redacted result,
-            credential, or stable denial.
+            Evidence Gateway is the governed path between a service that needs proof and the
+            registry that holds the records. It checks who is asking and why, confirms the answer
+            is current, and returns only what the request is allowed to receive: a single fact, a
+            redacted result, a credential, or a clear no.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="/notary/">Explore Registry Notary</a>
-            <a class="button button-secondary" href="https://docs.registrystack.org/">Read the technical docs</a>
+            <a class="button button-primary" href="https://lab.registrystack.org/">Try the live demo</a>
+            <a class="button button-secondary" href="https://docs.registrystack.org/">Read the docs</a>
           </div>
         </div>
       </div>
@@ -78,12 +73,11 @@ const products = [
       <div class="section-inner split">
         <div class="section-heading compact">
           <p class="eyebrow">Where it fits</p>
-          <h2 id="evidence-fit-title">A governed path between evidence requests and source records.</h2>
+          <h2 id="evidence-fit-title">A governed path between a request and the records behind it.</h2>
           <p>
             Evidence Gateway sits between the systems that ask for evidence and the registries
-            that hold source records. It makes each access decision explicit, records why the
-            decision was made, and returns only the evidence response the request is allowed to
-            receive.
+            that hold the records. It makes each decision explicit, records why the decision was
+            made, and returns only the answer the request is allowed to receive.
           </p>
         </div>
         <ul class="check-list" aria-label="Evidence Gateway use cases">
@@ -108,10 +102,10 @@ const products = [
       <div class="section-inner split">
         <div class="section-heading compact">
           <p class="eyebrow">What it governs</p>
-          <h2 id="evidence-governs-title">Policy checks, source checks, disclosure, and audit stay together.</h2>
+          <h2 id="evidence-governs-title">The checks, the redaction, and the audit trail stay in one place.</h2>
           <p>
-            The same path handles permits, redactions, and denials, so evidence exchange is not
-            split across a policy document, a source connector, and an unreviewable integration.
+            The same path handles approvals, redactions, and refusals, so evidence exchange is not
+            split across a policy document, a data connector, and an integration nobody can review.
           </p>
         </div>
         <div class="solution-control-list" aria-label="Evidence Gateway controls">
@@ -125,14 +119,14 @@ const products = [
     <section class="section section-muted" aria-labelledby="evidence-stack-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">Built from Registry Stack</p>
-          <h2 id="evidence-stack-title">A solution pattern, not another central service.</h2>
+          <p class="eyebrow">How it is built</p>
+          <h2 id="evidence-stack-title">A solution, not another central system.</h2>
           <p>
-            Evidence Gateway is delivered through Registry Stack services. Each product keeps a
-            narrow job, and deployments compose only the pieces they need.
+            Evidence Gateway is delivered through three open-source products. Each keeps a narrow
+            job, and a deployment composes only the pieces it needs.
           </p>
         </div>
-        <div class="solution-product-grid">
+        <div class="solution-product-grid solution-product-grid-three">
           {products.map((product) => (
             <article>
               <h3>{product.title}</h3>
@@ -152,12 +146,12 @@ const products = [
         </div>
         <div class="claim-body">
           <p>
-            The same governed evidence pattern can support domestic services, cross-agency
-            workflows, cross-border exchange, and wallet-backed service channels. EU once-only
-            and OOTS-style flows can be modeled as one profile of that pattern, with source
+            The same governed path can support services in one country, work that crosses
+            agencies, exchange that crosses borders, and answers that land in a person’s wallet.
+            EU once-only and OOTS-style exchanges are one example of it, with each registry’s
             records staying under the authority that owns them.
           </p>
-          <a class="inline-cta" href="/solutions/protected-registry-apis/">See how governed reads work &rarr;</a>
+          <a class="inline-cta" href="/solutions/protected-registry-apis/">See how safe registry reads work &rarr;</a>
         </div>
       </div>
     </section>
@@ -166,11 +160,10 @@ const products = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">Where to start</p>
-          <h2 id="evidence-next-title">Start with the surface closest to the request.</h2>
+          <h2 id="evidence-next-title">Start with the part closest to the request.</h2>
           <p>
-            Start with Registry Notary when you need claim evaluation, attestations, or
-            credentials. Start with Protected Registry APIs when your first task is exposing an
-            existing registry source safely.
+            Start with Registry Notary when you need a signed answer or a credential. Start with
+            Protected Registry APIs when your first task is opening an existing registry safely.
           </p>
         </div>
         <div class="solution-choice-row">
@@ -182,7 +175,7 @@ const products = [
 
     <DocsHandoff
       eyebrow="For your technical team"
-      heading="The Evidence Gateway contract, PDP behavior, and runtime surfaces live in the docs."
+      heading="The Evidence Gateway contract, the policy decisions, and the runtime surfaces live in the docs."
       primaryLabel="Read the technical docs"
     />
   </main>

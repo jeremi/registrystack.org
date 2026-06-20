@@ -3,33 +3,37 @@
 Static Astro site for `registrystack.org`, the institutional marketing site for
 Registry Stack.
 
-The site is product-led: the homepage carries the Registry Notary promise
-(prove facts without sharing records), routes to the hosted lab as the primary
-call to action, and routes visitors into the three products from their own
-situation ("services keep asking us to send the whole record"), keeping the
-products in priority order. The original
-single-page direction is recorded in `../registrystack-org-marketing-site-spec.md`
-and the multi-page split in `../registry-stack-docs-marketing-split-plan-2026-06-05.md`;
-where this site and those documents disagree, the site and
-`scripts/check-content.mjs` are current.
+The site is solution-led: the homepage carries the promise (prove facts from
+registries without sharing the records) and routes visitors into two solutions,
+then shows the three open-source products those solutions are built from, in
+priority order. The original single-page direction is recorded in
+`../registrystack-org-marketing-site-spec.md` and the multi-page split in
+`../registry-stack-docs-marketing-split-plan-2026-06-05.md`; where this site and
+those documents disagree, the site and `scripts/check-content.mjs` are current.
 
-- `/` home: Notary-led hero, live-lab CTA, situation doors into the three
-  products, the operating model, and links out to the deeper pages.
+- `/` home: the promise, two solution doors, the three products they are built
+  from (in priority order), a proof band, and links out to the deeper pages.
+- `/solutions/evidence-gateway` Evidence Gateway: share proof of a fact, a yes
+  or no, a status, or a credential, without sharing the record.
+- `/solutions/protected-registry-apis` Protected Registry APIs: open an existing
+  registry safely for approved services, read-only and audited.
 - `/notary` Registry Notary: signed answers and wallet credentials (Verify).
 - `/relay` Registry Relay: protected APIs over existing files and tables (Expose).
 - `/manifest` Registry Manifest: portable standards-facing metadata (Describe).
-- `/why` the recurring registry problems.
+- `/problem` the recurring registry problems (`/why` redirects here).
 - `/use-cases` the sell gallery (question, bounded answer, what is not shared).
 - `/ecosystem` positioning, complementary-not-competitive (footer-linked).
 - `/ai` a harness for AI in public services (context, not product); a static
   stub at `/why-now` redirects here.
+- `/pilot` what a pilot looks like, and `/pricing` the packages.
 
 The audience is program and policy people; code stays in the docs site. The
 voice is plain and outcome-led; release engineering detail such as versioning
-and maturity notes lives in the docs and the product repositories. The
-primary call to action on the homepage and product pages is the hosted lab at
-`https://lab.registrystack.org/`, which `npm run check:links` verifies is
-reachable on every build.
+and maturity notes lives in the docs and the product repositories. The two
+solutions are the primary route from the homepage; the hosted lab at
+`https://lab.registrystack.org/` is the "see it running" action on the solution
+and product pages, and `npm run check:links` verifies it is reachable on every
+build.
 
 The visual identity is civic print, drawn from the look of official records:
 a solid civic-blue cover hero, quiet paper heroes on the inner pages, mono

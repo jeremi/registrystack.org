@@ -2,27 +2,27 @@
 const decisions = [
   {
     label: 'Request',
-    title: 'Evidence request',
-    body: 'The requester supplies purpose, subject, requested evidence, and the context required for evaluation.',
+    title: 'The request',
+    body: 'A service asks for one fact about one subject, and says what it needs it for.',
     tags: ['purpose', 'subject', 'requested fact'],
   },
   {
     label: 'Decision',
-    title: 'Policy and trust',
-    body: 'The runtime checks identity, scopes, route, policy, and trusted request context before the source is used.',
-    tags: ['identity', 'scopes', 'policy'],
+    title: 'Who is asking',
+    body: 'The request is checked against policy: is this caller allowed to ask this, for this purpose?',
+    tags: ['identity', 'scope', 'policy'],
   },
   {
     label: 'Source',
-    title: 'Binding and freshness',
-    body: 'The allowed source is selected and its observation age is checked from trusted source metadata or context.',
-    tags: ['source binding', 'freshness'],
+    title: 'Which source, how current',
+    body: 'The allowed source is chosen, and how recently it was updated is checked before it is used.',
+    tags: ['source', 'freshness'],
   },
   {
     label: 'Disclosure',
-    title: 'Response shape',
-    body: 'Disclosure rules decide whether the response may be a value, predicate, redacted result, credential, or denial.',
-    tags: ['redaction', 'credential', 'denial'],
+    title: 'What goes back',
+    body: 'Disclosure rules decide whether the answer is a value, a yes or no, a redacted result, a credential, or a clear no.',
+    tags: ['redaction', 'credential', 'clear no'],
   },
 ];
 ---
@@ -31,10 +31,10 @@ const decisions = [
   <div class="evidence-flow-top">
     <div>
       <p class="evidence-flow-kicker">Governed evidence path</p>
-      <h3 id="evidence-flow-title">A source is consulted only after the request is allowed.</h3>
+      <h3 id="evidence-flow-title">The source is read only after the request is allowed.</h3>
     </div>
     <p>
-      Every outcome creates audit provenance, including permits, redactions, and stable denials.
+      Every outcome leaves an audit record, whether the request was approved, redacted, or refused.
     </p>
   </div>
 
@@ -54,16 +54,16 @@ const decisions = [
   </ol>
 
   <div class="evidence-flow-result" aria-label="Evidence Gateway outcomes">
-    <span>minimized evidence</span>
+    <span>a single fact</span>
     <span>redacted result</span>
-    <span>credential path</span>
-    <span>stable denial</span>
-    <strong>audit provenance</strong>
+    <span>credential</span>
+    <span>clear no</span>
+    <strong>audit trail</strong>
   </div>
 
   <figcaption>
-    Evidence Gateway keeps the policy decision, source check, disclosure rule, and audit record in
-    one governed path.
+    Evidence Gateway keeps the policy check, the source check, the disclosure rule, and the audit
+    record in one governed path.
   </figcaption>
 </figure>
 

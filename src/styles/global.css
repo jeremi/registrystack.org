@@ -948,6 +948,13 @@ code {
   margin: 12px 0 0;
 }
 
+/* Inline links inside the muted hero note are underlined so they stay
+   distinguishable from the surrounding text without relying on color. */
+.hero-note a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .inline-cta {
   color: var(--registry-blue);
   font-weight: 700;

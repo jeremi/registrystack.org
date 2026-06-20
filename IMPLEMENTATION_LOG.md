@@ -237,3 +237,35 @@ stated four times in a row. Two cuts:
   asserts the homepage carries no funnel figure (written first, red, then
   green after the cuts).
 - Full `npm run check` green; trimmed sections screenshot-verified.
+
+## 2026-06-20: solutions-first tone and consistency pass
+
+Jeremi asked for a marketing-site refresh: check the tone, tighten the copy,
+and remove contradictions. The review found the homepage had been rebuilt
+solutions-first (Evidence Gateway / Protected Registry APIs as the spine) while
+the rest of the site, the README, and this log still described the older
+situation-routed, Notary-led homepage. Decision (via AskUserQuestion): commit
+to solutions-first and do a full copy pass.
+
+- Solutions are now the spine; the three products are framed as "how it is
+  built". Homepage No. 02 retitled from "The products underneath /
+  Three components" to "How it is built / Both solutions are built from three
+  open-source products." The Notary-Relay-Manifest priority order is kept.
+- The two solution pages were the most jargon-heavy on the site; they are
+  rewritten in plain policy-reader language. Replaced "PDP behaviour",
+  "source binding", "predicate", "field projection", "purpose-bound access",
+  "evidence offering discovery", "audit provenance", and "stable denial" with
+  plain equivalents on the pages and in EvidenceGatewayFlow /
+  ProtectedRegistryApiFlow.
+- Contradiction fixes: dropped the "Registry Platform" fourth-product card from
+  both solution pages (the homepage says three products, and Platform is
+  unmarketed plumbing); removed the orphan "Registry Workbench" and "Registry
+  Trust Operations" names from /pricing (used nowhere else); reconciled the
+  hosted-lab CTA so it is the "see it running" action on solution and product
+  pages, and updated the README, which had described it as the primary CTA.
+- Each product page now names, in its hero, which solution it is a building
+  block of, and the product "In the stack" cross-links read "solution" rather
+  than "pattern".
+- check-content.mjs invariants were already solutions-first-aligned (homepage
+  routes to both solutions, product priority order, nav/handoff wiring); no
+  rule changes were needed. README and this log updated to match the site.

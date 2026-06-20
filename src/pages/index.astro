@@ -7,20 +7,20 @@ import RegistrySeal from '../components/RegistrySeal.astro';
 
 const pageTitle = 'Registry Stack | Governed registry services and trusted evidence';
 const pageDescription =
-  'Registry Stack helps public institutions expose protected registry APIs and return governed evidence from registries without sharing full records.';
+  'Registry Stack lets public institutions open registries safely and share proof of a fact, without handing over the underlying records.';
 
 const heroReasons = [
   {
-    label: 'Protected access',
-    body: 'Expose the registry surface a service is allowed to use, without handing over the source system or its records.',
+    label: 'Answer, do not hand over',
+    body: 'A service receives the one fact it needs, a yes or no, a status, or a credential, while the full record stays with the registry that owns it.',
   },
   {
-    label: 'Governed evidence',
-    body: 'Return a proof, redacted result, credential, or stable denial after policy, trust, freshness, disclosure, and audit checks.',
+    label: 'Safe on every request',
+    body: 'Who may ask, for what purpose, and what they get back are checked on every request, and each one leaves an audit record a reviewer can read.',
   },
   {
-    label: 'Inspectable contracts',
-    body: 'Publish the metadata, policies, schemas, and evidence offerings partners need before integrations become one-off code.',
+    label: 'Start from what you have',
+    body: 'Put a governed surface in front of the registry you already run, a spreadsheet, a database, or a domain platform, with nothing to migrate.',
   },
 ];
 
@@ -49,27 +49,27 @@ const heroAnswers = [
 
 const solutions = [
   {
-    eyebrow: 'Governed evidence exchange',
+    eyebrow: 'Share evidence, not records',
     title: 'Evidence Gateway',
     body:
-      'Use when a service needs a proof, predicate, redacted result, credential, or stable denial from source records it should not receive.',
+      'Use this when a service needs proof of a fact, a yes or no, a status, or a credential, but should never receive the underlying record.',
     href: '/solutions/evidence-gateway/',
-    cta: 'Explore Evidence Gateway',
+    cta: 'See how Evidence Gateway works',
     points: [
-      'Policy and trust context checked before evidence is returned.',
-      'Freshness, redaction, disclosure, and audit travel with the answer.',
+      'Every request is checked for who is asking and why before any answer is returned.',
+      'The answer carries its own freshness, redaction, and audit trail.',
     ],
   },
   {
-    eyebrow: 'Safe registry consultation',
+    eyebrow: 'Open a registry safely',
     title: 'Protected Registry APIs',
     body:
-      'Use when an existing registry source needs read-only routes with authentication, scopes, metadata, field limits, and reviewable audit.',
+      'Use this when a registry already exists, in a file, a database, or a legacy system, and partners need a safe, read-only way to consult it.',
     href: '/solutions/protected-registry-apis/',
-    cta: 'Explore Protected Registry APIs',
+    cta: 'See how Protected Registry APIs work',
     points: [
-      'Wrap CSV, XLSX, Parquet, PostgreSQL, extracts, or legacy systems.',
-      'Expose entity reads and metadata without opening the database.',
+      'Approved services get scoped routes, not a copy of the file or a database login.',
+      'Every read is limited to agreed fields and recorded in the audit trail.',
     ],
   },
 ];
@@ -78,19 +78,19 @@ const products = [
   {
     title: 'Registry Notary',
     role: 'Verify',
-    body: 'Evaluates governed claims and returns signed answers, attestations, or wallet credentials.',
+    body: 'Answers a precise question against a registry and returns a signed answer or a wallet credential.',
     href: '/notary/',
   },
   {
     title: 'Registry Relay',
     role: 'Expose',
-    body: 'Serves protected, read-only APIs over existing registry files, extracts, and tables.',
+    body: 'Serves a protected, read-only API over the files and tables a registry already lives in.',
     href: '/relay/',
   },
   {
     title: 'Registry Manifest',
     role: 'Describe',
-    body: 'Publishes validated metadata, policies, schemas, and evidence offerings.',
+    body: 'Publishes a registry’s metadata, policies, and schemas in the standard formats partners read.',
     href: '/manifest/',
   },
 ];
@@ -136,17 +136,17 @@ const proofPoints = [
             <p class="eyebrow">Open-source products &middot; For governments and their partners</p>
             <h1 id="hero-title">Prove facts from registries without sharing the records.</h1>
             <p class="hero-thesis">
-              Registry Stack helps public institutions expose protected registry APIs and return
-              governed evidence, while source records stay with the authority that owns them.
+              Registry Stack lets the registries a government already runs answer questions and
+              share proof, while the underlying records stay with the authority that owns them.
             </p>
             <p class="hero-lead">
-              Start with the registry you already have. Add a governed surface in front of it.
-              Let approved services receive the answer they are allowed to receive: a protected
-              read, a minimized fact, a credential, a redacted result, or a stable denial.
+              Start with the registry you already have. Put a governed surface in front of it, and
+              let an approved service receive only the answer it is allowed to: a protected read, a
+              single fact, a credential, a redacted result, or a clear no.
             </p>
             <div class="hero-actions" aria-label="Primary actions">
-              <a class="button button-primary" href="/solutions/evidence-gateway/">Explore Evidence Gateway</a>
-              <a class="button button-secondary" href="/solutions/protected-registry-apis/">Expose a registry safely</a>
+              <a class="button button-primary" href="/solutions/evidence-gateway/">Share evidence, not records</a>
+              <a class="button button-secondary" href="/solutions/protected-registry-apis/">Open a registry safely</a>
             </div>
             <p class="hero-note">
               Prefer to see it first? The <a href="https://lab.registrystack.org/">hosted lab</a>
@@ -179,8 +179,8 @@ const proofPoints = [
           <p class="eyebrow"><span class="reg-no">No. 01</span> &middot; Choose the path</p>
           <h2 id="solutions-title">Two ways to make registries usable without over-sharing records.</h2>
           <p>
-            Start from the outcome you need. Registry Stack keeps the solution pattern separate
-            from the products underneath it, so the first conversation stays clear.
+            Start from the outcome you need. Registry Stack keeps the solution you choose separate
+            from the products that deliver it, so the first conversation stays about outcomes.
           </p>
         </div>
         <div class="home-solution-grid">
@@ -204,11 +204,11 @@ const proofPoints = [
     <section class="section section-muted" id="products" aria-labelledby="products-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow"><span class="reg-no">No. 02</span> &middot; The products underneath</p>
-          <h2 id="products-title">Three components, each with a narrow job.</h2>
+          <p class="eyebrow"><span class="reg-no">No. 02</span> &middot; How it is built</p>
+          <h2 id="products-title">Both solutions are built from three open-source products.</h2>
           <p>
-            Use one product on its own, or compose them when a deployment needs protected APIs,
-            metadata, evidence decisions, and credential issuance together.
+            Each product does one narrow job. A solution uses one on its own, or composes them,
+            so a deployment adopts only the pieces it actually needs.
           </p>
         </div>
         <div class="home-product-strip">
@@ -269,8 +269,8 @@ const proofPoints = [
         <p class="pill">Start small</p>
         <h2 id="final-title">Start with one registry, one evidence need, and one governed service surface.</h2>
         <div class="hero-actions">
-          <a class="button button-primary" href="/solutions/evidence-gateway/">Explore Evidence Gateway</a>
-          <a class="button button-secondary" href="/solutions/protected-registry-apis/">See Protected Registry APIs</a>
+          <a class="button button-primary" href="/solutions/evidence-gateway/">Share evidence, not records</a>
+          <a class="button button-secondary" href="/solutions/protected-registry-apis/">Open a registry safely</a>
         </div>
       </div>
     </section>

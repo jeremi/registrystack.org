@@ -1,7 +1,7 @@
 ---
 const sources = ['CSV', 'XLSX', 'Parquet', 'PostgreSQL', 'Legacy API'];
-const controls = ['auth', 'scopes', 'metadata', 'field limits', 'audit'];
-const outputs = ['entity reads', 'metadata routes', 'aggregates', 'evidence offerings'];
+const controls = ['sign-in', 'scopes', 'metadata', 'field limits', 'audit'];
+const outputs = ['entity reads', 'metadata routes', 'allowed counts', 'what is on offer'];
 ---
 
 <figure class="registry-api-flow" aria-labelledby="registry-api-flow-title">
@@ -26,8 +26,8 @@ const outputs = ['entity reads', 'metadata routes', 'aggregates', 'evidence offe
   </div>
 
   <div class="registry-api-output">
-    <p class="registry-api-label">Approved consumers</p>
-    <h3>Services call entity routes, not storage internals.</h3>
+    <p class="registry-api-label">Approved services</p>
+    <h3>Services call routes for real things, not database tables.</h3>
     <div class="registry-api-chip-list" aria-label="Protected API outputs">
       {outputs.map((output) => (
         <span>{output}</span>
@@ -36,8 +36,8 @@ const outputs = ['entity reads', 'metadata routes', 'aggregates', 'evidence offe
   </div>
 
   <figcaption>
-    Protected Registry APIs put a governed consultation surface in front of existing sources, with
-    read-only access, route-level controls, and audit records.
+    Protected Registry APIs put a governed doorway in front of existing sources, with read-only
+    access, limits on every route, and a record of every read.
   </figcaption>
 </figure>
 
