@@ -25,6 +25,9 @@ those documents disagree, the site and `scripts/check-content.mjs` are current.
 - `/ecosystem` positioning, complementary-not-competitive (footer-linked).
 - `/ai` a harness for AI in public services (context, not product); a static
   stub at `/why-now` redirects here.
+- `/security` the security model, what you can verify, and how to report a
+  vulnerability.
+- `/faq` short, honest answers that link out to the deeper pages.
 - `/pilot` what a pilot looks like, and `/pricing` the packages.
 
 The audience is program and policy people; code stays in the docs site. The

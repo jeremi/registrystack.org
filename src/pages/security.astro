@@ -1,0 +1,189 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocsHandoff from '../components/DocsHandoff.astro';
+
+const pageTitle = 'Security | Registry Stack';
+const pageDescription =
+  'How Registry Stack is built so the worst case stays small: records stay in the source, every request is checked, answers are signed, and you can verify it all yourself.';
+
+// The security properties the architecture gives you, stated as outcomes a
+// security reviewer can reason about rather than implementation detail.
+const principles = [
+  {
+    title: 'Records stay home',
+    body:
+      'The source registry is never copied into Registry Stack. A request returns a fact, a status, or a credential, while the underlying record stays in the system that owns it.',
+  },
+  {
+    title: 'Zero trust on every request',
+    body:
+      'No caller is trusted because of where it comes from or what token it carries. Who is asking, for what purpose, and what they may receive are checked on every request, including callers that were trusted yesterday.',
+  },
+  {
+    title: 'Least privilege by construction',
+    body:
+      'The only thing on offer is the narrow answer. A caller that is compromised, or simply wrong, can leak one answer, never the registry behind it.',
+  },
+  {
+    title: 'Read-only by design',
+    body:
+      'Registry Relay serves reads only. There is no write path through the surface, so the consultation API cannot change, delete, or provision records in the source.',
+  },
+  {
+    title: 'Signed, time-bounded answers',
+    body:
+      'Answers are signed with Ed25519, and credentials follow SD-JWT VC, valid for a bounded time. A verifier checks the signature, and a tampered answer fails that check.',
+  },
+  {
+    title: 'A tamper-evident audit trail',
+    body:
+      'Every trust-critical request leaves an audit record: who asked, for what purpose, under what authority, and what was answered.',
+  },
+];
+
+const federation = [
+  'You self-host on your own infrastructure or a partner’s; no records or audit logs flow to the project.',
+  'Each registry keeps its own answering point and its own steward; there is no central gateway that sees every question.',
+  'Audit logs are sensitive too: access to them is minimized and governed, like the records they protect.',
+];
+
+const verify = [
+  'The products are open source, so your team and your auditors can review exactly what runs.',
+  'Signed builds and the published posture and audit schemas let you confirm what you deploy.',
+  'A local self-check validates a deployment against the expected posture.',
+  'You can run the whole flow in the hosted lab on synthetic data before any real record is touched.',
+];
+
+const responsibilities = [
+  'Whether a caller is legally entitled to a fact stays your decision; the surface enforces the policy you set.',
+  'Key custody, hosting hardening, network controls, and incident response for your deployment stay with your security team.',
+  'Legal authority, data-protection obligations, and public oversight stay with the institution and its regulators.',
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="security" />
+
+  <main>
+    <section class="hero" aria-labelledby="security-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Security</p>
+          <h1 id="security-hero-title">A breach should leak the answer, never the registry.</h1>
+          <p class="hero-lead">
+            Registry Stack is built so the worst case stays small. Records stay in the source
+            system, every request is checked, and a caller only ever receives the narrow answer it
+            was granted. This page explains the security model, what you can verify for yourself,
+            and how to report a vulnerability.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="security-model-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">The security model</p>
+          <h2 id="security-model-title">Safety is a property of the design, not a setting you remember to switch on.</h2>
+          <p>
+            The same minimization that protects privacy also limits blast radius. Each property
+            below holds for every request, by construction.
+          </p>
+        </div>
+        <div class="problem-grid">
+          {principles.map((item) => (
+            <article class="quiet-card">
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="security-federation-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">No central honeypot</p>
+          <h2 id="security-federation-title">One answering point per registry, not a central pool.</h2>
+          <p>
+            Registry Stack is not a data lake. There is one answering point per registry, run by
+            that registry’s own steward and federated with peers under explicit trust rules. There
+            is no central service that sees every question, and no shared copy of the records to
+            defend in one place.
+          </p>
+        </div>
+        <ul class="check-list">
+          {federation.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="security-verify-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">What you can verify</p>
+          <h2 id="security-verify-title">Trust, but verify.</h2>
+          <p>
+            A security claim is only worth what you can check. Everything a single registry needs
+            is open source and self-hosted, so your team can inspect it before trusting it.
+          </p>
+          <a class="inline-cta" href="https://lab.registrystack.org/">Try the live demo on synthetic data &rarr;</a>
+        </div>
+        <ul class="check-list">
+          {verify.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="security-report-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Coordinated disclosure</p>
+          <h2 id="security-report-title">Found a security issue? Tell us privately first.</h2>
+          <p>
+            If you find a vulnerability, please report it privately so it can be fixed before it
+            is public. Do not open a public issue for a security report. We will acknowledge your
+            report and work with you on a coordinated disclosure.
+          </p>
+        </div>
+        <div class="solution-choice-row">
+          <a class="button button-primary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20security%20report">Report a vulnerability</a>
+          <a class="button button-secondary" href="https://docs.registrystack.org/">Read the security docs</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="security-responsibility-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">Division of responsibility</p>
+          <h2 id="security-responsibility-title">What Registry Stack enforces, and what stays with you.</h2>
+          <p>
+            Registry Stack gives you the enforcement surface. Running it safely in production is a
+            shared job, and the parts that need legal authority and human accountability stay with
+            the institution, on purpose.
+          </p>
+        </div>
+        <ul class="check-list">
+          {responsibilities.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <DocsHandoff
+    eyebrow="For your security team"
+    heading="The threat model, the hardening checklist, and the audit schema live in the docs."
+    primaryLabel="Read the security docs"
+  />
+  <SiteFooter />
+</Base>

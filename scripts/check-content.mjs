@@ -143,6 +143,8 @@ for (const route of [
   '/use-cases/',
   '/ecosystem/',
   '/ai/',
+  '/security/',
+  '/faq/',
   '/pricing/',
   '/pilot/',
 ]) {

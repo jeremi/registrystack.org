@@ -1,0 +1,218 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocsHandoff from '../components/DocsHandoff.astro';
+
+const pageTitle = 'FAQ | Registry Stack';
+const pageDescription =
+  'Short, honest answers to the questions program teams, security reviewers, and engineers ask first about Registry Stack, each linking to the page that goes deeper.';
+
+// Grouped so a reader can scan to their own concern. Each answer stays short and
+// links to the page that carries the depth, so the FAQ does not become a second
+// copy of the site.
+const groups = [
+  {
+    heading: 'What it is',
+    items: [
+      {
+        q: 'What does Registry Stack actually do?',
+        a: 'It lets a registry you already run answer a specific question, or share proof of a fact, without handing over the underlying record. A service gets a yes or no, a status, or a credential; the record stays in the source system.',
+        link: { label: 'See the problem it solves', href: '/problem/' },
+      },
+      {
+        q: 'Do we have to replace our current registry or platform?',
+        a: 'No. Registry Stack runs alongside the systems you already operate, in front of the registry source you already keep. Nothing is replaced and nothing migrates.',
+        link: { label: 'How it fits the ecosystem', href: '/ecosystem/' },
+      },
+      {
+        q: 'Can it work with a spreadsheet or a legacy database?',
+        a: 'Yes. Registry Relay reads the files and tables a registry already lives in, including CSV, XLSX, Parquet, and PostgreSQL, and serves a protected, read-only API over them.',
+        link: { label: 'See Registry Relay', href: '/relay/' },
+      },
+    ],
+  },
+  {
+    heading: 'Data, security, and privacy',
+    items: [
+      {
+        q: 'Does our data leave our systems?',
+        a: 'No. You self-host Registry Stack on your own infrastructure or a partner’s. Records stay in the source, and no records or audit logs flow to the project.',
+        link: { label: 'Read the security model', href: '/security/' },
+      },
+      {
+        q: 'What happens if a connected service is compromised?',
+        a: 'A caller can only ever receive the narrow answer it was granted, never the registry. Answers are signed and time-bounded, and every request is in the audit trail.',
+        link: { label: 'How the security model holds', href: '/security/' },
+      },
+      {
+        q: 'How do AI agents fit in?',
+        a: 'An AI agent is treated as one more untrusted caller: it gets a checked, minimized answer, not direct access. AI is the reason safer registry surfaces are urgent, not something Registry Stack sells.',
+        link: { label: 'A harness for AI in public services', href: '/ai/' },
+      },
+    ],
+  },
+  {
+    heading: 'How it fits',
+    items: [
+      {
+        q: 'How is this different from an exchange layer like X-Road?',
+        a: 'An exchange layer carries trust and transport between institutions. Registry Stack is the governed registry surface behind it: it still checks scope, fields, and source access even for a request that arrived through a trusted channel.',
+        link: { label: 'Complementary, not competitive', href: '/ecosystem/' },
+      },
+      {
+        q: 'How is this different from a foundational ID system like MOSIP?',
+        a: 'Identity systems establish who a person is. Registry Stack answers what is true about that person in a specific registry, such as alive, enrolled, or registered, after the identity layer has done its job.',
+        link: { label: 'Where Registry Stack sits', href: '/ecosystem/' },
+      },
+      {
+        q: 'What standards does it use?',
+        a: 'It adopts established standards rather than inventing them: SD-JWT VC and OpenID4VCI for credentials, DCAT-AP and related profiles for metadata, and SP-DCI and OGC API for registry exchange.',
+        link: { label: 'The standards we adopt', href: '/ecosystem/' },
+      },
+    ],
+  },
+  {
+    heading: 'Adoption and cost',
+    items: [
+      {
+        q: 'Is it really free?',
+        a: 'The three products are open source, self-hosted, and complete for a single registry. The paid subscription adds governance across many registry services and maintainer support.',
+        link: { label: 'See pricing', href: '/pricing/' },
+      },
+      {
+        q: 'Do you charge per citizen or per credential?',
+        a: 'No. Pricing is by the registry services under management, so a program that reaches twice as many people pays the same.',
+        link: { label: 'What we never charge for', href: '/pricing/' },
+      },
+      {
+        q: 'Who uses it today, and is it ready for us?',
+        a: 'The products are open source and run in a public hosted lab on synthetic data, with live integrations you can inspect. Institutions adopt them through a scoped pilot: one registry, one question, safeguards from the first request.',
+        link: { label: 'What a pilot looks like', href: '/pilot/' },
+      },
+      {
+        q: 'Who is behind Registry Stack?',
+        a: 'It is built in the open by maintainers who work in social protection, DCI standards, and GovStack specifications. The code, the documentation, and the hosted lab are public, so what this site claims, you can check.',
+        link: { label: 'Who is behind this', href: '/pilot/#stewardship' },
+      },
+    ],
+  },
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="faq" />
+
+  <main>
+    <section class="hero" aria-labelledby="faq-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">FAQ</p>
+          <h1 id="faq-hero-title">Questions we hear, answered plainly.</h1>
+          <p class="hero-lead">
+            Short answers to the questions program teams, security reviewers, and engineers ask
+            first. For the longer story, each answer links to the page that goes deeper.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {groups.map((group, index) => (
+      <section class={index % 2 === 1 ? 'section section-muted' : 'section'} aria-labelledby={`faq-group-${index}`}>
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2 id={`faq-group-${index}`}>{group.heading}</h2>
+          </div>
+          <div class="faq-list">
+            {group.items.map((item) => (
+              <details class="faq-item">
+                <summary>{item.q}</summary>
+                <div class="faq-answer">
+                  <p>{item.a}</p>
+                  <a class="inline-cta" href={item.link.href}>{item.link.label} &rarr;</a>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))}
+  </main>
+
+  <DocsHandoff
+    eyebrow="Still have a question?"
+    heading="The docs answer the technical questions; a pilot conversation answers the rest."
+    primaryLabel="Read the docs"
+    emphasis="pilot"
+  />
+  <SiteFooter />
+</Base>
+
+<style>
+  .faq-list {
+    display: grid;
+    gap: 12px;
+    margin-top: clamp(20px, 3vw, 28px);
+    max-width: 820px;
+  }
+
+  .faq-item {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+  }
+
+  .faq-item summary {
+    align-items: center;
+    color: var(--registry-ink);
+    cursor: pointer;
+    display: flex;
+    font-size: 17px;
+    font-weight: 700;
+    gap: 16px;
+    justify-content: space-between;
+    list-style: none;
+    padding: 18px 20px;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* A register tick that opens into a cross, so the control reads without
+     relying on a dash glyph. */
+  .faq-item summary::after {
+    color: var(--registry-blue);
+    content: '+';
+    font-family: var(--registry-mono);
+    font-size: 20px;
+    line-height: 1;
+    transition: transform 0.15s ease;
+  }
+
+  .faq-item[open] summary::after {
+    transform: rotate(45deg);
+  }
+
+  .faq-item summary:hover {
+    color: var(--registry-blue);
+  }
+
+  .faq-answer {
+    border-top: 1px solid var(--registry-rule);
+    display: grid;
+    gap: 12px;
+    padding: 16px 20px 20px;
+  }
+
+  .faq-answer p {
+    color: var(--registry-body);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-item summary::after {
+      transition: none;
+    }
+  }
+</style>

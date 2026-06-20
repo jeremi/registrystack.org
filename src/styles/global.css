@@ -1352,6 +1352,8 @@ code {
   color: #ffffff;
   display: inline-flex;
   min-height: 36px;
+  /* Short labels such as "FAQ" still need a 36px tap target. */
+  min-width: 36px;
 }
 
 .site-footer :focus-visible {

@@ -102,7 +102,7 @@ for (const viewport of viewports) {
 
   // Each nav disclosure must present its expected links at tappable size once
   // opened, on every checked route and viewport. Solutions intentionally has
-  // two entries; Products and In practice each have three.
+  // two entries; Products has three; In practice gathers the supporting reading.
   {
     const menus = await page.evaluate(() =>
       [...document.querySelectorAll('.nav-group')].map((details) => {
@@ -119,7 +119,7 @@ for (const viewport of viewports) {
     const expectedMenuSizes = new Map([
       ['Solutions', 2],
       ['Products', 3],
-      ['In practice', 3],
+      ['In practice', 5],
     ]);
     const missing = [...expectedMenuSizes].filter(
       ([menuLabel, expected]) => !menus.some((menu) => menu.label === menuLabel && menu.links.length === expected),
