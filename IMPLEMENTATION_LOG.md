@@ -269,3 +269,38 @@ to solutions-first and do a full copy pass.
 - check-content.mjs invariants were already solutions-first-aligned (homepage
   routes to both solutions, product priority order, nav/handoff wiring); no
   rule changes were needed. README and this log updated to match the site.
+
+## 2026-06-20 (later): /security and /faq, footer, and an honest security model
+
+Added a `/security` and a `/faq` page and reorganised the footer into a
+four-column site map (Solutions, Products, Learn, Get started). The footer and
+nav build links from data arrays, so check-content's nav-wiring check now
+accepts single- or double-quoted route strings.
+
+The security page took three passes, and the lesson is worth recording:
+
+- First draft led with a slogan, "a breach should leak the answer, never the
+  registry." That is false. A deployment reads the raw source to compute an
+  answer, so it holds source access and a credential; a compromise of the
+  service can leak what it can read. The slogan only ever held for a compromised
+  downstream caller. Rewrote around an honest trust boundary.
+- Second pass fixed the voice. The copy kept narrating its own integrity ("this
+  page is honest about that", "we would rather name the exposure", "saying so is
+  part of an honest model", "do not take our word") instead of describing the
+  system. Researched how Vault, Tailscale, and Supabase write these pages: they
+  state the model in declarative "it can / it cannot" terms and let the reader
+  judge. Stripped every self-referential line.
+- Third pass followed their structure, not just their voice: open by naming the
+  properties the model protects (confidentiality, integrity, availability,
+  auditability) each with its mechanism; add a concrete note on where the two
+  secrets live, what TLS protects, and where data at rest stays; restate the
+  threat model as an explicit "defends against / out of scope" pair, Vault-style,
+  including the case it cannot defend (arbitrary ongoing control of the host);
+  and give disclosure a real home with an RFC 9116 `public/.well-known/security.txt`.
+  De-duplicated by moving the signing and audit guarantees into the properties
+  frame and trimming the controls list to blast-radius containment only.
+
+Astro does copy `public/.well-known/` into `dist/`, so the `security.txt` link
+resolves under check-links. The disclosure contact stays `mailto:jeremi@joslin.fr`,
+which check-links also requires; `security.txt` points back at it and at the
+`/security/` policy.

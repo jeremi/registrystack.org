@@ -6,11 +6,40 @@ import DocsHandoff from '../components/DocsHandoff.astro';
 
 const pageTitle = 'Security | Registry Stack';
 const pageDescription =
-  'The Registry Stack security model: what a deployment can reach, the controls that contain it, the threat model, and how security is shared with your team.';
+  'The Registry Stack security model: the properties it protects, what a deployment can reach, the threat model in scope and out, and how security is shared with your team.';
 
-// Stated as a trust boundary. A deployment reads the source to answer, so it is
-// a sensitive component; the page describes what it can reach and how that is
-// contained, in plain reader-facing terms rather than reassurance about itself.
+// Built as a security model, in the order serious projects use: state the
+// properties the model protects, draw the trust boundary, list the controls
+// that bound a compromise, enumerate the threat model in scope and out, split
+// responsibility with the operator, and give disclosure a real home.
+
+// 1. The properties the model protects, each tied to the concrete mechanism
+//    that delivers it.
+const properties = [
+  {
+    title: 'Confidentiality',
+    body:
+      'A caller receives the minimum that answers its question, a fact, a status, or a credential, never a bulk export and never fields outside the scope you grant it.',
+  },
+  {
+    title: 'Integrity',
+    body:
+      'Answers are signed and time-bounded (Ed25519, SD-JWT VC), so a verifier can detect a forged, altered, or stale answer. The consultation path is read-only, so the source is never changed.',
+  },
+  {
+    title: 'Availability',
+    body:
+      'Each registry runs its own deployment in its own environment, with no dependency on the project to serve a request, so there is no shared service whose outage takes everyone down.',
+  },
+  {
+    title: 'Auditability',
+    body:
+      'Every trust-critical request is written to a tamper-evident audit trail, so what was asked and what was answered can be reconstructed after the fact.',
+  },
+];
+
+// 2. The trust boundary: what a deployment can reach, and what it is built not
+//    to do.
 const access = [
   {
     title: 'What a deployment can reach',
@@ -31,34 +60,26 @@ const access = [
   },
 ];
 
+// 3. Controls that bound the blast radius. The guarantees (signing, audit) are
+//    stated above as properties; these are the containment measures only.
 const controls = [
-  'Least-privilege source access: connect each deployment with a read-only account scoped to only the fields and records it needs, so even a full compromise is bounded by what that account can read.',
+  'Least-privilege source access: a read-only account scoped to only the fields and records the deployment needs, so even a full compromise is bounded by what that account can read.',
   'One deployment per registry, in that registry’s own environment, so there is no central pool a single breach could drain.',
-  'Minimization: a caller receives a fact, a status, or a credential, not a bulk export, so the everyday data surface stays small.',
-  'Defense in depth: authentication, scopes, field limits, and audit are separate layers, so one misconfiguration is less likely to expose everything.',
-  'Signed, time-bounded answers (Ed25519, SD-JWT VC) a verifier can check, so a forged or stale answer fails verification.',
-  'A tamper-evident audit trail on every trust-critical request, so misuse is detectable after the fact.',
+  'Defense in depth: authentication, scopes, and field limits are separate, checked layers, so one misconfiguration is less likely to expose everything.',
+  'Network isolation and secret management, run by the operator, keep the host’s reachable surface and its credentials contained.',
 ];
 
-const threats = [
-  {
-    title: 'If the service host is compromised',
-    body:
-      'An attacker could reach the source data that deployment is configured to read, the credentials it uses, and its audit log. A least-privilege source account, network isolation, and secret management keep that reachable surface small and the damage bounded.',
-  },
-  {
-    title: 'If a downstream caller is compromised',
-    body:
-      'A compromised downstream service still receives only the narrow answer it was granted, never a direct line to the source. This is the case the access controls are designed for, and the one where the exposure is smallest.',
-  },
-  {
-    title: 'If a credential leaks',
-    body:
-      'Scoped, rotatable credentials and per-request checks limit what a stolen key can do, and the audit trail shows what it was used for. Rotate keys, scope them narrowly, and review the trail.',
-  },
+// 4. Threat model, stated as two explicit sides.
+const defends = [
+  'Eavesdropping or tampering with an answer in transit: answers are signed, verifiable, and carried over TLS.',
+  'A caller reaching beyond its granted scope: authentication, scopes, and field limits are checked on every request.',
+  'A forged or replayed answer: signatures and short lifetimes make a fake or stale answer fail verification.',
+  'A stolen credential used from outside: scoped, rotatable credentials and per-request checks limit it, and the audit trail records its use.',
+  'Misuse that has to be caught after the fact: the tamper-evident audit trail records who asked what, and what was answered.',
 ];
 
 const outOfScope = [
+  'An attacker with arbitrary, ongoing control of the host can reach the source data the deployment is configured to read, the credentials it holds, and its audit log. Least-privilege scoping bounds what that is, but cannot remove it.',
   'The security of the source system itself stays with the team that runs it.',
   'Establishing who a person is stays with the foundational identity layer.',
   'Whether a request is lawful stays an institutional and legal decision.',
@@ -94,18 +115,45 @@ const verify = [
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Security</p>
-          <h1 id="security-hero-title">What Registry Stack can reach, and how that is contained.</h1>
+          <h1 id="security-hero-title">What Registry Stack protects, and what it cannot.</h1>
           <p class="hero-lead">
             To answer a question, a deployment reads from your source, within the scope you
             configure. That makes it a sensitive part of your infrastructure, not a neutral pipe.
-            What follows is what a deployment can reach, the controls that contain it, the threat
-            model, and how security is shared between the project and your team.
+            This is the security model: the properties it protects, what a deployment can reach, the
+            threat model in scope and out, and how security is shared with your team.
           </p>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="security-boundary-title">
+    <section class="section" aria-labelledby="security-properties-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">What the model protects</p>
+          <h2 id="security-properties-title">Four properties, and the mechanism behind each.</h2>
+          <p>
+            A security model is clearest when it says what it is protecting and how. These are the
+            four properties a deployment is built to hold, with the mechanism that delivers each.
+          </p>
+        </div>
+        <div class="security-properties">
+          {properties.map((item) => (
+            <article class="quiet-card">
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+        <p class="security-keys-note">
+          A deployment holds two secrets: the read-only credential it uses to reach the source, and
+          the signing key for its answers. Both live in your secret management, never with the
+          project. Traffic is protected by TLS that you terminate, and the source records at rest
+          stay in the systems you already run.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="security-boundary-title">
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">The trust boundary</p>
@@ -131,7 +179,7 @@ const verify = [
       </div>
     </section>
 
-    <section class="section section-muted" aria-labelledby="security-controls-title">
+    <section class="section" aria-labelledby="security-controls-title">
       <div class="section-inner split">
         <div class="section-heading compact">
           <p class="eyebrow">Bounding the blast radius</p>
@@ -149,44 +197,38 @@ const verify = [
       </div>
     </section>
 
-    <section class="section" aria-labelledby="security-threat-title">
+    <section class="section section-muted" aria-labelledby="security-threat-title">
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">Threat model</p>
-          <h2 id="security-threat-title">What is at risk in each failure, and how it is bounded.</h2>
+          <h2 id="security-threat-title">What the model defends against, and what it does not.</h2>
           <p>
-            The size of the exposure depends on how narrowly the source account is scoped and how
-            well the host is run. Each case below names what an attacker could reach, and what
-            limits it.
+            A useful threat model is explicit about both sides. The size of any exposure depends on
+            how narrowly the source account is scoped and how well the host is run.
           </p>
         </div>
-        <div class="problem-grid">
-          {threats.map((item) => (
-            <article class="quiet-card">
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </article>
-          ))}
-        </div>
-        <div class="split security-scope">
-          <div class="section-heading compact">
-            <p class="eyebrow">Out of scope</p>
-            <h3>What Registry Stack does not secure.</h3>
-            <p>
-              The following are not part of what Registry Stack secures. They stay with the
-              institution and the systems it already runs.
-            </p>
-          </div>
-          <ul class="check-list">
-            {outOfScope.map((item) => (
-              <li>{item}</li>
-            ))}
-          </ul>
+        <div class="security-pair">
+          <article class="quiet-card">
+            <h3>What the model defends against</h3>
+            <ul class="check-list">
+              {defends.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </article>
+          <article class="quiet-card">
+            <h3>What is out of scope</h3>
+            <ul class="check-list">
+              {outOfScope.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="section section-muted" aria-labelledby="security-shared-title">
+    <section class="section" aria-labelledby="security-shared-title">
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">Shared responsibility</p>
@@ -218,7 +260,7 @@ const verify = [
       </div>
     </section>
 
-    <section class="section" aria-labelledby="security-verify-title">
+    <section class="section section-muted" aria-labelledby="security-verify-title">
       <div class="section-inner split">
         <div class="section-heading compact">
           <p class="eyebrow">Verify it yourself</p>
@@ -237,7 +279,7 @@ const verify = [
       </div>
     </section>
 
-    <section class="section section-muted" aria-labelledby="security-report-title">
+    <section class="section" aria-labelledby="security-report-title">
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">Coordinated disclosure</p>
@@ -257,6 +299,9 @@ const verify = [
           <a class="button button-primary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20security%20report">Report a vulnerability</a>
           <a class="button button-secondary" href="https://docs.registrystack.org/">Read the security docs</a>
         </div>
+        <p class="security-disclosure-extra">
+          <a class="inline-cta" href="/.well-known/security.txt">Our security.txt, machine-readable (RFC 9116) &rarr;</a>
+        </p>
       </div>
     </section>
   </main>
@@ -270,7 +315,29 @@ const verify = [
 </Base>
 
 <style>
-  /* Paired cards for the can/cannot, responsibility, and verify sections: a
+  /* The four protected properties: a balanced 2x2 that reads as a set, not a
+     ranked list. */
+  .security-properties {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: clamp(24px, 4vw, 36px);
+  }
+
+  .security-properties .quiet-card h3 {
+    margin-top: 0;
+  }
+
+  /* The concrete note on keys, transport, and data at rest sits under the
+     properties grid as a single calm paragraph. */
+  .security-keys-note {
+    color: var(--registry-body);
+    margin: clamp(24px, 3vw, 32px) auto 0;
+    max-width: 760px;
+    text-align: center;
+  }
+
+  /* Paired cards for the can/cannot, threat, and responsibility sections: a
      balanced two-up that reads as a deliberate comparison. */
   .security-pair {
     display: grid;
@@ -283,21 +350,18 @@ const verify = [
     margin-top: 0;
   }
 
-  /* The out-of-scope split sits inside the threat section, so give it its own
-     top rule and spacing rather than the section default. */
-  .security-scope {
-    border-top: 1px solid var(--registry-rule);
-    margin-top: clamp(28px, 4vw, 44px);
-    padding: clamp(28px, 4vw, 44px) 0 0;
-  }
-
   .security-claim-note {
     color: var(--registry-muted);
     font-size: 14px;
     margin-top: 14px;
   }
 
+  .security-disclosure-extra {
+    margin-top: 20px;
+  }
+
   @media (max-width: 620px) {
+    .security-properties,
     .security-pair {
       grid-template-columns: 1fr;
     }
