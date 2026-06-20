@@ -34,13 +34,11 @@ const server = createServer(async (request, response) => {
 
 await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen));
 const { port } = server.address();
-// The funnel lives on the use-cases page; the homepage keeps the four-card
-// grid and must NOT carry a second mechanism diagram.
+// The funnel and full scenario gallery live on the use-cases page; the
+// homepage stays an orientation page and must not carry a second mechanism or
+// a full use-case grid.
 const homeUrl = `http://127.0.0.1:${port}/`;
 const url = `http://127.0.0.1:${port}/use-cases/`;
-
-// The homepage cards stay grounded in concrete evidence returned by registries.
-const EXPECTED_TYPES = ['Bounded value set', 'Credential', 'Status', 'Status'];
 
 const claimOpacity = async (page) => {
   const claim = page.locator('.funnel-claim').first();
@@ -52,7 +50,7 @@ const browser = await chromium.launch();
 const failures = [];
 
 // 1. Structure: one funnel figure, one source record feeding several distinct
-//    claims, a meaningful caption, and the four evidence types in the grid.
+//    claims, and a meaningful caption.
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
   const page = await context.newPage();
@@ -113,9 +111,8 @@ const failures = [];
   await context.close();
 }
 
-// 1b. Homepage: the four-card use-case grid demonstrates the evidence-type
-//     spectrum, and the mechanism is drawn exactly once (the harness diagram),
-//     so no funnel figure appears there.
+// 1b. Homepage: the route is through the two solution cards, so no funnel
+//     figure or full use-case gallery appears there.
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
   const page = await context.newPage();
@@ -126,19 +123,19 @@ const failures = [];
     failures.push(`expected no funnel figure on the homepage (it lives on /use-cases/), found ${homeFunnelCount}`);
   }
 
-  const badges = (await page.locator('.use-case .evidence-type').allTextContents())
-    .map((text) => text.trim())
-    .sort();
-  if (JSON.stringify(badges) !== JSON.stringify(EXPECTED_TYPES)) {
-    failures.push(`evidence-type badges ${JSON.stringify(badges)} != ${JSON.stringify(EXPECTED_TYPES)}`);
+  const homeUseCaseCards = await page.locator('.use-case').count();
+  if (homeUseCaseCards !== 0) {
+    failures.push(`expected no full use-case cards on the homepage, found ${homeUseCaseCards}`);
   }
 
-  const farmer = (await page.locator('.use-case', { hasText: 'Farmer registry' }).first().innerText().catch(() => '')).toLowerCase();
-  for (const needle of ['2.5 ha', 'farmer']) {
-    if (!farmer.includes(needle)) failures.push(`farmer card missing returned value: "${needle}"`);
+  const solutionCards = await page.locator('.home-solution-card').count();
+  if (solutionCards !== 2) {
+    failures.push(`expected 2 homepage solution cards, found ${solutionCards}`);
   }
-  for (const needle of ['plot', 'household', 'crop', 'financial']) {
-    if (!farmer.includes(needle)) failures.push(`farmer card not-shared list missing: "${needle}"`);
+
+  const homeText = (await page.locator('main').innerText().catch(() => '')).toLowerCase();
+  for (const needle of ['evidence gateway', 'protected registry apis']) {
+    if (!homeText.includes(needle)) failures.push(`homepage solution routing missing: "${needle}"`);
   }
 
   await context.close();

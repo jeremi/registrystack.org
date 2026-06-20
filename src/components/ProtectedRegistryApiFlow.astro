@@ -1,0 +1,169 @@
+---
+const sources = ['CSV', 'XLSX', 'Parquet', 'PostgreSQL', 'Legacy API'];
+const controls = ['auth', 'scopes', 'metadata', 'field limits', 'audit'];
+const outputs = ['entity reads', 'metadata routes', 'aggregates', 'evidence offerings'];
+---
+
+<figure class="registry-api-flow" aria-labelledby="registry-api-flow-title">
+  <div class="registry-api-source">
+    <p class="registry-api-label">Existing sources</p>
+    <h3 id="registry-api-flow-title">The registry stays where it is.</h3>
+    <div class="registry-api-chip-list" aria-label="Supported source examples">
+      {sources.map((source) => (
+        <span>{source}</span>
+      ))}
+    </div>
+  </div>
+
+  <div class="registry-api-relay">
+    <p class="registry-api-label">Registry Relay</p>
+    <strong>Protected read-only surface</strong>
+    <ul>
+      {controls.map((control) => (
+        <li>{control}</li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="registry-api-output">
+    <p class="registry-api-label">Approved consumers</p>
+    <h3>Services call entity routes, not storage internals.</h3>
+    <div class="registry-api-chip-list" aria-label="Protected API outputs">
+      {outputs.map((output) => (
+        <span>{output}</span>
+      ))}
+    </div>
+  </div>
+
+  <figcaption>
+    Protected Registry APIs put a governed consultation surface in front of existing sources, with
+    read-only access, route-level controls, and audit records.
+  </figcaption>
+</figure>
+
+<style>
+  .registry-api-flow {
+    align-items: stretch;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: minmax(0, 0.95fr) minmax(220px, 0.75fr) minmax(0, 0.95fr);
+    margin: 0 auto;
+    max-width: var(--registry-max);
+  }
+
+  .registry-api-source,
+  .registry-api-output,
+  .registry-api-relay {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    min-width: 0;
+    padding: 22px;
+  }
+
+  .registry-api-source,
+  .registry-api-output {
+    display: grid;
+    gap: 16px;
+  }
+
+  .registry-api-relay {
+    border-color: var(--registry-blue);
+    box-shadow: 4px 4px 0 rgba(23, 59, 122, 0.12);
+    display: grid;
+    gap: 14px;
+    position: relative;
+  }
+
+  .registry-api-relay::before,
+  .registry-api-relay::after {
+    background: var(--registry-ink);
+    content: '';
+    height: 2px;
+    position: absolute;
+    top: 50%;
+    width: 14px;
+  }
+
+  .registry-api-relay::before {
+    left: -14px;
+  }
+
+  .registry-api-relay::after {
+    right: -14px;
+  }
+
+  .registry-api-label {
+    color: var(--registry-blue);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .registry-api-flow h3 {
+    font-size: clamp(23px, 2.7vw, 34px);
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .registry-api-relay strong {
+    color: var(--registry-ink);
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .registry-api-relay ul {
+    display: grid;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .registry-api-relay li {
+    border-top: 1px solid var(--registry-rule);
+    color: var(--registry-body);
+    font-size: 14px;
+    padding-top: 8px;
+  }
+
+  .registry-api-chip-list {
+    align-content: start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .registry-api-chip-list span {
+    background: var(--registry-paper);
+    border: 1px solid var(--registry-rule);
+    color: var(--registry-ink);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .registry-api-flow figcaption {
+    color: var(--registry-muted);
+    font-size: 14px;
+    grid-column: 1 / -1;
+    margin: 0;
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .registry-api-flow {
+      grid-template-columns: 1fr;
+    }
+
+    .registry-api-relay::before,
+    .registry-api-relay::after {
+      display: none;
+    }
+
+    .registry-api-flow figcaption {
+      text-align: left;
+    }
+  }
+</style>

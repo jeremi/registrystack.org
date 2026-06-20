@@ -50,8 +50,8 @@ const firstSlideOpacity = (page) =>
     .evaluate((el) => Number(getComputedStyle(el).opacity))
     .catch(() => null);
 
-// 1. Structure and content reuse: one hero card looping several answer slides,
-//    each reusing an answer shown in the use-cases section below.
+// 1. Structure and content reuse: one hero card looping several concrete answer
+//    slides, matching the examples expanded on the use-cases page.
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage();

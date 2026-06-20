@@ -52,6 +52,8 @@ const routes = [
   { name: 'manifest', path: '/manifest/' },
   { name: 'pricing', path: '/pricing/' },
   { name: 'problem', path: '/problem/' },
+  { name: 'evidence-gateway', path: '/solutions/evidence-gateway/' },
+  { name: 'protected-registry-apis', path: '/solutions/protected-registry-apis/' },
 ];
 
 const failures = [];
@@ -98,57 +100,52 @@ for (const viewport of viewports) {
     failures.push(`${label}: text extends outside viewport`);
   }
 
-  // Each nav disclosure (Products, In practice) must actually present its
-  // three links at tappable size once opened, on every checked route and
-  // viewport.
+  // Each nav disclosure must present its expected links at tappable size once
+  // opened, on every checked route and viewport. Solutions intentionally has
+  // two entries; Products and In practice each have three.
   {
     const menus = await page.evaluate(() =>
       [...document.querySelectorAll('.nav-group')].map((details) => {
         details.setAttribute('open', '');
+        const label = details.querySelector('summary')?.textContent?.trim() ?? '';
         const links = [...details.querySelectorAll('a')].map((link) => {
           const rect = link.getBoundingClientRect();
           return { width: rect.width, height: rect.height };
         });
         details.removeAttribute('open');
-        return links;
+        return { label, links };
       }),
     );
-    if (menus.length < 2 || menus.some((links) => links.length < 3)) {
-      failures.push(`${label}: a nav disclosure is missing or has fewer than 3 links`);
-    } else if (menus.flat().some((rect) => rect.width < 36 || rect.height < 36)) {
+    const expectedMenuSizes = new Map([
+      ['Solutions', 2],
+      ['Products', 3],
+      ['In practice', 3],
+    ]);
+    const missing = [...expectedMenuSizes].filter(
+      ([menuLabel, expected]) => !menus.some((menu) => menu.label === menuLabel && menu.links.length === expected),
+    );
+    if (missing.length > 0) {
+      failures.push(`${label}: nav disclosure link counts do not match expected menus`);
+    } else if (menus.flatMap((menu) => menu.links).some((rect) => rect.width < 36 || rect.height < 36)) {
       failures.push(`${label}: open nav menu links are below 36px`);
     }
   }
 
-  // On desktop the four use-case cards sit in one row and must read as an
-  // aligned comparison: equal height, and every field label sharing a baseline
-  // across cards regardless of how long each question wraps.
+  // On desktop the homepage solution cards are the main routing decision and
+  // should read as a balanced pair.
   if (route.path === '/' && viewport.name === 'desktop') {
     const align = await page.evaluate(() => {
-      const cards = [...document.querySelectorAll('.use-case')];
-      const labelTops = cards.map((card) => {
-        const label = card.querySelector('.use-case-label');
-        return label ? Math.round(label.getBoundingClientRect().top) : null;
-      });
+      const cards = [...document.querySelectorAll('.home-solution-card')];
       const cardHeights = cards.map((card) => Math.round(card.getBoundingClientRect().height));
-      return { count: cards.length, labelTops, cardHeights };
+      return { count: cards.length, cardHeights };
     });
 
-    if (align.count < 4) {
-      failures.push(`desktop: expected at least 4 use-case cards, found ${align.count}`);
+    if (align.count !== 2) {
+      failures.push(`desktop: expected 2 homepage solution cards, found ${align.count}`);
     } else {
-      const tops = align.labelTops.filter((value) => value !== null);
-      if (tops.length < 4) {
-        failures.push(`desktop: expected 4 use-case "Evidence returned" labels, found ${tops.length}`);
-      } else {
-        const topSpread = Math.max(...tops) - Math.min(...tops);
-        if (topSpread > 2) {
-          failures.push(`desktop: use-case field labels are misaligned (top spread ${topSpread}px)`);
-        }
-      }
       const heightSpread = Math.max(...align.cardHeights) - Math.min(...align.cardHeights);
       if (heightSpread > 2) {
-        failures.push(`desktop: use-case cards have unequal heights (spread ${heightSpread}px)`);
+        failures.push(`desktop: homepage solution cards have unequal heights (spread ${heightSpread}px)`);
       }
     }
   }

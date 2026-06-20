@@ -1,0 +1,207 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import ProtectedRegistryApiFlow from '../../components/ProtectedRegistryApiFlow.astro';
+
+const pageTitle = 'Protected Registry APIs | Registry Stack';
+const pageDescription =
+  'Expose existing registry sources through governed, read-only APIs with authentication, scopes, metadata, and audit.';
+
+const useCases = [
+  'A registry exists, but other services need a clearer approved access path.',
+  'A team needs read-only routes without changing the source system.',
+  'Consumers need stable entity routes instead of table names or source-specific queries.',
+  'A data-sharing agreement needs scopes, purpose, metadata, and audit attached to the API.',
+  'A legacy file, extract, or database needs a safer interface before replacement is possible.',
+];
+
+const exposures = [
+  'Entity reads',
+  'Field projection and bounded responses',
+  'Metadata routes',
+  'Evidence offering discovery',
+  'Aggregates where configured',
+  'Optional standards-shaped outputs',
+];
+
+const protections = [
+  'Source systems stay in place.',
+  'Callers do not receive database credentials.',
+  'Public routes use entity concepts instead of storage internals.',
+  'Access is scoped and auditable.',
+  'Sensitive fields can be excluded, projected, or governed.',
+  'Runtime configuration stays separate from portable metadata.',
+];
+
+const products = [
+  {
+    title: 'Registry Relay',
+    body: 'Serves the protected runtime API over existing sources.',
+    href: '/relay/',
+  },
+  {
+    title: 'Registry Manifest',
+    body: 'Provides metadata contracts and standards-shaped discovery.',
+    href: '/manifest/',
+  },
+  {
+    title: 'Registry Platform',
+    body: 'Supplies shared auth, audit, crypto, and operational primitives.',
+    href: 'https://github.com/jeremi/registry-platform',
+  },
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="protected-registry-apis" />
+
+  <main>
+    <section class="hero" aria-labelledby="protected-registry-apis-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Solution &middot; Protected Registry APIs</p>
+          <h1 id="protected-registry-apis-title">Turn existing registries into protected, auditable APIs.</h1>
+          <p class="hero-lead">
+            Protected Registry APIs expose read-only routes over files, databases, extracts, and
+            legacy systems with authentication, scopes, metadata, purpose-bound access, and audit
+            records built in.
+          </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href="/relay/">Explore Registry Relay</a>
+            <a class="button button-secondary" href="https://docs.registrystack.org/tutorials/deploy-standalone-with-own-data/">Read deployment docs</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="protected-fit-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">Where it fits</p>
+          <h2 id="protected-fit-title">Keep the source registry in place. Add the consultation surface around it.</h2>
+          <p>
+            Many institutions already operate authoritative registries, but the integration path
+            is often a file export, direct database access, or a bespoke API. Protected Registry
+            APIs keep the source registry in place and add a governed consultation surface around
+            it.
+          </p>
+        </div>
+        <ul class="check-list" aria-label="Protected Registry APIs use cases">
+          {useCases.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="protected-how-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">How it works</p>
+          <h2 id="protected-how-title">The source stays where it is. The API goes in front.</h2>
+        </div>
+        <ProtectedRegistryApiFlow />
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="protected-exposes-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">What it exposes</p>
+          <h2 id="protected-exposes-title">Read paths over real registry sources, shaped for approved consumers.</h2>
+          <p>
+            A protected registry API can return entity reads, bounded responses, metadata, and
+            configured aggregates without opening the underlying database or copying the whole
+            source file.
+          </p>
+        </div>
+        <div class="solution-control-list" aria-label="Protected Registry APIs exposed surfaces">
+          {exposures.map((item) => (
+            <span>{item}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="protected-protects-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">What it protects</p>
+          <h2 id="protected-protects-title">The API is the access path. The source remains authoritative.</h2>
+        </div>
+        <ul class="solution-protection-grid">
+          {protections.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="protected-stack-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Built from Registry Stack</p>
+          <h2 id="protected-stack-title">A narrow runtime surface for governed registry reads.</h2>
+          <p>
+            Protected Registry APIs are primarily powered by Registry Relay, with Manifest for
+            metadata contracts and Platform for shared operational primitives.
+          </p>
+        </div>
+        <div class="solution-product-grid solution-product-grid-three">
+          {products.map((product) => (
+            <article>
+              <h3>{product.title}</h3>
+              <p>{product.body}</p>
+              <a class="inline-cta" href={product.href}>Open {product.title} &rarr;</a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="claim-band" aria-labelledby="protected-relationship-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="pill">Relationship to Evidence Gateway</p>
+          <h2 id="protected-relationship-title">Governed reads are the foundation for governed evidence.</h2>
+        </div>
+        <div class="claim-body">
+          <p>
+            Protected Registry APIs give trusted systems a safe way to consult registry sources.
+            Evidence Gateway builds on that foundation when the caller needs a proof, predicate,
+            redacted answer, attestation, or credential instead of a record.
+          </p>
+          <a class="inline-cta" href="/solutions/evidence-gateway/">See Evidence Gateway &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="protected-next-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Where to start</p>
+          <h2 id="protected-next-title">Start with the registry source that already exists.</h2>
+          <p>
+            Registry Relay gives that source a protected read-only surface. Registry Manifest
+            makes the surface inspectable. Evidence Gateway uses governed reads when the request
+            needs an evidence response instead of a record.
+          </p>
+        </div>
+        <div class="solution-choice-row">
+          <a class="button button-primary" href="/relay/">Explore Registry Relay</a>
+          <a class="button button-secondary" href="/solutions/evidence-gateway/">See Evidence Gateway</a>
+        </div>
+      </div>
+    </section>
+
+    <DocsHandoff
+      eyebrow="For your technical team"
+      heading="Deployment, configuration, and API contracts live in the docs."
+      primaryLabel="Read deployment docs"
+    />
+  </main>
+
+  <SiteFooter />
+</Base>

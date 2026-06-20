@@ -23,6 +23,13 @@ const readSource = (relativePath) => {
 // only apply to reader-facing prose.
 const stripStyleBlocks = (text) => text.replace(/<style>[\s\S]*?<\/style>/g, '');
 
+const listAstroFiles = (relativeDir) =>
+  readdirSync(resolve(relativeDir), { withFileTypes: true }).flatMap((entry) => {
+    const relativePath = `${relativeDir}/${entry.name}`;
+    if (entry.isDirectory()) return listAstroFiles(relativePath);
+    return entry.isFile() && entry.name.endsWith('.astro') ? [relativePath] : [];
+  });
+
 // 1. Copy-quality sweep over every page and component, discovered from the
 // filesystem so new pages are covered without editing this script.
 const forbidden = [
@@ -55,12 +62,8 @@ const forbidden = [
 ];
 
 const sweptFiles = [
-  ...readdirSync(resolve('src/pages'))
-    .filter((file) => file.endsWith('.astro'))
-    .map((file) => `src/pages/${file}`),
-  ...readdirSync(resolve('src/components'))
-    .filter((file) => file.endsWith('.astro'))
-    .map((file) => `src/components/${file}`),
+  ...listAstroFiles('src/pages'),
+  ...listAstroFiles('src/components'),
 ];
 
 for (const relativePath of sweptFiles) {
@@ -107,26 +110,50 @@ if (!heroMatch) {
   }
 }
 
-// The primary call to action is the hosted lab; reachability is verified by
-// check-links at build time.
+// The homepage now routes first to the two solution patterns; the live lab
+// remains present as proof, but no longer owns the primary IA.
+for (const route of ['/solutions/evidence-gateway/', '/solutions/protected-registry-apis/']) {
+  if (!homeSource.includes(`href="${route}"`)) {
+    failures.push(`homepage primary solution routing is missing ${route}`);
+  }
+}
 if (!homeSource.includes('https://lab.registrystack.org/')) {
   failures.push('homepage is missing the live demo link (lab.registrystack.org)');
 }
+if (!homeSource.includes('home-solution-grid')) {
+  failures.push('homepage is missing the two-card solution routing grid');
+}
+if (homeSource.includes('class="use-case"') || homeSource.includes('class="use-case-grid"')) {
+  failures.push('homepage still carries the full use-case gallery; /use-cases/ owns that depth');
+}
 
-// 3. Site wiring: the homepage nav reaches every marketing route.
-for (const route of ['/notary/', '/relay/', '/manifest/', '/problem/', '/use-cases/', '/ai/']) {
-  if (!homeSource.includes(`href="${route}"`)) {
-    failures.push(`homepage is missing a link to ${route}`);
+// 3. Site wiring: shared navigation and footer reach every marketing route.
+const navigationSource = [
+  homeSource,
+  readSource('src/components/SiteHeader.astro'),
+  readSource('src/components/SiteFooter.astro'),
+].join('\n');
+for (const route of [
+  '/solutions/evidence-gateway/',
+  '/solutions/protected-registry-apis/',
+  '/notary/',
+  '/relay/',
+  '/manifest/',
+  '/problem/',
+  '/use-cases/',
+  '/ecosystem/',
+  '/ai/',
+  '/pricing/',
+  '/pilot/',
+]) {
+  if (!navigationSource.includes(`href="${route}"`)) {
+    failures.push(`site navigation is missing a link to ${route}`);
   }
 }
 
-// The operating-model section carries the harness diagram (asker, answering
-// point, registry, audit trail), the AI page carries its annotated variant,
-// and each product page carries the variant with its own check highlighted.
-// The diagram is the one picture of the core transaction.
-if (!homeSource.includes('HarnessDiagram')) {
-  failures.push('homepage is missing the harness diagram (HarnessDiagram)');
-}
+// The AI page carries the annotated harness variant, and each product page
+// carries the variant with its own check highlighted. The homepage stays an
+// orientation and routing page.
 if (!readSource('src/pages/ai.astro').includes('HarnessDiagram')) {
   failures.push('src/pages/ai.astro is missing the harness diagram (HarnessDiagram)');
 }

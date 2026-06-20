@@ -39,7 +39,16 @@ const { port } = server.address();
 const browser = await chromium.launch();
 const failures = [];
 
-const paths = ['/', '/notary/', '/relay/', '/manifest/', '/pricing/', '/problem/'];
+const paths = [
+  '/',
+  '/notary/',
+  '/relay/',
+  '/manifest/',
+  '/pricing/',
+  '/problem/',
+  '/solutions/evidence-gateway/',
+  '/solutions/protected-registry-apis/',
+];
 for (const path of paths) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
   const page = await context.newPage();

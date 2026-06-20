@@ -581,30 +581,6 @@ p {
   max-width: 900px;
 }
 
-.partner-strip {
-  background: #ffffff;
-  border-bottom: 1px solid var(--registry-rule);
-}
-
-.partner-strip-inner {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px clamp(16px, 3vw, 28px);
-  justify-content: center;
-  margin: 0 auto;
-  max-width: var(--registry-max);
-  padding: 20px clamp(16px, 4vw, 42px);
-}
-
-.partner-strip-inner span {
-  color: var(--registry-muted);
-  font-family: var(--registry-mono);
-  font-size: 12px;
-  margin-right: 8px;
-  text-transform: uppercase;
-}
-
 .partner-logos {
   align-items: center;
   display: flex;
@@ -808,180 +784,152 @@ code {
   max-width: 980px;
 }
 
+.solution-control-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.solution-control-list span {
+  background: #ffffff;
+  border: 1px solid var(--registry-rule);
+  color: var(--registry-ink);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 12px;
+}
+
+.solution-product-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.solution-product-grid-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 920px;
+}
+
+.solution-product-grid article {
+  background: #ffffff;
+  border: 1px solid var(--registry-rule);
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 22px;
+}
+
+.solution-product-grid h3,
+.solution-product-grid p {
+  margin: 0;
+}
+
+.solution-protection-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.solution-protection-grid li {
+  background: #ffffff;
+  border: 1px solid var(--registry-rule);
+  color: var(--registry-body);
+  line-height: 1.5;
+  padding: 18px;
+}
+
+.solution-choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.home-solution-grid {
+  display: grid;
+  gap: clamp(18px, 3vw, 28px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: clamp(30px, 5vw, 48px) auto 0;
+  max-width: 980px;
+}
+
+.home-solution-card {
+  background: #ffffff;
+  border: 1px solid var(--registry-rule);
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  padding: clamp(24px, 4vw, 34px);
+}
+
+.home-solution-card h3,
+.home-solution-card p,
+.home-solution-card ul {
+  margin: 0;
+}
+
+.home-solution-card h3 {
+  font-size: clamp(26px, 3vw, 34px);
+}
+
+.home-solution-card > p:not(.eyebrow) {
+  color: var(--registry-body);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.home-solution-card ul {
+  border-top: 1px solid var(--registry-rule);
+  color: var(--registry-body);
+  display: grid;
+  gap: 10px;
+  line-height: 1.5;
+  padding: 16px 0 0 20px;
+}
+
+.home-product-strip {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: clamp(28px, 4vw, 40px);
+}
+
+.home-product-strip article {
+  background: #ffffff;
+  border: 1px solid var(--registry-rule);
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 22px;
+}
+
+.home-product-strip h3,
+.home-product-strip p {
+  margin: 0;
+}
+
+.home-product-strip article > p:not(.product-role) {
+  color: var(--registry-body);
+  line-height: 1.55;
+}
+
+.product-role {
+  color: var(--registry-blue);
+  font-family: var(--registry-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
 .centered-action {
   display: flex;
   justify-content: center;
   margin-top: 24px;
-}
-
-/* Product cards: the three products in priority order, each carrying a small
-   concrete artifact instead of a screenshot. Cards share four rows via
-   subgrid so situation, answer, artifact, and link align across the row. */
-.product-grid {
-  display: grid;
-  gap: clamp(16px, 2vw, 24px);
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(4, auto);
-}
-
-.product-card {
-  background: #ffffff;
-  border: 1px solid var(--registry-rule);
-  display: grid;
-  grid-row: 1 / -1;
-  grid-template-rows: subgrid;
-  min-width: 0;
-  padding: 26px;
-  row-gap: 16px;
-  transition: border-color var(--registry-ease), box-shadow var(--registry-ease);
-}
-
-/* Each door card carries one route in; hovering anywhere on the card lifts
-   it like a pulled record slip. */
-.product-card:hover {
-  border-color: var(--registry-blue);
-  box-shadow: 4px 4px 0 rgba(23, 59, 122, 0.12);
-}
-
-.product-card h3 {
-  font-size: 24px;
-  margin: 0;
-}
-
-/* Door headings: the steward's own sentence, set as a quote the visitor
-   recognizes before any product is named. */
-.product-card h3.door-situation {
-  font-size: 21px;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.product-card > p {
-  color: var(--registry-body);
-  line-height: 1.55;
-  margin: 0;
-}
-
-/* The service-side aside under the doors: the secondary audience gets a
-   route without a card of its own. */
-.door-aside {
-  color: var(--registry-muted);
-  margin: 32px auto 0;
-  max-width: 640px;
-  text-align: center;
-}
-
-/* Each artifact reads as a record slip: ledger paper, perforated edge. */
-.product-artifact {
-  align-content: start;
-  background: var(--registry-paper);
-  border: 1px dashed #c2cce0;
-  display: grid;
-  font-family: var(--registry-mono);
-  font-size: 13px;
-  gap: 8px;
-  padding: 16px;
-}
-
-.artifact-flow {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.artifact-chip {
-  background: #ffffff;
-  border: 1px solid var(--registry-rule);
-  color: var(--registry-ink);
-  padding: 4px 8px;
-}
-
-.artifact-chip-strong {
-  border-color: var(--registry-blue);
-  color: var(--registry-blue);
-  font-weight: 700;
-}
-
-.artifact-arrow {
-  color: var(--registry-muted);
-}
-
-.artifact-title {
-  color: var(--registry-ink);
-  font-weight: 700;
-}
-
-.artifact-meta {
-  color: var(--registry-muted);
-}
-
-/* The smallest-start strip: three steps (you bring, we do not touch, you get
-   back) reading left to right like the on-ramp it describes. Collapses to a
-   single column once the arrows would crowd. */
-.start-strip {
-  align-items: stretch;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-  margin-top: 32px;
-}
-
-.start-step {
-  background: #ffffff;
-  border: 1px solid var(--registry-rule);
-  display: grid;
-  flex: 1 1 220px;
-  gap: 10px;
-  justify-items: start;
-  max-width: 280px;
-  padding: 20px;
-}
-
-.start-step-label {
-  color: var(--registry-blue);
-  font-family: var(--registry-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  margin: 0;
-  text-transform: uppercase;
-}
-
-.start-step .artifact-chip {
-  font-family: var(--registry-mono);
-  font-size: 13px;
-}
-
-.start-step-text {
-  color: var(--registry-body);
-  font-size: 14px;
-  margin: 0;
-}
-
-.start-arrow {
-  align-self: center;
-  color: var(--registry-muted);
-  font-size: 22px;
-}
-
-.start-reassure {
-  color: var(--registry-body);
-  margin: 24px auto 0;
-  max-width: 680px;
-  text-align: center;
-}
-
-/* The strip is a row on desktop; once it wraps, hide the inline arrows so the
-   stacked cards do not carry dangling connectors. */
-@media (max-width: 760px) {
-  .start-arrow {
-    display: none;
-  }
-
-  .start-step {
-    max-width: none;
-  }
 }
 
 /* Product attribution inside the lifecycle diagram steps. */
@@ -1310,6 +1258,38 @@ code {
   margin-top: clamp(28px, 4vw, 44px);
 }
 
+.proof-partners {
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px clamp(20px, 4vw, 36px);
+  margin-top: clamp(28px, 4vw, 44px);
+  padding-top: 22px;
+}
+
+.proof-partners span {
+  color: var(--registry-brass);
+  font-family: var(--registry-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.proof-partners .partner-logos {
+  justify-content: flex-start;
+}
+
+.proof-partners .partner-logos img {
+  filter: brightness(0) invert(1);
+  opacity: 0.72;
+}
+
+.proof-partners .partner-logos img[src$='openfn.png'] {
+  filter: grayscale(1) brightness(1.9);
+  opacity: 0.82;
+}
+
 /* The closing call to action mirrors the claim band's divider tint, so the
    two tinted bands bookend the white body of the page. */
 .final-cta {
@@ -1428,7 +1408,11 @@ code {
   .ecosystem-grid,
   .boundary-list,
   .principle-grid,
-  .implementation-grid {
+  .implementation-grid,
+  .solution-product-grid,
+  .solution-product-grid-three,
+  .solution-protection-grid,
+  .home-product-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1440,16 +1424,6 @@ code {
   }
 
   .use-case {
-    grid-row: auto;
-    grid-template-rows: none;
-  }
-
-  .product-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: none;
-  }
-
-  .product-card {
     grid-row: auto;
     grid-template-rows: none;
   }
@@ -1484,6 +1458,11 @@ code {
   .boundary-list,
   .principle-grid,
   .implementation-grid,
+  .solution-product-grid,
+  .solution-product-grid-three,
+  .solution-protection-grid,
+  .home-solution-grid,
+  .home-product-strip,
   .hero-proof-grid,
   .proof-grid {
     grid-template-columns: 1fr;

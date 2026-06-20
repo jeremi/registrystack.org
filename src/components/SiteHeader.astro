@@ -1,8 +1,6 @@
 ---
-// Shared top navigation for every marketing page. The homepage keeps its own
-// inline header so the single-page content contract can still assert on its
-// source; this component carries the same brand mark and nav links for the
-// deeper pages, with the current page marked aria-current.
+// Shared top navigation for every marketing page. The current page is marked
+// aria-current when a page passes its route key.
 const { current } = Astro.props;
 
 const products = [
@@ -11,8 +9,23 @@ const products = [
   { href: '/manifest/', label: 'Registry Manifest', role: 'Describe', blurb: 'Portable standards-facing metadata', key: 'manifest' },
 ];
 
+const solutions = [
+  {
+    href: '/solutions/evidence-gateway/',
+    label: 'Evidence Gateway',
+    blurb: 'Governed evidence requests, redaction, freshness, and audit',
+    key: 'evidence-gateway',
+  },
+  {
+    href: '/solutions/protected-registry-apis/',
+    label: 'Protected Registry APIs',
+    blurb: 'Read-only APIs over existing registry sources',
+    key: 'protected-registry-apis',
+  },
+];
+
 // Supporting reading folds into one disclosure so the bar itself stays the
-// journey: problem, products, practice, price, pilot.
+// journey: problem, solutions, products, practice, price, pilot.
 const practice = [
   { href: '/use-cases/', label: 'Use cases', blurb: 'Worked scenarios, question to signed answer', key: 'use-cases' },
   { href: '/ecosystem/', label: 'Ecosystem', blurb: 'Beside the platforms governments already run', key: 'ecosystem' },
@@ -25,6 +38,7 @@ const links = [
 ];
 
 const onProductPage = products.some((product) => product.key === current);
+const onSolutionPage = solutions.some((solution) => solution.key === current);
 const onPracticePage = practice.some((page) => page.key === current);
 ---
 
@@ -35,6 +49,17 @@ const onPracticePage = practice.some((page) => page.key === current);
   </a>
   <nav class="top-nav" aria-label="Main navigation">
     <a href="/problem/" aria-current={current === 'problem' ? 'page' : undefined}>The problem</a>
+    <details class="nav-group">
+      <summary aria-current={onSolutionPage ? 'page' : undefined}>Solutions</summary>
+      <div class="nav-group-panel">
+        {solutions.map((solution) => (
+          <a href={solution.href} aria-current={current === solution.key ? 'page' : undefined}>
+            <span class="nav-entry-name">{solution.label}</span>
+            <span class="nav-entry-blurb">{solution.blurb}</span>
+          </a>
+        ))}
+      </div>
+    </details>
     <details class="nav-group">
       <summary aria-current={onProductPage ? 'page' : undefined}>Products</summary>
       <div class="nav-group-panel">
