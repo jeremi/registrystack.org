@@ -6,10 +6,11 @@ import DocsHandoff from '../components/DocsHandoff.astro';
 
 const pageTitle = 'Security | Registry Stack';
 const pageDescription =
-  'An honest security model for software that reads real registry data: what a deployment can reach, the controls that bound it, a plain threat model, and how responsibility is shared with your team.';
+  'The Registry Stack security model: what a deployment can reach, the controls that contain it, the threat model, and how security is shared with your team.';
 
-// Stated as a trust boundary, not a slogan. Registry Stack reads the source to
-// answer, so it is a sensitive component; the page is honest about that.
+// Stated as a trust boundary. A deployment reads the source to answer, so it is
+// a sensitive component; the page describes what it can reach and how that is
+// contained, in plain reader-facing terms rather than reassurance about itself.
 const access = [
   {
     title: 'What a deployment can reach',
@@ -48,7 +49,7 @@ const threats = [
   {
     title: 'If a downstream caller is compromised',
     body:
-      'A service that misbehaves still only ever receives the narrow answer it was granted, never a direct line to the source. This is the case the access controls are built for, and it is where the blast radius is genuinely small.',
+      'A compromised downstream service still receives only the narrow answer it was granted, never a direct line to the source. This is the case the access controls are designed for, and the one where the exposure is smallest.',
   },
   {
     title: 'If a credential leaks',
@@ -93,12 +94,12 @@ const verify = [
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Security</p>
-          <h1 id="security-hero-title">A security model for software that reads real registry data.</h1>
+          <h1 id="security-hero-title">What Registry Stack can reach, and how that is contained.</h1>
           <p class="hero-lead">
-            Registry Stack sits in the data path. To answer a question, a deployment reads from the
-            source within the scope you configure, so it is a sensitive component, not a neutral
-            pipe. This page is honest about that: what a deployment can reach, the controls that
-            bound it, a plain threat model, and how responsibility is shared with your team.
+            To answer a question, a deployment reads from your source, within the scope you
+            configure. That makes it a sensitive part of your infrastructure, not a neutral pipe.
+            What follows is what a deployment can reach, the controls that contain it, the threat
+            model, and how security is shared between the project and your team.
           </p>
         </div>
       </div>
@@ -136,8 +137,8 @@ const verify = [
           <p class="eyebrow">Bounding the blast radius</p>
           <h2 id="security-controls-title">The controls that limit what a flaw or a breach can reach.</h2>
           <p>
-            None of these makes a breach impossible. Together they keep the reachable surface small,
-            contain a compromise to one registry, and make misuse detectable.
+            No control makes a breach impossible. Together they keep the reachable surface small,
+            contain a compromise to a single registry, and make misuse detectable after the fact.
           </p>
         </div>
         <ul class="check-list">
@@ -151,11 +152,12 @@ const verify = [
     <section class="section" aria-labelledby="security-threat-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">Threat model, stated plainly</p>
-          <h2 id="security-threat-title">What is at risk, and how each case is bounded.</h2>
+          <p class="eyebrow">Threat model</p>
+          <h2 id="security-threat-title">What is at risk in each failure, and how it is bounded.</h2>
           <p>
-            We would rather name the exposure than imply a breach is harmless. The size of the risk
-            depends on how narrowly the source account is scoped and how well the host is run.
+            The size of the exposure depends on how narrowly the source account is scoped and how
+            well the host is run. Each case below names what an attacker could reach, and what
+            limits it.
           </p>
         </div>
         <div class="problem-grid">
@@ -171,8 +173,8 @@ const verify = [
             <p class="eyebrow">Out of scope</p>
             <h3>What Registry Stack does not secure.</h3>
             <p>
-              Some things are not ours to protect, and saying so is part of an honest model. These
-              stay with the institution and the systems it already runs.
+              The following are not part of what Registry Stack secures. They stay with the
+              institution and the systems it already runs.
             </p>
           </div>
           <ul class="check-list">
@@ -190,8 +192,9 @@ const verify = [
           <p class="eyebrow">Shared responsibility</p>
           <h2 id="security-shared-title">Security is a job we split with your team.</h2>
           <p>
-            The project ships software that can be secured well. Running it safely in production
-            depends on the deployment, the same way it would for any infrastructure you self-host.
+            The project ships software that can be operated securely. Running it safely in
+            production depends on the deployment, the same way it would for any infrastructure you
+            self-host.
           </p>
         </div>
         <div class="security-pair">
@@ -218,11 +221,11 @@ const verify = [
     <section class="section" aria-labelledby="security-verify-title">
       <div class="section-inner split">
         <div class="section-heading compact">
-          <p class="eyebrow">Verify, do not take our word</p>
-          <h2 id="security-verify-title">You can inspect what you run.</h2>
+          <p class="eyebrow">Verify it yourself</p>
+          <h2 id="security-verify-title">You can inspect everything you run.</h2>
           <p>
-            A security claim is only worth what you can check. Everything a single registry needs is
-            open source and self-hosted, so your team can review it before trusting it.
+            Everything a single registry needs is open source and self-hosted, so your team and your
+            auditors can review exactly what runs before trusting it.
           </p>
           <a class="inline-cta" href="https://lab.registrystack.org/">Try the live demo on synthetic data &rarr;</a>
         </div>
@@ -245,9 +248,9 @@ const verify = [
             report and work with you on a coordinated disclosure.
           </p>
           <p class="security-claim-note">
-            We do not claim a formal security certification on this page. The detailed threat model
-            and the current security posture live in the docs, and a pilot includes a security
-            review against your own requirements.
+            Registry Stack does not currently hold a formal security certification. The detailed
+            threat model and the current security posture live in the docs, and a pilot includes a
+            security review against your own requirements.
           </p>
         </div>
         <div class="solution-choice-row">
