@@ -249,8 +249,8 @@ to solutions-first and do a full copy pass.
 
 - Solutions are now the spine; the three products are framed as "how it is
   built". Homepage No. 02 retitled from "The products underneath /
-  Three components" to "How it is built / Both solutions are built from three
-  open-source products." The Notary-Relay-Manifest priority order is kept.
+  Three components" to "How it is built / Together, the two solutions are built
+  from three open-source products." The Notary-Relay-Manifest priority order is kept.
 - The two solution pages were the most jargon-heavy on the site; they are
   rewritten in plain policy-reader language. Replaced "PDP behaviour",
   "source binding", "predicate", "field projection", "purpose-bound access",
@@ -282,7 +282,7 @@ The security page took three passes, and the lesson is worth recording:
 - First draft led with a slogan, "a breach should leak the answer, never the
   registry." That is false. A deployment reads the raw source to compute an
   answer, so it holds source access and a credential; a compromise of the
-  service can leak what it can read. The slogan only ever held for a compromised
+  service can leak what it can read. The slogan applied only to a compromised
   downstream caller. Rewrote around an honest trust boundary.
 - Second pass fixed the voice. The copy kept narrating its own integrity ("this
   page is honest about that", "we would rather name the exposure", "saying so is

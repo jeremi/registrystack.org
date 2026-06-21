@@ -22,7 +22,7 @@ const groups = [
       },
       {
         q: 'Do we have to replace our current registry or platform?',
-        a: 'No. Registry Stack runs alongside the systems you already operate, in front of the registry source you already keep. Nothing is replaced and nothing migrates.',
+        a: 'No. Registry Stack runs alongside the systems you already operate, in front of the registry source you already keep. You do not have to replace the registry or migrate source records into Registry Stack.',
         link: { label: 'How it fits the ecosystem', href: '/ecosystem/' },
       },
       {
@@ -42,7 +42,7 @@ const groups = [
       },
       {
         q: 'What happens if a connected service is compromised?',
-        a: 'A caller can only ever receive the narrow answer it was granted, never the registry. Answers are signed and time-bounded, and every request is in the audit trail.',
+        a: 'A compromised caller is bounded by the scope and fields it was granted, plus rate limits, monitoring, and revocation. It should not get a database login or a direct line to the source, but broad grants still carry broad risk.',
         link: { label: 'How the security model holds', href: '/security/' },
       },
       {
@@ -87,7 +87,7 @@ const groups = [
       },
       {
         q: 'Who uses it today, and is it ready for us?',
-        a: 'The products are open source and run in a public hosted lab on synthetic data, with live integrations you can inspect. Institutions adopt them through a scoped pilot: one registry, one question, safeguards from the first request.',
+        a: 'It is not in production anywhere yet. The products are open source and run in a public hosted lab on synthetic data, with live integrations you can inspect. Institutions should adopt them through a scoped pilot: one registry, one question, safeguards from the first request.',
         link: { label: 'What a pilot looks like', href: '/pilot/' },
       },
       {

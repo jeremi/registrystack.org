@@ -7,6 +7,7 @@ import DocsHandoff from '../components/DocsHandoff.astro';
 const pageTitle = 'Security | Registry Stack';
 const pageDescription =
   'The Registry Stack security model: the properties it protects, what a deployment can reach, the threat model in scope and out, and how security is shared with your team.';
+const securityDocsHref = 'https://docs.registrystack.org/spec/rs-sec-g/';
 
 // Built as a security model, in the order serious projects use: state the
 // properties the model protects, draw the trust boundary, list the controls
@@ -55,7 +56,7 @@ const access = [
       'Act as a data warehouse: it reads to answer and returns a minimized result, not a bulk export.',
       'Return more to a caller than the configured scope allows.',
       'Write back to, or change, the source system; the consultation path is read-only.',
-      'Send data to the project: you self-host, and nothing phones home.',
+      'Send records or audit logs to the project: you self-host, and those data stay in your environment.',
     ],
   },
 ];
@@ -79,6 +80,7 @@ const defends = [
 ];
 
 const outOfScope = [
+  'A compromised caller can still use the legitimate scope it was granted. If that grant is broad, it can collect many allowed answers, so grants need to stay narrow and revocable.',
   'An attacker with arbitrary, ongoing control of the host can reach the source data the deployment is configured to read, the credentials it holds, and its audit log. Least-privilege scoping bounds what that is, but cannot remove it.',
   'The security of the source system itself stays with the team that runs it.',
   'Establishing who a person is stays with the foundational identity layer.',
@@ -297,7 +299,7 @@ const verify = [
         </div>
         <div class="solution-choice-row">
           <a class="button button-primary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20security%20report">Report a vulnerability</a>
-          <a class="button button-secondary" href="https://docs.registrystack.org/">Read the security docs</a>
+          <a class="button button-secondary" href={securityDocsHref}>Read the security docs</a>
         </div>
         <p class="security-disclosure-extra">
           <a class="inline-cta" href="/.well-known/security.txt">Our security.txt, machine-readable (RFC 9116) &rarr;</a>
@@ -310,6 +312,7 @@ const verify = [
     eyebrow="For your security team"
     heading="The detailed threat model, the hardening checklist, and the audit schema live in the docs."
     primaryLabel="Read the security docs"
+    primaryHref={securityDocsHref}
   />
   <SiteFooter />
 </Base>
