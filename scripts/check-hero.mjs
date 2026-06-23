@@ -67,7 +67,7 @@ const firstSlideOpacity = (page) =>
   if (activeCount !== 1) failures.push(`expected exactly 1 active slide at load, found ${activeCount}`);
 
   const stageText = (await page.locator('[data-answer-card]').first().innerText().catch(() => '')).toLowerCase();
-  for (const needle of ['alive', 'enrolled', 'active', '2.5 ha']) {
+  for (const needle of ['age band', 'enrolled', 'active', '2.5 ha']) {
     if (!stageText.includes(needle)) {
       failures.push(`hero card missing reused use-case answer: "${needle}"`);
     }

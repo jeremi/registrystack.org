@@ -16,12 +16,12 @@ const pageDescription =
 const useCases = [
   {
     domain: 'Civil registration',
-    evidenceType: 'Credential',
-    question: 'Is this person alive?',
-    answer: 'Alive · proof of life',
-    evidence: 'Issue a signed proof-of-life the person can hold and present.',
-    notShared: 'Do not disclose the full civil-registration record.',
-    pilot: 'A pension authority confirms vital status for continuations without a database credential.',
+    evidenceType: 'Bounded value set',
+    question: 'Which age band applies to this person?',
+    answer: 'Age band · 18-64',
+    evidence: 'Return the policy age band calculated from civil-registration data.',
+    notShared: 'Do not disclose date of birth or the full civil-registration record.',
+    pilot: 'A service checks age-band eligibility without receiving date of birth.',
   },
   {
     domain: 'Social protection',
