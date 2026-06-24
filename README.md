@@ -17,7 +17,7 @@ those documents disagree, the site and `scripts/check-content.mjs` are current.
   or no, a status, or a credential, without sharing the record.
 - `/solutions/protected-registry-apis` Protected Registry APIs: open an existing
   registry safely for approved services, read-only and audited.
-- `/notary` Registry Notary: signed answers and wallet credentials (Verify).
+- `/notary` Registry Notary: configured signed claim results and wallet credentials (Verify).
 - `/relay` Registry Relay: protected APIs over existing files and tables (Expose).
 - `/manifest` Registry Manifest: portable standards-facing metadata (Describe).
 - `/problem` the recurring registry problems (`/why` redirects here).

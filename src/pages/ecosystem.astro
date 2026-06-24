@@ -15,7 +15,7 @@ const neighbors = [
     category: 'Domain registry platforms',
     examples: 'OpenCRVS, OpenSPP, DHIS2, OpenIMIS',
     owns: 'Storage, business rules, correction workflows, user interfaces, and a domain runtime API.',
-    adds: 'Standards-shaped metadata, scoped read-only routes, configured evidence responses, and tamper-evident audit.',
+    adds: 'Standards-shaped metadata, scoped read-only routes, configured evidence responses, and hash-chained audit records.',
   },
   {
     category: 'Workflow engines',
@@ -45,7 +45,7 @@ const neighbors = [
     category: 'Foundational ID and identity providers',
     examples: 'MOSIP, eSignet',
     owns: 'Identity enrollment, deduplication, authentication, e-KYC, and assurance levels for who a person is.',
-    adds: 'The registry-facing side of that question: signed answers about what is true of that person in a specific registry (alive, eligible, registered), issued after the identity layer has done its job.',
+    adds: 'The registry-facing side of that question: configured proofs about what is true of that person in a specific registry (alive, eligible, registered), issued after the identity layer has done its job.',
   },
 ];
 ---

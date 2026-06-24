@@ -1,6 +1,6 @@
 ---
 // The harness diagram: the one picture of the core transaction. An asker poses
-// a precise question, the answering point runs every check, and a signed,
+// a precise question, the answering point runs every check, and a governed,
 // minimized answer comes back. The record never leaves the registry.
 // The 'home' variant tells that one story with plain questions; 'ai' names the
 // open standards behind each check and foregrounds the automated asker; the
@@ -57,7 +57,7 @@ const figureLabel =
   'How Registry Stack answers a question: a program, caseworker, or AI agent asks a ' +
   'precise question and never sees the record. The answering point, run by the ' +
   "registry's own steward, checks who may ask, whether the fields mean the same " +
-  'thing, and whether the case meets the criteria, then returns a signed, minimized ' +
+  'thing, and whether the case meets the criteria, then returns a governed, minimized ' +
   'answer. The record never leaves the registry, and an audit trail records who ' +
   'asked, for what purpose, under what authority, and what was answered.' +
   (highlightedName
@@ -75,7 +75,7 @@ const figureLabel =
 
     <div class="harness-channel">
       <p class="harness-ask">asks a precise question <span class="harness-arrow">&rarr;</span></p>
-      <p class="harness-reply"><span class="harness-arrow">&larr;</span> signed, minimized answer</p>
+      <p class="harness-reply"><span class="harness-arrow">&larr;</span> governed, minimized proof</p>
     </div>
 
     <div class="harness-steward">
