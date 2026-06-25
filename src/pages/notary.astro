@@ -5,9 +5,9 @@ import SiteFooter from '../components/SiteFooter.astro';
 import DocsHandoff from '../components/DocsHandoff.astro';
 import HarnessDiagram from '../components/HarnessDiagram.astro';
 
-const pageTitle = 'Registry Notary | Signed answers and credentials from registries';
+const pageTitle = 'Registry Notary | Signed proofs and credentials from registries';
 const pageDescription =
-  'Registry Notary answers a precise question against a registry and returns a signed answer: a yes or no, a bounded value, or a credential held in a wallet.';
+  'Registry Notary answers a precise question against a registry and returns a bounded proof, signed result, or credential held in a wallet.';
 
 // What makes the product different, in the reader's terms rather than the
 // implementation's.
@@ -15,7 +15,7 @@ const differences = [
   {
     title: 'Answers, not records',
     body:
-      'A pension system asks "is this person alive?" and receives exactly that answer, signed by the authority. No date of birth, no address, no record dump to store and protect.',
+      'A pension system asks "is this person alive?" and receives exactly that bounded proof from the authority. No date of birth, no address, no record dump to store and protect.',
   },
   {
     title: 'Proofs people can carry',
@@ -25,7 +25,7 @@ const differences = [
   {
     title: 'The data stays home',
     body:
-      'A notary can delegate a question to the authority that owns the registry and pass back only the signed answer. Registries cooperate on proofs without pooling their data.',
+      'A notary can delegate a question to the authority that owns the registry and pass back only the configured proof. Registries cooperate on proofs without pooling their data.',
   },
 ];
 
@@ -88,12 +88,12 @@ const openPoints = [
           <p class="eyebrow">Registry Notary &middot; Verify</p>
           <h1 id="notary-hero-title">Registry facts become proofs people and systems can trust.</h1>
           <p class="hero-lead">
-            Registry Notary answers a precise question against a registry and returns a signed
-            answer: a yes or no, a bounded value, or a credential a person can hold in a wallet.
+            Registry Notary answers a precise question against a registry and returns a bounded
+            proof: a yes or no, a scoped value, a signed result, or a credential a person can hold in a wallet.
             The service gets its proof; the record stays with the registry.
           </p>
           <p class="hero-note">
-            It is the building block that signs the answer in the
+            It is the building block that issues signed proofs in the
             <a href="/solutions/evidence-gateway/">Evidence Gateway</a> solution.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
@@ -134,7 +134,7 @@ const openPoints = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">How it works</p>
-          <h2 id="notary-how-title">A governed question in, a signed answer out.</h2>
+          <h2 id="notary-how-title">A governed question in, a bounded proof out.</h2>
         </div>
         <div class="flow-diagram" aria-label="Registry Notary operating model">
           <div class="flow-node">
@@ -153,8 +153,8 @@ const openPoints = [
           </div>
           <div class="flow-arrow" aria-hidden="true">&rarr;</div>
           <div class="flow-node">
-            <span>A signed answer</span>
-            <p>A yes or no, a bounded value, an attestation, or a wallet credential, with a reviewable trail.</p>
+            <span>A bounded proof</span>
+            <p>A yes or no, a scoped value, a signed result, an attestation, or a wallet credential, with a reviewable trail.</p>
           </div>
         </div>
       </div>

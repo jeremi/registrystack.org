@@ -25,7 +25,7 @@ const properties = [
   {
     title: 'Integrity',
     body:
-      'Answers are signed and time-bounded (Ed25519, SD-JWT VC), so a verifier can detect a forged, altered, or stale answer. The consultation path is read-only, so the source is never changed.',
+      'Configured credential and signed-response surfaces are time-bounded, so a verifier can detect a forged, altered, or stale proof. The consultation path is read-only, so the source is never changed.',
   },
   {
     title: 'Availability',
@@ -35,7 +35,7 @@ const properties = [
   {
     title: 'Auditability',
     body:
-      'Every trust-critical request is written to a tamper-evident audit trail, so what was asked and what was answered can be reconstructed after the fact.',
+      'Trust-critical requests are written as hash-chained audit records, so retained logs can reconstruct what was asked and what was answered. Stronger integrity depends on operator-owned append-only storage or anchoring.',
   },
 ];
 
@@ -72,11 +72,11 @@ const controls = [
 
 // 4. Threat model, stated as two explicit sides.
 const defends = [
-  'Eavesdropping or tampering with an answer in transit: answers are signed, verifiable, and carried over TLS.',
+  'Eavesdropping or tampering with a proof in transit: configured signed-response and credential surfaces are verifiable and carried over TLS.',
   'A caller reaching beyond its granted scope: authentication, scopes, and field limits are checked on every request.',
-  'A forged or replayed answer: signatures and short lifetimes make a fake or stale answer fail verification.',
+  'A forged or replayed proof: signed-response and credential surfaces use signatures and short lifetimes to make a fake or stale proof fail verification.',
   'A stolen credential used from outside: scoped, rotatable credentials and per-request checks limit it, and the audit trail records its use.',
-  'Misuse that has to be caught after the fact: the tamper-evident audit trail records who asked what, and what was answered.',
+  'Misuse that has to be caught after the fact: hash-chained audit records show who asked what, and what was answered, when the operator retains them in protected storage.',
 ];
 
 const outOfScope = [
@@ -90,7 +90,7 @@ const outOfScope = [
 
 const provides = [
   'Open-source, hardenable software with read-only consultation as the default path.',
-  'Signed builds, published posture and audit schemas, and a local self-check.',
+  'Published posture and audit schemas, a local self-check, and release workflow support for checksums, image digests, SBOMs, vulnerability scans, and capsules once the first capsule-producing release runs.',
   'A hardening checklist in the docs and a coordinated-disclosure process.',
 ];
 
@@ -103,9 +103,20 @@ const operates = [
 
 const verify = [
   'The products are open source, so your team and your auditors can review exactly what runs.',
-  'Signed builds and the published posture and audit schemas let you confirm what you deploy.',
+  'The release workflow is being prepared to publish binary checksums, image digests, image SBOMs, vulnerability scan reports, and release capsules.',
   'A local self-check validates a deployment against the expected posture.',
   'You can run the whole flow in the hosted lab on synthetic data before any real record is touched.',
+];
+
+const evidence = [
+  {
+    label: 'Security model',
+    href: 'https://docs.registrystack.org/spec/rs-sec-g/',
+  },
+  {
+    label: 'GitHub releases',
+    href: 'https://github.com/registrystack/registry-stack/releases',
+  },
 ];
 ---
 
@@ -148,7 +159,7 @@ const verify = [
         </div>
         <p class="security-keys-note">
           A deployment holds two secrets: the read-only credential it uses to reach the source, and
-          the signing key for its answers. Both live in your secret management, never with the
+          the key used for configured signed-response or credential surfaces. Both live in your secret management, never with the
           project. Traffic is protected by TLS that you terminate, and the source records at rest
           stay in the systems you already run.
         </p>
@@ -276,6 +287,9 @@ const verify = [
         <ul class="check-list">
           {verify.map((item) => (
             <li>{item}</li>
+          ))}
+          {evidence.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
           ))}
         </ul>
       </div>

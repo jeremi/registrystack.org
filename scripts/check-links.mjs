@@ -9,7 +9,9 @@ const warnings = [];
 // already-deployed site are just as dead: blocking this build would not protect
 // anyone. Unreachability there warns; everywhere else it fails.
 const warnOnlyOrigins = ["https://lab.registrystack.org"];
+const warnOnlyLinks = [];
 const isWarnOnly = (href) =>
+  warnOnlyLinks.includes(href) ||
   warnOnlyOrigins.some(
     (origin) => href === origin || href.startsWith(`${origin}/`),
   );
