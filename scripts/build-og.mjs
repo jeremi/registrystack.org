@@ -84,7 +84,7 @@ const html = `<!doctype html>
     </div>
     <div class="foot">
       <span class="url">registrystack.org</span>
-      <span class="works">Works alongside OpenCRVS &middot; OpenSPP &middot; DHIS2 &middot; MOSIP &middot; OpenFn</span>
+      <span class="works">Works alongside OpenCRVS &middot; OpenSPP &middot; DHIS2 &middot; HL7 FHIR &middot; MOSIP &middot; OpenFn</span>
     </div>
   </body>
 </html>`;

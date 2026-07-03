@@ -8,6 +8,7 @@ import MinimizationFunnel from '../components/MinimizationFunnel.astro';
 const pageTitle = 'Use cases | Registry Stack';
 const pageDescription =
   'Worked registry scenarios: the domain, the question a service asks, the bounded answer returned, and the record that is never over-shared.';
+const contactHref = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20pilot%20scope';
 
 // A sell gallery. The first four mirror the homepage cards (keeping the two in
 // sync conceptually); the rest expand the docs-site use-case scenarios into the
@@ -138,7 +139,7 @@ const useCases = [
           ))}
         </div>
         <div class="centered-action">
-          <a class="inline-cta" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20scope">Request pilot scope for one registry &rarr;</a>
+          <a class="inline-cta" href={contactHref}>Request pilot scope for one registry &rarr;</a>
         </div>
       </div>
     </section>

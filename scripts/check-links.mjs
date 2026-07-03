@@ -77,9 +77,11 @@ for (const file of htmlFiles) {
 const requiredExternal = [
   "https://docs.registrystack.org/",
   "https://lab.registrystack.org/",
-  "https://github.com/jeremi/registry-relay",
-  "https://github.com/jeremi/registry-notary",
-  "https://github.com/jeremi/registry-manifest",
+  "https://github.com/registrystack/registry-stack",
+  "https://github.com/registrystack/registry-stack/security/advisories/new",
+  "https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay",
+  "https://github.com/registrystack/registry-stack/tree/main/products/notary",
+  "https://github.com/registrystack/registry-stack/tree/main/products/manifest",
 ];
 
 for (const href of requiredExternal) {
@@ -87,7 +89,7 @@ for (const href of requiredExternal) {
     failures.push(`missing required external link: ${href}`);
 }
 
-const requiredMailto = ["mailto:jeremi@joslin.fr"];
+const requiredMailto = ["mailto:contact@registrystack.org"];
 for (const href of mailtoLinks) {
   const address = href.slice("mailto:".length).split("?")[0];
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {

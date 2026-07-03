@@ -2,6 +2,7 @@
 // Shared top navigation for every marketing page. The current page is marked
 // aria-current when a page passes its route key.
 const { current } = Astro.props;
+const repoHref = 'https://github.com/registrystack/registry-stack';
 
 const products = [
   { href: '/notary/', label: 'Registry Notary', role: 'Verify', blurb: 'Signed answers and wallet credentials', key: 'notary' },
@@ -88,5 +89,6 @@ const onPracticePage = practice.some((page) => page.key === current);
       <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
     ))}
     <a class="nav-emphasis" href="https://docs.registrystack.org/">Read the docs</a>
+    <a href={repoHref}>GitHub</a>
   </nav>
 </header>

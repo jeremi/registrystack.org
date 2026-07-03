@@ -4,23 +4,27 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import HeroAnswerCard from '../components/HeroAnswerCard.astro';
 import RegistrySeal from '../components/RegistrySeal.astro';
+import SystemsDiagram from '../components/SystemsDiagram.astro';
 
 const pageTitle = 'Registry Stack | Governed registry services and trusted evidence';
 const pageDescription =
   'Registry Stack lets public institutions open registries safely and share proof of a fact, without handing over the underlying records.';
+const repoHref = 'https://github.com/registrystack/registry-stack';
+const roadmapHref = 'https://github.com/registrystack/registry-stack/blob/main/ROADMAP.md';
+const releaseVerifyHref = 'https://github.com/registrystack/registry-stack/blob/main/release/VERIFY.md';
 
 const heroReasons = [
   {
-    label: 'Answer, do not hand over',
-    body: 'A service receives the one fact it needs, a yes or no, a status, or a credential, while the full record stays with the registry that owns it.',
+    label: 'Inclusion without rework',
+    body: 'People and services stop re-proving facts the government already holds, while the full record stays with the registry that owns it.',
   },
   {
-    label: 'Safe on every request',
+    label: 'Safeguards by default',
     body: 'Who may ask, for what purpose, and what they get back are checked on every request, and each one leaves an audit record a reviewer can read.',
   },
   {
-    label: 'Start from what you have',
-    body: 'Put a governed surface in front of the registry you already run, a spreadsheet, a database, or a domain platform, with no source-data migration required.',
+    label: 'Integrations compound',
+    body: 'A governed registry surface becomes reusable infrastructure, not another one-off export that the next program has to renegotiate.',
   },
 ];
 
@@ -110,17 +114,38 @@ const proofPoints = [
   {
     title: 'Products with narrow jobs',
     body: 'Inspect the code, run the pieces on your own infrastructure, and compose only the surfaces a deployment needs.',
-    fact: 'No product license fees, no vendor gate',
+    fact: 'Apache-2.0, no product license fees',
   },
   {
     title: 'A live lab you can use now',
-    body: 'The hosted lab issues a configured proof to a wallet, on synthetic data, and runs integrations with OpenCRVS, DHIS2, MOSIP eSignet, and OpenFn.',
-    fact: 'lab.registrystack.org',
+    body: 'The hosted lab issues a signed proof to a wallet, runs OpenCRVS and DHIS2 flows on synthetic data, and exposes Relay services backed by files and tables.',
+    fact: 'Running in the lab today',
   },
   {
     title: 'Standards-shaped outputs',
-    body: 'Credentials issue as SD-JWT VC over OpenID4VCI, catalogs render to DCAT-AP, and registry sync follows SP-DCI where that pattern fits.',
-    fact: 'SD-JWT VC · OpenID4VCI · no lock-in',
+    body: 'Credentials issue in wallet-readable formats, catalogs render to public-sector metadata formats, and registry sync follows the social-protection exchange pattern where it fits.',
+    fact: 'Inspectable contracts, no lock-in',
+  },
+];
+
+const maturitySignals = [
+  {
+    label: 'Current release train',
+    body: 'Built for evaluation, integration pilots, and public review. Stability commitments follow the public roadmap.',
+    href: roadmapHref,
+    cta: 'Read the roadmap',
+  },
+  {
+    label: 'Supply-chain evidence',
+    body: 'Release assets are published with checksums, keyless cosign signatures, SBOMs, and release-level provenance where the release workflow supports it.',
+    href: releaseVerifyHref,
+    cta: 'Verify a release',
+  },
+  {
+    label: 'Open-source source of truth',
+    body: 'The monorepo carries the code, release manifests, docs, lab evidence, Scorecard badge, Best Practices badge, and Apache-2.0 license.',
+    href: repoHref,
+    cta: 'Open GitHub',
   },
 ];
 ---
@@ -133,7 +158,7 @@ const proofPoints = [
       <div class="hero-inner">
         <div class="hero-top">
           <div class="hero-copy">
-            <p class="eyebrow">Open-source products &middot; For governments and their partners</p>
+            <p class="eyebrow">Digital public infrastructure &middot; For governments and their partners</p>
             <h1 id="hero-title">Prove facts from registries without sharing the records.</h1>
             <p class="hero-thesis">
               Registry Stack lets the registries a government already runs answer questions and
@@ -165,6 +190,18 @@ const proofPoints = [
             </article>
           ))}
         </div>
+      </div>
+    </section>
+
+    <section class="maturity-strip" aria-label="Release maturity and verification">
+      <div class="maturity-strip-inner">
+        {maturitySignals.map((signal) => (
+          <article>
+            <h2>{signal.label}</h2>
+            <p>{signal.body}</p>
+            <a href={signal.href}>{signal.cta} &rarr;</a>
+          </article>
+        ))}
       </div>
     </section>
 
@@ -217,8 +254,23 @@ const proofPoints = [
           ))}
         </div>
         <div class="centered-action">
-          <a class="inline-cta" href="/use-cases/">See example questions and bounded answers &rarr;</a>
+          <a class="inline-cta" href="/use-cases/">See example questions and the answers they return &rarr;</a>
         </div>
+      </div>
+    </section>
+
+    <section class="section" id="where-it-runs" aria-labelledby="sysmap-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow"><span class="reg-no">No. 03</span> &middot; Where it runs</p>
+          <h2 id="sysmap-title">Inside the authority&rsquo;s infrastructure. Only answers leave.</h2>
+          <p>
+            Everything is software the authority runs itself. The products sit inside the
+            registry&rsquo;s own infrastructure; partner services and wallets stay outside and
+            only ever receive answers.
+          </p>
+        </div>
+        <SystemsDiagram />
       </div>
     </section>
 
@@ -242,7 +294,7 @@ const proofPoints = [
           ))}
         </div>
         <div class="proof-partners" aria-label="Platforms Registry Stack works alongside">
-          <span>Works alongside</span>
+          <span>Standards-compatible neighbors</span>
           <ul class="partner-logos">
             {worksAlongside.map((item) => (
               <li>
@@ -255,6 +307,7 @@ const proofPoints = [
           <a href="https://lab.registrystack.org/">Try the live demo &rarr;</a>
           <a href="/pilot/">What a pilot looks like &rarr;</a>
           <a href="/ecosystem/">How Registry Stack fits the ecosystem &rarr;</a>
+          <a href="/pilot/#for-funders">For funders: what a grant buys &rarr;</a>
         </div>
       </div>
     </section>

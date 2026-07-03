@@ -301,6 +301,6 @@ The security page took three passes, and the lesson is worth recording:
   frame and trimming the controls list to blast-radius containment only.
 
 Astro does copy `public/.well-known/` into `dist/`, so the `security.txt` link
-resolves under check-links. The disclosure contact stays `mailto:jeremi@joslin.fr`,
-which check-links also requires; `security.txt` points back at it and at the
-`/security/` policy.
+resolves under check-links. The disclosure contact points at GitHub private
+vulnerability reporting; `security.txt` points back at it and at the `/security/`
+policy.

@@ -48,7 +48,7 @@ const openPoints = [
   'Renders DCAT-AP, BRegDCAT-AP, CPSV-AP, SHACL, JSON Schema, OGC API Records, and policy documents from one description.',
   'Publishes as plain static files: any web server can host them, and there is no runtime to operate.',
   'Feeds the catalogs and harvesters that already exist; descriptions travel, records never do.',
-  'The same manifest can later drive Registry Relay and Registry Notary, with no rework.',
+  'The same manifest can guide Registry Relay publication; Registry Notary still needs its own claim and credential configuration.',
 ];
 ---
 
@@ -74,7 +74,7 @@ const openPoints = [
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href="https://lab.registrystack.org/#services">See published metadata in the lab</a>
-            <a class="button button-secondary" href="https://github.com/jeremi/registry-manifest">View on GitHub</a>
+            <a class="button button-secondary" href="https://github.com/registrystack/registry-stack/tree/main/products/manifest">View on GitHub</a>
           </div>
           <p class="hero-note">
             The live lab includes a static metadata publisher serving exactly this kind of output,
@@ -186,6 +186,30 @@ const openPoints = [
           </p>
         </div>
         <HarnessDiagram highlight="manifest" />
+        <div class="quiet-card under-hood">
+          <p class="eyebrow">Under the hood</p>
+          <dl>
+            <div>
+              <dt>Runtime</dt>
+              <dd>None to operate: a CLI compiles the manifest and renders static files.</dd>
+            </div>
+            <div>
+              <dt>CLI</dt>
+              <dd>
+                <a href="https://github.com/registrystack/registry-stack/tree/main/crates/registry-manifest-cli">registry-manifest-cli</a>,
+                part of the monorepo.
+              </dd>
+            </div>
+            <div>
+              <dt>Output</dt>
+              <dd>Plain static files at well-known paths; any web server can host them.</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="centered-action manifest-cross-links">
+          <a class="inline-cta" href="/solutions/evidence-gateway/">See the Evidence Gateway solution &rarr;</a>
+          <a class="inline-cta" href="/solutions/protected-registry-apis/">See the Protected Registry APIs solution &rarr;</a>
+        </div>
       </div>
     </section>
 
@@ -199,3 +223,51 @@ const openPoints = [
   <SiteFooter />
 </Base>
 
+<style>
+  /* Developer-scannable operating facts, placed just ahead of the closing
+     cross-links so a technical reader can confirm fit before following them. */
+  .under-hood {
+    margin-top: 24px;
+  }
+
+  .under-hood dl {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 16px 0 0;
+  }
+
+  .under-hood dt {
+    color: var(--registry-ink);
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+
+  .under-hood dd {
+    color: var(--registry-body);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Inline links inside the block stay underlined so they are distinguishable
+     without relying on color. */
+  .under-hood dd a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 620px) {
+    .under-hood dl {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Manifest feeds both solutions, so its closing action carries two links
+     instead of the single cross-link the other product pages use. */
+  .manifest-cross-links {
+    flex-wrap: wrap;
+    gap: 12px 32px;
+  }
+</style>

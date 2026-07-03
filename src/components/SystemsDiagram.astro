@@ -1,0 +1,249 @@
+---
+// The systems diagram: the one picture of where Registry Stack sits. The
+// services that ask, and the citizen's wallet, stay outside. The products run
+// inside the registry authority's own infrastructure, next to the registry it
+// already operates, and only answers cross the boundary. The harness diagram
+// tells the policy story (which checks run); this one tells the deployment
+// story (what runs where, and what it talks to).
+
+const figureLabel =
+  'Where Registry Stack sits: the services that ask, and the citizen’s wallet, ' +
+  'stay outside. Registry Notary and Registry Relay run inside the registry ' +
+  'authority’s own infrastructure, reading only the agreed fields from the ' +
+  'registry the authority already operates, a spreadsheet, a database, or a ' +
+  'domain platform. Registry Manifest describes that registry: the metadata, ' +
+  'policies, and schemas the products and partners read. Services ask over ' +
+  'HTTPS and receive a signed answer, or a credential delivered to a ' +
+  'standard wallet, never the record itself. The records stay inside, and every ' +
+  'request lands in an audit trail the authority keeps.';
+---
+
+<figure class="sysmap" role="img" aria-label={figureLabel}>
+  <div class="sysmap-flow" aria-hidden="true">
+    <div class="sysmap-outside">
+      <p class="sysmap-zone-label">Outside &middot; partners and citizens</p>
+      <div class="sysmap-box">
+        <p class="sysmap-label">Services that ask</p>
+        <p class="sysmap-name">Program &middot; caseworker tool &middot; workflow engine</p>
+        <p class="sysmap-stamp-note">No database login, no file copy</p>
+      </div>
+      <div class="sysmap-box">
+        <p class="sysmap-label">Citizen&rsquo;s wallet</p>
+        <p class="sysmap-name">Holds the signed credential in a standard digital wallet</p>
+      </div>
+    </div>
+
+    <div class="sysmap-channel">
+      <p class="sysmap-ask">asks over HTTPS <span class="sysmap-arrow">&rarr;</span></p>
+      <p class="sysmap-reply"><span class="sysmap-arrow">&larr;</span> signed answer, never the record</p>
+      <p class="sysmap-reply"><span class="sysmap-arrow">&larr;</span> credential to the wallet</p>
+    </div>
+
+    <div class="sysmap-boundary">
+      <p class="sysmap-zone-label">Self-hosted &middot; the registry authority&rsquo;s own infrastructure</p>
+      <div class="sysmap-product-row">
+        <div class="sysmap-box sysmap-product">
+          <p class="sysmap-label">Registry Notary &middot; verify</p>
+          <p class="sysmap-name">Answers a precise question with a signed answer or a wallet credential</p>
+        </div>
+        <div class="sysmap-box sysmap-product">
+          <p class="sysmap-label">Registry Relay &middot; expose</p>
+          <p class="sysmap-name">Serves protected, read-only API routes over the source</p>
+        </div>
+      </div>
+      <p class="sysmap-read">reads only the agreed fields <span class="sysmap-arrow-down">&darr;</span></p>
+      <div class="sysmap-box sysmap-registry">
+        <svg class="sysmap-lock" viewBox="0 0 24 24" width="22" height="22" fill="none">
+          <rect x="5" y="10.5" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.8" />
+          <path d="M8 10.5 V 7.5 a 4 4 0 0 1 8 0 V 10.5" stroke="currentColor" stroke-width="1.8" />
+        </svg>
+        <div>
+          <p class="sysmap-label">The registry you already run</p>
+          <p class="sysmap-name">Spreadsheet &middot; database &middot; domain platform. Records stay here.</p>
+        </div>
+      </div>
+      <div class="sysmap-box sysmap-manifest">
+        <p class="sysmap-label">Registry Manifest &middot; describe</p>
+        <p class="sysmap-name">Publishes this registry&rsquo;s metadata, policies, and schemas for the products and partners to read</p>
+      </div>
+      <p class="sysmap-audit">Audit trail &middot; every request recorded &middot; kept by the authority</p>
+    </div>
+  </div>
+</figure>
+
+<style>
+  .sysmap {
+    margin: 0;
+  }
+
+  .sysmap-flow {
+    align-items: center;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 230px minmax(160px, auto) 1fr;
+  }
+
+  .sysmap-zone-label {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+  }
+
+  .sysmap-box {
+    background: #ffffff;
+    border: 1.5px solid var(--registry-ink);
+    padding: 14px 16px;
+  }
+
+  .sysmap-outside .sysmap-box + .sysmap-box {
+    margin-top: 12px;
+  }
+
+  .sysmap-label {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+  }
+
+  .sysmap-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .sysmap-stamp-note {
+    color: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin: 10px 0 0;
+    text-transform: uppercase;
+  }
+
+  .sysmap-channel p {
+    font-size: 13.5px;
+    line-height: 1.4;
+    margin: 0 0 12px;
+    text-align: center;
+  }
+
+  .sysmap-channel p:last-child {
+    margin-bottom: 0;
+  }
+
+  .sysmap-ask {
+    color: var(--registry-blue);
+    font-weight: 600;
+  }
+
+  .sysmap-reply {
+    color: var(--registry-stamp);
+    font-weight: 700;
+  }
+
+  .sysmap-arrow {
+    font-size: 18px;
+  }
+
+  .sysmap-boundary {
+    border: 1.5px dashed var(--registry-ink);
+    padding: 12px 14px 12px;
+  }
+
+  .sysmap-product-row {
+    align-items: stretch;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sysmap-product {
+    background: #eef3ff;
+    border-color: var(--registry-blue);
+  }
+
+  .sysmap-product .sysmap-label {
+    color: var(--registry-blue);
+  }
+
+  .sysmap-read {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    margin: 8px 0;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .sysmap-registry {
+    align-items: center;
+    background: var(--registry-paper);
+    display: flex;
+    gap: 14px;
+  }
+
+  .sysmap-lock {
+    color: var(--registry-ink);
+    flex-shrink: 0;
+  }
+
+  .sysmap-manifest {
+    border-style: solid;
+    margin-top: 12px;
+  }
+
+  .sysmap-audit {
+    background: var(--registry-paper);
+    border: 1px solid #c2cce0;
+    color: var(--registry-ink);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin: 12px 0 0;
+    padding: 9px 14px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 920px) {
+    .sysmap-flow {
+      grid-template-columns: 1fr;
+    }
+
+    .sysmap-channel {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+    }
+
+    /* The outside world now sits above the boundary, so questions point down
+       the page and answers point back up. */
+    .sysmap-arrow {
+      display: inline-block;
+      transform: rotate(90deg);
+    }
+
+    .sysmap-channel p {
+      margin: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .sysmap-product-row {
+      grid-template-columns: 1fr;
+    }
+
+    .sysmap-channel {
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
+</style>

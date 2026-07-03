@@ -98,7 +98,7 @@ const openPoints = [
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href="https://lab.registrystack.org/#wallet">Try the wallet demo</a>
-            <a class="button button-secondary" href="https://github.com/jeremi/registry-notary">View on GitHub</a>
+            <a class="button button-secondary" href="https://github.com/registrystack/registry-stack/tree/main/products/notary">View on GitHub</a>
           </div>
           <p class="hero-note">
             The live lab issues a real signed proof of life into a hosted wallet, on synthetic
@@ -201,7 +201,7 @@ const openPoints = [
         </div>
 
         <div class="centered-action">
-          <a class="inline-cta" href="https://github.com/jeremi/registry-notary/blob/main/docs/fhir-source-adapter-guide.md">
+          <a class="inline-cta" href="https://github.com/registrystack/registry-stack/blob/main/products/notary/docs/fhir-source-adapter-guide.md">
             Read the FHIR adapter guide &rarr;
           </a>
         </div>
@@ -239,11 +239,20 @@ const openPoints = [
             issues locks anyone in.
           </p>
         </div>
-        <ul class="check-list">
-          {openPoints.map((point) => (
-            <li>{point}</li>
-          ))}
-        </ul>
+        <div class="technical-doc-handoff">
+          <ul class="check-list">
+            {openPoints.map((point) => (
+              <li>{point}</li>
+            ))}
+          </ul>
+          <p>
+            For the exact supported credential profile, wallet flow, and current
+            non-support list, read the
+            <a href="https://docs.registrystack.org/products/registry-notary/sd-jwt-vc-conformance-profile/">SD-JWT VC conformance profile</a>
+            and
+            <a href="https://docs.registrystack.org/products/registry-notary/oid4vci-wallet-interop/">OID4VCI wallet interop guide</a>.
+          </p>
+        </div>
       </div>
     </section>
 
@@ -260,6 +269,30 @@ const openPoints = [
           </p>
         </div>
         <HarnessDiagram highlight="notary" />
+        <div class="quiet-card under-hood">
+          <p class="eyebrow">Under the hood</p>
+          <dl>
+            <div>
+              <dt>Runtime</dt>
+              <dd>A Rust service, self-hosted.</dd>
+            </div>
+            <div>
+              <dt>API contract</dt>
+              <dd>
+                Committed OpenAPI spec:
+                <a href="https://github.com/registrystack/registry-stack/tree/main/products/notary/openapi">products/notary/openapi</a>.
+              </dd>
+            </div>
+            <div>
+              <dt>Prerequisites</dt>
+              <dd>A signing key, TLS, and audit storage; see <a href="/security/">Security</a>.</dd>
+            </div>
+            <div>
+              <dt>Local quickstart</dt>
+              <dd><code>cd lab && just quick</code></dd>
+            </div>
+          </dl>
+        </div>
         <div class="centered-action">
           <a class="inline-cta" href="/solutions/evidence-gateway/">See the Evidence Gateway solution &rarr;</a>
         </div>
@@ -275,3 +308,51 @@ const openPoints = [
 
   <SiteFooter />
 </Base>
+
+<style>
+  /* Developer-scannable operating facts, placed just ahead of the closing
+     cross-link so a technical reader can confirm fit before following it. */
+  .under-hood {
+    margin-top: 24px;
+  }
+
+  .under-hood dl {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 16px 0 0;
+  }
+
+  .under-hood dt {
+    color: var(--registry-ink);
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+
+  .under-hood dd {
+    color: var(--registry-body);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Inline links inside the block stay underlined so they are distinguishable
+     without relying on color. */
+  .under-hood dd a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .under-hood code {
+    display: inline;
+    font-size: 13px;
+    padding: 1px 4px;
+  }
+
+  @media (max-width: 620px) {
+    .under-hood dl {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -8,7 +8,7 @@ const pageTitle = 'Pricing | Registry Stack';
 const pageDescription =
   'Everything one registry needs is free forever. The subscription adds governance across many registry services. No per-citizen or per-credential fees, ever.';
 
-const mailto = 'mailto:jeremi@joslin.fr?subject=Registry%20Stack%20package%20fit';
+const mailto = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20package%20fit';
 
 // Bands count managed registry services: one registry behind one governed
 // answering point. Reference prices are for lower-middle-income deployments;
@@ -20,8 +20,8 @@ const plans = [
     term: 'forever',
     tagline: 'Everything a registry needs to answer safely, self-hosted.',
     includes: [
-      'Registry Relay, Registry Notary, and Registry Manifest',
-      'Posture and audit schemas, local self-checks, and release evidence as it is published',
+      'Registry Relay, Registry Notary, and Registry Manifest under Apache-2.0',
+      'Signed release assets, checksums, SBOMs, posture and audit schemas, and the local doctor check',
       'Reports and evidence packs for a single service',
       'Community support. No registration, no callback.',
     ],
@@ -38,7 +38,7 @@ const plans = [
       'Up to 2 managed registry services in one environment',
       'Inventory, health, and posture history for the services under management',
       'An evidence pack a reviewer, an auditor, or a funder can read',
-      'Business-hours maintainer support included in the package',
+      'Business-hours maintainer support, with response targets set in the scope confirmation',
     ],
     cta: { label: 'Request scope confirmation', href: null, kind: 'primary' },
   },
@@ -67,6 +67,21 @@ const scalePlans = [
     body: 'One flat annual agreement covering unlimited managed registry services across a government: sovereignty packaging, a named engineer, and a voice in the roadmap.',
   },
 ];
+
+const openCoreRows = [
+  {
+    label: 'Apache-2.0 baseline',
+    body: 'Registry Relay, Registry Notary, Registry Manifest, registryctl, docs, local demos, release verification, and the self-check stay open source.',
+  },
+  {
+    label: 'Subscription layer',
+    body: 'The paid layer covers packaged support, multi-service governance history, reviewer evidence packs, and subscription-only operational tooling where a program needs it.',
+  },
+  {
+    label: 'If you stop paying',
+    body: 'Your self-hosted open-source deployments keep running. Paid support, subscription evidence packs, and subscription-only governance tooling stop.',
+  },
+];
 ---
 
 <Base title={pageTitle} description={pageDescription}>
@@ -80,7 +95,8 @@ const scalePlans = [
           <h1 id="pricing-hero-title">Everything one registry needs is free. Forever.</h1>
           <p class="hero-lead">
             Registry Relay, Registry Notary, and Registry Manifest are open source,
-            self-hosted, and complete: public posture evidence, a local self-check, no registration.
+            self-hosted, Apache-2.0, and complete: signed release assets, public posture
+            evidence, a local doctor check, no registration.
             The paid subscription runs many registry services under one governance discipline,
             with maintainer support included in each package.
           </p>
@@ -110,6 +126,27 @@ const scalePlans = [
           is priced by the registry services under management, so a program that reaches
           twice as many people pays exactly the same.
         </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="open-core-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">Open-core boundary</p>
+          <h2 id="open-core-title">What stays free, what the subscription adds.</h2>
+          <p>
+            The public roadmap does not imply a community support SLA. Paid support is the
+            subscription layer, agreed separately from the open-source baseline.
+          </p>
+        </div>
+        <div class="pricing-boundary-list">
+          {openCoreRows.map((row) => (
+            <article>
+              <h3>{row.label}</h3>
+              <p>{row.body}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
 
@@ -172,6 +209,11 @@ const scalePlans = [
             fixed. If it does not, we first confirm whether it belongs in a published support
             band before scheduling implementation time.
           </p>
+          <p>
+            Business-hours support means maintainer response during the agreed business week for
+            the paid package. Response targets and the invoicing entity are named in the signed
+            scope confirmation before procurement starts.
+          </p>
           <a class="inline-cta" href={mailto}>Request scope confirmation &rarr;</a>
         </div>
       </div>
@@ -220,6 +262,30 @@ const scalePlans = [
     margin: 0 auto;
     max-width: 620px;
     text-align: center;
+  }
+
+  .pricing-boundary-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .pricing-boundary-list article {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    padding: 20px 22px;
+  }
+
+  .pricing-boundary-list h3,
+  .pricing-boundary-list p {
+    margin: 0;
+  }
+
+  .pricing-boundary-list h3 {
+    margin-bottom: 8px;
+  }
+
+  .pricing-boundary-list p {
+    color: var(--registry-body);
   }
 
   /* Five shared rows (name, price, tagline, the includes list, CTA) so the

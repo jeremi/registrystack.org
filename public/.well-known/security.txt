@@ -1,7 +1,7 @@
 # Registry Stack security contact (RFC 9116)
 # Please report vulnerabilities privately to the contact below before
 # any public disclosure.
-Contact: mailto:jeremi@joslin.fr
+Contact: https://github.com/registrystack/registry-stack/security/advisories/new
 Expires: 2027-06-20T00:00:00.000Z
 Preferred-Languages: en
 Canonical: https://registrystack.org/.well-known/security.txt

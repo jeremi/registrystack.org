@@ -48,7 +48,7 @@ const scenarioSteps = [
 const openPoints = [
   'Reads CSV, XLSX, Parquet, and PostgreSQL sources where they already live.',
   'Speaks the formats partners expect: DCAT-AP catalogs, OGC API Features and Records, sync over SP-DCI (the social protection data-exchange interface), and field mapping to the PublicSchema shared vocabulary.',
-  'Follows the protected consultation pattern of the GovStack Digital Registries building block.',
+  'Explores a protected consultation profile for GovStack Digital Registries, scoped to read-only registry access.',
   'Read-only by design: provisioning and updates stay in the source system, which remains authoritative.',
 ];
 ---
@@ -73,11 +73,11 @@ const openPoints = [
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href="https://lab.registrystack.org/#services">See it running in the lab</a>
-            <a class="button button-secondary" href="https://github.com/jeremi/registry-relay">View on GitHub</a>
+            <a class="button button-secondary" href="https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay">View on GitHub</a>
           </div>
           <p class="hero-note">
-            The live lab runs three Relay authorities on synthetic data, one of them straight from
-            an XLSX workbook.
+            The live lab runs four Relay authorities on synthetic data, two of them backed by
+            XLSX workbooks.
           </p>
         </div>
       </div>
@@ -201,6 +201,35 @@ const openPoints = [
           </p>
         </div>
         <HarnessDiagram highlight="relay" />
+        <div class="quiet-card under-hood">
+          <p class="eyebrow">Under the hood</p>
+          <dl>
+            <div>
+              <dt>Runtime</dt>
+              <dd>A Rust service, self-hosted.</dd>
+            </div>
+            <div>
+              <dt>API contract</dt>
+              <dd>
+                Committed OpenAPI spec:
+                <a href="https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay/openapi">crates/registry-relay/openapi</a>.
+              </dd>
+            </div>
+            <div>
+              <dt>Route surface</dt>
+              <dd>Read-only; there is no write or provisioning path to secure.</dd>
+            </div>
+            <div>
+              <dt>Local quickstart</dt>
+              <dd><code>cd lab && just quick</code></dd>
+            </div>
+          </dl>
+          <p class="under-hood-note">
+            Relay lives under <code>crates/</code> in the monorepo, while Notary and Manifest
+            live under <code>products/</code>, which is why their GitHub links above take a
+            different shape.
+          </p>
+        </div>
         <div class="centered-action">
           <a class="inline-cta" href="/solutions/protected-registry-apis/">See the Protected Registry APIs solution &rarr;</a>
         </div>
@@ -216,3 +245,57 @@ const openPoints = [
 
   <SiteFooter />
 </Base>
+
+<style>
+  /* Developer-scannable operating facts, placed just ahead of the closing
+     cross-link so a technical reader can confirm fit before following it. */
+  .under-hood {
+    margin-top: 24px;
+  }
+
+  .under-hood dl {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 16px 0 0;
+  }
+
+  .under-hood dt {
+    color: var(--registry-ink);
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+
+  .under-hood dd {
+    color: var(--registry-body);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Inline links inside the block stay underlined so they are distinguishable
+     without relying on color. */
+  .under-hood dd a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .under-hood code {
+    display: inline;
+    font-size: 13px;
+    padding: 1px 4px;
+  }
+
+  .under-hood-note {
+    color: var(--registry-muted);
+    font-size: 13px;
+    margin: 16px 0 0;
+  }
+
+  @media (max-width: 620px) {
+    .under-hood dl {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

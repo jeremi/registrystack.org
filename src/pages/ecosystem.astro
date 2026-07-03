@@ -30,6 +30,18 @@ const neighbors = [
     adds: 'The registry-facing surface behind the exchange: route-level scopes, field projection, and source access controls.',
   },
   {
+    category: 'API gateways and policy engines',
+    examples: 'Kong, Envoy, Open Policy Agent',
+    owns: 'Edge routing, shared ingress policy, traffic controls, service identity, and platform-wide authorization decisions.',
+    adds: 'The registry-specific contract behind the gateway: entity routes, source scopes, field limits, evidence responses, and audit records.',
+  },
+  {
+    category: 'Health information mediators',
+    examples: 'OpenHIM, FHIR gateways',
+    owns: 'Health-message mediation, channel orchestration, facility-system routing, terminology handling, and domain-specific interoperability.',
+    adds: 'A governed registry answer path for health-adjacent claims, credentials, and status checks without exposing the source registry record.',
+  },
+  {
     category: 'Wallets',
     examples: 'SD-JWT VC and OpenID4VCI-compatible wallets',
     owns: 'Key management, credential storage, holder consent, and presentation to relying parties.',
@@ -44,7 +56,7 @@ const neighbors = [
   {
     category: 'Foundational ID and identity providers',
     examples: 'MOSIP, eSignet',
-    owns: 'Identity enrollment, deduplication, authentication, e-KYC, and assurance levels for who a person is.',
+    owns: 'Identity enrollment, deduplication, authentication, e-KYC (electronic know-your-customer identity checks), and assurance levels for who a person is.',
     adds: 'The registry-facing side of that question: configured proofs about what is true of that person in a specific registry (alive, eligible, registered), issued after the identity layer has done its job.',
   },
 ];
@@ -130,6 +142,14 @@ const neighbors = [
             </article>
           ))}
         </div>
+        <p class="tco-note">
+          A ministry team can build the narrow surface above in-house: a tamper-evident audit
+          chain, credential issuance and lifecycle, standards-shaped rendering, and scope and
+          field-limit enforcement. Each of those pieces then needs its own maintenance,
+          security review, and standards upkeep for as long as the registry runs. Adopting an
+          open-source product that already carries them moves that ongoing cost off the
+          program team.
+        </p>
       </div>
     </section>
 
@@ -137,33 +157,41 @@ const neighbors = [
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Demonstrated, not promised</p>
-          <h2 id="lab-title">Four of these integrations already run in the lab.</h2>
+          <h2 id="lab-title">Separate what runs in the lab from what is compatible.</h2>
           <p>
-            The homepage names five platforms. This list states what exists today for each:
-            four run in <a href="https://lab.registrystack.org/">the hosted lab</a>, where you
-            can check them yourself, and one is in progress.
+            The logo wall names six neighboring systems and standards. This list separates
+            live lab paths you can inspect from compatible integration paths that are supported
+            by product contracts or examples.
           </p>
         </div>
+        <h3 class="lab-group-title">Running in the lab today</h3>
         <dl class="lab-list">
           <div class="lab-entry">
-            <dt>OpenFn</dt>
-            <dd>Registry Notary ships an OpenFn sidecar. It runs in the hosted lab and is covered by performance tests.</dd>
-          </div>
-          <div class="lab-entry">
             <dt>DHIS2</dt>
-            <dd>The lab runs a DHIS2 health scenario through the OpenFn sidecar against a live DHIS2 demo instance, with its own smoke test.</dd>
+            <dd>The lab runs a DHIS2 health scenario through Registry Notary&rsquo;s built-in <code>http_json</code> source-adapter path against a live DHIS2 demo instance, with its own smoke test.</dd>
           </div>
           <div class="lab-entry">
             <dt>OpenCRVS</dt>
-            <dd>The lab runs an OpenCRVS DCI notary. A step-by-step tutorial issues a verifiable credential (SD-JWT VC) from an OpenCRVS DCI test birth record.</dd>
+            <dd>The lab runs an OpenCRVS DCI notary. A step-by-step tutorial issues a wallet credential from an OpenCRVS DCI test birth record.</dd>
           </div>
           <div class="lab-entry">
             <dt>MOSIP</dt>
             <dd>The lab runs MOSIP eSignet for a citizen self-attestation login flow.</dd>
           </div>
+        </dl>
+        <h3 class="lab-group-title">Compatible paths and shipped examples</h3>
+        <dl class="lab-list">
           <div class="lab-entry">
             <dt>OpenSPP</dt>
-            <dd>A Registry Manifest metadata profile for OpenSPP is in progress, and the stack already speaks SP-DCI, the interface OpenSPP uses.</dd>
+            <dd>Registry Notary ships an OpenSPP disability-registry credential configuration and client contract examples for issuing and checking credentials from DCI-shaped records.</dd>
+          </div>
+          <div class="lab-entry">
+            <dt>OpenFn</dt>
+            <dd>OpenFn is treated as a workflow-engine caller: workflows call Registry Notary for minimized claim results instead of owning source reads. The DHIS2 lab path now uses Registry Notary&rsquo;s built-in adapter rather than an OpenFn-based one.</dd>
+          </div>
+          <div class="lab-entry">
+            <dt>HL7 FHIR</dt>
+            <dd>Registry Notary ships a FHIR source-adapter guide for projecting bounded FHIR R4 graphs into evidence-ready source facts without exposing raw bundles.</dd>
           </div>
         </dl>
       </div>
@@ -217,14 +245,16 @@ const neighbors = [
           <p>
             Registry Stack adopts standards rather than inventing them. Claim levels vary by
             standard; the docs carry the full register before assuming conformance. No universal
-            registry ontology is claimed.
+            registry ontology is claimed. Concrete conformance evidence, golden output fixtures
+            checked against these standards, sits in the manifest renderer&rsquo;s
+            <a href="https://github.com/registrystack/registry-stack/tree/main/crates/registry-manifest-core/tests/fixtures/golden">test fixtures</a> in the repo.
           </p>
         </div>
         <ul class="check-list">
-          <li>Metadata: DCAT-AP, BRegDCAT-AP, CPSV-AP, ODRL.</li>
-          <li>Shape: SHACL, JSON Schema, OpenAPI.</li>
-          <li>Evidence: CCCEV (JSON-LD), SD-JWT VC, OpenID4VCI.</li>
-          <li>Sector: SP-DCI, OGC API Records, OGC API Features, GovStack Digital Registries.</li>
+          <li>Metadata: DCAT-AP, BRegDCAT-AP, CPSV-AP, ODRL: the vocabularies that describe a dataset, register, service, or usage policy.</li>
+          <li>Shape: SHACL, JSON Schema, OpenAPI: the contracts that define what a valid record or response looks like.</li>
+          <li>Evidence: CCCEV (JSON-LD), SD-JWT VC, OpenID4VCI: the formats a signed answer or wallet credential arrives in.</li>
+          <li>Sector: SP-DCI, OGC API Records, OGC API Features, GovStack Digital Registries: the domain-specific patterns registries and geospatial services already follow.</li>
         </ul>
       </div>
     </section>
@@ -243,7 +273,7 @@ const neighbors = [
   .neighbor-grid {
     display: grid;
     gap: 20px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .neighbor-card {
@@ -272,8 +302,25 @@ const neighbors = [
     gap: 12px;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     list-style: none;
-    margin: 0;
+    margin: 0 0 24px;
     padding: 0;
+  }
+
+  .lab-list:last-child {
+    margin-bottom: 0;
+  }
+
+  .lab-group-title {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  .tco-note {
+    color: var(--registry-muted);
+    font-size: 15px;
+    line-height: 1.55;
+    margin: clamp(20px, 3vw, 28px) 0 0;
+    max-width: 760px;
   }
 
   .lab-entry {
@@ -297,6 +344,12 @@ const neighbors = [
     font-size: 14px;
     line-height: 1.55;
     margin: 0;
+  }
+
+  .lab-entry code {
+    display: inline;
+    font-size: 13px;
+    padding: 1px 4px;
   }
 
   @media (max-width: 900px) {

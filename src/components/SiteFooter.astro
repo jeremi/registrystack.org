@@ -3,6 +3,7 @@
 // grouped into columns that mirror the site's information architecture, so the
 // footer reads as a site map rather than one undifferentiated list.
 const year = new Date().getFullYear();
+const repoHref = 'https://github.com/registrystack/registry-stack';
 
 const columns = [
   {
@@ -38,6 +39,7 @@ const columns = [
       { href: '/pilot/', label: 'Start a pilot' },
       { href: 'https://docs.registrystack.org/', label: 'Documentation' },
       { href: 'https://lab.registrystack.org/', label: 'Live demo' },
+      { href: repoHref, label: 'GitHub repository' },
     ],
   },
 ];
@@ -63,7 +65,7 @@ const columns = [
     </nav>
   </div>
   <div class="site-footer-base">
-    <p>&copy; {year} Registry Stack. Built in the open.</p>
-    <p>Records stay with the authority that owns them.</p>
+    <p>&copy; {year} Registry Stack. Apache-2.0 open-source license.</p>
+    <p><a href={repoHref}>Source, releases, Scorecard, and Best Practices badges</a></p>
   </div>
 </footer>

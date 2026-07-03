@@ -8,6 +8,9 @@ const pageTitle = 'Security | Registry Stack';
 const pageDescription =
   'The Registry Stack security model: the properties it protects, what a deployment can reach, the threat model in scope and out, and how security is shared with your team.';
 const securityDocsHref = 'https://docs.registrystack.org/spec/rs-sec-g/';
+const securityReportHref =
+  'https://github.com/registrystack/registry-stack/security/advisories/new';
+const releaseVerifyHref = 'https://github.com/registrystack/registry-stack/blob/main/release/VERIFY.md';
 
 // Built as a security model, in the order serious projects use: state the
 // properties the model protects, draw the trust boundary, list the controls
@@ -67,14 +70,15 @@ const controls = [
   'Least-privilege source access: a read-only account scoped to only the fields and records the deployment needs, so even a full compromise is bounded by what that account can read.',
   'One deployment per registry, in that registry’s own environment, so there is no central pool a single breach could drain.',
   'Defense in depth: authentication, scopes, and field limits are separate, checked layers, so one misconfiguration is less likely to expose everything.',
-  'Network isolation and secret management, run by the operator, keep the host’s reachable surface and its credentials contained.',
+  'Network isolation, secret management, and off-host audit retention, run by the operator, keep the host’s reachable surface and its credentials contained.',
+  'Fail-closed configuration: validation runs at startup, so a malformed grant or an invalid key usage fails loudly before serving, and scopes and field limits are explicit configuration a reviewer can read.',
 ];
 
 // 4. Threat model, stated as two explicit sides.
 const defends = [
   'Eavesdropping or tampering with a proof in transit: configured signed-response and credential surfaces are verifiable and carried over TLS.',
   'A caller reaching beyond its granted scope: authentication, scopes, and field limits are checked on every request.',
-  'A forged or replayed proof: signed-response and credential surfaces use signatures and short lifetimes to make a fake or stale proof fail verification.',
+  'A forged or replayed proof: signed-response and credential surfaces use signatures and short lifetimes to make a fake or stale proof fail verification, and a replay store consumes one-time holder proofs and issuance nonces.',
   'A stolen credential used from outside: scoped, rotatable credentials and per-request checks limit it, and the audit trail records its use.',
   'Misuse that has to be caught after the fact: hash-chained audit records show who asked what, and what was answered, when the operator retains them in protected storage.',
 ];
@@ -90,7 +94,7 @@ const outOfScope = [
 
 const provides = [
   'Open-source, hardenable software with read-only consultation as the default path.',
-  'Published posture and audit schemas, a local self-check, and release workflow support for checksums, image digests, SBOMs, vulnerability scans, and capsules once the first capsule-producing release runs.',
+  'Signed release assets with checksums, image digests, software bill of materials (SBOM) files, vulnerability scan reports, and a signed release capsule, plus published posture and audit schemas and a local doctor check (registryctl doctor).',
   'A hardening checklist in the docs and a coordinated-disclosure process.',
 ];
 
@@ -103,8 +107,8 @@ const operates = [
 
 const verify = [
   'The products are open source, so your team and your auditors can review exactly what runs.',
-  'The release workflow is being prepared to publish binary checksums, image digests, image SBOMs, vulnerability scan reports, and release capsules.',
-  'A local self-check validates a deployment against the expected posture.',
+  'Keyless cosign signatures, checksums, SBOM files, and release-level SLSA provenance for tag-triggered releases let you confirm what you deploy.',
+  'A local doctor check (registryctl doctor) validates a deployment against the expected posture for its declared profile.',
   'You can run the whole flow in the hosted lab on synthetic data before any real record is touched.',
 ];
 
@@ -124,6 +128,24 @@ const evidence = [
   {
     label: 'GitHub releases',
     href: 'https://github.com/registrystack/registry-stack/releases',
+  },
+];
+
+const credentialLifecycle = [
+  {
+    title: 'Signing keys rotate explicitly',
+    body:
+      'Registry Notary signing keys move through active, publish-only, and disabled states. Old verification keys can remain published for a verifier window without signing new credentials.',
+  },
+  {
+    title: 'Compromise response is operational',
+    body:
+      'A suspected signing-key compromise is an operator incident: disable or rotate the affected key, preserve evidence, and decide which issued credentials need suspension or replacement.',
+  },
+  {
+    title: 'Credential status is optional',
+    body:
+      'Credentials are time-bounded by profile validity. Deployments that need live suspension or revocation can enable the credential status store and protect it as operator infrastructure.',
   },
 ];
 ---
@@ -166,10 +188,15 @@ const evidence = [
           ))}
         </div>
         <p class="security-keys-note">
-          A deployment holds two secrets: the read-only credential it uses to reach the source, and
-          the key used for configured signed-response or credential surfaces. Both live in your secret management, never with the
-          project. Traffic is protected by TLS that you terminate, and the source records at rest
-          stay in the systems you already run.
+          A deployment holds security-sensitive secrets: the read-only credential it uses to reach
+          the source, the key used for configured signed-response or credential surfaces, and the
+          audit HMAC secret used for keyed audit hashes. They live in your secret management,
+          never with the project. The audit chain is tamper-evident when retained logs and tail
+          hashes are protected or anchored; it is not a defense against the operating institution
+          rewriting all of its own evidence. The fact that someone asked about a person can itself
+          be sensitive, so audit records deserve the same access governance as the registry
+          itself, and they stay with the operator. Traffic is protected by TLS that you terminate,
+          and the source records at rest stay in the systems you already run.
         </p>
       </div>
     </section>
@@ -281,7 +308,28 @@ const evidence = [
       </div>
     </section>
 
-    <section class="section section-muted" aria-labelledby="security-verify-title">
+    <section class="section section-muted" aria-labelledby="credential-lifecycle-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Credential lifecycle</p>
+          <h2 id="credential-lifecycle-title">Short-lived by default, status-aware when you need it.</h2>
+          <p>
+            Credential risk does not end at issuance. The deployment chooses key rotation,
+            compromise response, and whether verifiers need a live status check after issuance.
+          </p>
+        </div>
+        <div class="security-properties">
+          {credentialLifecycle.map((item) => (
+            <article class="quiet-card">
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="security-verify-title">
       <div class="section-inner split">
         <div class="section-heading compact">
           <p class="eyebrow">Verify it yourself</p>
@@ -291,6 +339,7 @@ const evidence = [
             auditors can review exactly what runs before trusting it.
           </p>
           <a class="inline-cta" href="https://lab.registrystack.org/">Try the live demo on synthetic data &rarr;</a>
+          <a class="inline-cta" href={releaseVerifyHref}>Verify a release &rarr;</a>
         </div>
         <ul class="check-list">
           {verify.map((item) => (
@@ -309,18 +358,21 @@ const evidence = [
           <p class="eyebrow">Coordinated disclosure</p>
           <h2 id="security-report-title">Found a security issue? Tell us privately first.</h2>
           <p>
-            If you find a vulnerability, please report it privately so it can be fixed before it is
-            public. Do not open a public issue for a security report. We will acknowledge your
-            report and work with you on a coordinated disclosure.
+            If you find a vulnerability, please report it through GitHub private vulnerability
+            reporting so it can be fixed before it is public. Do not open a public issue for a
+            security report. We will acknowledge your report and work with you on a coordinated
+            disclosure.
           </p>
           <p class="security-claim-note">
             Registry Stack does not currently hold a formal security certification. The detailed
             threat model and the current security posture live in the docs, and a pilot includes a
-            security review against your own requirements.
+            security review against your own requirements. Audit-log retention periods and
+            data-subject access or erasure over audit records are deployment policy decisions, set
+            by the operating institution and reviewed during a pilot&rsquo;s security review.
           </p>
         </div>
         <div class="solution-choice-row">
-          <a class="button button-primary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20security%20report">Report a vulnerability</a>
+          <a class="button button-primary" href={securityReportHref}>Report a vulnerability</a>
           <a class="button button-secondary" href={securityDocsHref}>Read the security docs</a>
         </div>
         <p class="security-disclosure-extra">

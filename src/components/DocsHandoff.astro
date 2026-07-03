@@ -17,6 +17,7 @@ const {
   primaryHref = 'https://docs.registrystack.org/',
   emphasis = 'docs',
 } = Astro.props;
+const contactHref = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20pilot%20scope';
 ---
 
 <section class="final-cta" aria-labelledby="handoff-title">
@@ -26,13 +27,13 @@ const {
     <div class="hero-actions">
       {emphasis === 'pilot' ? (
         <>
-          <a class="button button-primary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20scope">Request pilot scope</a>
+          <a class="button button-primary" href={contactHref}>Request pilot scope</a>
           <a class="button button-secondary" href={primaryHref}>{primaryLabel}</a>
         </>
       ) : (
         <>
           <a class="button button-primary" href={primaryHref}>{primaryLabel}</a>
-          <a class="button button-secondary" href="mailto:jeremi@joslin.fr?subject=Registry%20Stack%20pilot%20scope">Request pilot scope</a>
+          <a class="button button-secondary" href={contactHref}>Request pilot scope</a>
         </>
       )}
     </div>

@@ -6,38 +6,53 @@ import DocsHandoff from '../components/DocsHandoff.astro';
 
 const pageTitle = 'The problem | Registry Stack';
 const pageDescription =
-  'The registry problems Registry Stack is built around: data not service-ready, APIs that over-share, safeguards on paper, integrations that never compound.';
+  'The registry problems Registry Stack is built around: over-sharing by default, safeguards on paper, integrations that do not compound, and the integrator concerns underneath.';
 
 // Condensed from the docs-site problem framings. Each card names the recurring
 // failure, a short concrete illustration, and what Registry Stack changes.
-const problems = [
+// The lead group is ordered for a funder or policy reader: the failures a
+// program officer recognizes without needing an integration diagram first.
+// Each lead card also carries the stake: what actually goes wrong if the
+// failure stays unfixed. The second group is the integrator's view of the
+// same territory: what determines whether a connection is fast or another
+// one-off.
+const leadProblems = [
+  {
+    title: 'Over-sharing by default',
+    illustration:
+      'A partner needs to confirm one fact. The only thing on offer is a full export or a database login, because there is no smaller unit of sharing than the whole registry.',
+    change:
+      'A route can answer "license valid" or "actively registered" without exposing the underlying record. The caller gets the fact; the rest stays with the owner.',
+    stake:
+      'One leaked export is every record at once, and people are left re-proving facts the state already holds.',
+  },
+  {
+    title: 'Safeguards on paper',
+    illustration:
+      'A data-sharing agreement promises one purpose. The system enforces none of it: no purpose field, no scope, no access log a reviewer could read. A year later, an inspector has nowhere to look.',
+    change:
+      'Purpose, scope, and disclosure limits are checked at the point of access, and each trust-critical request leaves a reviewable audit record.',
+    stake:
+      'Compliance rests on trust and after-the-fact discovery instead of enforcement, so incidents surface late, or never.',
+  },
+  {
+    title: 'Integrations that do not compound',
+    illustration:
+      'A national registry has integrated three partners, each starting from the same questions in a fresh email thread. The fourth partner asks them again next week.',
+    change:
+      'The answers are published once, as artifacts every partner can read. The negotiation starts from a shared contract instead of from scratch.',
+    stake:
+      'Every new service pays the full integration cost again, and nothing accumulates into shared infrastructure.',
+  },
+];
+
+const integratorProblems = [
   {
     title: 'Data exists, but is not service-ready',
     illustration:
       'A school directory lives in one focal point’s spreadsheet. Three teams email for copies, and three months later nobody can say which list is authoritative.',
     change:
       'The source stays where it is. A public contract describes who may ask, for what, with what freshness, and on what authority.',
-  },
-  {
-    title: 'APIs over-share records',
-    illustration:
-      'A licensing counter needs a yes or no. The only available API returns the full record: date of birth, address, and ten years of history the clerk never asked for.',
-    change:
-      'A route can return "license valid" or "actively registered" without exposing the underlying record. The caller gets the fact; the rest stays with the owner.',
-  },
-  {
-    title: 'Safeguards need technical enforcement',
-    illustration:
-      'A data-sharing agreement is signed for one purpose. The API has no purpose field, no scope, and an access log a reviewer cannot read. A year later, an inspector has nowhere to look.',
-    change:
-      'Purpose, scope, and disclosure limits are checked at the point of access, and each trust-critical request leaves a reviewable audit record.',
-  },
-  {
-    title: 'Integrations become one-off negotiations',
-    illustration:
-      'A national registry has integrated three partners. Each started with the same questions in a fresh email thread. The fourth partner asks them again next week.',
-    change:
-      'The answers are published once, as artifacts every partner can read. The negotiation starts from a shared contract instead of from scratch.',
   },
   {
     title: 'Capabilities are hard to discover',
@@ -75,8 +90,9 @@ const problems = [
           <p class="hero-lead">
             Governments already hold the data for faster, fairer services. What is usually
             missing is the safe way to use it: who may ask, what answer is appropriate, what
-            stays private, and how use is reviewed. These are the recurring problems Registry
-            Stack is built around.
+            stays private, and how use is reviewed. When that safe way is missing, the failure
+            is not abstract: it shows up as leaked exports, safeguards nobody can point to, and
+            programs paying to reconnect the same data again and again.
           </p>
         </div>
       </div>
@@ -112,16 +128,37 @@ const problems = [
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">The recurring problems</p>
-          <h2 id="problems-title">The same failures show up across very different registries.</h2>
+          <h2 id="problems-title">The failures a program officer recognizes first.</h2>
           <p>
-            Each one is independent of any single domain. They appear in civil registration,
-            social protection, business registries, farmer registries, health facility
-            registries, and more. Registry Stack changes the runtime and metadata surface around
-            the data; it does not replace the source.
+            These show up long before anyone reaches an integration diagram, and they repeat
+            across civil registration, social protection, business registries, farmer
+            registries, health facility registries, and more.
           </p>
         </div>
-        <div class="problem-grid problem-grid-why">
-          {problems.map((problem) => (
+        <div class="problem-grid problem-grid-why problem-grid-lead">
+          {leadProblems.map((problem) => (
+            <article class="quiet-card problem-card problem-card-lead">
+              <h3>{problem.title}</h3>
+              <p class="problem-illustration">{problem.illustration}</p>
+              <p class="problem-change-label">What changes</p>
+              <p class="problem-change">{problem.change}</p>
+              <p class="problem-stake-label">At stake</p>
+              <p class="problem-stake">{problem.stake}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="section-heading compact problems-underneath-heading">
+          <p class="eyebrow">Underneath</p>
+          <h3 id="underneath-title">And underneath, the integration reality</h3>
+          <p>
+            These are what determine whether a connection is fast or another one-off. Registry
+            Stack changes the runtime and metadata surface around the data; it does not replace
+            the source.
+          </p>
+        </div>
+        <div class="problem-grid problem-grid-why problem-grid-underneath">
+          {integratorProblems.map((problem) => (
             <article class="quiet-card problem-card">
               <h3>{problem.title}</h3>
               <p class="problem-illustration">{problem.illustration}</p>
@@ -202,10 +239,44 @@ const problems = [
     margin: 0;
   }
 
+  .problem-stake-label {
+    color: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    margin: 6px 0 0;
+    text-transform: uppercase;
+  }
+
+  .problem-stake {
+    color: var(--registry-ink);
+    margin: 0;
+  }
+
+  /* The lead group is the same three-card grid, but the top rule and
+     slightly heavier border mark it as the primary read. */
+  .problem-card-lead {
+    border-color: var(--registry-ink);
+    border-top: 3px solid var(--registry-stamp);
+  }
+
+  .problems-underneath-heading {
+    margin-top: 44px;
+  }
+
+  /* Four cards read better as two rows of two than a lopsided 3-and-1. */
+  .problem-grid-underneath {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   /* Three short payoff cards: one row on desktop, a single column once the
      row would crowd, mirroring the pilot page's phase cards. */
   @media (max-width: 900px) {
     .payoff-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .problem-grid-underneath {
       grid-template-columns: 1fr;
     }
   }
