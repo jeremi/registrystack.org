@@ -12,7 +12,7 @@
 - [Registry Notary](https://registrystack.org/notary/): Signed answers and wallet credentials for what a registry can attest.
 - [Registry Manifest](https://registrystack.org/manifest/): Portable, standards-facing metadata describing a registry service.
 - [Pricing](https://registrystack.org/pricing/): Self-host every product free under Apache-2.0, or subscribe for packaged support and governance across many registry services.
-- [Start a pilot](https://registrystack.org/pilot/): What a scoped pilot looks like: one registry, one question, safeguards from the first request.
+- [Start a pilot](https://registrystack.org/pilot/): What a scoped pilot looks like: one registry, its first questions live, safeguards from the first request.
 - [Security](https://registrystack.org/security/): The security model: what it protects, what a deployment can reach, and the threat model in and out of scope.
 - [FAQ](https://registrystack.org/faq/): Short answers to the questions program teams, security reviewers, and engineers ask first.
 

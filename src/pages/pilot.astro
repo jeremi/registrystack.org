@@ -6,7 +6,7 @@ import DocsHandoff from '../components/DocsHandoff.astro';
 
 const pageTitle = 'Start a pilot | Registry Stack';
 const pageDescription =
-  'What a Registry Stack pilot looks like: one registry, one question, safeguards enforced from the first request, built on the open-source products.';
+  'What a Registry Stack pilot looks like: one registry, its first questions live, safeguards enforced from the first request, built on the open-source products.';
 const contactHref = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20pilot%20scope';
 const evidencePackHref =
   'https://github.com/registrystack/registry-stack/blob/main/lab/docs/evidence-gateway-packs.md';
@@ -34,8 +34,8 @@ const outcomes = [
 
 const phases = [
   {
-    name: 'Choose the registry and the question',
-    body: 'A civil register, a household register in a spreadsheet, a farmer registry export: any source counts. Pair it with one question a service keeps asking of it, with a yes-or-no or bounded answer.',
+    name: 'Choose the registry and map the questions',
+    body: 'A civil register, a household register in a spreadsheet, a farmer registry export: any source counts. In the scoping workshop, map the questions services keep asking of it, each with a yes-or-no or bounded answer. The first questions go live during the pilot; the rest become a backlog the registry grows into.',
   },
   {
     name: 'Prove it on synthetic data',
@@ -57,13 +57,15 @@ const phases = [
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">For governments and their implementing partners</p>
-          <h1 id="pilot-hero-title">A pilot starts with one registry and one question.</h1>
+          <h1 id="pilot-hero-title">A pilot starts with one registry and its first questions.</h1>
           <p class="hero-lead">
             Registry Stack&rsquo;s open-source products are built as digital public infrastructure:
             reusable, standards-based, openly licensed shared rails that let the registries a
             government already holds answer questions safely. A pilot does not
-            begin with a replatforming program. It begins with one registry, one question a
-            service keeps asking, and safeguards enforced from the first request.
+            begin with a replatforming program. It begins with one registry, the questions one
+            service keeps asking of it, and safeguards enforced from the first request.
+            Connecting the registry is the real work: every question after the first is a
+            configuration change and a governance sign-off, not a new project.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href={contactHref}>Request pilot scope</a>
@@ -101,7 +103,7 @@ const phases = [
             before you commit: the code, the docs, and the live lab. A supported pilot runs on the
             published <a href="/pricing/">First registry package</a>: one scoped, fixed-price annual
             subscription that takes the first registry live, with scope confirmed against the
-            registry, service question, deployment path, institutional owner, and evidence pack the
+            registry, question set, deployment path, institutional owner, and evidence pack the
             reviewer needs.
           </p>
           <a class="inline-cta" href={evidencePackHref}>See the technical evidence-pack format &rarr;</a>
@@ -129,12 +131,12 @@ const phases = [
             <h3>You bring</h3>
             <ul class="check-list">
               <li>A registry, in whatever form it exists today: a database, a domain platform, or a spreadsheet.</li>
-              <li>One service that needs an answer from it, and the question it keeps asking.</li>
+              <li>One asking service to start, and the questions it keeps asking.</li>
               <li>An institutional owner with the authority to say who may ask, and for what purpose.</li>
             </ul>
           </article>
           <article class="quiet-card">
-            <h3>The project brings</h3>
+            <h3>We bring</h3>
             <ul class="check-list">
               <li>Three Apache-2.0 open-source products with no license fees: you pay for delivery and support, not for the code, and you run it on your infrastructure or a partner&rsquo;s. Our engineers run the setup directly with your team.</li>
               <li>The deployment patterns the hosted lab already demonstrates, including live integrations you can inspect first.</li>
