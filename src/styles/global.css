@@ -407,70 +407,114 @@ p {
   color: var(--registry-blue);
 }
 
-/* Three slim rule-topped pillars under the hero, set like ledger column
-   headings rather than boxed cards. */
-.hero-proof-grid {
+/* Three slim rule-topped pillars, set like ledger column headings rather than
+   boxed cards. */
+.home-problem-grid {
   display: grid;
   gap: clamp(20px, 3vw, 40px);
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: clamp(28px, 4vw, 44px);
   width: 100%;
 }
 
-.hero-proof-grid article {
+.home-problem-grid article {
   border-top: 2px solid var(--registry-ink);
   min-width: 0;
   padding: 14px 0 0;
 }
 
-.hero-proof-grid h2 {
+.home-problem-grid h3 {
   color: var(--registry-ink);
   font-size: 18px;
   line-height: 1.2;
   margin: 0 0 10px;
 }
 
-.hero-proof-grid p {
+.home-problem-grid p {
   color: var(--registry-body);
   font-size: 15px;
   line-height: 1.5;
   margin: 0;
 }
 
-.maturity-strip {
+/* Neighbor marks directly under the hero: borrowed institutional trust before
+   any claims are made. Uses the same ink treatment as .partner-logos. */
+.partner-strip {
   background: #ffffff;
   border-bottom: 1px solid var(--registry-rule);
 }
 
-.maturity-strip-inner {
-  display: grid;
-  gap: 18px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.partner-strip-inner {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px clamp(20px, 4vw, 36px);
+  justify-content: center;
   margin: 0 auto;
   max-width: var(--registry-max);
-  padding: 22px clamp(16px, 4vw, 42px);
+  padding: 18px clamp(16px, 4vw, 42px);
 }
 
-.maturity-strip article {
-  border-top: 2px solid var(--registry-ink);
-  min-width: 0;
-  padding-top: 12px;
-}
-
-.maturity-strip h2 {
-  font-size: 16px;
-  margin: 0 0 8px;
-}
-
-.maturity-strip p {
+.partner-strip-inner > span {
   color: var(--registry-body);
-  font-size: 14px;
-  line-height: 1.5;
-  margin: 0 0 8px;
+  font-family: var(--registry-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-.maturity-strip a {
+/* Worked question-and-answer rows, ledger style: one denied row shows the
+   purpose gate doing its job. */
+.answer-examples {
+  display: grid;
+  margin: clamp(28px, 4vw, 44px) auto 0;
+  max-width: 860px;
+}
+
+.answer-example {
+  align-items: center;
+  border-top: 1px solid var(--registry-rule);
+  display: grid;
+  gap: 6px clamp(16px, 3vw, 32px);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr) minmax(0, 1fr);
+  padding: 14px 0;
+}
+
+.answer-example:last-child {
+  border-bottom: 1px solid var(--registry-rule);
+}
+
+.answer-example .ae-domain {
+  color: var(--registry-body);
+  font-family: var(--registry-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.answer-example .ae-question {
+  color: var(--registry-ink);
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.answer-example .ae-answer {
+  color: var(--registry-ink);
   font-size: 14px;
   font-weight: 700;
+}
+
+.answer-example.is-denied .ae-answer {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 620px) {
+  .answer-example {
+    grid-template-columns: 1fr;
+  }
 }
 
 .hero-top {
@@ -1324,39 +1368,25 @@ code {
   margin-top: clamp(28px, 4vw, 44px);
 }
 
-.proof-partners {
-  align-items: center;
+/* The stewardship note sits under the proof columns, reversed out like them. */
+.proof-steward {
   border-top: 1px solid rgba(255, 255, 255, 0.24);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px clamp(20px, 4vw, 36px);
   margin-top: clamp(28px, 4vw, 44px);
   padding-top: 22px;
 }
 
-.proof-partners span {
-  color: var(--registry-brass);
-  font-family: var(--registry-mono);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.proof-steward h3 {
+  color: #ffffff;
+  font-size: 16px;
+  margin: 0 0 8px;
 }
 
-.proof-partners .partner-logos {
-  justify-content: flex-start;
-}
-
-/* Every neighbor mark renders as a flat white mark so it reads against the
-   ink band. */
-.proof-partners .partner-logos img {
-  filter: brightness(0) invert(1);
-  opacity: 0.85;
-}
-
-/* The OpenFn wordmark has dark text plus a boxed "Fn" whose letters would be
-   flattened away by brightness(0); a plain inversion keeps the box contrast. */
-.proof-partners .partner-logos img[src$='openfn.png'] {
-  filter: grayscale(1) invert(1);
+.proof-steward p {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 15px;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 760px;
 }
 
 /* The closing call to action mirrors the claim band's divider tint, so the
@@ -1400,6 +1430,16 @@ code {
   color: rgba(255, 255, 255, 0.72);
   margin: 10px 0 0;
   max-width: 360px;
+}
+
+.footer-brand a:not(.footer-brand-name) {
+  color: rgba(255, 255, 255, 0.86);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer-brand a:not(.footer-brand-name):hover {
+  color: #ffffff;
 }
 
 .footer-nav {
@@ -1508,9 +1548,8 @@ code {
     grid-template-columns: 1fr;
   }
 
-  .hero-proof-grid,
-  .proof-grid,
-  .maturity-strip-inner {
+  .home-problem-grid,
+  .proof-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1576,9 +1615,8 @@ code {
   .solution-protection-grid,
   .home-solution-grid,
   .home-product-strip,
-  .hero-proof-grid,
-  .proof-grid,
-  .maturity-strip-inner {
+  .home-problem-grid,
+  .proof-grid {
     grid-template-columns: 1fr;
   }
 

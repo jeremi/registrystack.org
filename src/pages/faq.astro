@@ -37,7 +37,7 @@ const groups = [
     items: [
       {
         q: 'Does our data leave our systems?',
-        a: 'No. You self-host Registry Stack on your own infrastructure or a partner’s. Records stay in the source, and no records or audit logs flow to the project.',
+        a: 'No. You self-host Registry Stack on your own infrastructure or a partner’s. Records stay in the source, and no records or audit logs flow to Aubex.',
         link: { label: 'Read the security model', href: '/security/' },
       },
       {
@@ -67,7 +67,7 @@ const groups = [
       },
       {
         q: 'What standards does it use?',
-        a: 'It adopts established standards rather than inventing them: SD-JWT VC and OpenID4VCI for credentials, DCAT-AP and related profiles for metadata, and SP-DCI and OGC API for registry exchange.',
+        a: 'It adopts established standards rather than inventing them: SD-JWT VC and OpenID4VCI for credentials, DCAT-AP and related profiles for metadata, and SP-DCI (the social protection data-exchange interface) and OGC API for registry exchange.',
         link: { label: 'The standards we adopt', href: '/ecosystem/' },
       },
     ],
@@ -77,7 +77,7 @@ const groups = [
     items: [
       {
         q: 'Is it really free?',
-        a: 'The three products are open source, self-hosted, and complete for a single registry. The paid subscription adds governance across many registry services and maintainer support.',
+        a: 'The three products are open source, self-hosted, and complete for a single registry. The subscription adds Aubex engineering support and governance across many registry services.',
         link: { label: 'See pricing', href: '/pricing/' },
       },
       {
@@ -87,23 +87,41 @@ const groups = [
       },
       {
         q: 'Who uses it today, and is it ready for us?',
-        a: 'There are no production deployments yet: the current release train is built for evaluation, integration pilots, and public review. The products are open source and run in a public hosted lab on synthetic data, with live integrations you can inspect. Institutions should adopt them through a scoped pilot: one registry, one question, safeguards from the first request.',
+        a: 'The products are release-managed, signed, and running live in a public hosted lab on synthetic data, with integrations you can inspect. Production entry happens through a scoped pilot: one registry, one question, safeguards from the first request, with our engineers working directly alongside your team. Early adopters get direct access to the people who build the products.',
         link: { label: 'What a pilot looks like', href: '/pilot/' },
       },
       {
         q: 'Who is behind Registry Stack?',
-        a: 'It is built in the open by maintainers who work in social protection, DCI standards, and GovStack specifications. The code, the documentation, and the hosted lab are public, so what this site claims, you can check.',
+        a: 'It is built by Aubex, the team behind OpenSPP, with seats in Digital Convergence Initiative standards work and contributions to the GovStack registry building block. The code, the documentation, and the hosted lab are public, so what this site claims, you can check.',
         link: { label: 'Who is behind this', href: '/pilot/#stewardship' },
       },
     ],
   },
 ];
+
+// FAQPage structured data, built from every group's question and answer so the
+// markup stays in step with the visible FAQ.
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: groups.flatMap((group) =>
+    group.items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    })),
+  ),
+};
 ---
 
 <Base title={pageTitle} description={pageDescription}>
   <SiteHeader current="faq" />
 
   <main>
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
     <section class="hero" aria-labelledby="faq-hero-title">
       <div class="hero-inner">
         <div class="hero-copy">

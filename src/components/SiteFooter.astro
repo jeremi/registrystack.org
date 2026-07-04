@@ -49,7 +49,11 @@ const columns = [
   <div class="site-footer-inner">
     <div class="footer-brand">
       <a class="footer-brand-name" href="/">Registry Stack</a>
-      <p>Open-source products that let registry authorities answer questions, issue proofs, and keep their records.</p>
+      <p>
+        Open-source products that let registry authorities answer questions, issue proofs, and
+        keep their records. Built and commercially supported by Aubex, the team behind OpenSPP.
+      </p>
+      <p><a href="mailto:contact@registrystack.org">contact@registrystack.org</a></p>
     </div>
     <nav class="footer-nav" aria-label="Footer">
       {columns.map((column) => (
@@ -65,7 +69,14 @@ const columns = [
     </nav>
   </div>
   <div class="site-footer-base">
-    <p>&copy; {year} Registry Stack. Apache-2.0 open-source license.</p>
+    <p>
+      &copy; {year} Aubex Consulting LLC. Registry Stack products are Apache-2.0 open source.
+      Third-party names and logos belong to their owners; no endorsement is implied.
+    </p>
+    <p>
+      <a href="/privacy/">Privacy</a> &middot; <a href="/terms/">Terms</a> &middot;
+      <a href="/imprint/">Legal notice</a>
+    </p>
     <p><a href={repoHref}>Source, releases, Scorecard, and Best Practices badges</a></p>
   </div>
 </footer>

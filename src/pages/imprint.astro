@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const pageTitle = 'Legal notice | Registry Stack';
+const pageDescription =
+  'Legal notice for registrystack.org: entity, address, contact, and the publisher responsible for this site.';
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="imprint" />
+
+  <main>
+    <section class="hero" aria-labelledby="imprint-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Legal notice</p>
+          <h1 id="imprint-hero-title">Legal notice</h1>
+          <p class="hero-lead">Who publishes registrystack.org, and how to reach us.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="imprint-body-title">
+      <div class="section-inner">
+        <div class="legal-body">
+          <h2 id="imprint-entity-title">Entity</h2>
+          <p>Aubex Consulting LLC</p>
+          <p>28 Geary St, Ste 650 #189<br />San Francisco, CA 94108<br />United States</p>
+          <p>Contact: <a href="mailto:contact@registrystack.org">contact@registrystack.org</a></p>
+
+          <h2 id="imprint-publisher-title">Responsible publisher</h2>
+          <p>
+            Aubex Consulting LLC is the publisher responsible for the content of this website.
+          </p>
+
+          <h2 id="imprint-about-title">About Registry Stack</h2>
+          <p>
+            Registry Stack is a set of open-source products that let registry authorities answer
+            questions and share proof about their records, without exposing the underlying data.
+            It is built by Aubex Consulting LLC, the team behind OpenSPP.
+          </p>
+
+          <h2 id="imprint-more-title">More</h2>
+          <p>
+            See our <a href="/privacy/">Privacy policy</a> and <a href="/terms/">Terms of use</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  .legal-body {
+    margin: 0 auto;
+    max-width: 720px;
+  }
+
+  .legal-body h2 {
+    margin-top: 44px;
+  }
+
+  .legal-body h2:first-child {
+    margin-top: 0;
+  }
+
+  .legal-body p {
+    color: var(--registry-body);
+    line-height: 1.65;
+  }
+</style>

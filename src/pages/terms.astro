@@ -1,0 +1,121 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const pageTitle = 'Terms of use | Registry Stack';
+const pageDescription =
+  'Website terms for registrystack.org: content provided as-is, product code licensed under Apache-2.0, trademarks, external links, liability, and governing law.';
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="terms" />
+
+  <main>
+    <section class="hero" aria-labelledby="terms-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Terms</p>
+          <h1 id="terms-hero-title">Terms of use</h1>
+          <p class="hero-lead">
+            This is an informational website about Registry Stack, published by Aubex Consulting
+            LLC. Nothing on this site is an offer, a contract, or legal or procurement advice.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="terms-body-title">
+      <div class="section-inner">
+        <div class="legal-body">
+          <h2 id="terms-content-title">Content provided as-is</h2>
+          <p>
+            The content on this site is provided as-is, without warranty of any kind, express or
+            implied. We work to keep it accurate, but we do not guarantee that it is complete,
+            current, or fits your specific situation.
+          </p>
+
+          <h2 id="terms-license-title">Product licensing</h2>
+          <p>
+            Registry Relay, Registry Notary, Registry Manifest, and registryctl are open source,
+            released under the Apache License 2.0. The Apache-2.0 license, not this page, governs
+            your use of that code. Where the two say different things about the software itself,
+            the license text prevails.
+          </p>
+
+          <h2 id="terms-commercial-title">Commercial subscriptions and pilots</h2>
+          <p>
+            Commercial subscriptions and pilots are agreed separately, in a signed scope
+            confirmation between Aubex Consulting LLC and the customer. If a signed agreement
+            conflicts with this page, the signed agreement prevails.
+          </p>
+
+          <h2 id="terms-trademarks-title">Trademarks</h2>
+          <p>
+            "Registry Stack" and the product names on this site, Registry Relay, Registry Notary,
+            and Registry Manifest, are used by Aubex Consulting LLC. Third-party names, logos, and
+            standards mentioned on this site belong to their respective owners. Mentioning them
+            does not imply their endorsement of Registry Stack, and it is not an endorsement by us
+            of them.
+          </p>
+
+          <h2 id="terms-links-title">External links</h2>
+          <p>
+            This site links to other sites we do not control, including GitHub and standards
+            bodies. We are not responsible for their content or their practices.
+          </p>
+
+          <h2 id="terms-liability-title">Limitation of liability</h2>
+          <p>
+            To the extent the law allows, Aubex Consulting LLC is not liable for any damage or
+            loss arising from your use of this website or your reliance on its content. Use of the
+            open-source products is governed separately by the Apache-2.0 license, which carries
+            its own limitation of liability.
+          </p>
+
+          <h2 id="terms-law-title">Governing law</h2>
+          <p>
+            These terms are governed by the laws of the State of California, USA, without regard
+            to conflict-of-law rules.
+          </p>
+
+          <h2 id="terms-contact-title">Contact</h2>
+          <p>
+            Questions about these terms: <a href="mailto:contact@registrystack.org">contact@registrystack.org</a>.
+          </p>
+
+          <p class="legal-effective">Effective date: July 4, 2026.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  .legal-body {
+    margin: 0 auto;
+    max-width: 720px;
+  }
+
+  .legal-body h2 {
+    margin-top: 44px;
+  }
+
+  .legal-body h2:first-child {
+    margin-top: 0;
+  }
+
+  .legal-body p {
+    color: var(--registry-body);
+    line-height: 1.65;
+  }
+
+  .legal-effective {
+    border-top: 1px solid var(--registry-rule);
+    color: var(--registry-muted);
+    margin-top: 44px;
+    padding-top: 20px;
+  }
+</style>

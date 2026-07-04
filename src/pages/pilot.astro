@@ -15,7 +15,7 @@ const evidencePackHref =
 // the result, not the mechanism; the product pages carry the mechanism.
 const outcomes = [
   {
-    title: 'People stop re-proving facts',
+    title: 'People stop proving the same facts twice',
     body: 'The once-only principle, made operational: a fact the government already holds is answered by the registry that holds it, instead of being re-documented at every counter. Fewer certified copies, fewer queues, fewer reasons to drop out of a service.',
   },
   {
@@ -47,23 +47,6 @@ const phases = [
   },
 ];
 
-// Vocabulary funders and program owners use when they are the ones asking,
-// not the registry owner. Kept product-name-free; the outcomes above carry
-// the mechanism.
-const funderPoints = [
-  {
-    title: 'What a grant buys',
-    body: 'A scoped pilot: one registry, one question a service keeps asking, safeguards enforced from the first request, plus the evidence trail that survives the pilot.',
-  },
-  {
-    title: 'What the grantee brings',
-    body: 'An existing registry in any form, the recurring question it answers, and an institutional owner who can approve purpose, access, and safeguards.',
-  },
-  {
-    title: 'What you get to point to',
-    body: 'Open-source code and docs, a public roadmap, a hosted lab on synthetic data, and audit records a reviewer can read.',
-  },
-];
 ---
 
 <Base title={pageTitle} description={pageDescription}>
@@ -73,16 +56,17 @@ const funderPoints = [
     <section class="hero" aria-labelledby="pilot-hero-title">
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="eyebrow">For governments, funders, and implementing partners</p>
+          <p class="eyebrow">For governments and their implementing partners</p>
           <h1 id="pilot-hero-title">A pilot starts with one registry and one question.</h1>
           <p class="hero-lead">
-            Registry Stack&rsquo;s open-source products are digital public infrastructure: shared
-            rails that let the registries a government already holds answer questions safely. A pilot does not
+            Registry Stack&rsquo;s open-source products are built as digital public infrastructure:
+            reusable, standards-based, openly licensed shared rails that let the registries a
+            government already holds answer questions safely. A pilot does not
             begin with a replatforming program. It begins with one registry, one question a
             service keeps asking, and safeguards enforced from the first request.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href={contactHref}>Book a briefing</a>
+            <a class="button button-primary" href={contactHref}>Request pilot scope</a>
             <a class="button button-secondary" href="https://lab.registrystack.org/">Try the live demo</a>
           </div>
         </div>
@@ -93,7 +77,7 @@ const funderPoints = [
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">What a pilot buys</p>
-          <h2 id="outcomes-title">Outcomes a program can point to, not a platform to maintain.</h2>
+          <h2 id="outcomes-title">Outcomes a program can point to.</h2>
         </div>
         <div class="problem-grid outcome-grid">
           {outcomes.map((outcome) => (
@@ -113,10 +97,12 @@ const funderPoints = [
           <h2 id="shape-title">Small enough to authorize, real enough to evaluate.</h2>
           <p>
             Three phases, each with something concrete to show. The scope is set by the registry
-            owner and the asking service, not by a product roadmap. Your team can evaluate every
-            product free before any paid support starts. A supported pilot is the published
-            First registry package, with scope confirmed against the registry, service question,
-            deployment path, governance owner, and evidence pack the funder or reviewer needs.
+            owner and the asking service, not by a product roadmap. Evaluate everything in the open
+            before you commit: the code, the docs, and the live lab. A supported pilot runs on the
+            published <a href="/pricing/">First registry package</a>: one scoped, fixed-price annual
+            subscription that takes the first registry live, with scope confirmed against the
+            registry, service question, deployment path, institutional owner, and evidence pack the
+            reviewer needs.
           </p>
           <a class="inline-cta" href={evidencePackHref}>See the technical evidence-pack format &rarr;</a>
         </div>
@@ -150,9 +136,9 @@ const funderPoints = [
           <article class="quiet-card">
             <h3>The project brings</h3>
             <ul class="check-list">
-              <li>Three Apache-2.0 open-source products with no product license fees, run on your infrastructure or a partner&rsquo;s. Deployment support is maintainer-led today: the team works the setup directly with each pilot rather than handing over a self-service console.</li>
+              <li>Three Apache-2.0 open-source products with no license fees: you pay for delivery and support, not for the code, and you run it on your infrastructure or a partner&rsquo;s. Our engineers run the setup directly with your team.</li>
               <li>The deployment patterns the hosted lab already demonstrates, including live integrations you can inspect first.</li>
-              <li>Answers in the formats the ecosystem expects: SD-JWT VC and OpenID4VCI for wallets, DCAT-AP for catalogs, SP-DCI for registry exchange.</li>
+              <li>Answers in the formats the ecosystem expects: SD-JWT VC and OpenID4VCI for wallets, DCAT-AP for catalogs, SP-DCI (the social protection data-exchange interface) for registry exchange.</li>
             </ul>
           </article>
         </div>
@@ -162,19 +148,20 @@ const funderPoints = [
     <section class="section" id="for-funders" aria-labelledby="for-funders-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">For funders</p>
-          <h2 id="for-funders-title">What a grant buys, and what it asks of the grantee.</h2>
-        </div>
-        <div class="problem-grid">
-          {funderPoints.map((point) => (
-            <article class="quiet-card">
-              <h3>{point.title}</h3>
-              <p>{point.body}</p>
-            </article>
-          ))}
+          <p class="eyebrow">For development partners and funders</p>
+          <h2 id="for-funders-title">Financing a government&rsquo;s first deployment.</h2>
+          <p>
+            Development partners and funders often finance a government&rsquo;s first deployment.
+            What you finance is the published First registry package, owned by the government that
+            runs it. Package prices are published on the <a href="/pricing/">pricing page</a> and
+            scale with World Bank income classification, which is exactly what a financing partner
+            needs to budget. The pilot leaves an evidence trail that survives it: open-source code
+            and docs, a public roadmap, a hosted lab on synthetic data, and audit records a reviewer
+            can read.
+          </p>
         </div>
         <div class="funder-cta">
-          <a class="button button-primary" href={contactHref}>Book a briefing</a>
+          <a class="button button-primary" href={contactHref}>Request pilot scope</a>
         </div>
       </div>
     </section>
@@ -187,14 +174,15 @@ const funderPoints = [
         </div>
         <div class="stewardship-body">
           <p>
-            Registry Stack is built in the open by maintainers who work in social protection,
-            Digital Convergence Initiative (DCI) standards, and GovStack specifications. The code, the documentation, and the
-            hosted lab are public: what this site claims, you can check.
+            Registry Stack is built by Aubex, the team behind OpenSPP, with seats in Digital
+            Convergence Initiative (DCI) standards work and contributions to the GovStack registry
+            building block. The code, the documentation, and the hosted lab are public: what this
+            site claims, you can check.
           </p>
           <p>
-            Paid pilot support starts when there is a concrete registry, a concrete service
-            question, and an institutional owner who can approve purpose, access, and safeguards.
-            For earlier exploration, start with the docs and hosted lab.
+            A pilot needs three things: a concrete registry, a concrete service question, and an
+            institutional owner who can approve purpose, access, and safeguards. If you have them,
+            or most of them, talk to us. To explore first, start with the docs and hosted lab.
           </p>
           <a class="inline-cta" href={contactHref}>Request pilot scope &rarr;</a>
         </div>

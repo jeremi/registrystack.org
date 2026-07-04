@@ -100,7 +100,9 @@ const neighbors = [
           <li>
             <strong>Not a benefits or payments platform.</strong> Platforms such as OpenSPP own
             enrollment, case management, and payments; Registry Stack lets the registries they
-            rely on answer their questions safely.
+            rely on answer their questions safely. Registry Stack is built by Aubex, the team
+            behind OpenSPP, but the product boundary is deliberate: OpenSPP still owns enrollment
+            and payments, and Registry Stack does not replace it.
           </li>
           <li>
             <strong>Not a foundational identity system.</strong> MOSIP and eSignet establish who
@@ -146,9 +148,9 @@ const neighbors = [
           A ministry team can build the narrow surface above in-house: a tamper-evident audit
           chain, credential issuance and lifecycle, standards-shaped rendering, and scope and
           field-limit enforcement. Each of those pieces then needs its own maintenance,
-          security review, and standards upkeep for as long as the registry runs. Adopting an
-          open-source product that already carries them moves that ongoing cost off the
-          program team.
+          security review, and standards upkeep for as long as the registry runs. Adopting a
+          supported open-source product moves that ongoing cost off the program team: the code
+          is free, and the subscription keeps those pieces maintained, reviewed, and current.
         </p>
       </div>
     </section>
@@ -157,26 +159,26 @@ const neighbors = [
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Demonstrated, not promised</p>
-          <h2 id="lab-title">Separate what runs in the lab from what is compatible.</h2>
+          <h2 id="lab-title">Separate what runs in the hosted lab from what is compatible.</h2>
           <p>
             The logo wall names six neighboring systems and standards. This list separates
-            live lab paths you can inspect from compatible integration paths that are supported
+            hosted lab paths you can inspect from compatible integration paths that are supported
             by product contracts or examples.
           </p>
         </div>
-        <h3 class="lab-group-title">Running in the lab today</h3>
+        <h3 class="lab-group-title">Running in the hosted lab today</h3>
         <dl class="lab-list">
           <div class="lab-entry">
             <dt>DHIS2</dt>
-            <dd>The lab runs a DHIS2 health scenario through Registry Notary&rsquo;s built-in <code>http_json</code> source-adapter path against a live DHIS2 demo instance, with its own smoke test.</dd>
+            <dd>The hosted lab runs a DHIS2 health scenario through Registry Notary&rsquo;s built-in <code>http_json</code> source-adapter path against a live DHIS2 demo instance, with its own smoke test.</dd>
           </div>
           <div class="lab-entry">
             <dt>OpenCRVS</dt>
-            <dd>The lab runs an OpenCRVS DCI notary. A step-by-step tutorial issues a wallet credential from an OpenCRVS DCI test birth record.</dd>
+            <dd>The hosted lab runs an OpenCRVS Digital Convergence Initiative (DCI) notary. A step-by-step tutorial issues a wallet credential from an OpenCRVS DCI test birth record.</dd>
           </div>
           <div class="lab-entry">
             <dt>MOSIP</dt>
-            <dd>The lab runs MOSIP eSignet for a citizen self-attestation login flow.</dd>
+            <dd>The hosted lab runs MOSIP eSignet for a citizen self-attestation login flow.</dd>
           </div>
         </dl>
         <h3 class="lab-group-title">Compatible paths and shipped examples</h3>
@@ -246,7 +248,8 @@ const neighbors = [
             Registry Stack adopts standards rather than inventing them. Claim levels vary by
             standard; the docs carry the full register before assuming conformance. No universal
             registry ontology is claimed. Concrete conformance evidence, golden output fixtures
-            checked against these standards, sits in the manifest renderer&rsquo;s
+            (the published expected outputs that conformance runs are compared against) checked
+            against these standards, sits in the manifest renderer&rsquo;s
             <a href="https://github.com/registrystack/registry-stack/tree/main/crates/registry-manifest-core/tests/fixtures/golden">test fixtures</a> in the repo.
           </p>
         </div>

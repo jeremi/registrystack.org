@@ -6,46 +6,54 @@ import DocsHandoff from '../components/DocsHandoff.astro';
 
 const pageTitle = 'Pricing | Registry Stack';
 const pageDescription =
-  'Everything one registry needs is free forever. The subscription adds governance across many registry services. No per-citizen or per-credential fees, ever.';
+  'Self-host every product free under Apache-2.0. The subscription adds packaged support and governance across many registry services. No per-citizen or per-credential fees, ever.';
 
 const mailto = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20package%20fit';
+const scopeMailto = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20scope%20conversation';
+const scopeFirstMailto = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20scope%3A%20First%20registry';
+const scopeProgramMailto = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20scope%3A%20Program';
+const scopeNationalMailto = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20scope%3A%20National';
+const scopeCountryMailto = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20scope%3A%20Country%20membership';
 
 // Bands count managed registry services: one registry behind one governed
-// answering point. Reference prices are for lower-middle-income deployments;
-// see the income-tier note rendered above the cards.
+// answering point. Listed figures are lower-middle-income reference prices;
+// the income-scaling note renders below the cards.
 const plans = [
   {
     name: 'Community',
     price: 'Free',
     term: 'forever',
-    tagline: 'Everything a registry needs to answer safely, self-hosted.',
+    priceNote: 'Free in every country',
+    tagline: 'Everything one registry needs is free. Forever. Self-hosted, and complete.',
     includes: [
       'Registry Relay, Registry Notary, and Registry Manifest under Apache-2.0',
-      'Signed release assets, checksums, SBOMs, posture and audit schemas, and the local doctor check',
-      'Reports and evidence packs for a single service',
+      'Signed release assets, checksums, software bills of materials (SBOMs), posture and audit schemas, and the local doctor check',
+      'Reports and evidence packs (a bundled, readable record of checks, decisions, and audit history) for a single service',
       'Community support. No registration, no callback.',
     ],
     cta: { label: 'Read the docs', href: 'https://docs.registrystack.org/', kind: 'secondary' },
   },
   {
     name: 'First registry',
-    price: '$7,500',
+    price: 'From $7,500',
     term: 'per year',
+    priceNote: 'Price for lower-middle-income countries',
     tagline: 'One registry under management, with packaged support behind it.',
     featured: true,
     flag: 'Most programs start here',
     includes: [
       'Up to 2 managed registry services in one environment',
-      'Inventory, health, and posture history for the services under management',
+      'Inventory, health, and posture history (the recorded state of each deployment’s configuration and checks over time) for the services under management',
       'An evidence pack a reviewer, an auditor, or a funder can read',
-      'Business-hours maintainer support, with response targets set in the scope confirmation',
+      'Business-hours engineering support from Aubex, with response targets set in the scope confirmation',
     ],
-    cta: { label: 'Request scope confirmation', href: null, kind: 'primary' },
+    cta: { label: 'Request First registry scope', href: scopeFirstMailto, kind: 'primary' },
   },
   {
     name: 'Program',
-    price: '$25,000',
+    price: 'From $25,000',
     term: 'per year',
+    priceNote: 'Price for lower-middle-income countries',
     tagline: 'Your program’s registries under one governance discipline.',
     includes: [
       'Up to 6 managed registry services across 3 environments',
@@ -53,18 +61,20 @@ const plans = [
       'Audit continuity tracked across every service, with evidence packs to match',
       'A web console for governance decisions, and priority support',
     ],
-    cta: { label: 'Check package fit', href: null, kind: 'secondary' },
+    cta: { label: 'Request Program scope', href: scopeProgramMailto, kind: 'secondary' },
   },
 ];
 
 const scalePlans = [
   {
     name: 'National',
-    body: 'For programs that plug into a government’s identity, audit, and security estate, with longer retention and service-level commitments. Up to 15 managed registry services, confirmed against a published annual band.',
+    body: 'For a government taking Registry Stack beyond one program: up to 15 managed registry services across ministries, integrated with the national identity, audit, and security systems. Compared with Program, it adds longer audit retention and faster response commitments. One fixed annual price, agreed in the scope confirmation.',
+    cta: { label: 'Request National scope', href: scopeNationalMailto, kind: 'secondary' },
   },
   {
     name: 'Country membership',
-    body: 'One flat annual agreement covering unlimited managed registry services across a government: sovereignty packaging, a named engineer, and a voice in the roadmap.',
+    body: 'The whole-of-government agreement: one flat annual price, no limit on managed registry services, everything running on government-owned infrastructure. Comes with a named Aubex engineer and a direct voice in the product roadmap.',
+    cta: { label: 'Discuss Country membership', href: scopeCountryMailto, kind: 'secondary' },
   },
 ];
 
@@ -92,17 +102,17 @@ const openCoreRows = [
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Pricing</p>
-          <h1 id="pricing-hero-title">Everything one registry needs is free. Forever.</h1>
+          <h1 id="pricing-hero-title">Self-host every product free. Subscribe for support and governance.</h1>
           <p class="hero-lead">
             Registry Relay, Registry Notary, and Registry Manifest are open source,
             self-hosted, Apache-2.0, and complete: signed release assets, public posture
             evidence, a local doctor check, no registration.
             The paid subscription runs many registry services under one governance discipline,
-            with maintainer support included in each package.
+            with engineering support from Aubex included in each package.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="https://docs.registrystack.org/">Start with the free tier</a>
-            <a class="button button-secondary" href={mailto}>Check package fit</a>
+            <a class="button button-primary" href={scopeMailto}>Request a scope conversation</a>
+            <a class="button button-secondary" href="https://docs.registrystack.org/">Start with the free tier</a>
           </div>
         </div>
       </div>
@@ -112,7 +122,7 @@ const openCoreRows = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">The pricing rule</p>
-          <h2 id="never-title">What we never charge for.</h2>
+          <h2 id="never-title">Priced per registry service. Never per citizen.</h2>
         </div>
         <ul class="never-list">
           <li>Per citizen</li>
@@ -157,10 +167,7 @@ const openCoreRows = [
           <h2 id="plans-title">Annual, per managed registry service, on your infrastructure.</h2>
           <p>
             A managed registry service is one registry behind one governed answering point.
-            The figures shown are published package prices for lower-middle-income countries.
-            The applicable package follows the World Bank income classification of the deploying
-            country: lower for low-income and humanitarian deployments, higher for high-income
-            ones. Nonprofits pay the low-income price.
+            Every package is annual, fixed-price, and runs on your infrastructure.
           </p>
         </div>
         <div class="plan-grid">
@@ -169,6 +176,7 @@ const openCoreRows = [
               {plan.flag && <p class="plan-flag">{plan.flag}</p>}
               <h3>{plan.name}</h3>
               <p class="plan-price">{plan.price} <span>{plan.term}</span></p>
+              {plan.priceNote && <p class="plan-price-note">{plan.priceNote}</p>}
               <p class="plan-tagline">{plan.tagline}</p>
               <ul class="check-list">
                 {plan.includes.map((item) => (
@@ -188,11 +196,23 @@ const openCoreRows = [
           {scalePlans.map((plan) => (
             <article class="plan-card scale-card">
               <h3>{plan.name}</h3>
-              <p class="plan-price plan-price-talk">Fixed annual band</p>
+              <p class="plan-price plan-price-talk">Fixed annual price</p>
               <p class="plan-tagline">{plan.body}</p>
+              <a
+                class={`button button-${plan.cta.kind} plan-cta`}
+                href={plan.cta.href}
+              >
+                {plan.cta.label}
+              </a>
             </article>
           ))}
         </div>
+        <p class="plan-band-note">
+          Listed prices are the published packages for lower-middle-income countries, following
+          the World Bank income classification of the deploying country. Low-income and
+          humanitarian deployments pay less, high-income countries pay more, and nonprofits pay
+          the low-income price. The exact figure is fixed in the scope confirmation.
+        </p>
       </div>
     </section>
 
@@ -210,11 +230,13 @@ const openCoreRows = [
             band before scheduling implementation time.
           </p>
           <p>
-            Business-hours support means maintainer response during the agreed business week for
-            the paid package. Response targets and the invoicing entity are named in the signed
-            scope confirmation before procurement starts.
+            Subscriptions are delivered by Aubex Consulting LLC, the San Francisco company behind
+            OpenSPP and Registry Stack. Business-hours support means engineering response during the
+            agreed business week for the paid package. The scope confirmation is a short signed
+            document that fixes the services, environments, response targets, and invoicing entity
+            before support starts.
           </p>
-          <a class="inline-cta" href={mailto}>Request scope confirmation &rarr;</a>
+          <a class="inline-cta" href={scopeMailto}>Request a scope conversation &rarr;</a>
         </div>
       </div>
     </section>
@@ -222,7 +244,7 @@ const openCoreRows = [
 
   <DocsHandoff
     eyebrow="For your technical team"
-    heading="Everything in the free tier is in the docs. Evaluate it before requesting scope confirmation."
+    heading="The docs cover everything, free tier included. Bring us the scope and we will confirm it in writing."
     primaryLabel="Read the docs"
     emphasis="pilot"
   />
@@ -288,21 +310,21 @@ const openCoreRows = [
     color: var(--registry-body);
   }
 
-  /* Five shared rows (name, price, tagline, the includes list, CTA) so the
-     prices sit on one line and the buttons on another, across all three
-     cards, however long each tagline wraps. */
+  /* Six shared rows (name, price, price note, tagline, the includes list,
+     CTA) so the prices sit on one line and the buttons on another, across
+     all three cards, however long each tagline wraps. */
   .plan-grid {
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: repeat(5, auto);
+    grid-template-rows: repeat(6, auto);
   }
 
   .scale-grid {
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(3, auto);
+    grid-template-rows: repeat(4, auto);
     margin: 24px auto 0;
     max-width: 860px;
   }
@@ -373,6 +395,22 @@ const openCoreRows = [
   .plan-price-talk {
     font-size: 16px;
     letter-spacing: 0.02em;
+  }
+
+  .plan-price-note {
+    color: var(--registry-body);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    margin: 2px 0 0;
+  }
+
+  .plan-band-note {
+    color: var(--registry-body);
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 18px auto 0;
+    max-width: 720px;
+    text-align: center;
   }
 
   .plan-tagline {

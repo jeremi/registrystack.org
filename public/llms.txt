@@ -1,0 +1,22 @@
+# Registry Stack
+
+> Registry Stack is a set of open-source products that let government registries answer questions and share proof of facts while records stay with the authority that holds them. Every product is free to self-host under Apache-2.0; Aubex Consulting LLC, the team behind OpenSPP, provides commercial support and packaged governance.
+
+## Pages
+
+- [Home](https://registrystack.org/): Overview of Registry Stack and how it fits a registry you already run.
+- [The problem](https://registrystack.org/problem/): The registry failures Registry Stack is built around: over-sharing by default, safeguards on paper, and integrations that do not compound.
+- [Evidence Gateway](https://registrystack.org/solutions/evidence-gateway/): Share proof of a fact, not the underlying record, with a service that needs it.
+- [Protected Registry APIs](https://registrystack.org/solutions/protected-registry-apis/): Open an existing registry safely for approved services, with scoped, read-only access.
+- [Registry Relay](https://registrystack.org/relay/): Protected APIs over the files and tables a registry already lives in.
+- [Registry Notary](https://registrystack.org/notary/): Signed answers and wallet credentials for what a registry can attest.
+- [Registry Manifest](https://registrystack.org/manifest/): Portable, standards-facing metadata describing a registry service.
+- [Pricing](https://registrystack.org/pricing/): Self-host every product free under Apache-2.0, or subscribe for packaged support and governance across many registry services.
+- [Start a pilot](https://registrystack.org/pilot/): What a scoped pilot looks like: one registry, one question, safeguards from the first request.
+- [Security](https://registrystack.org/security/): The security model: what it protects, what a deployment can reach, and the threat model in and out of scope.
+- [FAQ](https://registrystack.org/faq/): Short answers to the questions program teams, security reviewers, and engineers ask first.
+
+## Related sites
+
+- [Documentation](https://docs.registrystack.org/): Technical reference and specifications for the Registry Stack products.
+- [Live demo](https://lab.registrystack.org/): A hosted lab running the full stack on synthetic data only.

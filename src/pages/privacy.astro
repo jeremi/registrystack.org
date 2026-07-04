@@ -1,0 +1,157 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const pageTitle = 'Privacy policy | Registry Stack';
+const pageDescription =
+  'What registrystack.org collects, why, and what it does not do: analytics, email correspondence, server logs, your rights, and the effective date.';
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="privacy" />
+
+  <main>
+    <section class="hero" aria-labelledby="privacy-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Privacy</p>
+          <h1 id="privacy-hero-title">Privacy policy</h1>
+          <p class="hero-lead">
+            This page explains what registrystack.org collects, why, and what it does not do. It
+            covers this website only. The hosted lab at lab.registrystack.org and the docs site at
+            docs.registrystack.org are separate services with their own policies.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="privacy-body-title">
+      <div class="section-inner">
+        <div class="legal-body">
+          <h2 id="privacy-who-title">Who we are</h2>
+          <p>
+            Registry Stack is published by Aubex Consulting LLC, 28 Geary St, Ste 650 #189, San
+            Francisco, CA 94108, United States. Aubex is the controller responsible for this
+            website. You can reach us at <a href="mailto:contact@registrystack.org">contact@registrystack.org</a>.
+          </p>
+
+          <h2 id="privacy-collect-title">What this site collects</h2>
+          <p>
+            This site is a static set of pages. It has no accounts, no forms, and it does not set
+            any cookies of its own.
+          </p>
+          <h3>Analytics</h3>
+          <p>
+            We run a self-hosted analytics tool, Umami, at stats.registrystack.org. It is
+            cookie-free. When it is enabled, it records aggregate, de-identified usage data: page
+            views, referring sites, and a general browser and device class. It does not build a
+            profile of an individual visitor and does not share data with advertising networks. We
+            also tag some outbound link clicks, for example to the docs site, the live demo, or
+            GitHub, with the link&rsquo;s destination and label, so we can see which resources
+            visitors use next. These events are not tied to a name, an email address, or any other
+            identifying detail.
+          </p>
+          <h3>Email</h3>
+          <p>
+            If you email us, you give us your address and the content of your message. We use that
+            only to reply to you and keep the exchange as ordinary business correspondence.
+          </p>
+          <h3>Server logs</h3>
+          <p>
+            This site is hosted on GitHub Pages. GitHub, as the hosting provider, keeps its own
+            server logs, for example request IP addresses, to operate the service. We do not
+            configure or query those logs beyond what GitHub provides. GitHub&rsquo;s own privacy
+            statement covers that data.
+          </p>
+
+          <h2 id="privacy-not-title">What this site does not do</h2>
+          <ul class="check-list">
+            <li>It does not set cookies of its own.</li>
+            <li>It does not run advertising and does not share data with ad networks.</li>
+            <li>It does not sell personal data.</li>
+            <li>It does not build behavioral profiles of visitors.</li>
+          </ul>
+
+          <h2 id="privacy-basis-title">Legal bases for visitors in the EEA and UK</h2>
+          <p>
+            Where the GDPR or the UK GDPR applies, we rely on legitimate interest to run
+            aggregate, cookie-free analytics that help us understand which pages are useful. If
+            you email us, that exchange proceeds on the basis that you chose to contact us and
+            provided your information for that purpose.
+          </p>
+
+          <h2 id="privacy-retention-title">Retention</h2>
+          <p>
+            Analytics events are aggregate and are not tied to an identified person. We keep them
+            only as long as they are useful for understanding site usage. Email correspondence is
+            kept as ordinary business records for as long as it stays relevant.
+          </p>
+
+          <h2 id="privacy-rights-title">Your rights</h2>
+          <p>
+            You can ask us to access, correct, or delete personal data you have given us, for
+            example the content of an email, by writing to <a href="mailto:contact@registrystack.org">contact@registrystack.org</a>.
+            We will respond. Aggregate analytics data is not tied to an identified person, so there
+            is generally nothing to look up or erase per visitor. If you believe otherwise in your
+            case, tell us and we will look into it.
+          </p>
+
+          <h2 id="privacy-third-party-title">Third-party services linked from this site</h2>
+          <p>
+            This site links to GitHub for source code and releases, to docs.registrystack.org for
+            documentation, and to lab.registrystack.org, a hosted demo that runs on synthetic data
+            only. Each of those is a separate service with its own privacy practices. This policy
+            covers registrystack.org only.
+          </p>
+
+          <h2 id="privacy-changes-title">Changes to this policy</h2>
+          <p>
+            We may update this page as the site changes. The effective date below tells you when
+            it last changed.
+          </p>
+
+          <p class="legal-effective">Effective date: July 4, 2026.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  .legal-body {
+    margin: 0 auto;
+    max-width: 720px;
+  }
+
+  .legal-body h2 {
+    margin-top: 44px;
+  }
+
+  .legal-body h2:first-child {
+    margin-top: 0;
+  }
+
+  .legal-body h3 {
+    margin-bottom: 8px;
+    margin-top: 24px;
+  }
+
+  .legal-body p {
+    color: var(--registry-body);
+    line-height: 1.65;
+  }
+
+  .legal-body .check-list {
+    margin-top: 12px;
+  }
+
+  .legal-effective {
+    border-top: 1px solid var(--registry-rule);
+    color: var(--registry-muted);
+    margin-top: 44px;
+    padding-top: 20px;
+  }
+</style>

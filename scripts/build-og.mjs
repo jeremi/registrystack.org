@@ -80,7 +80,7 @@ const html = `<!doctype html>
     </div>
     <div>
       <p class="kicker">Open source &middot; For governments and their partners</p>
-      <h1>Prove facts from registries without sharing the records.</h1>
+      <h1>Answer the question. Keep the records.</h1>
     </div>
     <div class="foot">
       <span class="url">registrystack.org</span>

@@ -4,15 +4,40 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  // Error pages (404) have no canonical route and should stay out of indexes.
+  noindex?: boolean;
 }
 
 const {
   title = 'Registry Stack | Governed registry services and trusted evidence',
   description =
     'Registry Stack helps public institutions expose protected registry services, return only the evidence a service needs, and audit trust-critical access.',
+  noindex = false,
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, 'https://registrystack.org').toString();
 const ogImageUrl = new URL('/og-image.png', 'https://registrystack.org').toString();
+const organizationLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Registry Stack',
+  legalName: 'Aubex Consulting LLC',
+  url: 'https://registrystack.org',
+  logo: 'https://registrystack.org/og-image.png',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '28 Geary St, Ste 650 #189',
+    addressLocality: 'San Francisco',
+    addressRegion: 'CA',
+    postalCode: '94108',
+    addressCountry: 'US',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'contact@registrystack.org',
+    contactType: 'customer support',
+  },
+  sameAs: ['https://github.com/registrystack'],
+};
 const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID?.trim();
 const umamiScriptSrc =
   import.meta.env.PUBLIC_UMAMI_SCRIPT_SRC?.trim() || 'https://stats.registrystack.org/script.js';
@@ -29,8 +54,11 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalUrl} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalUrl} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -41,7 +69,10 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Registry Stack: prove facts from registries without sharing the records." />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <script type="application/ld+json" set:html={JSON.stringify(organizationLd)} />
     {
       umamiWebsiteId && (
         <script is:inline defer src={umamiScriptSrc} data-website-id={umamiWebsiteId} data-domains={umamiDomains}></script>

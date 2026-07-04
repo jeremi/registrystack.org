@@ -101,7 +101,7 @@ const openPoints = [
             <a class="button button-secondary" href="https://github.com/registrystack/registry-stack/tree/main/products/notary">View on GitHub</a>
           </div>
           <p class="hero-note">
-            The live lab issues a real signed proof of life into a hosted wallet, on synthetic
+            The hosted lab issues a real signed proof of life into a hosted wallet, on synthetic
             data, with nothing to install.
           </p>
         </div>
@@ -166,9 +166,10 @@ const openPoints = [
           <p class="eyebrow">FHIR support</p>
           <h2 id="notary-fhir-title">Prove health and service claims without sharing sensitive records.</h2>
           <p>
-            Registry Notary can connect to FHIR APIs and turn structured health data into narrow,
-            purpose-bound claim results. FHIR stays the source interface. Notary becomes the proof
-            interface.
+            Registry Notary reads FHIR endpoints through its shipped source-adapter path, turning
+            structured health data into narrow, purpose-bound claim results. FHIR stays the source
+            interface; Notary becomes the proof interface. The docs carry the worked guide for
+            connecting a FHIR source.
           </p>
         </div>
 
@@ -202,7 +203,7 @@ const openPoints = [
 
         <div class="centered-action">
           <a class="inline-cta" href="https://github.com/registrystack/registry-stack/blob/main/products/notary/docs/fhir-source-adapter-guide.md">
-            Read the FHIR adapter guide &rarr;
+            Read the FHIR source-adapter guide &rarr;
           </a>
         </div>
       </div>
@@ -223,7 +224,7 @@ const openPoints = [
           ))}
         </div>
         <div class="centered-action">
-          <a class="inline-cta" href="https://lab.registrystack.org/#wallet">Run this exact flow in the live lab &rarr;</a>
+          <a class="inline-cta" href="https://lab.registrystack.org/#wallet">Run this exact flow in the hosted lab &rarr;</a>
         </div>
       </div>
     </section>
@@ -303,6 +304,7 @@ const openPoints = [
       eyebrow="For your technical team"
       heading="The contracts, connectors, and conformance profile live in the docs."
       primaryLabel="Read the Notary docs"
+      primaryHref="https://docs.registrystack.org/products/registry-notary/"
     />
   </main>
 

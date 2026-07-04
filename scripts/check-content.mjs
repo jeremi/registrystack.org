@@ -112,8 +112,10 @@ if (!heroMatch) {
 
 // The homepage now routes first to the two solution patterns; the live lab
 // remains present as proof, but no longer owns the primary IA.
+// Like the nav check below, the routes count whether they appear as literal
+// href attributes (double-quoted) or in a data array (single-quoted).
 for (const route of ['/solutions/evidence-gateway/', '/solutions/protected-registry-apis/']) {
-  if (!homeSource.includes(`href="${route}"`)) {
+  if (!homeSource.includes(`href="${route}"`) && !homeSource.includes(`'${route}'`)) {
     failures.push(`homepage primary solution routing is missing ${route}`);
   }
 }
@@ -168,9 +170,17 @@ for (const product of ['notary', 'relay', 'manifest']) {
   }
 }
 
-// 4. Every non-home page hands off to the docs for the "how".
+// 4. Every non-home marketing page hands off to the docs for the "how".
+// Legal and error pages end on their own terms, not a marketing handoff.
+const handoffExempt = new Set([
+  'src/pages/index.astro',
+  'src/pages/privacy.astro',
+  'src/pages/terms.astro',
+  'src/pages/imprint.astro',
+  'src/pages/404.astro',
+]);
 for (const relativePath of sweptFiles) {
-  if (!relativePath.startsWith('src/pages/') || relativePath === 'src/pages/index.astro') continue;
+  if (!relativePath.startsWith('src/pages/') || handoffExempt.has(relativePath)) continue;
   if (!readSource(relativePath).includes('DocsHandoff')) {
     failures.push(`${relativePath} is missing the docs handoff CTA (DocsHandoff)`);
   }

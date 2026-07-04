@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const pageTitle = 'Page not found | Registry Stack';
+const pageDescription = 'This page does not exist, or it moved. Find your way back from here.';
+---
+
+<Base title={pageTitle} description={pageDescription} noindex>
+  <SiteHeader />
+
+  <main>
+    <section class="hero" aria-labelledby="not-found-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">404</p>
+          <h1 id="not-found-title">This page does not exist, or it moved.</h1>
+          <p class="hero-lead">
+            Check the address, or pick up from one of these instead.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="/">Go to the homepage</a>
+            <a class="button button-secondary" href="/pricing/">See pricing</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="not-found-links-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <h2 id="not-found-links-title">Where you might have been headed</h2>
+        </div>
+        <ul class="check-list">
+          <li><a href="/">Home</a>, an overview of Registry Stack.</li>
+          <li><a href="https://docs.registrystack.org/">Documentation</a>, the technical reference.</li>
+          <li><a href="https://lab.registrystack.org/">Live demo</a>, a hosted lab running on synthetic data.</li>
+          <li><a href="/pricing/">Pricing</a>, how the subscription works.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Base>

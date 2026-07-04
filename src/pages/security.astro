@@ -33,7 +33,7 @@ const properties = [
   {
     title: 'Availability',
     body:
-      'Each registry runs its own deployment in its own environment, with no dependency on the project to serve a request, so there is no shared service whose outage takes everyone down.',
+      'Each registry runs its own deployment in its own environment, with no dependency on Aubex to serve a request, so there is no shared service whose outage takes everyone down.',
   },
   {
     title: 'Auditability',
@@ -59,7 +59,7 @@ const access = [
       'Act as a data warehouse: it reads to answer and returns a minimized result, not a bulk export.',
       'Return more to a caller than the configured scope allows.',
       'Write back to, or change, the source system; the consultation path is read-only.',
-      'Send records or audit logs to the project: you self-host, and those data stay in your environment.',
+      'Send records or audit logs to Aubex: you self-host, and those data stay in your environment.',
     ],
   },
 ];
@@ -107,7 +107,7 @@ const operates = [
 
 const verify = [
   'The products are open source, so your team and your auditors can review exactly what runs.',
-  'Keyless cosign signatures, checksums, SBOM files, and release-level SLSA provenance for tag-triggered releases let you confirm what you deploy.',
+  'Keyless cosign signatures, checksums, SBOM files, and release-level SLSA provenance (a supply-chain integrity attestation) for tag-triggered releases let you confirm what you deploy.',
   'A local doctor check (registryctl doctor) validates a deployment against the expected posture for its declared profile.',
   'You can run the whole flow in the hosted lab on synthetic data before any real record is touched.',
 ];
@@ -190,8 +190,9 @@ const credentialLifecycle = [
         <p class="security-keys-note">
           A deployment holds security-sensitive secrets: the read-only credential it uses to reach
           the source, the key used for configured signed-response or credential surfaces, and the
-          audit HMAC secret used for keyed audit hashes. They live in your secret management,
-          never with the project. The audit chain is tamper-evident when retained logs and tail
+          audit HMAC secret (the key that makes the audit chain tamper-evident) used for keyed audit
+          hashes. They live in your secret management, never with Aubex. The audit chain is
+          tamper-evident when retained logs and tail
           hashes are protected or anchored; it is not a defense against the operating institution
           rewriting all of its own evidence. The fact that someone asked about a person can itself
           be sensitive, so audit records deserve the same access governance as the registry
@@ -282,14 +283,14 @@ const credentialLifecycle = [
           <p class="eyebrow">Shared responsibility</p>
           <h2 id="security-shared-title">Security is a job we split with your team.</h2>
           <p>
-            The project ships software that can be operated securely. Running it safely in
+            Aubex ships software that can be operated securely. Running it safely in
             production depends on the deployment, the same way it would for any infrastructure you
             self-host.
           </p>
         </div>
         <div class="security-pair">
           <article class="quiet-card">
-            <h3>The project provides</h3>
+            <h3>Registry Stack provides</h3>
             <ul class="check-list">
               {provides.map((item) => (
                 <li>{item}</li>
@@ -364,9 +365,9 @@ const credentialLifecycle = [
             disclosure.
           </p>
           <p class="security-claim-note">
-            Registry Stack does not currently hold a formal security certification. The detailed
-            threat model and the current security posture live in the docs, and a pilot includes a
-            security review against your own requirements. Audit-log retention periods and
+            Registry Stack&rsquo;s security posture is verifiable rather than certified: releases
+            ship signed, with checksums and SBOMs, the detailed threat model lives in the docs,
+            and a pilot includes a security review against your own requirements. Audit-log retention periods and
             data-subject access or erasure over audit records are deployment policy decisions, set
             by the operating institution and reviewed during a pilot&rsquo;s security review.
           </p>
@@ -387,6 +388,7 @@ const credentialLifecycle = [
     heading="The detailed threat model, the hardening checklist, and the audit schema live in the docs."
     primaryLabel="Read the security docs"
     primaryHref={securityDocsHref}
+    emphasis="docs"
   />
   <SiteFooter />
 </Base>
