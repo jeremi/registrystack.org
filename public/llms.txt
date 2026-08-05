@@ -1,6 +1,6 @@
 # Registry Stack
 
-> Registry Stack is open-source infrastructure that helps government registries return signed minimum-disclosure answers or protected, selected data while source records stay with the authority that holds them. Evidence Gateway and Protected Registry APIs are the two product paths; Evidence and Registry Relay are their independent runtimes. Registry Mint and Registry Manifest provide supporting token and metadata capabilities. Aubex Consulting LLC, the team behind OpenSPP, provides pilot delivery and commercial support.
+> Registry Stack is open-source infrastructure that helps government registries return signed minimum-disclosure answers or protected, selected data while source records stay with the authority that holds them. Evidence Gateway and Protected Registry APIs are the two product paths; Evidence and Registry Relay are their independent runtimes. Registry Mint and Registry Manifest provide supporting token and metadata capabilities. Aubex Consulting LLC provides pilot delivery and commercial support.
 
 ## Pages
 
