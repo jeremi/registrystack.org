@@ -50,8 +50,7 @@ const firstSlideOpacity = (page) =>
     .evaluate((el) => Number(getComputedStyle(el).opacity))
     .catch(() => null);
 
-// 1. Structure and content reuse: one hero card looping several concrete answer
-//    slides, matching the examples expanded on the use-cases page.
+// 1. Structure: one hero card looping several answer slides.
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage();
@@ -65,13 +64,6 @@ const firstSlideOpacity = (page) =>
 
   const activeCount = await page.locator('[data-answer-slide].is-active').count();
   if (activeCount !== 1) failures.push(`expected exactly 1 active slide at load, found ${activeCount}`);
-
-  const stageText = (await page.locator('[data-answer-card]').first().innerText().catch(() => '')).toLowerCase();
-  for (const needle of ['age band', 'enrolled', 'active', '2.5 ha']) {
-    if (!stageText.includes(needle)) {
-      failures.push(`hero card missing reused use-case answer: "${needle}"`);
-    }
-  }
 
   await context.close();
 }

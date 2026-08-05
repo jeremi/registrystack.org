@@ -47,13 +47,13 @@ const viewports = [
 
 const routes = [
   { name: 'home', path: '/' },
-  { name: 'notary', path: '/notary/' },
-  { name: 'relay', path: '/relay/' },
-  { name: 'manifest', path: '/manifest/' },
-  { name: 'pricing', path: '/pricing/' },
-  { name: 'problem', path: '/problem/' },
   { name: 'evidence-gateway', path: '/solutions/evidence-gateway/' },
-  { name: 'protected-registry-apis', path: '/solutions/protected-registry-apis/' },
+  { name: 'protected-registry-access', path: '/solutions/protected-registry-apis/' },
+  { name: 'use-cases', path: '/use-cases/' },
+  { name: 'how-it-fits', path: '/how-it-fits/' },
+  { name: 'security', path: '/security/' },
+  { name: 'pilot', path: '/pilot/' },
+  { name: 'faq', path: '/faq/' },
 ];
 
 const failures = [];
@@ -69,7 +69,7 @@ for (const viewport of viewports) {
   const metrics = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     clientWidth: document.documentElement.clientWidth,
-    // Links inside a closed <details> disclosure (the Products menu) are
+    // Links inside the closed Solutions disclosure are
     // intentionally hidden, not clipped.
     clippedButtons: [...document.querySelectorAll('a, button')].filter((element) => {
       if (element.closest('details:not([open])')) return false;
@@ -100,31 +100,21 @@ for (const viewport of viewports) {
     failures.push(`${label}: text extends outside viewport`);
   }
 
-  // Each nav disclosure must present its expected links at tappable size once
-  // opened, on every checked route and viewport. Solutions intentionally has
-  // two entries; Products has three; In practice gathers the supporting reading.
+  // The Solutions disclosure must present both solution routes at tappable
+  // size once opened, on every checked route and viewport.
   {
     const menus = await page.evaluate(() =>
       [...document.querySelectorAll('.nav-group')].map((details) => {
         details.setAttribute('open', '');
-        const label = details.querySelector('summary')?.textContent?.trim() ?? '';
         const links = [...details.querySelectorAll('a')].map((link) => {
           const rect = link.getBoundingClientRect();
           return { width: rect.width, height: rect.height };
         });
         details.removeAttribute('open');
-        return { label, links };
+        return { links };
       }),
     );
-    const expectedMenuSizes = new Map([
-      ['Solutions', 2],
-      ['Products', 3],
-      ['In practice', 5],
-    ]);
-    const missing = [...expectedMenuSizes].filter(
-      ([menuLabel, expected]) => !menus.some((menu) => menu.label === menuLabel && menu.links.length === expected),
-    );
-    if (missing.length > 0) {
+    if (menus.length !== 1 || menus[0].links.length !== 2) {
       failures.push(`${label}: nav disclosure link counts do not match expected menus`);
     } else if (menus.flatMap((menu) => menu.links).some((rect) => rect.width < 36 || rect.height < 36)) {
       failures.push(`${label}: open nav menu links are below 36px`);

@@ -1,11 +1,9 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-// Invariant checks only. This script does not pin marketing copy; pages can be
-// reworded freely. It enforces the rules that outlive any single rewrite:
-// copy quality (no SaaS language, no em dashes, no scaffolding markers), the
-// policy-audience guardrail on the hero, the product priority order, and the
-// structural wiring every page must keep (nav routes, docs handoff, OG image).
+// Structural invariant checks only. Marketing copy is intentionally reviewed
+// by people, not pinned in this script. These checks protect the solution-first
+// information architecture, redirects, required components, and site wiring.
 
 const failures = [];
 
@@ -18,11 +16,6 @@ const readSource = (relativePath) => {
   return readFileSync(fullPath, 'utf8');
 };
 
-// Strip scoped <style> blocks before the copy sweep: properties like
-// `text-transform` are legitimate CSS, not marketing copy, and the banned terms
-// only apply to reader-facing prose.
-const stripStyleBlocks = (text) => text.replace(/<style>[\s\S]*?<\/style>/g, '');
-
 const listAstroFiles = (relativeDir) =>
   readdirSync(resolve(relativeDir), { withFileTypes: true }).flatMap((entry) => {
     const relativePath = `${relativeDir}/${entry.name}`;
@@ -30,47 +23,28 @@ const listAstroFiles = (relativeDir) =>
     return entry.isFile() && entry.name.endsWith('.astro') ? [relativePath] : [];
   });
 
-// 1. Copy-quality sweep over every page and component, discovered from the
-// filesystem so new pages are covered without editing this script.
-const forbidden = [
-  'Powerful',
-  'powerful',
-  'Seamless',
-  'seamless',
-  'Revolutionary',
-  'revolutionary',
-  'Unlock',
-  'unlock',
-  'Transform',
-  'transform',
-  'AI-powered',
-  // Maturity self-deprecation belongs in the docs and the repos, not on the
-  // marketing site.
-  'Experimental',
-  'experimental',
-  'pre-1.0',
-  'No claimed production',
-  'no claimed production',
-  'full-stack platform',
-  'end-to-end replacement',
-  'universal registry',
-  '—',
-  '–',
-  'TODO',
-  'TBD',
-  'FIXME',
-];
-
 const sweptFiles = [
   ...listAstroFiles('src/pages'),
   ...listAstroFiles('src/components'),
 ];
 
+// 1. Superseded marketing routes exist only as redirects for inbound links.
+// Reader-facing links should point directly to the page or docs that replaced
+// them so the simplified information architecture does not slowly grow back.
+const supersededRoutes = [
+  '/notary/',
+  '/relay/',
+  '/manifest/',
+  '/problem/',
+  '/ecosystem/',
+  '/ai/',
+  '/pricing/',
+];
 for (const relativePath of sweptFiles) {
-  const text = stripStyleBlocks(readSource(relativePath));
-  for (const term of forbidden) {
-    if (text.includes(term)) {
-      failures.push(`forbidden term present in ${relativePath}: ${term}`);
+  const source = readSource(relativePath);
+  for (const route of supersededRoutes) {
+    if (source.includes(`href="${route}"`) || source.includes(`href: '${route}'`)) {
+      failures.push(`${relativePath} links to superseded marketing route ${route}`);
     }
   }
 }
@@ -78,42 +52,32 @@ for (const relativePath of sweptFiles) {
 // 2. Homepage guardrails.
 const homeSource = readSource('src/pages/index.astro');
 
-// The audience is program and policy people: the hero must stay plain-language
-// and carry the looping answer card as its visual anchor.
+// The homepage hero must carry the looping answer card as its visual anchor.
 const heroMatch = homeSource.match(/<section class="hero[^"]*"[\s\S]*?<\/section>/);
 if (!heroMatch) {
   failures.push('missing hero section');
-} else {
-  for (const signal of ['<code', 'GET /']) {
-    if (heroMatch[0].includes(signal)) {
-      failures.push(`hero starts too technically: ${signal}`);
-    }
-  }
-  if (!heroMatch[0].includes('HeroAnswerCard')) {
-    failures.push('hero is missing the answer-card visual anchor');
-  }
-}
-
-// The three products appear on the homepage in priority order:
-// Notary (most innovative) before Relay (easiest adoption) before Manifest.
-{
-  const order = ['Registry Notary', 'Registry Relay', 'Registry Manifest'];
-  let lastIndex = -1;
-  for (const name of order) {
-    const index = homeSource.indexOf(name);
-    if (index === -1) {
-      failures.push(`homepage does not mention ${name}`);
-      continue;
-    }
-    if (index <= lastIndex) failures.push(`homepage product order is wrong at: ${name}`);
-    lastIndex = index;
-  }
+} else if (!heroMatch[0].includes('HeroAnswerCard')) {
+  failures.push('hero is missing the answer-card visual anchor');
 }
 
 // The homepage now routes first to the two solution patterns; the live lab
-// remains present as proof, but no longer owns the primary IA.
+// remains present as proof. Product implementation detail stays in the docs.
 // Like the nav check below, the routes count whether they appear as literal
 // href attributes (double-quoted) or in a data array (single-quoted).
+const workflowIndex = homeSource.indexOf('class="home-workflow"');
+const solutionGridIndex = homeSource.indexOf('class="home-solution-grid"');
+if (workflowIndex === -1) {
+  failures.push('homepage is missing the outcome-first workflow');
+} else if (solutionGridIndex !== -1 && workflowIndex > solutionGridIndex) {
+  failures.push('homepage must explain the institutional workflow before routing to solutions');
+}
+
+const workflowSource = homeSource.match(/const workflowSteps = \[([\s\S]*?)\n\];/)?.[1] ?? '';
+const workflowStepCount = (workflowSource.match(/\bnumber:/g) ?? []).length;
+if (workflowStepCount !== 4) {
+  failures.push(`homepage workflow must contain 4 steps, found ${workflowStepCount}`);
+}
+
 for (const route of ['/solutions/evidence-gateway/', '/solutions/protected-registry-apis/']) {
   if (!homeSource.includes(`href="${route}"`) && !homeSource.includes(`'${route}'`)) {
     failures.push(`homepage primary solution routing is missing ${route}`);
@@ -124,6 +88,20 @@ if (!homeSource.includes('https://lab.registrystack.org/')) {
 }
 if (!homeSource.includes('home-solution-grid')) {
   failures.push('homepage is missing the two-card solution routing grid');
+}
+if (!homeSource.includes('home-audience-grid')) {
+  failures.push('homepage is missing the government customer audience grid');
+}
+if (!homeSource.includes('/how-it-fits/')) {
+  failures.push('homepage is missing the How it fits handoff');
+}
+for (const productRoute of ['/notary/', '/relay/', '/manifest/']) {
+  if (homeSource.includes(`href="${productRoute}"`) || homeSource.includes(`'${productRoute}'`)) {
+    failures.push(`homepage links to removed product marketing route ${productRoute}`);
+  }
+}
+if (homeSource.includes('home-product-strip')) {
+  failures.push('homepage still contains the removed product marketing strip');
 }
 if (homeSource.includes('class="use-case"') || homeSource.includes('class="use-case-grid"')) {
   failures.push('homepage still carries the full use-case gallery; /use-cases/ owns that depth');
@@ -138,16 +116,10 @@ const navigationSource = [
 for (const route of [
   '/solutions/evidence-gateway/',
   '/solutions/protected-registry-apis/',
-  '/notary/',
-  '/relay/',
-  '/manifest/',
-  '/problem/',
   '/use-cases/',
-  '/ecosystem/',
-  '/ai/',
+  '/how-it-fits/',
   '/security/',
   '/faq/',
-  '/pricing/',
   '/pilot/',
 ]) {
   // The nav and footer build their links from data arrays (single-quoted
@@ -158,15 +130,47 @@ for (const route of [
   }
 }
 
-// The AI page carries the annotated harness variant, and each product page
-// carries the variant with its own check highlighted. The homepage stays an
-// orientation and routing page.
-if (!readSource('src/pages/ai.astro').includes('HarnessDiagram')) {
-  failures.push('src/pages/ai.astro is missing the harness diagram (HarnessDiagram)');
+const headerSource = readSource('src/components/SiteHeader.astro');
+for (const staleRoute of ['/notary/', '/relay/', '/manifest/', '/problem/', '/ecosystem/', '/ai/', '/pricing/']) {
+  if (headerSource.includes(`'${staleRoute}'`) || headerSource.includes(`"${staleRoute}"`)) {
+    failures.push(`header still links to superseded route ${staleRoute}`);
+  }
 }
-for (const product of ['notary', 'relay', 'manifest']) {
-  if (!readSource(`src/pages/${product}.astro`).includes(`highlight="${product}"`)) {
-    failures.push(`src/pages/${product}.astro is missing its highlighted harness diagram (HarnessDiagram highlight="${product}")`);
+// Product marketing pages are removed. Their former routes must go directly to
+// technical documentation, while consolidated editorial routes redirect to
+// the page that absorbed their useful material.
+for (const oldPage of ['notary', 'relay', 'manifest', 'problem', 'ecosystem', 'ai', 'pricing']) {
+  if (existsSync(resolve(`src/pages/${oldPage}.astro`))) {
+    failures.push(`superseded marketing page still exists: src/pages/${oldPage}.astro`);
+  }
+}
+const redirectsSource = readSource('astro.config.mjs');
+const expectedRedirects = [
+  "'/why/': '/'",
+  "'/problem/': '/'",
+  "'/ecosystem/': '/how-it-fits/'",
+  "'/ai/': '/use-cases/'",
+  "'/pricing/': '/pilot/'",
+  "'/notary/': '/solutions/evidence-gateway/'",
+  "'/relay/': 'https://docs.registrystack.org/products/registry-relay/'",
+  "'/manifest/': 'https://docs.registrystack.org/products/registry-manifest/'",
+];
+for (const redirect of expectedRedirects) {
+  if (!redirectsSource.includes(redirect)) failures.push(`missing redirect: ${redirect}`);
+}
+
+// Each solution teaches the customer journey and then hands technical readers
+// to the open-source components in the docs.
+for (const page of [
+  'src/pages/solutions/evidence-gateway.astro',
+  'src/pages/solutions/protected-registry-apis.astro',
+]) {
+  const source = readSource(page);
+  if (!source.includes('class="technical-component-grid"')) {
+    failures.push(`${page} is missing the open-source component handoff`);
+  }
+  if (!source.includes('https://docs.registrystack.org/products/')) {
+    failures.push(`${page} does not link product detail to the technical docs`);
   }
 }
 

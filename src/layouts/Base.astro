@@ -9,9 +9,9 @@ interface Props {
 }
 
 const {
-  title = 'Registry Stack | Governed registry services and trusted evidence',
+  title = 'Registry Stack | Answer the question. Keep the records.',
   description =
-    'Registry Stack helps public institutions expose protected registry services, return only the evidence a service needs, and audit trust-critical access.',
+    'Registry Stack helps government registries return signed minimum-disclosure answers or protected, selected data while source records stay with the authority that holds them.',
   noindex = false,
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, 'https://registrystack.org').toString();
@@ -67,7 +67,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Registry Stack: prove facts from registries without sharing the records." />
+    <meta property="og:image:alt" content="Registry Stack: Answer the question. Keep the records." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />

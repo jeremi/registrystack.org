@@ -1,98 +1,125 @@
 ---
-const sources = ['CSV', 'XLSX', 'Parquet', 'PostgreSQL'];
-const controls = ['sign-in', 'scopes', 'metadata', 'field limits', 'audit'];
-const outputs = ['entity reads', 'metadata routes', 'allowed counts', 'what is on offer'];
+const steps = [
+  {
+    title: 'Connect the existing source',
+    body:
+      'The registry owner connects the file, table, or system it already maintains. Updates continue there.',
+  },
+  {
+    title: 'Describe the useful data',
+    body:
+      'The owner names useful records and fields in terms public and partner services understand.',
+  },
+  {
+    title: 'Agree who can read which fields',
+    body:
+      'Each service, purpose, and set of agreed fields is made explicit before any read is allowed.',
+  },
+  {
+    title: 'Return selected data and record the read',
+    body:
+      'The service receives the permitted fields. Fields outside the agreement are not returned. The request is recorded.',
+  },
+];
+
+const sourceFields = [
+  { name: 'Household reference', state: 'moves' },
+  { name: 'District', state: 'moves' },
+  { name: 'Enrolment status', state: 'moves' },
+  { name: 'Home address', state: 'stops' },
+  { name: 'Payment details', state: 'stops' },
+];
 ---
 
-<figure class="registry-api-flow" aria-labelledby="registry-api-flow-title">
-  <div class="registry-api-source">
-    <p class="registry-api-label">Existing sources</p>
-    <h3 id="registry-api-flow-title">The registry stays where it is.</h3>
-    <div class="registry-api-chip-list" aria-label="Supported source examples">
-      {sources.map((source) => (
-        <span>{source}</span>
-      ))}
+<figure class="registry-flow" aria-labelledby="registry-flow-title">
+  <div class="flow-intro">
+    <p class="flow-kicker">How selected data is provided</p>
+    <h3 id="registry-flow-title">The registry owner controls which fields each service can receive.</h3>
+  </div>
+
+  <ol class="flow-steps">
+    {steps.map((step, index) => (
+      <li>
+        <span class="step-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+        <div>
+          <h4>{step.title}</h4>
+          <p>{step.body}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+
+  <div class="field-journey" aria-label="Example showing selected and disallowed registry fields">
+    <section class="source-panel" aria-labelledby="source-panel-title">
+      <p class="panel-label">Registry owner</p>
+      <h4 id="source-panel-title">Source record stays with the authority</h4>
+      <ul>
+        {sourceFields.map((field) => (
+          <li class={field.state === 'moves' ? 'field-moves' : 'field-stops'}>
+            <span>{field.name}</span>
+            <small>{field.state === 'moves' ? 'agreed field' : 'not returned'}</small>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <div class="boundary-panel" aria-label="Registry boundary">
+      <p class="panel-label">Field permissions</p>
+      <div class="boundary-gate">
+        <span>Permitted fields</span>
+        <strong aria-hidden="true">&rarr;</strong>
+      </div>
+      <div class="boundary-stop">
+        <span aria-hidden="true">×</span>
+        Other fields are not returned
+      </div>
     </div>
-  </div>
 
-  <div class="registry-api-relay">
-    <p class="registry-api-label">Registry Relay</p>
-    <strong>Protected read-only surface</strong>
-    <ul>
-      {controls.map((control) => (
-        <li>{control}</li>
-      ))}
-    </ul>
-  </div>
+    <section class="service-panel" aria-labelledby="service-panel-title">
+      <p class="panel-label">Public or partner service</p>
+      <h4 id="service-panel-title">Selected data returned</h4>
+      <ul>
+        <li>Household reference</li>
+        <li>District</li>
+        <li>Enrolment status</li>
+      </ul>
+      <p class="service-note">No source login and no copy of the full record.</p>
+    </section>
 
-  <div class="registry-api-output">
-    <p class="registry-api-label">Approved services</p>
-    <h3>Services call routes for real things, not database tables.</h3>
-    <div class="registry-api-chip-list" aria-label="Protected API outputs">
-      {outputs.map((output) => (
-        <span>{output}</span>
-      ))}
+    <div class="audit-slip">
+      <span class="audit-mark" aria-hidden="true">✓</span>
+      <p>
+        <strong>Audit record</strong>
+        Which service read which fields, for which purpose, what happened, and when.
+      </p>
     </div>
   </div>
 
   <figcaption>
-    Protected Registry APIs put a governed doorway in front of existing sources, with read-only
-    access, limits on every route, and a record of every read.
+    The service receives the fields permitted for this request. The full source record and all
+    other fields remain with the registry owner.
   </figcaption>
 </figure>
 
 <style>
-  .registry-api-flow {
-    align-items: stretch;
-    display: grid;
-    gap: 14px;
-    grid-template-columns: minmax(0, 0.95fr) minmax(220px, 0.75fr) minmax(0, 0.95fr);
+  .registry-flow {
     margin: 0 auto;
     max-width: var(--registry-max);
   }
 
-  .registry-api-source,
-  .registry-api-output,
-  .registry-api-relay {
-    background: #ffffff;
-    border: 1px solid var(--registry-rule);
-    min-width: 0;
-    padding: 22px;
+  .flow-intro {
+    margin: 0 auto 24px;
+    max-width: 780px;
+    text-align: center;
   }
 
-  .registry-api-source,
-  .registry-api-output {
-    display: grid;
-    gap: 16px;
+  .flow-intro h3 {
+    font-size: clamp(25px, 3vw, 38px);
+    margin: 6px 0 0;
   }
 
-  .registry-api-relay {
-    border-color: var(--registry-blue);
-    box-shadow: 4px 4px 0 rgba(23, 59, 122, 0.12);
-    display: grid;
-    gap: 14px;
-    position: relative;
-  }
-
-  .registry-api-relay::before,
-  .registry-api-relay::after {
-    background: var(--registry-ink);
-    content: '';
-    height: 2px;
-    position: absolute;
-    top: 50%;
-    width: 14px;
-  }
-
-  .registry-api-relay::before {
-    left: -14px;
-  }
-
-  .registry-api-relay::after {
-    right: -14px;
-  }
-
-  .registry-api-label {
+  .flow-kicker,
+  .panel-label {
     color: var(--registry-blue);
     font-family: var(--registry-mono);
     font-size: 11px;
@@ -101,69 +128,282 @@ const outputs = ['entity reads', 'metadata routes', 'allowed counts', 'what is o
     text-transform: uppercase;
   }
 
-  .registry-api-flow h3 {
-    font-size: clamp(23px, 2.7vw, 34px);
-    line-height: 1.1;
-    margin: 0;
-  }
-
-  .registry-api-relay strong {
-    color: var(--registry-ink);
-    font-size: 20px;
-    line-height: 1.25;
-  }
-
-  .registry-api-relay ul {
+  .flow-steps {
     display: grid;
-    gap: 8px;
+    gap: 14px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
-  .registry-api-relay li {
-    border-top: 1px solid var(--registry-rule);
+  .flow-steps li {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    display: grid;
+    gap: 14px;
+    grid-template-rows: auto 1fr;
+    min-width: 0;
+    padding: 20px;
+    position: relative;
+  }
+
+  .flow-steps li:not(:last-child)::after {
+    background: var(--registry-ink);
+    content: '';
+    height: 2px;
+    position: absolute;
+    right: -14px;
+    top: 34px;
+    width: 14px;
+    z-index: 1;
+  }
+
+  .step-number {
+    color: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .flow-steps h4 {
+    color: var(--registry-ink);
+    font-size: 20px;
+    line-height: 1.22;
+    margin: 0 0 9px;
+  }
+
+  .flow-steps p {
     color: var(--registry-body);
-    font-size: 14px;
-    padding-top: 8px;
+    font-size: 14.5px;
+    line-height: 1.5;
+    margin: 0;
   }
 
-  .registry-api-chip-list {
-    align-content: start;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .registry-api-chip-list span {
+  .field-journey {
+    align-items: stretch;
     background: var(--registry-paper);
     border: 1px solid var(--registry-rule);
-    color: var(--registry-ink);
-    font-family: var(--registry-mono);
-    font-size: 11px;
-    padding: 6px 8px;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: minmax(0, 1fr) minmax(150px, 0.48fr) minmax(0, 0.85fr);
+    margin-top: 18px;
+    padding: clamp(18px, 3vw, 28px);
+    position: relative;
   }
 
-  .registry-api-flow figcaption {
+  .field-journey::before {
+    background: var(--registry-ink);
+    content: '';
+    height: 18px;
+    left: 50%;
+    position: absolute;
+    top: -19px;
+    width: 2px;
+  }
+
+  .source-panel,
+  .service-panel {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    display: grid;
+    gap: 13px;
+    min-width: 0;
+    padding: 20px;
+  }
+
+  .source-panel h4,
+  .service-panel h4 {
+    font-size: 20px;
+    line-height: 1.25;
+    margin: 0;
+  }
+
+  .source-panel ul,
+  .service-panel ul {
+    display: grid;
+    gap: 7px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .source-panel li,
+  .service-panel li {
+    align-items: center;
+    border: 1px solid var(--registry-rule);
+    display: flex;
+    font-size: 14px;
+    gap: 8px;
+    justify-content: space-between;
+    padding: 8px 9px;
+  }
+
+  .source-panel small {
+    flex: 0 0 auto;
+    font-family: var(--registry-mono);
+    font-size: 9.5px;
+    text-transform: uppercase;
+  }
+
+  .field-moves {
+    border-left: 4px solid var(--registry-blue) !important;
+  }
+
+  .field-moves small {
+    color: var(--registry-blue);
+  }
+
+  .field-stops {
+    border-left: 4px solid var(--registry-stamp) !important;
+    color: var(--registry-muted);
+  }
+
+  .field-stops small {
+    color: var(--registry-stamp);
+  }
+
+  .boundary-panel {
+    align-content: center;
+    display: grid;
+    gap: 16px;
+  }
+
+  .boundary-gate,
+  .boundary-stop {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    padding: 12px;
+  }
+
+  .boundary-gate {
+    align-items: center;
+    border-color: var(--registry-blue);
+    color: var(--registry-blue);
+    display: flex;
+    font-size: 13px;
+    font-weight: 800;
+    justify-content: space-between;
+  }
+
+  .boundary-gate strong {
+    font-size: 22px;
+  }
+
+  .boundary-stop {
+    color: var(--registry-body);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .boundary-stop span {
+    color: var(--registry-stamp);
+    font-size: 19px;
+    font-weight: 800;
+    margin-right: 4px;
+  }
+
+  .service-panel ul {
+    border-left: 4px solid var(--registry-blue);
+  }
+
+  .service-note {
+    color: var(--registry-muted);
+    font-size: 13px;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .audit-slip {
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    display: flex;
+    gap: 12px;
+    grid-column: 1 / -1;
+    padding: 13px 16px;
+  }
+
+  .audit-slip p {
+    color: var(--registry-body);
+    margin: 0;
+  }
+
+  .audit-slip strong {
+    color: var(--registry-ink);
+    display: block;
+    font-size: 14px;
+  }
+
+  .audit-mark {
+    align-items: center;
+    background: var(--registry-blue);
+    color: #ffffff;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-weight: 800;
+    height: 30px;
+    justify-content: center;
+    width: 30px;
+  }
+
+  .registry-flow figcaption {
     color: var(--registry-muted);
     font-size: 14px;
-    grid-column: 1 / -1;
-    margin: 0;
+    margin-top: 13px;
     text-align: center;
   }
 
   @media (max-width: 900px) {
-    .registry-api-flow {
-      grid-template-columns: 1fr;
+    .flow-steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .registry-api-relay::before,
-    .registry-api-relay::after {
+    .flow-steps li::after {
       display: none;
     }
 
-    .registry-api-flow figcaption {
+    .field-journey {
+      grid-template-columns: minmax(0, 1fr) minmax(140px, 0.45fr) minmax(0, 0.9fr);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .flow-intro,
+    .registry-flow figcaption {
       text-align: left;
+    }
+
+    .flow-steps,
+    .field-journey {
+      grid-template-columns: 1fr;
+    }
+
+    .field-journey::before {
+      left: 30px;
+    }
+
+    .boundary-panel {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .boundary-panel .panel-label {
+      grid-column: 1 / -1;
+    }
+
+    .audit-slip {
+      align-items: flex-start;
+      grid-column: auto;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .boundary-panel {
+      grid-template-columns: 1fr;
+    }
+
+    .boundary-panel .panel-label {
+      grid-column: auto;
     }
   }
 </style>

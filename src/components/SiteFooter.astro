@@ -1,7 +1,6 @@
 ---
-// Shared footer for every marketing page, including the homepage. The links are
-// grouped into columns that mirror the site's information architecture, so the
-// footer reads as a site map rather than one undifferentiated list.
+// Shared footer for every marketing page. Product names remain visible here as
+// an open-source implementation handoff, rather than as marketing destinations.
 const year = new Date().getFullYear();
 const repoHref = 'https://github.com/registrystack/registry-stack';
 
@@ -11,35 +10,32 @@ const columns = [
     links: [
       { href: '/solutions/evidence-gateway/', label: 'Evidence Gateway' },
       { href: '/solutions/protected-registry-apis/', label: 'Protected Registry APIs' },
-    ],
-  },
-  {
-    title: 'Products',
-    links: [
-      { href: '/notary/', label: 'Registry Notary' },
-      { href: '/relay/', label: 'Registry Relay' },
-      { href: '/manifest/', label: 'Registry Manifest' },
-    ],
-  },
-  {
-    title: 'Learn',
-    links: [
-      { href: '/problem/', label: 'The problem' },
       { href: '/use-cases/', label: 'Use cases' },
-      { href: '/ecosystem/', label: 'Ecosystem' },
-      { href: '/ai/', label: 'AI in public services' },
+    ],
+  },
+  {
+    title: 'How it works',
+    links: [
+      { href: '/how-it-fits/', label: 'How it fits' },
       { href: '/security/', label: 'Security' },
       { href: '/faq/', label: 'FAQ' },
     ],
   },
   {
+    title: 'Open-source components',
+    links: [
+      { href: 'https://docs.registrystack.org/', label: 'Evidence' },
+      { href: 'https://docs.registrystack.org/products/registry-relay/', label: 'Registry Relay' },
+      { href: 'https://docs.registrystack.org/products/registry-manifest/', label: 'Registry Manifest' },
+      { href: repoHref, label: 'GitHub repository' },
+    ],
+  },
+  {
     title: 'Get started',
     links: [
-      { href: '/pricing/', label: 'Pricing' },
-      { href: '/pilot/', label: 'Start a pilot' },
+      { href: '/pilot/', label: 'Pilot and support' },
       { href: 'https://docs.registrystack.org/', label: 'Documentation' },
       { href: 'https://lab.registrystack.org/', label: 'Live demo' },
-      { href: repoHref, label: 'GitHub repository' },
     ],
   },
 ];
@@ -50,9 +46,10 @@ const columns = [
     <div class="footer-brand">
       <a class="footer-brand-name" href="/">Registry Stack</a>
       <p>
-        Open-source products that let registry authorities answer questions, issue proofs, and
-        keep their records. Built and commercially supported by Aubex, the team behind OpenSPP.
+        Open-source infrastructure that helps registry owners return signed answers or protected,
+        selected data while source records stay with the registry owner.
       </p>
+      <p>Built and commercially supported by Aubex, the team behind OpenSPP.</p>
       <p><a href="mailto:contact@registrystack.org">contact@registrystack.org</a></p>
     </div>
     <nav class="footer-nav" aria-label="Footer">

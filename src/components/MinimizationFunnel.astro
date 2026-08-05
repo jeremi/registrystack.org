@@ -31,7 +31,7 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
 <figure class="funnel" data-funnel>
   <div class="funnel-panel">
     <div class="funnel-head">
-      <span class="funnel-head-label">One registry record, many minimal answers</span>
+      <span class="funnel-head-label">One registry record can support different services</span>
       <button type="button" class="funnel-replay" data-funnel-replay aria-label="Replay the animation">
         Replay
       </button>
@@ -51,10 +51,7 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
 
       <div class="funnel-gate">
         <div class="funnel-gate-shape funnel-anim">
-          <svg class="funnel-gate-svg" viewBox="0 0 120 100" focusable="false" aria-hidden="true">
-            <polygon points="2,2 118,30 118,70 2,98"></polygon>
-          </svg>
-          <span class="funnel-gate-mark">policy</span>
+          <span class="funnel-gate-mark">agreed rules</span>
         </div>
         <span class="funnel-gate-note funnel-anim">checked per request</span>
       </div>
@@ -62,7 +59,7 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
       <span class="funnel-arrow funnel-anim">&rarr;</span>
 
       <div class="funnel-zone funnel-claims">
-        <span class="funnel-zone-label">Evidence out, per request</span>
+        <span class="funnel-zone-label">Response for each request</span>
         {claims.map((claim) => (
           <div class:list={['funnel-claim', 'funnel-anim', `funnel-claim-${claim.kind}`]} data-source={claim.reads}>
             <span class="funnel-claim-req">{claim.requester} · {claim.asks}</span>
@@ -77,7 +74,7 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
             <span class="funnel-claim-derived">
               {claim.kind === 'denied'
                 ? 'purpose not allowed'
-                : `reads: ${fieldLabels[claim.reads]}`}
+                : `uses: ${fieldLabels[claim.reads]}`}
             </span>
           </div>
         ))}
@@ -86,21 +83,21 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
 
     <div class="funnel-footer">
       <div class="funnel-stays funnel-anim" aria-hidden="true">
-        <span class="funnel-stays-label">Stays with the data owner</span>
+        <span class="funnel-stays-label">Stays with the registry owner</span>
         <ul class="funnel-stays-fields">
           {sourceFields.map((field) => <li>{field.label}</li>)}
         </ul>
       </div>
       <p class="funnel-audit funnel-anim" aria-hidden="true">
-        Logged: who asked, and why. Never the record.
+        The audit record shows who asked, why, and what happened. The source record stays with the registry owner.
       </p>
     </div>
   </div>
 
   <figcaption class="funnel-caption">
     The same source record answers different questions for different services. Each
-    request returns only the evidence a service needs; the rest stays with the data
-    owner, and every request is logged.
+    request returns the agreed answer; the rest of the record stays with the registry
+    owner, and every request is recorded.
   </figcaption>
 </figure>
 
@@ -234,27 +231,22 @@ const fieldLabels = Object.fromEntries(sourceFields.map((field) => [field.id, fi
   }
 
   .funnel-gate-shape {
+    align-items: center;
+    background: var(--registry-active);
+    border: 1.5px solid var(--registry-blue);
+    clip-path: polygon(0 0, 100% 28%, 100% 72%, 0 100%);
+    display: flex;
+    height: 100px;
+    justify-content: center;
     position: relative;
     width: 116px;
-  }
-
-  .funnel-gate-svg {
-    display: block;
-    height: auto;
-    width: 100%;
-  }
-
-  .funnel-gate-svg polygon {
-    fill: var(--registry-active);
-    stroke: var(--registry-blue);
-    stroke-width: 1.5;
   }
 
   .funnel-gate-mark {
     color: var(--registry-blue);
     font-family: var(--registry-mono);
-    font-size: 11px;
-    left: 38%;
+    font-size: 10px;
+    left: 44%;
     letter-spacing: 0.05em;
     position: absolute;
     text-transform: uppercase;

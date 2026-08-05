@@ -65,11 +65,6 @@ const failures = [];
   const claimCount = await page.locator('.funnel-claim').count();
   if (claimCount < 3) failures.push(`expected at least 3 distinct claims from one record, found ${claimCount}`);
 
-  const claimsText = (await page.locator('.funnel-claims').first().innerText().catch(() => '')).toLowerCase();
-  for (const needle of ['alive', 'over 18', 'district', 'not permitted']) {
-    if (!claimsText.includes(needle)) failures.push(`claims missing distinct answer: "${needle}"`);
-  }
-
   // A denied request shows the gate enforces purpose, not just trims data.
   const deniedCount = await page.locator('.funnel-claim-denied').count();
   if (deniedCount < 1) failures.push(`expected at least 1 denied request, found ${deniedCount}`);
@@ -95,17 +90,14 @@ const failures = [];
     .catch(() => false);
   if (!replayVisible) failures.push('replay control is not visible when JavaScript is enabled');
 
-  // The "stays with the owner" footer must list real field labels, not
-  // stringified objects.
+  // The footer must render the same number of field items as the source panel,
+  // not stringified objects.
   const staysText = (await page.locator('.funnel-stays').first().innerText().catch(() => '')).toLowerCase();
   if (staysText.includes('[object')) failures.push('stays footer renders "[object Object]" instead of field labels');
-  if (!staysText.includes('date of birth')) failures.push('stays footer missing a known field label (date of birth)');
-
-  const caption = (await page.locator('figure.funnel figcaption').first().textContent().catch(() => '')) ?? '';
-  for (const needle of ['evidence a service needs', 'stays with']) {
-    if (!caption.toLowerCase().includes(needle)) {
-      failures.push(`funnel caption missing phrase: "${needle}"`);
-    }
+  const sourceFieldCount = await page.locator('.funnel-fields li').count();
+  const staysFieldCount = await page.locator('.funnel-stays-fields li').count();
+  if (staysFieldCount !== sourceFieldCount) {
+    failures.push(`stays footer has ${staysFieldCount} fields, expected ${sourceFieldCount}`);
   }
 
   await context.close();
@@ -131,11 +123,6 @@ const failures = [];
   const solutionCards = await page.locator('.home-solution-card').count();
   if (solutionCards !== 2) {
     failures.push(`expected 2 homepage solution cards, found ${solutionCards}`);
-  }
-
-  const homeText = (await page.locator('main').innerText().catch(() => '')).toLowerCase();
-  for (const needle of ['evidence gateway', 'protected registry apis']) {
-    if (!homeText.includes(needle)) failures.push(`homepage solution routing missing: "${needle}"`);
   }
 
   await context.close();

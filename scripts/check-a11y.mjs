@@ -41,13 +41,13 @@ const failures = [];
 
 const paths = [
   '/',
-  '/notary/',
-  '/relay/',
-  '/manifest/',
-  '/pricing/',
-  '/problem/',
   '/solutions/evidence-gateway/',
   '/solutions/protected-registry-apis/',
+  '/use-cases/',
+  '/how-it-fits/',
+  '/security/',
+  '/pilot/',
+  '/faq/',
 ];
 for (const path of paths) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });

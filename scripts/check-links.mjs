@@ -79,9 +79,8 @@ const requiredExternal = [
   "https://lab.registrystack.org/",
   "https://github.com/registrystack/registry-stack",
   "https://github.com/registrystack/registry-stack/security/advisories/new",
-  "https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay",
-  "https://github.com/registrystack/registry-stack/tree/main/products/notary",
-  "https://github.com/registrystack/registry-stack/tree/main/products/manifest",
+  "https://docs.registrystack.org/products/registry-relay/",
+  "https://docs.registrystack.org/products/registry-manifest/",
 ];
 
 for (const href of requiredExternal) {

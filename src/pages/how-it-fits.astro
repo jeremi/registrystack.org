@@ -1,0 +1,260 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocsHandoff from '../components/DocsHandoff.astro';
+
+const pageTitle = 'How Registry Stack fits | Registry Stack';
+const pageDescription =
+  'Registry Stack is deployed next to the source registry and before any exchange layer. See how it relates to identity systems, catalogs, and evidence exchange.';
+
+const relationships = [
+  {
+    system: 'Existing registry software',
+    examples: 'OpenCRVS, OpenSPP, DHIS2, and custom systems',
+    label: 'Works alongside',
+    body:
+      'The existing system keeps its records, write workflows, and user interface. Registry Stack adds a read-only interface for agreed questions or fields. The hosted lab demonstrates connections to OpenCRVS and DHIS2, but that is not a promise of automatic integration with every version or deployment.',
+  },
+  {
+    system: 'Spreadsheets and databases',
+    examples: 'CSV, XLSX, and selected PostgreSQL tables',
+    label: 'Connects to supported sources',
+    body:
+      'Registry Relay can place a protected, read-only API over these sources. The registry owner still maintains the source and decides which fields a public or partner service may read.',
+  },
+  {
+    system: 'Exchange and integration layers',
+    examples: 'X-Road, WSO2, and OpenFn',
+    label: 'Connects after Registry Stack',
+    body:
+      'Registry Stack is deployed next to the source registry, before any exchange layer. It applies the registry owner’s rules first. An exchange layer can then transport requests and responses between institutions. Registry Stack does not replace that layer, and no X-Road, WSO2, or OpenFn integration is shipped today.',
+  },
+  {
+    system: 'Identity and access systems',
+    examples: 'MOSIP eSignet and other identity providers',
+    label: 'Relies on an identity provider',
+    body:
+      'Identity systems establish who a person or service is. Registry Stack uses that identity when checking a request; it does not enroll people, issue national identifiers, or replace identity and access management. An eSignet-backed flow is demonstrated in the lab.',
+  },
+  {
+    system: 'Signed assertion formats',
+    examples: 'Signed JWS and SD-JWT VC',
+    label: 'Returns one assertion in two encodings',
+    body:
+      'Evidence Gateway returns a stateless signed assertion. Signed JWS is the default; SD-JWT VC is an optional serialization of the same assertion. It does not add a credential lifecycle, wallet flow, or presentation service.',
+  },
+  {
+    system: 'Catalogs and standards',
+    examples: 'DCAT, BRegDCAT-AP, CPSV-AP, JSON Schema, and OpenAPI',
+    label: 'Publishes supported formats',
+    body:
+      'Registry Manifest and Registry Relay can publish machine-readable descriptions in these formats. Support and conformance evidence differ by standard, so Registry Stack does not make one blanket statement of standards conformance.',
+  },
+  {
+    system: 'Once-only evidence exchange',
+    examples: 'Discover evidence, request it from an authority, return it to a service',
+    label: 'Follows the same broad evidence journey',
+    body:
+      'Registry Stack describes available evidence and handles defined requests between authorities and services. An EU OOTS deployment would add its network, eDelivery, AS4 transport, and conformance requirements through the surrounding integration layer.',
+  },
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="how-it-fits" />
+
+  <main>
+    <section class="hero" aria-labelledby="fit-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">How it fits</p>
+          <h1 id="fit-hero-title">Registry Stack works with the systems a government already operates.</h1>
+          <p class="hero-lead">
+            Registry Stack is not a replacement for registry software, exchange networks,
+            identity systems, or catalogs. It runs next to the registry and applies the registry
+            owner&rsquo;s rules when another service requests an answer or selected data.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="relationships-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Existing systems and standards</p>
+          <h2 id="relationships-title">What Registry Stack adds to each part of the environment.</h2>
+          <p>
+            Some connections are implemented and demonstrated today. Others describe where
+            Registry Stack can sit but still require integration work. Each entry states the
+            current level of support.
+          </p>
+        </div>
+        <div class="relationship-list">
+          {relationships.map((item) => (
+            <article class="relationship-row">
+              <div>
+                <p class="relationship-label">{item.label}</p>
+                <h3>{item.system}</h3>
+                <p class="relationship-examples">{item.examples}</p>
+              </div>
+              <p class="relationship-body">{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="ownership-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">A direct service request</p>
+          <h2 id="ownership-title">Registry Stack sits between the source registry and any exchange layer.</h2>
+          <p>
+            The components below are ordered from the source registry outward. A request travels
+            inward in the opposite direction, and the response returns through the same
+            components.
+          </p>
+        </div>
+        <ol class="ownership-flow">
+          <li>
+            <span class="flow-number">01</span>
+            <h3>The existing registry</h3>
+            <p>Stores the source records. The registry owner remains responsible for updates and corrections.</p>
+          </li>
+          <li>
+            <span class="flow-number">02</span>
+            <h3>Registry Stack</h3>
+            <p>Runs next to the registry, checks each request, reads the source, returns the agreed answer or fields, and records the event.</p>
+          </li>
+          <li>
+            <span class="flow-number">03</span>
+            <h3>The exchange layer, if used</h3>
+            <p>Transports requests and responses between institutions after Registry Stack has applied the registry owner&rsquo;s rules.</p>
+          </li>
+          <li>
+            <span class="flow-number">04</span>
+            <h3>The public or partner service</h3>
+            <p>Sends the permitted request and uses the answer or selected fields it receives.</p>
+          </li>
+        </ol>
+        <p class="product-path-note">
+          Evidence Gateway returns one signed fact. Registry Relay returns protected, selected
+          data. Evidence Gateway may use a Relay-protected API as one fixed source, but each
+          product keeps its own authorization and configuration boundary.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <DocsHandoff
+    eyebrow="Technical details"
+    heading="Review the supported integrations and standards before planning a deployment."
+    primaryLabel="Read the docs"
+    emphasis="docs"
+  />
+  <SiteFooter />
+</Base>
+
+<style>
+  .relationship-list {
+    border-bottom: 1px solid var(--registry-rule);
+  }
+
+  .relationship-row {
+    border-top: 1px solid var(--registry-rule);
+    display: grid;
+    gap: clamp(20px, 4vw, 56px);
+    grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.4fr);
+    padding: 24px 0;
+  }
+
+  .relationship-row h3,
+  .relationship-row p {
+    margin-bottom: 0;
+  }
+
+  .relationship-label {
+    color: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+  }
+
+  .relationship-examples {
+    color: var(--registry-blue);
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .relationship-body {
+    color: var(--registry-body);
+  }
+
+  .ownership-flow {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ownership-flow li {
+    background: #ffffff;
+    border-top: 2px solid var(--registry-ink);
+    padding: 18px;
+    position: relative;
+  }
+
+  .ownership-flow h3 {
+    margin: 12px 0 8px;
+  }
+
+  .ownership-flow p {
+    color: var(--registry-body);
+    margin: 0;
+  }
+
+  .flow-number {
+    color: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  .product-path-note {
+    border-left: 3px solid var(--registry-blue);
+    color: var(--registry-body);
+    margin: 28px 0 0;
+    padding: 4px 0 4px 18px;
+  }
+
+  @media (min-width: 901px) {
+    .ownership-flow li:not(:last-child)::after {
+      color: var(--registry-blue);
+      content: '\2192';
+      font-size: 22px;
+      font-weight: 700;
+      position: absolute;
+      right: -17px;
+      top: 28px;
+      z-index: 1;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .ownership-flow {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .relationship-row,
+    .ownership-flow {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -5,43 +5,58 @@ import SiteFooter from '../../components/SiteFooter.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import EvidenceGatewayFlow from '../../components/EvidenceGatewayFlow.astro';
 
-const pageTitle = 'Evidence Gateway | Registry Stack';
+const pageTitle = 'Evidence Gateway | Signed minimum-disclosure answers';
 const pageDescription =
-  'A governed path between a service that needs proof and the registry that holds the records: who is asking is checked, the answer is current, and only what is allowed is returned.';
+  'Let an approved service ask one predefined question and receive a signed answer without receiving the authoritative source record.';
 
-const useCases = [
-  'A service needs proof of a fact, not the full source record.',
-  'A workflow in one agency needs a fact from a registry another agency owns.',
-  'A credential needs to be issued from a registry, after the right checks, not from a copied record.',
-  'Approvals, refusals, and redactions all need to leave the same audit trail.',
-  'Evidence needs to move between institutions, across borders, or into a person’s wallet.',
+const goodFit = [
+  'A public or partner service needs to prove one fact, such as an active registration or enrolment status.',
+  'The registry owner wants to agree what can be asked and returned before connecting the service.',
+  'The relying service can verify a signed answer and does not need the source record behind it.',
 ];
 
-const controls = [
-  'Purpose and policy',
-  'Who is asking',
-  'Which source answers',
-  'How current the answer is',
-  'What may be disclosed',
-  'A reviewable audit trail',
-  'A clear reason for a no',
+const agreements = [
+  {
+    marker: '01',
+    title: 'The question and possible answer',
+    body:
+      'Write the question in service language. Define whether the answer is a yes or no, a status, a date, or another small piece of evidence.',
+  },
+  {
+    marker: '02',
+    title: 'Who may ask, and for what purpose',
+    body:
+      'Name the public or partner service, the purpose it may declare, and the authority it must present before any source access.',
+  },
+  {
+    marker: '03',
+    title: 'How long the answer remains useful',
+    body:
+      'Agree how recent the source observation must be and how long the signed assertion may be accepted.',
+  },
 ];
 
-const products = [
+const handoffComponents = [
   {
-    title: 'Registry Notary',
-    body: 'Checks the question against the registry and signs the answer, or issues a credential.',
-    href: '/notary/',
+    name: 'Evidence',
+    body:
+      'Authenticates and authorizes one predefined request, makes one fixed source call, and returns a signed minimum-disclosure assertion.',
+    docs: 'https://docs.registrystack.org/',
+    github: 'https://github.com/registrystack/registry-stack',
   },
   {
-    title: 'Registry Relay',
-    body: 'Provides the safe, read-only reads from the source the answer is based on.',
-    href: '/relay/',
+    name: 'Registry Relay',
+    body:
+      'Can expose selected registry data or act as Evidence\'s fixed, protected source while retaining its own authorization rules.',
+    docs: 'https://docs.registrystack.org/products/registry-relay/',
+    github: 'https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay',
   },
   {
-    title: 'Registry Manifest',
-    body: 'Describes what evidence the registry can offer, and under which policy.',
-    href: '/manifest/',
+    name: 'Registry Manifest',
+    body:
+      'Publishes portable registry metadata and can describe the evidence and access surfaces an institution offers.',
+    docs: 'https://docs.registrystack.org/products/registry-manifest/',
+    github: 'https://github.com/registrystack/registry-stack/tree/main/products/manifest',
   },
 ];
 ---
@@ -50,21 +65,24 @@ const products = [
   <SiteHeader current="evidence-gateway" />
 
   <main>
-    <section class="hero" aria-labelledby="evidence-gateway-title">
+    <section class="hero solution-hero" aria-labelledby="evidence-gateway-title">
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="eyebrow">Solution &middot; Evidence Gateway</p>
-          <h1 id="evidence-gateway-title">Share verified evidence without sharing records.</h1>
+          <p class="eyebrow">Product &middot; Evidence Gateway</p>
+          <h1 id="evidence-gateway-title">Let a service check a fact without receiving the full registry record.</h1>
           <p class="hero-lead">
-            Evidence Gateway is the governed path between a service that needs proof and the
-            registry that holds the records. It checks who is asking and why, confirms the answer
-            is current, and returns only what the request is allowed to receive: a single fact, a
-            redacted result, a credential, or a clear no.
+            The registry owner defines one question, who may ask it, for what purpose, and which
+            answer may be returned. Evidence Gateway authorizes the request before source access, makes
+            one fixed lookup, and returns a signed minimum-disclosure assertion. The source
+            record stays with the authority.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="https://lab.registrystack.org/">Try the live demo</a>
-            <a class="button button-secondary" href="https://docs.registrystack.org/">Read the docs</a>
+            <a class="button button-primary" href="https://docs.registrystack.org/">Read the technical docs</a>
+            <a class="button button-secondary" href="/pilot/">Start with one question</a>
           </div>
+          <p class="hero-note">
+            Evidence Gateway is a stateless assertion service, not an eligibility or case-management engine.
+          </p>
         </div>
       </div>
     </section>
@@ -72,16 +90,16 @@ const products = [
     <section class="section" aria-labelledby="evidence-fit-title">
       <div class="section-inner split">
         <div class="section-heading compact">
-          <p class="eyebrow">Where it fits</p>
-          <h2 id="evidence-fit-title">A governed path between a request and the records behind it.</h2>
+          <p class="eyebrow">When to use Evidence Gateway</p>
+          <h2 id="evidence-fit-title">Use it when a service needs proof of a specific fact.</h2>
           <p>
-            Evidence Gateway sits between the systems that ask for evidence and the registries
-            that hold the records. It makes each decision explicit, records why the decision was
-            made, and returns only the answer the request is allowed to receive.
+            Start with a question that a service needs answered, such as whether a business is
+            registered or a household is enrolled. The service receives the signed answer and
+            verifies it against independently configured trust and request expectations.
           </p>
         </div>
-        <ul class="check-list" aria-label="Evidence Gateway use cases">
-          {useCases.map((item) => (
+        <ul class="check-list" aria-label="When Evidence Gateway is a good fit">
+          {goodFit.map((item) => (
             <li>{item}</li>
           ))}
         </ul>
@@ -92,94 +110,231 @@ const products = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">How it works</p>
-          <h2 id="evidence-how-title">Every answer starts with a governed decision.</h2>
+          <h2 id="evidence-how-title">Each request is checked before the registry is consulted.</h2>
+          <p>
+            The registry owner defines the question, purpose, authorized service, and how the
+            answer is represented. Evidence Gateway applies that reviewed definition to every request.
+          </p>
         </div>
         <EvidenceGatewayFlow />
       </div>
     </section>
 
-    <section class="section" aria-labelledby="evidence-governs-title">
-      <div class="section-inner split">
-        <div class="section-heading compact">
-          <p class="eyebrow">What it governs</p>
-          <h2 id="evidence-governs-title">The checks, the redaction, and the audit trail stay in one place.</h2>
-          <p>
-            The same path handles approvals, redactions, and refusals, so evidence exchange is not
-            split across a policy document, a data connector, and an integration nobody can review.
-          </p>
-        </div>
-        <div class="solution-control-list" aria-label="Evidence Gateway controls">
-          {controls.map((item) => (
-            <span>{item}</span>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="evidence-stack-title">
+    <section class="section" aria-labelledby="evidence-agreement-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">How it is built</p>
-          <h2 id="evidence-stack-title">A solution, not another central system.</h2>
+          <p class="eyebrow">Define the evidence</p>
+          <h2 id="evidence-agreement-title">Before connecting a service, define the question, purpose, and response.</h2>
           <p>
-            Evidence Gateway is delivered through three open-source products. Each keeps a narrow
-            job, and a deployment composes only the pieces it needs.
+            The registry owner, service team, and policy owner should agree what the answer means,
+            who may receive it, and how long it remains useful.
           </p>
         </div>
-        <div class="solution-product-grid solution-product-grid-three">
-          {products.map((product) => (
+        <div class="agreement-grid">
+          {agreements.map((item) => (
             <article>
-              <h3>{product.title}</h3>
-              <p>{product.body}</p>
-              <a class="inline-cta" href={product.href}>Open {product.title} &rarr;</a>
+              <span>{item.marker}</span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="claim-band" aria-labelledby="evidence-interoperability-title">
+    <section class="claim-band" aria-labelledby="evidence-example-title">
       <div class="section-inner split">
         <div class="section-heading compact">
-          <p class="pill">Interoperability</p>
-          <h2 id="evidence-interoperability-title">Built for evidence exchange across institutions, borders, and service channels.</h2>
+          <p class="pill">Keep the decision boundary clear</p>
+          <h2 id="evidence-example-title">Evidence Gateway returns the fact. The relying service decides what to do next.</h2>
         </div>
         <div class="claim-body">
           <p>
-            The same governed path can support services in one country, work that crosses
-            agencies, exchange that crosses borders, and answers that land in a person’s wallet.
-            It follows the same pattern as the EU’s Once-Only Technical System (OOTS), which
-            standardizes exactly this kind of exchange at EU scale, with each registry’s records
-            staying under the authority that owns them.
+            A licensing portal may ask whether a business registration is active. Evidence Gateway can
+            return that signed fact, but it does not decide eligibility, approve a permit, rank a
+            case, or certify that the source itself is correct. Those responsibilities remain
+            with the authoritative institution and the relying service.
           </p>
-          <a class="inline-cta" href="/solutions/protected-registry-apis/">See the Protected Registry APIs solution &rarr;</a>
+          <a class="inline-cta" href="/use-cases/">See more public-service examples &rarr;</a>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="evidence-next-title">
+    <section class="section section-muted" aria-labelledby="evidence-choice-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">Where to start</p>
-          <h2 id="evidence-next-title">Start with the part closest to the request.</h2>
+          <p class="eyebrow">When a service needs data</p>
+          <h2 id="evidence-choice-title">Use Registry Relay when a service needs selected registry data.</h2>
           <p>
-            Start with Registry Notary when you need a signed proof or a credential. Start with
-            Protected Registry APIs when your first task is opening an existing registry safely.
+            Evidence Gateway provides one signed answer. Registry Relay provides selected data from an
+            existing registry through a protected, read-only API. Evidence Gateway may also use a Relay
+            API as its one fixed source without merging the two products&rsquo; authorization models.
           </p>
         </div>
         <div class="solution-choice-row">
-          <a class="button button-primary" href="/notary/">Explore Registry Notary</a>
-          <a class="button button-secondary" href="/solutions/protected-registry-apis/">See the Protected Registry APIs solution</a>
+          <a class="button button-primary" href="/solutions/protected-registry-apis/">See Protected Registry APIs</a>
+          <a class="button button-secondary" href="/how-it-fits/">See how it fits existing systems</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section technical-handoff" aria-labelledby="evidence-components-title">
+      <div class="section-inner">
+        <div class="technical-heading">
+          <div>
+            <p class="eyebrow">Open-source components</p>
+            <h2 id="evidence-components-title">The open-source components behind the solution.</h2>
+          </div>
+          <p>The technical documentation explains how each component is configured and deployed.</p>
+        </div>
+        <div class="technical-component-grid">
+          {handoffComponents.map((component) => (
+            <article>
+              <div>
+                <h3>{component.name}</h3>
+                <p>{component.body}</p>
+              </div>
+              <div class="technical-links">
+                <a href={component.docs}>Docs</a>
+                <a href={component.github}>GitHub</a>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
 
     <DocsHandoff
       eyebrow="For your technical team"
-      heading="The Evidence Gateway contract, the policy decisions, and the runtime surfaces live in the docs."
-      primaryLabel="Read the docs"
+      heading="See how to define a requirement, authorize callers, bind one fixed source, sign the assertion, and operate the audit trail."
+      primaryLabel="Read the technical docs"
+      emphasis="docs"
     />
   </main>
 
   <SiteFooter />
 </Base>
+
+<style>
+  .solution-hero .hero-copy {
+    max-width: 920px;
+  }
+
+  .agreement-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0 auto;
+    max-width: 980px;
+  }
+
+  .agreement-grid article {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    min-width: 0;
+    padding: 22px;
+  }
+
+  .agreement-grid article > span {
+    color: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .agreement-grid h3 {
+    font-size: 21px;
+    margin: 14px 0 9px;
+  }
+
+  .agreement-grid p {
+    color: var(--registry-body);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .technical-handoff {
+    border-top: 3px solid var(--registry-ink);
+  }
+
+  .technical-handoff .section-inner {
+    padding-bottom: clamp(42px, 6vw, 62px);
+    padding-top: clamp(42px, 6vw, 62px);
+  }
+
+  .technical-heading {
+    align-items: end;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 0.55fr);
+    margin-bottom: 22px;
+  }
+
+  .technical-heading h2 {
+    font-size: clamp(26px, 3vw, 36px);
+    margin: 6px 0 0;
+  }
+
+  .technical-heading > p {
+    color: var(--registry-body);
+    margin: 0;
+  }
+
+  .technical-component-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .technical-component-grid article {
+    background: var(--registry-paper);
+    border: 1px solid var(--registry-rule);
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+    min-width: 0;
+    padding: 18px;
+  }
+
+  .technical-component-grid h3 {
+    font-size: 18px;
+    margin: 0 0 5px;
+  }
+
+  .technical-component-grid p {
+    color: var(--registry-body);
+    font-size: 14px;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .technical-links {
+    align-content: start;
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .technical-links a {
+    border: 1px solid var(--registry-rule);
+    color: var(--registry-blue);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    padding: 5px 7px;
+  }
+
+  @media (max-width: 800px) {
+    .agreement-grid,
+    .technical-heading,
+    .technical-component-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .technical-component-grid article {
+      display: grid;
+    }
+  }
+</style>

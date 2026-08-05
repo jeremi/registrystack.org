@@ -11,9 +11,9 @@ interface Props {
 }
 
 const {
-  eyebrow = 'Read the docs',
-  heading = 'See how it works, end to end.',
-  primaryLabel = 'Read the docs',
+  eyebrow = 'More information',
+  heading = 'Read the technical documentation or discuss a pilot for one registry.',
+  primaryLabel = 'Read the technical docs',
   primaryHref = 'https://docs.registrystack.org/',
   emphasis = 'pilot',
 } = Astro.props;
@@ -27,13 +27,13 @@ const contactHref = 'mailto:contact@registrystack.org?subject=Registry%20Stack%2
     <div class="hero-actions">
       {emphasis === 'pilot' ? (
         <>
-          <a class="button button-primary" href={contactHref}>Request pilot scope</a>
+          <a class="button button-primary" href={contactHref}>Discuss a pilot</a>
           <a class="button button-secondary" href={primaryHref}>{primaryLabel}</a>
         </>
       ) : (
         <>
           <a class="button button-primary" href={primaryHref}>{primaryLabel}</a>
-          <a class="button button-secondary" href={contactHref}>Request pilot scope</a>
+          <a class="button button-secondary" href={contactHref}>Discuss a pilot</a>
         </>
       )}
     </div>

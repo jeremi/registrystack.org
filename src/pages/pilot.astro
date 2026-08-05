@@ -4,49 +4,64 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import DocsHandoff from '../components/DocsHandoff.astro';
 
-const pageTitle = 'Start a pilot | Registry Stack';
+const pageTitle = 'Pilot and support | Registry Stack';
 const pageDescription =
-  'What a Registry Stack pilot looks like: one registry, its first questions live, safeguards enforced from the first request, built on the open-source products.';
-const contactHref = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20pilot%20scope';
-const evidencePackHref =
-  'https://github.com/registrystack/registry-stack/blob/main/lab/docs/evidence-gateway-packs.md';
+  'Use the Apache-2.0 Registry Stack components for free, or pay for pilot design, integration, deployment, training, upgrades, and support.';
+const contactHref = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20pilot%20and%20support';
 
-// Outcomes in the vocabulary funders and program owners use. Each card names
-// the result, not the mechanism; the product pages carry the mechanism.
-const outcomes = [
+const paidHelp = [
   {
-    title: 'People stop proving the same facts twice',
-    body: 'The once-only principle, made operational: a fact the government already holds is answered by the registry that holds it, instead of being re-documented at every counter. Fewer certified copies, fewer queues, fewer reasons to drop out of a service.',
+    title: 'Pilot design',
+    body:
+      'Choose one registry, one public or partner service, and the first questions or fields worth testing.',
   },
   {
-    title: 'Safeguards become infrastructure',
-    body: 'A zero-trust posture for registry data: no caller is trusted by default, and purpose, scope, and disclosure limits are checked on every request, not promised in a signed agreement nobody can verify. Every trust-critical request leaves an audit record a reviewer, an inspector, or a court can actually read.',
+    title: 'Source integration',
+    body:
+      'Connect the existing file, database, or registry system and configure the read-only access Registry Stack needs.',
   },
   {
-    title: 'Each integration compounds',
-    body: 'A one-off integration project leaves behind code two people understand. A pilot on shared rails leaves behind a described, governed registry surface that the next program reuses, which is the difference between an IT project and digital public infrastructure.',
+    title: 'Deployment and hardening',
+    body:
+      'Deploy on infrastructure chosen by the government, configure operational controls, and prepare the service for handover.',
   },
   {
-    title: 'Existing investments keep their place',
-    body: 'Registry Stack runs alongside the platforms governments already choose, including OpenCRVS, OpenSPP, DHIS2, and MOSIP, and behind X-Road-style exchange layers (the secure data-exchange backbones some governments already run). You do not have to replace those systems or migrate source records into Registry Stack.',
+    title: 'Evidence and access configuration',
+    body:
+      'Work with the registry owner to agree what can be asked and returned, then configure signed answers or agreed fields.',
+  },
+  {
+    title: 'Training',
+    body:
+      'Train the government team and its implementation partner to operate, inspect, and extend the deployment.',
+  },
+  {
+    title: 'Upgrades and support',
+    body:
+      'Plan version upgrades, troubleshoot production issues, and maintain an agreed support arrangement.',
   },
 ];
 
-const phases = [
+const pilotSteps = [
   {
-    name: 'Choose the registry and map the questions',
-    body: 'A civil register, a household register in a spreadsheet, a farmer registry export: any source counts. In the scoping workshop, map the questions services keep asking of it, each with a yes-or-no or bounded answer. The first questions go live during the pilot; the rest become a backlog the registry grows into.',
+    number: '01',
+    title: 'Choose one useful service need',
+    body:
+      'Name the registry owner, the public or partner service, and whether it needs one signed answer or selected data.',
   },
   {
-    name: 'Prove it on synthetic data',
-    body: 'Stand up the same flow the hosted lab runs, on synthetic records shaped like yours. Stakeholders watch a Notary-issued credential land in a wallet before any real record is touched.',
+    number: '02',
+    title: 'Test with synthetic data before using source records',
+    body:
+      'Use synthetic data to test the source connection, request rules, result, errors, and audit record with the responsible teams.',
   },
   {
-    name: 'Go live, governed from the first request',
-    body: 'Connect the real source read-only, scope the route to its stated purpose, and let the audit trail run from day one. The answering surface can run alongside your existing process at first, so nothing is cut over; if it is down, the caller gets an explicit error rather than a wrong answer, and the source registry stays untouched. The registry keeps its records; the service gets its answer.',
+    number: '03',
+    title: 'Connect, evaluate, and hand over',
+    body:
+      'Connect the real source read-only, test the agreed questions or fields, document the deployment, and train the operating team.',
   },
 ];
-
 ---
 
 <Base title={pageTitle} description={pageDescription}>
@@ -56,169 +71,179 @@ const phases = [
     <section class="hero" aria-labelledby="pilot-hero-title">
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="eyebrow">For governments and their implementing partners</p>
-          <h1 id="pilot-hero-title">A pilot starts with one registry and its first questions.</h1>
+          <p class="eyebrow">Pilot and support</p>
+          <h1 id="pilot-hero-title">The software is open source. Aubex charges for implementation and support.</h1>
           <p class="hero-lead">
-            Registry Stack&rsquo;s open-source products are built as digital public infrastructure:
-            reusable, standards-based, openly licensed shared rails that let the registries a
-            government already holds answer questions safely. A pilot does not
-            begin with a replatforming program. It begins with one registry, the questions one
-            service keeps asking of it, and safeguards enforced from the first request.
-            Connecting the registry is the real work: every question after the first is a
-            configuration change and a governance sign-off, not a new project.
+            Registry Stack&rsquo;s core components are open source under Apache-2.0. A government
+            or its chosen partner can deploy them without a license fee. Aubex offers paid help
+            when a team wants support designing, connecting, deploying, or operating the system.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href={contactHref}>Request pilot scope</a>
-            <a class="button button-secondary" href="https://lab.registrystack.org/">Try the live demo</a>
+            <a class="button button-primary" href={contactHref}>Discuss a pilot or support</a>
+            <a class="button button-secondary" href="https://github.com/registrystack/registry-stack">Inspect the code</a>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="outcomes-title">
+    <section class="section" aria-labelledby="split-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Open-source software and paid services</p>
+          <h2 id="split-title">Deploy Registry Stack yourself or pay Aubex for delivery support.</h2>
+        </div>
+        <div class="offer-split">
+          <article class="offer-card offer-card-open">
+            <p class="offer-marker">Free and open source</p>
+            <h3>The Registry Stack components</h3>
+            <ul class="check-list">
+              <li>Evidence Gateway, Registry Relay, and Registry Manifest under Apache-2.0.</li>
+              <li>Source code, product documentation, examples, and release artifacts.</li>
+              <li>Self-hosting on infrastructure controlled by the government or its chosen operator.</li>
+              <li>No per-person, per-record, or per-assertion software license fee.</li>
+            </ul>
+            <p class="offer-note">
+              Open-source availability does not include a support response time or delivery team.
+            </p>
+          </article>
+          <article class="offer-card">
+            <p class="offer-marker">Paid help</p>
+            <h3>Scoped delivery and ongoing support</h3>
+            <p>
+              Scope and pricing are agreed against the source systems, deployment environment,
+              training needs, and support level. A software license purchase is not required.
+            </p>
+            <a class="inline-cta" href={contactHref}>Discuss the scope &rarr;</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="help-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">What a pilot buys</p>
-          <h2 id="outcomes-title">Outcomes a program can point to.</h2>
+          <p class="eyebrow">Paid services</p>
+          <h2 id="help-title">Implementation and support available from Aubex.</h2>
+          <p>A government can choose the services it needs without buying a software license.</p>
         </div>
-        <div class="problem-grid outcome-grid">
-          {outcomes.map((outcome) => (
-            <article class="quiet-card">
-              <h3>{outcome.title}</h3>
-              <p>{outcome.body}</p>
+        <div class="help-grid">
+          {paidHelp.map((item) => (
+            <article>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="section section-muted" aria-labelledby="shape-title">
+    <section class="section" aria-labelledby="pilot-shape-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">The shape of a pilot</p>
-          <h2 id="shape-title">Small enough to authorize, real enough to evaluate.</h2>
+          <p class="eyebrow">A practical first pilot</p>
+          <h2 id="pilot-shape-title">Start with one registry and one service need.</h2>
           <p>
-            Three phases, each with something concrete to show. The scope is set by the registry
-            owner and the asking service, not by a product roadmap. Evaluate everything in the open
-            before you commit: the code, the docs, and the live lab. A supported pilot runs on the
-            published <a href="/pricing/">First registry package</a>: one scoped, fixed-price annual
-            subscription that takes the first registry live, with scope confirmed against the
-            registry, question set, deployment path, institutional owner, and evidence pack the
-            reviewer needs.
+            A pilot should be small enough to understand and complete, but real enough for the
+            registry owner and service team to evaluate.
           </p>
-          <a class="inline-cta" href={evidencePackHref}>See the technical evidence-pack format &rarr;</a>
         </div>
-        <ol class="phase-list">
-          {phases.map((phase, index) => (
-            <li class="phase-card">
-              <span class="phase-no" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-              <h3>{phase.name}</h3>
-              <p>{phase.body}</p>
+        <ol class="pilot-steps">
+          {pilotSteps.map((step) => (
+            <li>
+              <span>{step.number}</span>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
             </li>
           ))}
         </ol>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="brings-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">The division of work</p>
-          <h2 id="brings-title">What each side brings.</h2>
-        </div>
-        <div class="problem-grid brings-grid">
-          <article class="quiet-card">
-            <h3>You bring</h3>
-            <ul class="check-list">
-              <li>A registry, in whatever form it exists today: a database, a domain platform, or a spreadsheet.</li>
-              <li>One asking service to start, and the questions it keeps asking.</li>
-              <li>An institutional owner with the authority to say who may ask, and for what purpose.</li>
-            </ul>
-          </article>
-          <article class="quiet-card">
-            <h3>We bring</h3>
-            <ul class="check-list">
-              <li>Three Apache-2.0 open-source products with no license fees: you pay for delivery and support, not for the code, and you run it on your infrastructure or a partner&rsquo;s. Our engineers run the setup directly with your team.</li>
-              <li>The deployment patterns the hosted lab already demonstrates, including live integrations you can inspect first.</li>
-              <li>Answers in the formats the ecosystem expects: SD-JWT VC and OpenID4VCI for wallets, DCAT-AP for catalogs, SP-DCI (the social protection data-exchange interface) for registry exchange.</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="for-funders" aria-labelledby="for-funders-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">For development partners and funders</p>
-          <h2 id="for-funders-title">Financing a government&rsquo;s first deployment.</h2>
-          <p>
-            Development partners and funders often finance a government&rsquo;s first deployment.
-            What you finance is the published First registry package, owned by the government that
-            runs it. Package prices are published on the <a href="/pricing/">pricing page</a> and
-            scale with World Bank income classification, which is exactly what a financing partner
-            needs to budget. The pilot leaves an evidence trail that survives it: open-source code
-            and docs, a public roadmap, a hosted lab on synthetic data, and audit records a reviewer
-            can read.
-          </p>
-        </div>
-        <div class="funder-cta">
-          <a class="button button-primary" href={contactHref}>Request pilot scope</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" id="stewardship" aria-labelledby="stewardship-title">
-      <div class="section-inner split">
+    <section class="section section-muted" aria-labelledby="ready-title">
+      <div class="section-inner ready-section">
         <div class="section-heading compact">
-          <p class="eyebrow">Who is behind this</p>
-          <h2 id="stewardship-title">Built in the open, by people who help write the standards.</h2>
+          <p class="eyebrow">Planning a pilot</p>
+          <h2 id="ready-title">Information needed to define the first pilot.</h2>
         </div>
-        <div class="stewardship-body">
-          <p>
-            Registry Stack is built by Aubex, the team behind OpenSPP, with seats in Digital
-            Convergence Initiative (DCI) standards work and contributions to the GovStack registry
-            building block. The code, the documentation, and the hosted lab are public: what this
-            site claims, you can check.
-          </p>
-          <p>
-            A pilot needs three things: a concrete registry, a concrete service question, and an
-            institutional owner who can approve purpose, access, and safeguards. If you have them,
-            or most of them, talk to us. To explore first, start with the docs and hosted lab.
-          </p>
-          <a class="inline-cta" href={contactHref}>Request pilot scope &rarr;</a>
+        <div>
+          <ul class="check-list">
+            <li>The registry owner and the source format or system.</li>
+            <li>The public or partner service and what it actually needs.</li>
+            <li>Who can agree what can be asked and returned.</li>
+            <li>The intended hosting, identity, and exchange environment, if known.</li>
+            <li>The team that will operate the result after handover.</li>
+          </ul>
+          <a class="button button-primary" href={contactHref}>Discuss a pilot or support</a>
         </div>
       </div>
     </section>
   </main>
 
   <DocsHandoff
-    eyebrow="For your technical team"
-    heading="The docs carry the tutorials, the deployment guides, and the conformance profiles."
+    eyebrow="Review the software"
+    heading="Your team can review the code and technical documentation before discussing paid support."
     primaryLabel="Read the docs"
+    emphasis="docs"
   />
   <SiteFooter />
 </Base>
 
 <style>
-  /* Four outcome cards: two columns reads better than a 3+1 orphan row. */
-  .outcome-grid {
+  .offer-split {
+    display: grid;
+    gap: 20px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0 auto;
+    max-width: 900px;
   }
 
-  .brings-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 860px;
+  .offer-card {
+    border: 1px solid var(--registry-rule);
+    padding: 26px;
   }
 
-  .brings-grid h3 {
+  .offer-card-open {
+    border-top: 4px solid var(--registry-blue);
+  }
+
+  .offer-marker {
+    color: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
     margin-bottom: 10px;
+    text-transform: uppercase;
   }
 
-  .phase-list {
-    counter-reset: phase;
+  .offer-note {
+    border-top: 1px solid var(--registry-rule);
+    color: var(--registry-muted);
+    font-size: 14px;
+    margin: 20px 0 0;
+    padding-top: 14px;
+  }
+
+  .help-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .help-grid article {
+    background: #ffffff;
+    border-top: 2px solid var(--registry-ink);
+    padding: 18px;
+  }
+
+  .help-grid h3 {
+    margin-bottom: 8px;
+  }
+
+  .help-grid p {
+    margin: 0;
+  }
+
+  .pilot-steps {
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -227,49 +252,41 @@ const phases = [
     padding: 0;
   }
 
-  .phase-card {
-    background: #ffffff;
+  .pilot-steps li {
     border: 1px solid var(--registry-rule);
-    display: grid;
-    gap: 10px;
     padding: 22px;
   }
 
-  .phase-card h3 {
-    margin: 0;
-  }
-
-  .phase-card p {
-    color: var(--registry-body);
-    margin: 0;
-  }
-
-  .phase-no {
-    color: var(--registry-blue);
+  .pilot-steps span {
+    color: var(--registry-stamp);
     font-family: var(--registry-mono);
     font-size: 12px;
     letter-spacing: 0.08em;
   }
 
-  .funder-cta {
-    margin-top: clamp(24px, 4vw, 36px);
-    text-align: center;
+  .pilot-steps h3 {
+    margin: 12px 0 8px;
   }
 
-  .stewardship-body p {
-    color: var(--registry-body);
-    margin: 0 0 14px;
+  .pilot-steps p {
+    margin: 0;
   }
 
-  @media (max-width: 900px) {
-    .phase-list {
-      grid-template-columns: 1fr;
-    }
+  .ready-section {
+    display: grid;
+    gap: clamp(28px, 6vw, 80px);
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   }
 
-  @media (max-width: 620px) {
-    .outcome-grid,
-    .brings-grid {
+  .ready-section .button {
+    margin-top: 20px;
+  }
+
+  @media (max-width: 800px) {
+    .offer-split,
+    .help-grid,
+    .pilot-steps,
+    .ready-section {
       grid-template-columns: 1fr;
     }
   }

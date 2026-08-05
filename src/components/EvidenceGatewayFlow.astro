@@ -1,69 +1,80 @@
 ---
-const decisions = [
+const steps = [
   {
-    label: 'Request',
-    title: 'The request',
-    body: 'A service asks for one fact about one subject, and says what it needs it for.',
-    tags: ['purpose', 'subject', 'requested fact'],
+    title: 'Define the question',
+    body:
+      'The registry owner defines the question, the service that may ask it, the purpose, and the possible response.',
+    note: 'Question · service · purpose · response',
   },
   {
-    label: 'Decision',
-    title: 'Who is asking',
-    body: 'The request is checked against policy: is this caller allowed to ask this, for this purpose?',
-    tags: ['identity', 'scope', 'policy'],
+    title: 'Check the request',
+    body:
+      'Evidence Gateway authenticates the service and authorizes the complete predefined request before acquiring source credentials or reading data.',
+    note: 'Requester · purpose · requirement',
   },
   {
-    label: 'Source',
-    title: 'Which source, how current',
-    body: 'The allowed source is chosen, and how recently it was updated is checked before it is used.',
-    tags: ['source', 'freshness'],
+    title: 'Read the current source record',
+    body:
+      'Evidence Gateway makes one fixed, bounded source request and validates the response. It does not browse candidates or copy the source record.',
+    note: 'One source · bounded response',
   },
   {
-    label: 'Disclosure',
-    title: 'What goes back',
-    body: 'Disclosure rules decide whether the answer is a value, a yes or no, a redacted result, a credential, or a clear no.',
-    tags: ['redaction', 'credential', 'clear no'],
+    title: 'Derive, sign, audit, and release',
+    body:
+      'Evidence Gateway derives only the declared value, signs the assertion, records the disclosure, and then releases the response.',
+    note: 'Minimum answer · signature · audit',
   },
 ];
 ---
 
 <figure class="evidence-flow" aria-labelledby="evidence-flow-title">
-  <div class="evidence-flow-top">
-    <div>
-      <p class="evidence-flow-kicker">Governed evidence path</p>
-      <h3 id="evidence-flow-title">The source is read only after the request is allowed.</h3>
-    </div>
-    <p>
-      Every outcome leaves an audit record, whether the request was approved, redacted, or refused.
-    </p>
+  <div class="flow-intro">
+    <p class="flow-kicker">How an evidence request is handled</p>
+    <h3 id="evidence-flow-title">Evidence Gateway checks authority before reading the registry.</h3>
   </div>
 
-  <ol class="evidence-flow-steps">
-    {decisions.map((step) => (
+  <ol class="flow-steps">
+    {steps.map((step, index) => (
       <li>
-        <p class="evidence-flow-label">{step.label}</p>
-        <h4>{step.title}</h4>
-        <p>{step.body}</p>
-        <div class="evidence-flow-tags" aria-label={`${step.title} inputs`}>
-          {step.tags.map((tag) => (
-            <span>{tag}</span>
-          ))}
+        <span class="step-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+        <div>
+          <h4>{step.title}</h4>
+          <p>{step.body}</p>
         </div>
+        <span class="step-note">{step.note}</span>
       </li>
     ))}
   </ol>
 
-  <div class="evidence-flow-result" aria-label="Evidence Gateway outcomes">
-    <span>a single fact</span>
-    <span>redacted result</span>
-    <span>credential</span>
-    <span>clear no</span>
-    <strong>audit trail</strong>
+  <div class="return-route" aria-label="Signed Evidence Gateway response">
+    <div class="route-heading">
+      <span>What the relying service receives</span>
+      <p>One stateless signed assertion containing the approved answer.</p>
+    </div>
+
+    <article class="route-card route-service">
+      <p class="route-label">Signed minimum-disclosure assertion</p>
+      <h4>The service receives the answer, not the record</h4>
+      <div class="answer-slip" aria-label="Example answer">
+        <span>Business registration</span>
+        <strong>Active</strong>
+        <small>Source: business registry</small>
+      </div>
+      <p>The assertion carries its purpose, audience, validity, and an opaque subject binding. The relying service verifies it before use.</p>
+    </article>
+
+    <div class="audit-slip">
+      <span class="audit-mark" aria-hidden="true">✓</span>
+      <p>
+        <strong>Two durable audit gates</strong>
+        Authorized access is recorded before the source read. The released disclosure is recorded after signing and before the response leaves.
+      </p>
+    </div>
   </div>
 
   <figcaption>
-    Evidence Gateway keeps the policy check, the source check, the disclosure rule, and the audit
-    record in one governed path.
+    Evidence Gateway provides the approved registry fact. It does not decide eligibility, awards,
+    enforcement, or case outcomes.
   </figcaption>
 </figure>
 
@@ -73,27 +84,19 @@ const decisions = [
     max-width: var(--registry-max);
   }
 
-  .evidence-flow-top {
-    align-items: end;
-    display: grid;
-    gap: 18px;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
-    margin-bottom: 20px;
+  .flow-intro {
+    margin: 0 auto 24px;
+    max-width: 780px;
+    text-align: center;
   }
 
-  .evidence-flow-top h3 {
-    font-size: clamp(24px, 3vw, 36px);
-    margin: 0;
-    max-width: 680px;
+  .flow-intro h3 {
+    font-size: clamp(25px, 3vw, 38px);
+    margin: 6px 0 0;
   }
 
-  .evidence-flow-top p:not(.evidence-flow-kicker) {
-    color: var(--registry-body);
-    margin: 0;
-  }
-
-  .evidence-flow-kicker,
-  .evidence-flow-label {
+  .flow-kicker,
+  .route-label {
     color: var(--registry-blue);
     font-family: var(--registry-mono);
     font-size: 11px;
@@ -102,8 +105,7 @@ const decisions = [
     text-transform: uppercase;
   }
 
-  .evidence-flow-steps {
-    counter-reset: evidence-flow;
+  .flow-steps {
     display: grid;
     gap: 14px;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -112,117 +114,219 @@ const decisions = [
     padding: 0;
   }
 
-  .evidence-flow-steps li {
+  .flow-steps li {
     background: #ffffff;
     border: 1px solid var(--registry-rule);
     display: grid;
-    gap: 12px;
+    gap: 15px;
+    grid-template-rows: auto 1fr auto;
     min-width: 0;
     padding: 20px;
     position: relative;
   }
 
-  .evidence-flow-steps li::before {
-    color: var(--registry-stamp);
-    content: counter(evidence-flow, decimal-leading-zero);
-    counter-increment: evidence-flow;
-    font-family: var(--registry-mono);
-    font-size: 12px;
-    font-weight: 700;
-  }
-
-  .evidence-flow-steps li:not(:last-child)::after {
+  .flow-steps li:not(:last-child)::after {
     background: var(--registry-ink);
     content: '';
     height: 2px;
     position: absolute;
     right: -14px;
-    top: 44px;
+    top: 34px;
     width: 14px;
+    z-index: 1;
   }
 
-  .evidence-flow-steps h4 {
+  .step-number {
+    color: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .flow-steps h4 {
     color: var(--registry-ink);
     font-size: 20px;
-    line-height: 1.2;
-    margin: 0;
+    line-height: 1.22;
+    margin: 0 0 9px;
   }
 
-  .evidence-flow-steps p:not(.evidence-flow-label) {
+  .flow-steps p {
     color: var(--registry-body);
     font-size: 14.5px;
     line-height: 1.5;
     margin: 0;
   }
 
-  .evidence-flow-tags {
-    align-content: end;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: auto;
-  }
-
-  .evidence-flow-tags span,
-  .evidence-flow-result span,
-  .evidence-flow-result strong {
-    border: 1px solid var(--registry-rule);
-    color: var(--registry-ink);
+  .step-note {
+    border-top: 1px solid var(--registry-rule);
+    color: var(--registry-muted);
     font-family: var(--registry-mono);
-    font-size: 11px;
-    padding: 5px 7px;
+    font-size: 10.5px;
+    line-height: 1.45;
+    padding-top: 10px;
   }
 
-  .evidence-flow-result {
-    align-items: center;
+  .return-route {
     background: var(--registry-paper);
     border: 1px solid var(--registry-rule);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 14px;
-    padding: 14px;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 1fr;
+    margin-top: 18px;
+    padding: clamp(18px, 3vw, 28px);
+    position: relative;
   }
 
-  .evidence-flow-result strong {
+  .return-route::before {
+    background: var(--registry-ink);
+    content: '';
+    height: 18px;
+    left: 50%;
+    position: absolute;
+    top: -19px;
+    width: 2px;
+  }
+
+  .route-heading {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    justify-content: space-between;
+  }
+
+  .route-heading span {
+    color: var(--registry-ink);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .route-heading p {
+    color: var(--registry-body);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .route-card {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    display: grid;
+    gap: 13px;
+    min-width: 0;
+    padding: 20px;
+  }
+
+  .route-card h4,
+  .route-card > p:last-child {
+    margin: 0;
+  }
+
+  .route-card h4 {
+    font-size: 20px;
+  }
+
+  .route-card > p:last-child {
+    color: var(--registry-body);
+    line-height: 1.5;
+  }
+
+  .answer-slip {
+    border: 1px solid var(--registry-ink);
+    display: grid;
+    gap: 5px;
+    padding: 13px 15px;
+  }
+
+  .answer-slip {
+    border-left: 5px solid var(--registry-blue);
+  }
+
+  .answer-slip span,
+  .answer-slip small {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: 10.5px;
+  }
+
+  .answer-slip strong {
+    color: var(--registry-ink);
+    font-size: 16px;
+  }
+
+  .audit-slip {
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    display: flex;
+    gap: 12px;
+    padding: 13px 16px;
+  }
+
+  .audit-slip p {
+    color: var(--registry-body);
+    margin: 0;
+  }
+
+  .audit-slip strong {
+    color: var(--registry-ink);
+    display: block;
+    font-size: 14px;
+  }
+
+  .audit-mark {
+    align-items: center;
     background: var(--registry-blue);
-    border-color: var(--registry-blue);
     color: #ffffff;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-weight: 800;
+    height: 30px;
+    justify-content: center;
+    width: 30px;
   }
 
   .evidence-flow figcaption {
     color: var(--registry-muted);
     font-size: 14px;
-    margin-top: 12px;
+    margin-top: 13px;
     text-align: center;
   }
 
   @media (max-width: 900px) {
-    .evidence-flow-top {
-      grid-template-columns: 1fr;
-    }
-
-    .evidence-flow-steps {
+    .flow-steps {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .evidence-flow-steps li::after {
+    .flow-steps li::after {
       display: none;
     }
   }
 
   @media (max-width: 620px) {
-    .evidence-flow-steps {
+    .flow-intro,
+    .evidence-flow figcaption {
+      text-align: left;
+    }
+
+    .flow-steps,
+    .return-route {
       grid-template-columns: 1fr;
     }
 
-    .evidence-flow-result {
-      justify-content: flex-start;
+    .route-heading,
+    .audit-slip {
+      grid-column: auto;
     }
 
-    .evidence-flow figcaption {
-      text-align: left;
+    .return-route::before {
+      left: 30px;
+    }
+
+    .audit-slip {
+      align-items: flex-start;
     }
   }
 </style>

@@ -159,11 +159,18 @@ a:hover {
 }
 
 .top-nav .nav-emphasis {
-  color: var(--registry-blue);
+  background: var(--registry-blue);
+  color: #ffffff;
+  padding: 0 14px;
 }
 
-/* Related pages fold into disclosures (Products, In practice), keeping the
-   nav at six entries. Plain <details>, so it works without JavaScript. */
+.top-nav .nav-emphasis:hover {
+  background: var(--registry-ink);
+  color: #ffffff;
+}
+
+/* The two solution routes fold into a disclosure. Plain <details> keeps the
+   menu usable without JavaScript. */
 .nav-group {
   position: relative;
 }

@@ -1,49 +1,30 @@
 ---
-// Shared top navigation for every marketing page. The current page is marked
-// aria-current when a page passes its route key.
+// Shared top navigation for every marketing page. Marketing is organized by
+// the outcomes a team needs; product implementation detail lives in the docs.
 const { current } = Astro.props;
-const repoHref = 'https://github.com/registrystack/registry-stack';
-
-const products = [
-  { href: '/notary/', label: 'Registry Notary', role: 'Verify', blurb: 'Signed answers and wallet credentials', key: 'notary' },
-  { href: '/relay/', label: 'Registry Relay', role: 'Expose', blurb: 'Protected APIs over existing files and tables', key: 'relay' },
-  { href: '/manifest/', label: 'Registry Manifest', role: 'Describe', blurb: 'Portable standards-facing metadata', key: 'manifest' },
-];
 
 const solutions = [
   {
     href: '/solutions/evidence-gateway/',
     label: 'Evidence Gateway',
-    blurb: 'Share proof of a fact, not the underlying record',
+    blurb: 'Return a signed answer without sharing the source record',
     key: 'evidence-gateway',
   },
   {
     href: '/solutions/protected-registry-apis/',
     label: 'Protected Registry APIs',
-    blurb: 'Open an existing registry safely for approved services',
+    blurb: 'Give services read-only access to selected registry fields',
     key: 'protected-registry-apis',
   },
 ];
 
-// Supporting reading folds into one disclosure so the bar itself stays the
-// journey: problem, solutions, products, practice, price, pilot.
-const practice = [
-  { href: '/use-cases/', label: 'Use cases', blurb: 'Worked scenarios, question to bounded answer', key: 'use-cases' },
-  { href: '/ecosystem/', label: 'Ecosystem', blurb: 'Beside the platforms governments already run', key: 'ecosystem' },
-  { href: '/security/', label: 'Security', blurb: 'The security model, and how to verify it', key: 'security' },
-  { href: '/ai/', label: 'AI in public services', blurb: 'Governed answers for human and AI askers', key: 'ai' },
-  { href: '/faq/', label: 'FAQ', blurb: 'Short answers to the questions we hear first', key: 'faq' },
-];
-
 const links = [
-  { href: 'https://lab.registrystack.org/', label: 'Live demo', key: 'demo' },
-  { href: '/pricing/', label: 'Pricing', key: 'pricing' },
-  { href: '/pilot/', label: 'Start a pilot', key: 'pilot' },
+  { href: '/use-cases/', label: 'Use cases', key: 'use-cases' },
+  { href: '/how-it-fits/', label: 'How it fits', key: 'how-it-fits' },
+  { href: '/pilot/', label: 'Pilot and support', key: 'pilot' },
 ];
 
-const onProductPage = products.some((product) => product.key === current);
 const onSolutionPage = solutions.some((solution) => solution.key === current);
-const onPracticePage = practice.some((page) => page.key === current);
 ---
 
 <header class="site-header">
@@ -52,7 +33,6 @@ const onPracticePage = practice.some((page) => page.key === current);
     <span>Registry Stack</span>
   </a>
   <nav class="top-nav" aria-label="Main navigation">
-    <a href="/problem/" aria-current={current === 'problem' ? 'page' : undefined}>The problem</a>
     <details class="nav-group">
       <summary aria-current={onSolutionPage ? 'page' : undefined}>Solutions</summary>
       <div class="nav-group-panel">
@@ -64,32 +44,10 @@ const onPracticePage = practice.some((page) => page.key === current);
         ))}
       </div>
     </details>
-    <details class="nav-group">
-      <summary aria-current={onProductPage ? 'page' : undefined}>Products</summary>
-      <div class="nav-group-panel">
-        {products.map((product) => (
-          <a href={product.href} aria-current={current === product.key ? 'page' : undefined}>
-            <span class="nav-entry-name">{product.label} <span class="nav-entry-role">{product.role}</span></span>
-            <span class="nav-entry-blurb">{product.blurb}</span>
-          </a>
-        ))}
-      </div>
-    </details>
-    <details class="nav-group">
-      <summary aria-current={onPracticePage ? 'page' : undefined}>In practice</summary>
-      <div class="nav-group-panel">
-        {practice.map((page) => (
-          <a href={page.href} aria-current={current === page.key ? 'page' : undefined}>
-            <span class="nav-entry-name">{page.label}</span>
-            <span class="nav-entry-blurb">{page.blurb}</span>
-          </a>
-        ))}
-      </div>
-    </details>
     {links.map((link) => (
       <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
     ))}
-    <a class="nav-emphasis" href="https://docs.registrystack.org/">Read the docs</a>
-    <a href={repoHref}>GitHub</a>
+    <a href="https://docs.registrystack.org/">Docs</a>
+    <a class="nav-emphasis" href="https://lab.registrystack.org/">Try the demo</a>
   </nav>
 </header>

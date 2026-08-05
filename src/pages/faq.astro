@@ -17,18 +17,18 @@ const groups = [
     items: [
       {
         q: 'What does Registry Stack actually do?',
-        a: 'It lets a registry you already run answer a specific question, or share proof of a fact, without handing over the underlying record. A service gets a yes or no, a status, or a credential; the record stays in the source system.',
-        link: { label: 'See the problem it solves', href: '/problem/' },
+        a: 'It helps a registry you already run provide what another service needs without handing over the complete source record. Depending on the agreed need, that can be one signed answer or selected data.',
+        link: { label: 'Compare the two solutions', href: '/#solutions' },
       },
       {
         q: 'Do we have to replace our current registry or platform?',
-        a: 'No. Registry Stack runs alongside the systems you already operate, in front of the registry source you already keep. You do not have to replace the registry or migrate source records into Registry Stack.',
-        link: { label: 'How it fits the ecosystem', href: '/ecosystem/' },
+        a: 'No. Registry Stack runs alongside the systems you already operate and reads from the registry source you already keep. You do not have to replace the registry or migrate source records into Registry Stack.',
+        link: { label: 'See how it fits', href: '/how-it-fits/' },
       },
       {
         q: 'Can it work with a spreadsheet or a legacy database?',
-        a: 'Yes. Registry Relay reads the files and tables a registry already lives in, including CSV, XLSX, Parquet, and PostgreSQL, and serves a protected, read-only API over them.',
-        link: { label: 'See Registry Relay', href: '/relay/' },
+        a: 'Yes. Registry Stack can read from common files and tables, including CSV, XLSX, Parquet, and PostgreSQL, and provide agreed fields through a read-only API.',
+        link: { label: 'See Protected Registry APIs', href: '/solutions/protected-registry-apis/' },
       },
     ],
   },
@@ -37,18 +37,18 @@ const groups = [
     items: [
       {
         q: 'Does our data leave our systems?',
-        a: 'No. You self-host Registry Stack on your own infrastructure or a partner’s. Records stay in the source, and no records or audit logs flow to Aubex.',
+        a: 'The source records stay in the system run by the registry owner. A signed answer or selected data may leave it when the agreed rules allow. Registry Stack is self-hosted, so records and audit logs do not flow to Aubex.',
         link: { label: 'Read the security model', href: '/security/' },
       },
       {
         q: 'What happens if a connected service is compromised?',
-        a: 'A compromised caller is bounded by the scope and fields it was granted, plus rate limits, monitoring, and revocation. It should not get a database login or a direct line to the source, but broad grants still carry broad risk.',
-        link: { label: 'How the security model holds', href: '/security/' },
+        a: 'A connected service can receive only the questions and fields configured for it, with rate limits, monitoring, and revocation available around that connection. Broad permissions still carry broad risk, so the agreement should remain narrow.',
+        link: { label: 'What the security model covers', href: '/security/' },
       },
       {
         q: 'How do AI agents fit in?',
-        a: 'An AI agent is treated as one more untrusted caller: it gets a checked, minimized answer, not direct access. AI is the reason safer registry surfaces are urgent, not something Registry Stack sells.',
-        link: { label: 'A harness for AI in public services', href: '/ai/' },
+        a: 'An AI-assisted service uses the same defined interface as any other service. It does not receive special access to the source. Registry Stack does not currently sell an AI review or approval product.',
+        link: { label: 'See current use cases', href: '/use-cases/' },
       },
     ],
   },
@@ -57,18 +57,18 @@ const groups = [
     items: [
       {
         q: 'How is this different from an exchange layer like X-Road?',
-        a: 'An exchange layer carries trust and transport between institutions. Registry Stack is the governed registry surface behind it: it still checks scope, fields, and source access even for a request that arrived through a trusted channel.',
-        link: { label: 'Complementary, not competitive', href: '/ecosystem/' },
+        a: 'Registry Stack is deployed next to the source registry, before the exchange layer. It applies the registry owner’s rules and produces the answer or selected data. An exchange layer such as X-Road can then transport the request and response between institutions.',
+        link: { label: 'See how the systems fit together', href: '/how-it-fits/' },
       },
       {
         q: 'How is this different from a foundational ID system like MOSIP?',
         a: 'Identity systems establish who a person is. Registry Stack answers what is true about that person in a specific registry, such as alive, enrolled, or registered, after the identity layer has done its job.',
-        link: { label: 'Where Registry Stack sits', href: '/ecosystem/' },
+        link: { label: 'Where Registry Stack sits', href: '/how-it-fits/' },
       },
       {
         q: 'What standards does it use?',
-        a: 'It adopts established standards rather than inventing them: SD-JWT VC and OpenID4VCI for credentials, DCAT-AP and related profiles for metadata, and SP-DCI (the social protection data-exchange interface) and OGC API for registry exchange.',
-        link: { label: 'The standards we adopt', href: '/ecosystem/' },
+        a: 'It adopts established standards rather than inventing them. Evidence Gateway uses OpenAPI, OIDC, signed JWS, and an optional SD-JWT VC serialization of the same assertion. Registry Relay and Registry Manifest use standards-shaped APIs and metadata. Support differs by standard, so the technical docs carry the exact claims.',
+        link: { label: 'The standards we adopt', href: '/how-it-fits/' },
       },
     ],
   },
@@ -77,27 +77,27 @@ const groups = [
     items: [
       {
         q: 'Is it really free?',
-        a: 'The three products are open source, self-hosted, and complete for a single registry. The subscription adds Aubex engineering support and governance across many registry services.',
-        link: { label: 'See pricing', href: '/pricing/' },
+        a: 'Evidence Gateway, Registry Relay, and Registry Manifest are Apache-2.0 open source and can be self-hosted without a software license fee. Aubex charges for pilot design, integration, deployment help, training, upgrades, and support when a team wants that help.',
+        link: { label: 'See pilot and support', href: '/pilot/' },
       },
       {
-        q: 'Do you charge per citizen or per credential?',
-        a: 'No. Pricing is by the registry services under management, so a program that reaches twice as many people pays the same.',
-        link: { label: 'What we never charge for', href: '/pricing/' },
+        q: 'Do you charge per person or per assertion?',
+        a: 'The open-source software has no per-person or per-assertion license fee. Commercial work is scoped around the pilot, integration, deployment, or support a team asks Aubex to provide.',
+        link: { label: 'What paid help covers', href: '/pilot/' },
       },
       {
         q: 'Can we add more questions after the pilot?',
-        a: 'Yes, and that is the point of connecting a registry. Once it is under management, each new question is a configuration change plus a sign-off from the registry owner: agree the purpose, bound the answer, and it goes live. Questions are not metered or priced individually; the subscription covers the registry service, not each answer.',
+        a: 'Yes. Each new question or data view is configured with the registry owner: agree who needs it, for what purpose, and what can be returned. The same source connection can then support more than the first pilot use case.',
         link: { label: 'What a pilot looks like', href: '/pilot/' },
       },
       {
         q: 'Who uses it today, and is it ready for us?',
-        a: 'The products are release-managed, signed, and running live in a public hosted lab on synthetic data, with integrations you can inspect. Production entry happens through a scoped pilot: one registry, its first questions, safeguards from the first request, with our engineers working directly alongside your team. Early adopters get direct access to the people who build the products.',
+        a: 'The products are release-managed, signed, and running in a public hosted lab on synthetic data. For production use, we recommend a scoped pilot with one registry, its first questions or fields, and the required safeguards. Aubex engineers can work directly with the government and its implementation partner.',
         link: { label: 'What a pilot looks like', href: '/pilot/' },
       },
       {
         q: 'Who is behind Registry Stack?',
-        a: 'It is built by Aubex, the team behind OpenSPP, with seats in Digital Convergence Initiative standards work and contributions to the GovStack registry building block. The code, the documentation, and the hosted lab are public, so what this site claims, you can check.',
+        a: 'It is built by Aubex, the team behind OpenSPP, with seats in Digital Convergence Initiative standards work and contributions to the GovStack registry building block. The code, documentation, releases, and hosted lab are public for review.',
         link: { label: 'Who is behind this', href: '/pilot/#stewardship' },
       },
     ],
@@ -131,7 +131,7 @@ const faqSchema = {
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">FAQ</p>
-          <h1 id="faq-hero-title">Questions we hear, answered plainly.</h1>
+          <h1 id="faq-hero-title">Answers to common questions about Registry Stack.</h1>
           <p class="hero-lead">
             Short answers to the questions program teams, security reviewers, and engineers ask
             first. For the longer story, each answer links to the page that goes deeper.
@@ -163,8 +163,8 @@ const faqSchema = {
   </main>
 
   <DocsHandoff
-    eyebrow="Still have a question?"
-    heading="The docs answer the technical questions; a pilot conversation answers the rest."
+    eyebrow="More information"
+    heading="Read the technical documentation or contact us to discuss a pilot."
     primaryLabel="Read the docs"
     emphasis="pilot"
   />

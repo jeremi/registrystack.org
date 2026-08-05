@@ -5,46 +5,69 @@ import SiteFooter from '../../components/SiteFooter.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import ProtectedRegistryApiFlow from '../../components/ProtectedRegistryApiFlow.astro';
 
-const pageTitle = 'Protected Registry APIs | Registry Stack';
+const pageTitle = 'Protected Registry APIs | Selected reads from existing registries';
 const pageDescription =
-  'Put a safe, read-only doorway in front of a registry you already run. Approved services get scoped access to agreed fields, and every read is recorded.';
+  'Give authorized services read-only access to selected fields from an existing registry while the source records stay with the registry owner.';
 
-const useCases = [
-  'A registry exists, and other services need an approved, official way to read from it.',
-  'A team needs read-only routes without changing the source system.',
-  'Partners need stable routes for real things, like households or suppliers, not raw table names.',
-  'A data-sharing agreement needs its scope, purpose, and audit trail built into the access path.',
-  'A legacy file or database needs a safer front door long before it can be replaced.',
+const goodFit = [
+  'A registry already exists in a file, database, or other system and must remain the official source.',
+  'A public or partner service needs several agreed fields, not a complete export or direct source login.',
+  'The registry owner needs a repeatable way to apply the same field rules and record each read.',
 ];
 
-const exposures = [
-  'Reads by real-world entity',
-  'Only the agreed fields',
-  'Metadata routes',
-  'Discover what is on offer',
-  'Aggregate counts where allowed',
-  'Standards-shaped views where needed',
-];
-
-const protections = [
-  'The source system stays in place.',
-  'Callers never receive a database login.',
-  'Routes name real things, not database tables.',
-  'Access is scoped and recorded in the audit trail.',
-  'Sensitive fields can be hidden, narrowed, or withheld.',
-  'Operational settings stay separate from the public description partners read.',
-];
-
-const products = [
+const agreements = [
   {
-    title: 'Registry Relay',
-    body: 'Serves the protected, read-only API over your existing files and tables.',
-    href: '/relay/',
+    marker: '01',
+    title: 'Describe data in service language',
+    body:
+      'Name people, households, businesses, or other useful records. Describe fields so service teams do not need to understand source tables.',
   },
   {
-    title: 'Registry Manifest',
-    body: 'Describes the registry so partners can see what it offers before they integrate.',
-    href: '/manifest/',
+    marker: '02',
+    title: 'Agree fields service by service',
+    body:
+      'For each public or partner service, write down the purpose and the fields it may read. Fields outside that agreement are not returned.',
+  },
+  {
+    marker: '03',
+    title: 'Keep updates with the registry owner',
+    body:
+      'Protected Registry APIs do not become a second registry. Corrections and updates continue in the source system controlled by its authority.',
+  },
+];
+
+const boundaries = [
+  {
+    title: 'What the service receives',
+    body:
+      'Selected data from the agreed fields for this service and purpose, plus the information needed to understand the response.',
+  },
+  {
+    title: 'What is not returned',
+    body:
+      'Fields outside the agreement, source credentials, and the rest of the record are not returned to the service.',
+  },
+  {
+    title: 'What stays with the registry owner',
+    body:
+      'The source records stay with the authority. Every allowed or refused read leaves an audit record.',
+  },
+];
+
+const handoffComponents = [
+  {
+    name: 'Registry Relay',
+    body:
+      'Connects existing sources and serves selected, read-only registry data under agreed field rules.',
+    docs: 'https://docs.registrystack.org/products/registry-relay/',
+    github: 'https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay',
+  },
+  {
+    name: 'Registry Manifest',
+    body:
+      'Describes the registry, its useful data, and the policy information partners need before integration.',
+    docs: 'https://docs.registrystack.org/products/registry-manifest/',
+    github: 'https://github.com/registrystack/registry-stack/tree/main/products/manifest',
   },
 ];
 ---
@@ -53,20 +76,23 @@ const products = [
   <SiteHeader current="protected-registry-apis" />
 
   <main>
-    <section class="hero" aria-labelledby="protected-registry-apis-title">
+    <section class="hero solution-hero" aria-labelledby="protected-registry-apis-title">
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="eyebrow">Solution &middot; Protected Registry APIs</p>
-          <h1 id="protected-registry-apis-title">Turn existing registries into protected, auditable APIs.</h1>
+          <p class="eyebrow">Product &middot; Protected Registry APIs</p>
+          <h1 id="protected-registry-apis-title">Give services read-only access to selected registry fields.</h1>
           <p class="hero-lead">
-            Protected Registry APIs put a safe, read-only doorway in front of a registry you
-            already run, whether it lives in a file, a database, or a legacy system. Approved
-            services get scoped access to agreed fields, and every read is recorded.
+            The registry owner connects an existing file, database, or registry system and defines
+            which fields each public or partner service may read. The service receives only those
+            fields, every request is recorded, and the source records stay with the authority.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="https://lab.registrystack.org/#services">See it running in the hosted lab</a>
-            <a class="button button-secondary" href="https://docs.registrystack.org/tutorials/deploy-standalone-with-own-data/">Read deployment docs</a>
+            <a class="button button-primary" href="https://lab.registrystack.org/#services">See a selected read</a>
+            <a class="button button-secondary" href="/pilot/">Start with one source</a>
           </div>
+          <p class="hero-note">
+            The live demo shows read-only access to synthetic registry data through an API.
+          </p>
         </div>
       </div>
     </section>
@@ -74,16 +100,16 @@ const products = [
     <section class="section" aria-labelledby="protected-fit-title">
       <div class="section-inner split">
         <div class="section-heading compact">
-          <p class="eyebrow">Where it fits</p>
-          <h2 id="protected-fit-title">Keep the source registry in place. Add the access path around it.</h2>
+          <p class="eyebrow">When to use Protected Registry APIs</p>
+          <h2 id="protected-fit-title">Use it when a service needs several fields from an existing registry.</h2>
           <p>
-            Many institutions already run authoritative registries, but the only way in is a file
-            export, a direct database login, or a one-off API. Protected Registry APIs leave the
-            source where it is and add a governed way to read from it.
+            A registry does not need to be replaced before it can support another service.
+            Registry Relay adds a protected, read-only API while the registry owner keeps the
+            source and remains responsible for corrections and updates.
           </p>
         </div>
-        <ul class="check-list" aria-label="Protected Registry APIs use cases">
-          {useCases.map((item) => (
+        <ul class="check-list" aria-label="When Protected Registry APIs are a good fit">
+          {goodFit.map((item) => (
             <li>{item}</li>
           ))}
         </ul>
@@ -94,107 +120,107 @@ const products = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">How it works</p>
-          <h2 id="protected-how-title">The source stays where it is. The API goes in front.</h2>
+          <h2 id="protected-how-title">The registry owner defines which fields each service can read.</h2>
+          <p>
+            Registry Relay applies that agreement to every request. It returns the
+            permitted fields, refuses fields outside the agreement, and writes an audit record.
+          </p>
         </div>
         <ProtectedRegistryApiFlow />
       </div>
     </section>
 
-    <section class="section" aria-labelledby="protected-exposes-title">
-      <div class="section-inner split">
-        <div class="section-heading compact">
-          <p class="eyebrow">What it exposes</p>
-          <h2 id="protected-exposes-title">Read access to real registry data, shaped for the services allowed to use it.</h2>
-          <p>
-            A protected registry API can return reads by entity, only the agreed fields, metadata,
-            and allowed counts, without opening the underlying database or copying the whole source
-            file.
-          </p>
-        </div>
-        <div class="solution-control-list" aria-label="Protected Registry APIs exposed surfaces">
-          {exposures.map((item) => (
-            <span>{item}</span>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="protected-protects-title">
+    <section class="section" aria-labelledby="protected-agreement-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">What it protects</p>
-          <h2 id="protected-protects-title">The API is the access path. The source remains authoritative.</h2>
-        </div>
-        <ul class="solution-protection-grid">
-          {protections.map((item) => (
-            <li>{item}</li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="protected-stack-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">How it is built</p>
-          <h2 id="protected-stack-title">Two open-source products do the work.</h2>
+          <p class="eyebrow">Define the data access</p>
+          <h2 id="protected-agreement-title">Before connecting a service, define the data, purpose, and permitted fields.</h2>
           <p>
-            Registry Relay serves the protected read-only API, and Registry Manifest describes the
-            registry so partners know what it offers before they connect.
+            The registry owner and service team document the access in terms that policy,
+            security, and delivery teams can review.
           </p>
         </div>
-        <div class="solution-product-grid built-from-two">
-          {products.map((product) => (
+        <div class="agreement-grid">
+          {agreements.map((item) => (
             <article>
-              <h3>{product.title}</h3>
-              <p>{product.body}</p>
-              <a class="inline-cta" href={product.href}>Open {product.title} &rarr;</a>
+              <span>{item.marker}</span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="claim-band" aria-labelledby="protected-relationship-title">
-      <div class="section-inner split">
-        <div class="section-heading compact">
-          <p class="pill">Relationship to Evidence Gateway</p>
-          <h2 id="protected-relationship-title">Safe reads are the foundation for shared evidence.</h2>
-        </div>
-        <div class="claim-body">
+    <section class="section section-muted" aria-labelledby="protected-boundary-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">What the service can receive</p>
+          <h2 id="protected-boundary-title">Each service receives only the fields agreed for its purpose.</h2>
           <p>
-            Protected Registry APIs give trusted systems a safe way to read from a registry.
-            Evidence Gateway builds on that foundation when the caller needs proof of a fact, a yes
-            or no, a redacted answer, or a credential instead of a record.
+            The source record remains in the registry. A request for any other field is refused
+            and recorded.
           </p>
-          <a class="inline-cta" href="/solutions/evidence-gateway/">See the Evidence Gateway solution &rarr;</a>
+        </div>
+        <div class="boundary-grid">
+          {boundaries.map((item, index) => (
+            <article class={index === 1 ? 'boundary-stop-card' : ''}>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="protected-next-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">Where to start</p>
-          <h2 id="protected-next-title">Start with the registry that already exists.</h2>
-          <p>
-            Registry Relay gives that source a protected read-only API. Registry Manifest makes it
-            easy for partners to see what it offers. Evidence Gateway takes over when the request
-            needs a proof or a credential instead of a record.
-          </p>
+    <section class="claim-band" aria-labelledby="protected-choice-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="pill">When a service needs evidence</p>
+          <h2 id="protected-choice-title">Use Evidence Gateway when a service only needs proof of one fact.</h2>
         </div>
-        <div class="solution-choice-row">
-          <a class="button button-primary" href="/relay/">Explore Registry Relay</a>
-          <a class="button button-secondary" href="/solutions/evidence-gateway/">See the Evidence Gateway solution</a>
+        <div class="claim-body">
+          <p>
+            Registry Relay returns selected data. When a service needs only one predefined,
+            signed fact, use Evidence Gateway.
+          </p>
+          <a class="inline-cta" href="/solutions/evidence-gateway/">See the Evidence Gateway &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section technical-handoff" aria-labelledby="protected-components-title">
+      <div class="section-inner">
+        <div class="technical-heading">
+          <div>
+            <p class="eyebrow">Open-source components</p>
+            <h2 id="protected-components-title">The components used by Protected Registry APIs.</h2>
+          </div>
+          <p>The technical documentation explains how each component is configured and deployed.</p>
+        </div>
+        <div class="technical-component-grid">
+          {handoffComponents.map((component) => (
+            <article>
+              <div>
+                <h3>{component.name}</h3>
+                <p>{component.body}</p>
+              </div>
+              <div class="technical-links">
+                <a href={component.docs}>Docs</a>
+                <a href={component.github}>GitHub</a>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
 
     <DocsHandoff
       eyebrow="For your technical team"
-      heading="Deployment, configuration, and API contracts live in the docs."
-      primaryLabel="Read deployment docs"
-      primaryHref="https://docs.registrystack.org/tutorials/deploy-standalone-with-own-data/"
+      heading="See how to configure source connections, field permissions, and deployment."
+      primaryLabel="Read the technical docs"
+      primaryHref="https://docs.registrystack.org/products/registry-relay/"
+      emphasis="docs"
     />
   </main>
 
@@ -202,18 +228,142 @@ const products = [
 </Base>
 
 <style>
-  /* This solution is built from two products, not three: a centered two-up grid
-     reads as intentional rather than a three-column row with an empty cell. */
-  .built-from-two {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 680px;
+  .solution-hero .hero-copy {
+    max-width: 920px;
   }
 
-  @media (max-width: 620px) {
-    .built-from-two {
+  .agreement-grid,
+  .boundary-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0 auto;
+    max-width: 980px;
+  }
+
+  .agreement-grid article,
+  .boundary-grid article {
+    background: #ffffff;
+    border: 1px solid var(--registry-rule);
+    min-width: 0;
+    padding: 22px;
+  }
+
+  .agreement-grid article > span {
+    color: var(--registry-stamp);
+    font-family: var(--registry-mono);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .agreement-grid h3,
+  .boundary-grid h3 {
+    font-size: 21px;
+    margin: 14px 0 9px;
+  }
+
+  .boundary-grid h3 {
+    margin-top: 0;
+  }
+
+  .agreement-grid p,
+  .boundary-grid p {
+    color: var(--registry-body);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .boundary-grid article {
+    border-top: 4px solid var(--registry-blue);
+  }
+
+  .boundary-grid .boundary-stop-card {
+    border-top-color: var(--registry-stamp);
+  }
+
+  .technical-handoff {
+    border-top: 3px solid var(--registry-ink);
+  }
+
+  .technical-handoff .section-inner {
+    padding-bottom: clamp(42px, 6vw, 62px);
+    padding-top: clamp(42px, 6vw, 62px);
+  }
+
+  .technical-heading {
+    align-items: end;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 0.55fr);
+    margin-bottom: 22px;
+  }
+
+  .technical-heading h2 {
+    font-size: clamp(26px, 3vw, 36px);
+    margin: 6px 0 0;
+  }
+
+  .technical-heading > p {
+    color: var(--registry-body);
+    margin: 0;
+  }
+
+  .technical-component-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .technical-component-grid article {
+    background: var(--registry-paper);
+    border: 1px solid var(--registry-rule);
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+    min-width: 0;
+    padding: 18px;
+  }
+
+  .technical-component-grid h3 {
+    font-size: 18px;
+    margin: 0 0 5px;
+  }
+
+  .technical-component-grid p {
+    color: var(--registry-body);
+    font-size: 14px;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .technical-links {
+    align-content: start;
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .technical-links a {
+    border: 1px solid var(--registry-rule);
+    color: var(--registry-blue);
+    font-family: var(--registry-mono);
+    font-size: 11px;
+    padding: 5px 7px;
+  }
+
+  @media (max-width: 800px) {
+    .agreement-grid,
+    .boundary-grid,
+    .technical-heading,
+    .technical-component-grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .technical-component-grid article {
+      display: grid;
     }
   }
 </style>

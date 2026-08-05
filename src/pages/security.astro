@@ -6,7 +6,7 @@ import DocsHandoff from '../components/DocsHandoff.astro';
 
 const pageTitle = 'Security | Registry Stack';
 const pageDescription =
-  'The Registry Stack security model: the properties it protects, what a deployment can reach, the threat model in scope and out, and how security is shared with your team.';
+  'How Registry Stack limits access to source data, which threats its controls address, and which security responsibilities remain with the operator.';
 const securityDocsHref = 'https://docs.registrystack.org/spec/rs-sec-g/';
 const securityReportHref =
   'https://github.com/registrystack/registry-stack/security/advisories/new';
@@ -23,22 +23,22 @@ const properties = [
   {
     title: 'Confidentiality',
     body:
-      'A caller receives the minimum that answers its question, a fact, a status, or a credential, never a bulk export and never fields outside the scope you grant it.',
+      'A connected service can receive only the answers or fields configured for it. Source access should use a read-only account limited to the records and fields the deployment needs.',
   },
   {
     title: 'Integrity',
     body:
-      'Configured credential and signed-response surfaces are time-bounded, so a verifier can detect a forged, altered, or stale proof. The consultation path is read-only, so the source is never changed.',
+      'Evidence Gateway assertions are signed, audience-bound, and time-limited. Registry consultation is read-only, so Registry Stack does not change the source record.',
   },
   {
     title: 'Availability',
     body:
-      'Each registry runs its own deployment in its own environment, with no dependency on Aubex to serve a request, so there is no shared service whose outage takes everyone down.',
+      'Each registry can run its own deployment without relying on an Aubex-hosted service to answer requests. Availability still depends on the operator and the connected source system.',
   },
   {
     title: 'Auditability',
     body:
-      'Trust-critical requests are written as hash-chained audit records, so retained logs can reconstruct what was asked and what was answered. Stronger integrity depends on operator-owned append-only storage or anchoring.',
+      'Evidence Gateway records authorized access before a source read and records disclosure before releasing a signed answer. Relay also records protected reads. Retention and independent review remain operator responsibilities.',
   },
 ];
 
@@ -57,8 +57,8 @@ const access = [
     title: 'What it is built not to do',
     items: [
       'Act as a data warehouse: it reads to answer and returns a minimized result, not a bulk export.',
-      'Return more to a caller than the configured scope allows.',
-      'Write back to, or change, the source system; the consultation path is read-only.',
+      'Return more to a connected service than the configured scope allows.',
+      'Write back to, or change, the source system; source connections are read-only.',
       'Send records or audit logs to Aubex: you self-host, and those data stay in your environment.',
     ],
   },
@@ -67,24 +67,24 @@ const access = [
 // 3. Controls that bound the blast radius. The guarantees (signing, audit) are
 //    stated above as properties; these are the containment measures only.
 const controls = [
-  'Least-privilege source access: a read-only account scoped to only the fields and records the deployment needs, so even a full compromise is bounded by what that account can read.',
+  'Least-privilege source access: a read-only account scoped to only the fields and records the deployment needs, so even a full compromise is limited to what that account can read.',
   'One deployment per registry, in that registry’s own environment, so there is no central pool a single breach could drain.',
-  'Defense in depth: authentication, scopes, and field limits are separate, checked layers, so one misconfiguration is less likely to expose everything.',
+  'Defense in depth: authentication, authorization, predefined questions, and field limits are separate, checked layers, so one misconfiguration is less likely to expose everything.',
   'Network isolation, secret management, and off-host audit retention, run by the operator, keep the host’s reachable surface and its credentials contained.',
   'Fail-closed configuration: validation runs at startup, so a malformed grant or an invalid key usage fails loudly before serving, and scopes and field limits are explicit configuration a reviewer can read.',
 ];
 
 // 4. Threat model, stated as two explicit sides.
 const defends = [
-  'Eavesdropping or tampering with a proof in transit: configured signed-response and credential surfaces are verifiable and carried over TLS.',
-  'A caller reaching beyond its granted scope: authentication, scopes, and field limits are checked on every request.',
-  'A forged or replayed proof: signed-response and credential surfaces use signatures and short lifetimes to make a fake or stale proof fail verification, and a replay store consumes one-time holder proofs and issuance nonces.',
-  'A stolen credential used from outside: scoped, rotatable credentials and per-request checks limit it, and the audit trail records its use.',
+  'Eavesdropping or tampering in transit: requests and responses travel over operator-provided TLS, and Evidence Gateway assertions are signed for independent verification.',
+  'A connected service reaching beyond its authority: each product checks its own configured authorization boundary on every request.',
+  'A forged, altered, or stale assertion: verifiers check the signature, trusted issuer, audience, purpose, validity, and retained request expectations before use.',
+  'A stolen service access token: short lifetimes, narrow authority, rate limits, and per-request checks reduce what it can reach, while the audit trail records its use.',
   'Misuse that has to be caught after the fact: hash-chained audit records show who asked what, and what was answered, when the operator retains them in protected storage.',
 ];
 
 const outOfScope = [
-  'A compromised caller can still use the legitimate scope it was granted. If that grant is broad, it can collect many allowed answers, so grants need to stay narrow and revocable.',
+  'A compromised connected service can still use the legitimate scope it was granted. If that grant is broad, it can collect many allowed answers, so grants need to stay narrow and revocable.',
   'An attacker with arbitrary, ongoing control of the host can reach the source data the deployment is configured to read, the credentials it holds, and its audit log. Least-privilege scoping bounds what that is, but cannot remove it.',
   'The security of the source system itself stays with the team that runs it.',
   'Establishing who a person is stays with the foundational identity layer.',
@@ -93,8 +93,8 @@ const outOfScope = [
 ];
 
 const provides = [
-  'Open-source, hardenable software with read-only consultation as the default path.',
-  'Signed release assets with checksums, image digests, software bill of materials (SBOM) files, vulnerability scan reports, and a signed release capsule, plus published posture and audit schemas and a local doctor check (registryctl doctor).',
+  'Open-source software designed for read-only registry consultation and hardened deployment.',
+  'Signed release assets with checksums, image digests, software bill of materials (SBOM) files, vulnerability scan reports, and a signed release capsule, plus published security and audit contracts and local validation tools.',
   'A hardening checklist in the docs and a coordinated-disclosure process.',
 ];
 
@@ -108,7 +108,7 @@ const operates = [
 const verify = [
   'The products are open source, so your team and your auditors can review exactly what runs.',
   'Keyless cosign signatures, checksums, SBOM files, and release-level SLSA provenance (a supply-chain integrity attestation) for tag-triggered releases let you confirm what you deploy.',
-  'A local doctor check (registryctl doctor) validates a deployment against the expected posture for its declared profile.',
+  'Product-specific checks validate Relay projects and Evidence bundles before the service starts.',
   'You can run the whole flow in the hosted lab on synthetic data before any real record is touched.',
 ];
 
@@ -131,21 +131,21 @@ const evidence = [
   },
 ];
 
-const credentialLifecycle = [
+const assertionProtection = [
   {
-    title: 'Signing keys rotate explicitly',
+    title: 'Authority is checked before source access',
     body:
-      'Registry Notary signing keys move through active, publish-only, and disabled states. Old verification keys can remain published for a verifier window without signing new credentials.',
+      'Evidence Gateway authenticates the requester and authorizes the complete predefined request before it acquires source credentials or reads the registry.',
   },
   {
-    title: 'Compromise response is operational',
+    title: 'Signing keys rotate without invalidating current answers',
     body:
-      'A suspected signing-key compromise is an operator incident: disable or rotate the affected key, preserve evidence, and decide which issued credentials need suspension or replacement.',
+      'The operator rotates the active signing key and keeps retired public keys available long enough for assertions that are still within their validity window.',
   },
   {
-    title: 'Credential status is optional',
+    title: 'Assertions expire rather than entering a lifecycle',
     body:
-      'Credentials are time-bounded by profile validity. Deployments that need live suspension or revocation can enable the credential status store and protect it as operator infrastructure.',
+      'An Evidence assertion is stateless and time-limited. There is no issuance session, status list, or revocation service; relying services reject it after its validity window.',
   },
 ];
 ---
@@ -158,12 +158,12 @@ const credentialLifecycle = [
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Security</p>
-          <h1 id="security-hero-title">What Registry Stack protects, and what it cannot.</h1>
+          <h1 id="security-hero-title">What the security model covers, and what remains your responsibility.</h1>
           <p class="hero-lead">
-            To answer a question, a deployment reads from your source, within the scope you
-            configure. That makes it a sensitive part of your infrastructure, not a neutral pipe.
-            This is the security model: the properties it protects, what a deployment can reach, the
-            threat model in scope and out, and how security is shared with your team.
+            A Registry Stack deployment reads the source data and uses the credentials and signing
+            keys configured by its operator. It is therefore a sensitive infrastructure
+            component. This page explains the controls in the software, the risks those controls
+            address, and the security work required from the operating team.
           </p>
         </div>
       </div>
@@ -172,11 +172,11 @@ const credentialLifecycle = [
     <section class="section" aria-labelledby="security-properties-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">What the model protects</p>
-          <h2 id="security-properties-title">Four properties, and the mechanism behind each.</h2>
+          <p class="eyebrow">Security properties</p>
+          <h2 id="security-properties-title">How Registry Stack addresses confidentiality, integrity, availability, and auditability.</h2>
           <p>
-            A security model is clearest when it says what it is protecting and how. These are the
-            four properties a deployment is built to hold, with the mechanism that delivers each.
+            These properties depend on both the software controls and how the deployment is
+            configured and operated.
           </p>
         </div>
         <div class="security-properties">
@@ -188,16 +188,12 @@ const credentialLifecycle = [
           ))}
         </div>
         <p class="security-keys-note">
-          A deployment holds security-sensitive secrets: the read-only credential it uses to reach
-          the source, the key used for configured signed-response or credential surfaces, and the
-          audit HMAC secret (the key that makes the audit chain tamper-evident) used for keyed audit
-          hashes. They live in your secret management, never with Aubex. The audit chain is
-          tamper-evident when retained logs and tail
-          hashes are protected or anchored; it is not a defense against the operating institution
-          rewriting all of its own evidence. The fact that someone asked about a person can itself
-          be sensitive, so audit records deserve the same access governance as the registry
-          itself, and they stay with the operator. Traffic is protected by TLS that you terminate,
-          and the source records at rest stay in the systems you already run.
+          A deployment holds the read-only source credential, signing keys used for configured
+          Evidence responses, and secrets used for audit integrity and subject pseudonyms. These
+          secrets stay in the operator&rsquo;s secret management system and
+          are not held by Aubex. Audit records can themselves reveal sensitive activity and need
+          access controls and protected retention. The operator also provides TLS and protects the
+          source records at rest.
         </p>
       </div>
     </section>
@@ -205,12 +201,12 @@ const credentialLifecycle = [
     <section class="section section-muted" aria-labelledby="security-boundary-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">The trust boundary</p>
-          <h2 id="security-boundary-title">Where Registry Stack sits, and what it can touch.</h2>
+          <p class="eyebrow">Deployment access</p>
+          <h2 id="security-boundary-title">What a Registry Stack deployment can access.</h2>
           <p>
-            A deployment is a trusted intermediary between a caller and a source. It has to read
-            the source to produce an answer, so the security work is to keep what it can reach
-            narrow, and to run it where it can be defended.
+            A deployment sits between a public or partner service and a registry source. Its source
+            account and network access should be limited to the data required for the configured
+            questions and fields.
           </p>
         </div>
         <div class="security-pair">
@@ -231,11 +227,11 @@ const credentialLifecycle = [
     <section class="section" aria-labelledby="security-controls-title">
       <div class="section-inner split">
         <div class="section-heading compact">
-          <p class="eyebrow">Bounding the blast radius</p>
-          <h2 id="security-controls-title">The controls that limit what a flaw or a breach can reach.</h2>
+          <p class="eyebrow">Limiting exposure</p>
+          <h2 id="security-controls-title">Controls that limit the impact of a flaw or compromised deployment.</h2>
           <p>
-            No control makes a breach impossible. Together they keep the reachable surface small,
-            contain a compromise to a single registry, and make misuse detectable after the fact.
+            No control makes a breach impossible. These controls limit what the deployment can
+            reach, isolate registries from each other, and help operators detect misuse.
           </p>
         </div>
         <ul class="check-list">
@@ -250,7 +246,7 @@ const credentialLifecycle = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">Threat model</p>
-          <h2 id="security-threat-title">What the model defends against, and what it does not.</h2>
+          <h2 id="security-threat-title">Threats addressed by the controls, and risks that remain.</h2>
           <p>
             A useful threat model is explicit about both sides. The size of any exposure depends on
             how narrowly the source account is scoped and how well the host is run.
@@ -281,11 +277,11 @@ const credentialLifecycle = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">Shared responsibility</p>
-          <h2 id="security-shared-title">Security is a job we split with your team.</h2>
+          <h2 id="security-shared-title">How security responsibilities are divided.</h2>
           <p>
-            Aubex ships software that can be operated securely. Running it safely in
-            production depends on the deployment, the same way it would for any infrastructure you
-            self-host.
+            Registry Stack provides software controls and security documentation. The operator is
+            responsible for the infrastructure, source permissions, secrets, monitoring, and
+            institutional policy used in production.
           </p>
         </div>
         <div class="security-pair">
@@ -309,18 +305,18 @@ const credentialLifecycle = [
       </div>
     </section>
 
-    <section class="section section-muted" aria-labelledby="credential-lifecycle-title">
+    <section class="section section-muted" aria-labelledby="assertion-protection-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">Credential lifecycle</p>
-          <h2 id="credential-lifecycle-title">Short-lived by default, status-aware when you need it.</h2>
+          <p class="eyebrow">Signed assertions</p>
+          <h2 id="assertion-protection-title">Authorization, signing, and limited validity.</h2>
           <p>
-            Credential risk does not end at issuance. The deployment chooses key rotation,
-            compromise response, and whether verifiers need a live status check after issuance.
+            Evidence Gateway returns one stateless assertion. The service checks authority before source
+            access, signs the answer, and gives it an explicit validity window.
           </p>
         </div>
         <div class="security-properties">
-          {credentialLifecycle.map((item) => (
+          {assertionProtection.map((item) => (
             <article class="quiet-card">
               <h3>{item.title}</h3>
               <p>{item.body}</p>
@@ -333,11 +329,11 @@ const credentialLifecycle = [
     <section class="section" aria-labelledby="security-verify-title">
       <div class="section-inner split">
         <div class="section-heading compact">
-          <p class="eyebrow">Verify it yourself</p>
-          <h2 id="security-verify-title">You can inspect everything you run.</h2>
+          <p class="eyebrow">Review the implementation</p>
+          <h2 id="security-verify-title">Review the software and release evidence before deployment.</h2>
           <p>
-            Everything a single registry needs is open source and self-hosted, so your team and your
-            auditors can review exactly what runs before trusting it.
+            The components are open source and self-hosted. Your team and auditors can inspect the
+            source, verify a release, and test the deployment with synthetic data.
           </p>
           <a class="inline-cta" href="https://lab.registrystack.org/">Try the live demo on synthetic data &rarr;</a>
           <a class="inline-cta" href={releaseVerifyHref}>Verify a release &rarr;</a>
