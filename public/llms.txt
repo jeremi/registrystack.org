@@ -16,4 +16,4 @@
 ## Related sites
 
 - [Documentation](https://docs.registrystack.org/): Technical reference and specifications for Evidence, Registry Relay, Registry Mint, and Registry Manifest.
-- [Live demo](https://lab.registrystack.org/): A hosted lab running the full stack on synthetic data only.
+- [Live demo](https://lab.registrystack.org/): A hosted synthetic-data demonstration, not a production integration reference.

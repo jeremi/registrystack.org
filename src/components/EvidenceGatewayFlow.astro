@@ -13,10 +13,10 @@ const steps = [
     note: 'Requester · purpose · requirement',
   },
   {
-    title: 'Read the current source record',
+    title: 'Follow the reviewed source plan',
     body:
-      'Evidence Gateway makes one fixed, bounded source request and validates the response. It does not browse candidates or copy the source record.',
-    note: 'One source · bounded response',
+      'Evidence Gateway executes only the predefined, bounded source steps and validates each response before continuing. It does not improvise a new source route or copy the source record.',
+    note: 'Closed plan · bounded responses',
   },
   {
     title: 'Derive, sign, audit, and release',
@@ -49,7 +49,7 @@ const steps = [
   <div class="return-route" aria-label="Signed Evidence Gateway response">
     <div class="route-heading">
       <span>What the relying service receives</span>
-      <p>One stateless signed assertion containing the approved answer.</p>
+      <p>A signed minimum-disclosure response containing the approved answer.</p>
     </div>
 
     <article class="route-card route-service">
@@ -60,7 +60,7 @@ const steps = [
         <strong>Active</strong>
         <small>Source: business registry</small>
       </div>
-      <p>The assertion carries its purpose, audience, validity, and an opaque subject binding. The relying service verifies it before use.</p>
+      <p>The assertion carries its purpose, validity, and an audience or holder binding. The relying service verifies it before use.</p>
     </article>
 
     <div class="audit-slip">

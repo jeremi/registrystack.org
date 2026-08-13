@@ -14,14 +14,14 @@ const relationships = [
     examples: 'OpenCRVS, OpenSPP, DHIS2, and custom systems',
     label: 'Works alongside',
     body:
-      'The existing system keeps its records, write workflows, and user interface. Registry Stack adds a read-only interface for agreed questions or fields. The hosted lab demonstrates connections to OpenCRVS and DHIS2, but that is not a promise of automatic integration with every version or deployment.',
+      'The existing system keeps its records, write workflows, and user interface. Registry Relay can serve reviewed SQLite views prepared from it, while Evidence Gateway can use a predefined HTTP source contract. The technical docs include reviewed OpenCRVS- and DHIS2-shaped examples, not automatic integrations with every deployment.',
   },
   {
-    system: 'Spreadsheets and databases',
-    examples: 'CSV, XLSX, and selected PostgreSQL tables',
-    label: 'Connects to supported sources',
+    system: 'Files and databases',
+    examples: 'Reviewed SQLite views and institution-owned extracts',
+    label: 'Uses a reviewed handoff',
     body:
-      'Registry Relay can place a protected, read-only API over these sources. The registry owner still maintains the source and decides which fields a public or partner service may read.',
+      'Registry Relay reads reviewed, read-only SQLite views. A CSV, XLSX, Parquet file, PostgreSQL database, or another source must first be converted to a reviewed SQLite view or extract by a process the institution owns and Relay does not see.',
   },
   {
     system: 'Exchange and integration layers',
@@ -32,24 +32,24 @@ const relationships = [
   },
   {
     system: 'Identity and access systems',
-    examples: 'MOSIP eSignet and other identity providers',
-    label: 'Relies on an identity provider',
+    examples: 'Institutional OIDC providers and Registry Mint',
+    label: 'Relies on verified identity',
     body:
-      'Identity systems establish who a person or service is. Registry Stack uses that identity when checking a request; it does not enroll people, issue national identifiers, or replace identity and access management. An eSignet-backed flow is demonstrated in the lab.',
+      'Registry Stack verifies service access tokens from a configured issuer. It does not enroll people, issue national identifiers, or replace identity and access management. Registry Mint can issue short-lived tokens for machine clients when a deployment has no suitable authorization server.',
   },
   {
-    system: 'Signed assertion formats',
-    examples: 'Signed JWS and SD-JWT VC',
-    label: 'Returns one assertion in two encodings',
+    system: 'Signed assertions and wallet delivery',
+    examples: 'Signed JWS, SD-JWT VC, and an optional OID4VCI adapter',
+    label: 'Supports bounded profiles',
     body:
-      'Evidence Gateway returns a stateless signed assertion. Signed JWS is the default; SD-JWT VC is an optional serialization of the same assertion. It does not add a credential lifecycle, wallet flow, or presentation service.',
+      'Evidence Gateway returns signed JWS by default and can encode the same assertion as SD-JWT VC. An optional adapter delivers holder-bound Evidence credentials through a bounded OID4VCI 1.0 Final profile. The adapter adds no signing or Evidence semantics, and the stack is not a general wallet or credential-lifecycle platform.',
   },
   {
     system: 'Catalogs and standards',
     examples: 'DCAT, BRegDCAT-AP, CPSV-AP, JSON Schema, and OpenAPI',
     label: 'Publishes supported formats',
     body:
-      'Registry Manifest and Registry Relay can publish machine-readable descriptions in these formats. Support and conformance evidence differ by standard, so Registry Stack does not make one blanket statement of standards conformance.',
+      'Registry Manifest publishes portable metadata such as DCAT-family and CPSV-AP descriptions. Relay generates deployment-specific OpenAPI, JSON Schema, SHACL, contexts, and discovery metadata from its compiled contract. Support and evidence differ by standard, so Registry Stack makes no blanket conformance claim.',
   },
   {
     system: 'Once-only evidence exchange',
@@ -139,9 +139,9 @@ const relationships = [
           </li>
         </ol>
         <p class="product-path-note">
-          Evidence Gateway returns one signed fact. Registry Relay returns protected, selected
-          data. Evidence Gateway may use a Relay-protected API as one fixed source, but each
-          product keeps its own authorization and configuration boundary.
+          Evidence Gateway returns signed facts. Registry Relay returns governed, selected data.
+          Evidence Gateway may use a Relay-protected exact lookup as one predefined HTTP source,
+          but each product keeps its own authorization, configuration, and audit boundary.
         </p>
       </div>
     </section>

@@ -55,8 +55,9 @@ independently deployed lab is temporarily unreachable.
   available.
 - Explain the two current product paths: Evidence Gateway when a service needs
   only a fact, and Registry Relay when it needs selected data. Do not describe
-  the underlying Evidence service as a credential lifecycle, wallet service,
-  or decision engine.
+  the underlying Evidence runtime as a general credential lifecycle, wallet
+  platform, or decision engine. Describe the optional OID4VCI adapter narrowly
+  as a holder-bound delivery service, separate from the core runtime.
 - State only current, inspectable capabilities. Product implementation detail
   belongs in the technical documentation.
 - Keep `Answer the question. Keep the records.` as the deliberate homepage

@@ -23,12 +23,12 @@ const properties = [
   {
     title: 'Confidentiality',
     body:
-      'A connected service can receive only the answers or fields configured for it. Source access should use a read-only account limited to the records and fields the deployment needs.',
+      'A connected service can receive only the result allowed by its Evidence grant or Relay access profile. Relay reads compiled properties from reviewed SQLite views; Evidence executes only its reviewed, bounded source plan.',
   },
   {
     title: 'Integrity',
     body:
-      'Evidence Gateway assertions are signed, audience-bound, and time-limited. Registry consultation is read-only, so Registry Stack does not change the source record.',
+      'Evidence Gateway assertions are signed, time-limited, and either audience-scoped or holder-bound under separate verification policies. Registry consultation is read-only, so Registry Stack does not change the source record.',
   },
   {
     title: 'Availability',
@@ -48,8 +48,8 @@ const access = [
   {
     title: 'What a deployment can reach',
     items: [
-      'The source fields and records you connect it to, within the scope you configure.',
-      'The credentials you give it to read that source.',
+      'The reviewed SQLite views, extracts, or fixed HTTP responses its configured product path is allowed to read.',
+      'Any source credentials configured for Evidence. Relay V2 makes no upstream source call and holds no upstream source credential.',
       'The audit log it writes about the requests it handles.',
     ],
   },
@@ -67,7 +67,7 @@ const access = [
 // 3. Controls that bound the blast radius. The guarantees (signing, audit) are
 //    stated above as properties; these are the containment measures only.
 const controls = [
-  'Least-privilege source access: a read-only account scoped to only the fields and records the deployment needs, so even a full compromise is limited to what that account can read.',
+  'Least-privilege source access: Relay exposes only reviewed SQLite views, while Evidence uses only predefined HTTP or SQLite acquisitions. Any Evidence source credential should be limited to the records and operations the deployment needs.',
   'One deployment per registry, in that registry’s own environment, so there is no central pool a single breach could drain.',
   'Defense in depth: authentication, authorization, predefined questions, and field limits are separate, checked layers, so one misconfiguration is less likely to expose everything.',
   'Network isolation, secret management, and off-host audit retention, run by the operator, keep the host’s reachable surface and its credentials contained.',
@@ -78,7 +78,7 @@ const controls = [
 const defends = [
   'Eavesdropping or tampering in transit: requests and responses travel over operator-provided TLS, and Evidence Gateway assertions are signed for independent verification.',
   'A connected service reaching beyond its authority: each product checks its own configured authorization boundary on every request.',
-  'A forged, altered, or stale assertion: verifiers check the signature, trusted issuer, audience, purpose, validity, and retained request expectations before use.',
+  'A forged, altered, or stale assertion: verifiers check the signature, trusted issuer, audience or holder proof, purpose, validity, and retained request expectations before use.',
   'A stolen service access token: short lifetimes, narrow authority, rate limits, and per-request checks reduce what it can reach, while the audit trail records its use.',
   'Misuse that has to be caught after the fact: hash-chained audit records show who asked what, and what was answered, when the operator retains them in protected storage.',
 ];
@@ -94,12 +94,12 @@ const outOfScope = [
 
 const provides = [
   'Open-source software designed for read-only registry consultation and hardened deployment.',
-  'Signed release assets with checksums, image digests, software bill of materials (SBOM) files, vulnerability scan reports, and a signed release capsule, plus published security and audit contracts and local validation tools.',
+  'Release assets covered by a Sigstore-signed checksum file, a consolidated SPDX software bill of materials (SBOM), a checksum-covered security-evidence archive, and a release manifest, plus published security and audit contracts and local validation tools.',
   'A hardening checklist in the docs and a coordinated-disclosure process.',
 ];
 
 const operates = [
-  'A least-privilege, read-only source account scoped to only what the service needs.',
+  'Reviewed Relay source views and, where Evidence calls an upstream API, a least-privilege source credential.',
   'Hosting hardening, network isolation, TLS termination, secret management, and patching.',
   'Monitoring, key rotation, audit-log protection, and incident response for the deployment.',
   'The legal authority and the policy for who may ask, and for what purpose.',
@@ -107,9 +107,9 @@ const operates = [
 
 const verify = [
   'The products are open source, so your team and your auditors can review exactly what runs.',
-  'Keyless cosign signatures, checksums, SBOM files, and release-level SLSA provenance (a supply-chain integrity attestation) for tag-triggered releases let you confirm what you deploy.',
+  'Sigstore-signed checksums, a consolidated SPDX SBOM, a security-evidence archive, a release manifest, and candidate attestations let you confirm what you deploy.',
   'Product-specific checks validate Relay projects and Evidence bundles before the service starts.',
-  'You can run the whole flow in the hosted lab on synthetic data before any real record is touched.',
+  'You can inspect the hosted synthetic-data demonstration before any real record is touched; it is not a production integration reference.',
 ];
 
 const evidence = [
@@ -143,9 +143,9 @@ const assertionProtection = [
       'The operator rotates the active signing key and keeps retired public keys available long enough for assertions that are still within their validity window.',
   },
   {
-    title: 'Assertions expire rather than entering a lifecycle',
+    title: 'Assertions expire rather than entering a status lifecycle',
     body:
-      'An Evidence assertion is stateless and time-limited. There is no issuance session, status list, or revocation service; relying services reject it after its validity window.',
+      'A direct Evidence assertion is stateless and time-limited. The optional OID4VCI adapter adds bounded delivery state but no status list, revocation, reissuance, or Evidence signing key.',
   },
 ];
 ---
@@ -160,8 +160,8 @@ const assertionProtection = [
           <p class="eyebrow">Security</p>
           <h1 id="security-hero-title">What the security model covers, and what remains your responsibility.</h1>
           <p class="hero-lead">
-            A Registry Stack deployment reads the source data and uses the credentials and signing
-            keys configured by its operator. It is therefore a sensitive infrastructure
+            A Registry Stack deployment reads source data and may use source credentials and
+            signing keys configured by its operator. It is therefore a sensitive infrastructure
             component. This page explains the controls in the software, the risks those controls
             address, and the security work required from the operating team.
           </p>
@@ -188,12 +188,12 @@ const assertionProtection = [
           ))}
         </div>
         <p class="security-keys-note">
-          A deployment holds the read-only source credential, signing keys used for configured
-          Evidence responses, and secrets used for audit integrity and subject pseudonyms. These
-          secrets stay in the operator&rsquo;s secret management system and
-          are not held by Aubex. Audit records can themselves reveal sensitive activity and need
-          access controls and protected retention. The operator also provides TLS and protects the
-          source records at rest.
+          A deployment may hold an Evidence source credential, Evidence signing keys, and secrets
+          used for audit integrity and subject pseudonyms. Relay V2 instead binds a read-only
+          SQLite source and holds no upstream source credential. These secrets stay in the
+          operator&rsquo;s secret management system and are not held by Aubex. Audit records can
+          themselves reveal sensitive activity and need access controls and protected retention.
+          The operator also provides TLS and protects the source records at rest.
         </p>
       </div>
     </section>
@@ -249,7 +249,8 @@ const assertionProtection = [
           <h2 id="security-threat-title">Threats addressed by the controls, and risks that remain.</h2>
           <p>
             A useful threat model is explicit about both sides. The size of any exposure depends on
-            how narrowly the source account is scoped and how well the host is run.
+            how narrowly the reviewed source and access boundaries are defined and how well the
+            host is run.
           </p>
         </div>
         <div class="security-pair">
@@ -311,8 +312,9 @@ const assertionProtection = [
           <p class="eyebrow">Signed assertions</p>
           <h2 id="assertion-protection-title">Authorization, signing, and limited validity.</h2>
           <p>
-            Evidence Gateway returns one stateless assertion. The service checks authority before source
-            access, signs the answer, and gives it an explicit validity window.
+            Evidence Gateway returns signed, time-limited assertions. Audience-scoped and
+            holder-bound modes have separate verification policies, and authority is checked before
+            source access.
           </p>
         </div>
         <div class="security-properties">
@@ -362,10 +364,11 @@ const assertionProtection = [
           </p>
           <p class="security-claim-note">
             Registry Stack&rsquo;s security posture is verifiable rather than certified: releases
-            ship signed, with checksums and SBOMs, the detailed threat model lives in the docs,
-            and a pilot includes a security review against your own requirements. Audit-log retention periods and
-            data-subject access or erasure over audit records are deployment policy decisions, set
-            by the operating institution and reviewed during a pilot&rsquo;s security review.
+            publish authenticated checksum inventories and SBOMs, the detailed threat model lives
+            in the docs, and a pilot includes a security review against your own requirements.
+            Audit-log retention periods and data-subject access or erasure over audit records are
+            deployment policy decisions, set by the operating institution and reviewed during a
+            pilot&rsquo;s security review.
           </p>
         </div>
         <div class="solution-choice-row">

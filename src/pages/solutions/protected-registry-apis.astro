@@ -10,7 +10,7 @@ const pageDescription =
   'Give authorized services read-only access to selected fields from an existing registry while the source records stay with the registry owner.';
 
 const goodFit = [
-  'A registry already exists in a file, database, or other system and must remain the official source.',
+  'A registry already exists and can provide a reviewed, read-only SQLite view directly or through an institution-owned extract process.',
   'A public or partner service needs several agreed fields, not a complete export or direct source login.',
   'The registry owner needs a repeatable way to apply the same field rules and record each read.',
 ];
@@ -45,7 +45,7 @@ const boundaries = [
   {
     title: 'What is not returned',
     body:
-      'Fields outside the agreement, source credentials, and the rest of the record are not returned to the service.',
+      'Fields outside the agreement, the SQLite source, deployment secrets, and the rest of the record are not returned to the service.',
   },
   {
     title: 'What stays with the registry owner',
@@ -58,14 +58,14 @@ const handoffComponents = [
   {
     name: 'Registry Relay',
     body:
-      'Connects existing sources and serves selected, read-only registry data under agreed field rules.',
+      'Compiles a reviewed registry contract and serves selected, read-only data from approved SQLite views.',
     docs: 'https://docs.registrystack.org/products/registry-relay/',
-    github: 'https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay',
+    github: 'https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay-v2',
   },
   {
     name: 'Registry Manifest',
     body:
-      'Describes the registry, its useful data, and the policy information partners need before integration.',
+      'Separately publishes portable descriptions of the registry, its useful data, and policy information for partners.',
     docs: 'https://docs.registrystack.org/products/registry-manifest/',
     github: 'https://github.com/registrystack/registry-stack/tree/main/products/manifest',
   },
@@ -82,9 +82,10 @@ const handoffComponents = [
           <p class="eyebrow">Product &middot; Protected Registry APIs</p>
           <h1 id="protected-registry-apis-title">Give services read-only access to selected registry fields.</h1>
           <p class="hero-lead">
-            The registry owner connects an existing file, database, or registry system and defines
-            which fields each public or partner service may read. The service receives only those
-            fields, every request is recorded, and the source records stay with the authority.
+            The registry owner exposes a reviewed, read-only SQLite view from the registry it
+            already operates, either directly or through an institution-owned extract process. It
+            defines which fields each public or partner service may read. The service receives only
+            those fields, every request is recorded, and the system of record remains authoritative.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href="https://lab.registrystack.org/#services">See a selected read</a>
@@ -104,8 +105,9 @@ const handoffComponents = [
           <h2 id="protected-fit-title">Use it when a service needs several fields from an existing registry.</h2>
           <p>
             A registry does not need to be replaced before it can support another service.
-            Registry Relay adds a protected, read-only API while the registry owner keeps the
-            source and remains responsible for corrections and updates.
+            Registry Relay adds a protected, read-only API over reviewed SQLite views while the
+            registry owner keeps the system of record and remains responsible for corrections and
+            updates.
           </p>
         </div>
         <ul class="check-list" aria-label="When Protected Registry APIs are a good fit">
@@ -193,8 +195,8 @@ const handoffComponents = [
       <div class="section-inner">
         <div class="technical-heading">
           <div>
-            <p class="eyebrow">Open-source components</p>
-            <h2 id="protected-components-title">The components used by Protected Registry APIs.</h2>
+            <p class="eyebrow">Runtime and related tooling</p>
+            <h2 id="protected-components-title">The runtime and related metadata tooling.</h2>
           </div>
           <p>The technical documentation explains how each component is configured and deployed.</p>
         </div>
@@ -217,7 +219,7 @@ const handoffComponents = [
 
     <DocsHandoff
       eyebrow="For your technical team"
-      heading="See how to configure source connections, field permissions, and deployment."
+      heading="See how to prepare a reviewed SQLite source, define access profiles, and deploy Registry Relay."
       primaryLabel="Read the technical docs"
       primaryHref="https://docs.registrystack.org/products/registry-relay/"
       emphasis="docs"

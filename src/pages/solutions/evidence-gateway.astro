@@ -38,23 +38,23 @@ const agreements = [
 
 const handoffComponents = [
   {
-    name: 'Evidence',
+    name: 'Evidence Gateway',
     body:
-      'Authenticates and authorizes one predefined request, makes one fixed source call, and returns a signed minimum-disclosure assertion.',
-    docs: 'https://docs.registrystack.org/',
-    github: 'https://github.com/registrystack/registry-stack',
+      'Authenticates and authorizes predefined requests, executes closed source plans, and signs minimum-disclosure assertions. Registry Mint and the optional OID4VCI adapter support token and wallet delivery.',
+    docs: 'https://docs.registrystack.org/products/registry-evidence/',
+    github: 'https://github.com/registrystack/registry-stack/tree/main/crates/registry-evidence',
   },
   {
     name: 'Registry Relay',
     body:
-      'Can expose selected registry data or act as Evidence\'s fixed, protected source while retaining its own authorization rules.',
+      'Can expose selected registry data or act as one protected HTTP source in an Evidence acquisition plan while retaining its own authorization rules.',
     docs: 'https://docs.registrystack.org/products/registry-relay/',
-    github: 'https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay',
+    github: 'https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay-v2',
   },
   {
     name: 'Registry Manifest',
     body:
-      'Publishes portable registry metadata and can describe the evidence and access surfaces an institution offers.',
+      'Separately publishes portable registry metadata and can describe the evidence and access surfaces an institution offers.',
     docs: 'https://docs.registrystack.org/products/registry-manifest/',
     github: 'https://github.com/registrystack/registry-stack/tree/main/products/manifest',
   },
@@ -72,16 +72,16 @@ const handoffComponents = [
           <h1 id="evidence-gateway-title">Let a service check a fact without receiving the full registry record.</h1>
           <p class="hero-lead">
             The registry owner defines one question, who may ask it, for what purpose, and which
-            answer may be returned. Evidence Gateway authorizes the request before source access, makes
-            one fixed lookup, and returns a signed minimum-disclosure assertion. The source
-            record stays with the authority.
+            answer may be returned. Evidence Gateway authorizes the request before source access,
+            executes the reviewed, bounded source plan, and returns a signed minimum-disclosure
+            assertion. The source record stays with the authority.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href="https://docs.registrystack.org/">Read the technical docs</a>
             <a class="button button-secondary" href="/pilot/">Start with one question</a>
           </div>
           <p class="hero-note">
-            Evidence Gateway is a stateless assertion service, not an eligibility or case-management engine.
+            At its core, Evidence Gateway is a stateless assertion service, not an eligibility or case-management engine.
           </p>
         </div>
       </div>
@@ -166,9 +166,10 @@ const handoffComponents = [
           <p class="eyebrow">When a service needs data</p>
           <h2 id="evidence-choice-title">Use Registry Relay when a service needs selected registry data.</h2>
           <p>
-            Evidence Gateway provides one signed answer. Registry Relay provides selected data from an
-            existing registry through a protected, read-only API. Evidence Gateway may also use a Relay
-            API as its one fixed source without merging the two products&rsquo; authorization models.
+            Evidence Gateway provides signed minimum-disclosure assertions. Registry Relay provides
+            selected data from an existing registry through a protected, read-only API. Evidence
+            Gateway may also use a Relay API as a predefined HTTP source without merging the two
+            products&rsquo; authorization models.
           </p>
         </div>
         <div class="solution-choice-row">
@@ -182,8 +183,8 @@ const handoffComponents = [
       <div class="section-inner">
         <div class="technical-heading">
           <div>
-            <p class="eyebrow">Open-source components</p>
-            <h2 id="evidence-components-title">The open-source components behind the solution.</h2>
+            <p class="eyebrow">Runtime and related tooling</p>
+            <h2 id="evidence-components-title">The runtime and components that can work alongside it.</h2>
           </div>
           <p>The technical documentation explains how each component is configured and deployed.</p>
         </div>
@@ -206,7 +207,7 @@ const handoffComponents = [
 
     <DocsHandoff
       eyebrow="For your technical team"
-      heading="See how to define a requirement, authorize callers, bind one fixed source, sign the assertion, and operate the audit trail."
+      heading="See how to define a requirement, authorize callers, bind a closed source plan, sign assertions, and operate the audit trail."
       primaryLabel="Read the technical docs"
       emphasis="docs"
     />
