@@ -95,6 +95,12 @@ if (!homeSource.includes('home-audience-grid')) {
 if (!homeSource.includes('/how-it-fits/')) {
   failures.push('homepage is missing the How it fits handoff');
 }
+if (!homeSource.includes('Base Registry Engine')) {
+  failures.push('homepage does not mention Base Registry Engine');
+}
+if (!homeSource.includes('https://docs.registrystack.org/start/breg-quickstart/')) {
+  failures.push('homepage is missing the Base Registry Engine docs link');
+}
 for (const productRoute of ['/notary/', '/relay/', '/manifest/']) {
   if (homeSource.includes(`href="${productRoute}"`) || homeSource.includes(`'${productRoute}'`)) {
     failures.push(`homepage links to removed product marketing route ${productRoute}`);
@@ -128,6 +134,11 @@ for (const route of [
   if (!navigationSource.includes(`"${route}"`) && !navigationSource.includes(`'${route}'`)) {
     failures.push(`site navigation is missing a link to ${route}`);
   }
+}
+
+const footerSource = readSource('src/components/SiteFooter.astro');
+if (!footerSource.includes('Base Registry Engine')) {
+  failures.push('footer open-source components column is missing Base Registry Engine');
 }
 
 const headerSource = readSource('src/components/SiteHeader.astro');
