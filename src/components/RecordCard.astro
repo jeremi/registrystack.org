@@ -1,0 +1,56 @@
+---
+interface Props {
+  recordType: string;
+  recordId: string;
+  name?: string;
+  icon?: 'person' | 'household' | 'business' | 'data';
+  fields: Array<{ label: string; value: string; state?: 'selected' | 'withheld' }>;
+}
+
+const { recordType, recordId, name, icon = 'data', fields } = Astro.props;
+---
+
+<section class="record-card" aria-label={`${recordType} ${recordId}`}>
+  <div class="record-heading">
+    <span class="record-type">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        {icon === 'person' ? (
+          <><circle cx="12" cy="7" r="3.5" /><path d="M5 21v-3a7 7 0 0 1 14 0v3" /></>
+        ) : icon === 'household' ? (
+          <><path d="m3 11 9-8 9 8M5 10v11h14V10" /><path d="M9 21v-7h6v7" /></>
+        ) : icon === 'business' ? (
+          <><path d="M5 21V3h14v18M2 21h20M9 7h2m2 0h2M9 11h2m2 0h2M10 21v-6h4v6" /></>
+        ) : (
+          <><rect x="4" y="3" width="16" height="18" rx="1" /><path d="M8 8h8M8 12h8M8 16h5" /></>
+        )}
+      </svg>
+      {recordType}
+    </span>
+    <span class="record-id">{recordId}</span>
+  </div>
+  {name && <p class="record-name">{name}</p>}
+  <dl class="record-fields">
+    {fields.map((field) => (
+      <div class:list={['record-field', field.state && `record-field-${field.state}`]}>
+        <dt>{field.label}</dt>
+        <dd>{field.value}{field.state && <span class="field-disclosure">{field.state === 'selected' ? 'Shared' : 'Not shared'}</span>}</dd>
+      </div>
+    ))}
+  </dl>
+</section>
+
+<style>
+  .record-card { min-width: 0; background: #fff; color: var(--registry-ink); border: 1px solid #cdd6df; border-left: 3px solid var(--registry-blue); }
+  .record-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px 12px; }
+  .record-type { display: flex; align-items: center; gap: 8px; color: var(--registry-blue); font: 11px/1.4 var(--registry-mono); text-transform: uppercase; }
+  .record-type svg { flex-shrink: 0; }
+  .record-id { color: var(--registry-body); background: #f1f4f7; border: 1px solid #dde3e9; padding: 3px 6px; font: 11px/1.3 var(--registry-mono); white-space: nowrap; }
+  .record-name { color: var(--registry-ink); font-size: 20px; font-weight: 700; line-height: 1.3; margin: 0; padding: 0 16px 14px; }
+  .record-fields { margin: 0; }
+  .record-field { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: baseline; gap: 8px 16px; border-top: 1px solid #e3e8ed; padding: 11px 16px; font-size: 13px; line-height: 1.45; }
+  .record-field dt { margin: 0; color: var(--registry-muted); }
+  .record-field dd { margin: 0; color: var(--registry-ink); text-align: right; font-weight: 600; overflow-wrap: anywhere; }
+  .record-field-selected { background: #f3f6fb; }
+  .field-disclosure { display: block; width: fit-content; margin: 5px 0 0 auto; padding: 2px 5px; border: 1px solid #b9c9df; color: var(--registry-blue); font: 10px/1.3 var(--registry-mono); font-weight: 400; }
+  .record-field-withheld .field-disclosure { border-color: #d7cecb; color: #7b4339; background: #fbf7f5; }
+</style>

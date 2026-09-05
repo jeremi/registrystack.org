@@ -1,0 +1,96 @@
+---
+import Product from '../../layouts/Product.astro';
+import PersonHouseholdRecords from '../../components/PersonHouseholdRecords.astro';
+import { products } from '../../data/products';
+const product = products[0];
+---
+<Product
+  product={product}
+  heading="Build and run the registry your organization needs."
+  description="People, households, organizations, assets: define the records that matter to your work and how they relate to each other. Base Registry Engine stores those records and gives your applications a consistent way to create, find, and update them, with your rules for access and data quality."
+>
+  <section id="product-example" class="section section-muted" aria-labelledby="registry-lifecycle-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">From the first record to years of changes</p>
+        <h2 id="registry-lifecycle-title">Create, connect, and maintain your records.</h2>
+        <p>A local authority could use the engine for a registry of residents and households. Staff register people, find existing records, and update details as circumstances change. The engine stores the information and its history; your application provides the screens.</p>
+      </div>
+      <figure class="record-example" aria-labelledby="record-example-caption">
+        <div class="stored-records">
+          <p class="record-owner">Stored in Base Registry Engine</p>
+          <PersonHouseholdRecords />
+          <p class="record-storage">Two linked records, each with its own fields and change history.</p>
+        </div>
+        <ol class="record-lifecycle">
+          <li><h3>Register and connect</h3><p>Create a person’s record and link it to a household. The engine checks required information, permitted values, and references before saving it.</p></li>
+          <li><h3>Find and use</h3><p>Look up a resident or retrieve the people linked to a household. Each application can access the records and fields its permissions allow.</p></li>
+          <li><h3>Keep up with changes</h3><p>Correct a detail or update a household relationship. The engine stores the current information and preserves earlier revisions so authorized users can follow what changed.</p></li>
+        </ol>
+        <figcaption id="record-example-caption">Illustrative registry with fictional records. The same approach can link a business to its establishments, a professional to licenses, or an asset to its location.</figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="breg-records-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">Your records, your rules</p>
+        <h2 id="breg-records-title">A shared foundation for your applications.</h2>
+        <p>Define the registry once, then use it across the applications that maintain and consult it. The engine applies the same configured rules to each request.</p>
+      </div>
+      <div class="product-facts">
+        <article><h3>Model the information you need</h3><p>Define record types, required fields, valid values, and relationships. Your registry can hold several kinds of records together, such as people, households, and memberships.</p></article>
+        <article><h3>Control access and changes</h3><p>Decide which records and fields each role can read or change. Allow routine updates directly and require review where needed. Related changes can be applied together so they stay consistent.</p></article>
+        <article><h3>Keep continuity over time</h3><p>Inspect earlier revisions and prevent an older edit from overwriting a newer change. As your needs evolve, update the record definitions through versioned configuration and planned data migrations.</p></article>
+      </div>
+    </div>
+  </section>
+  <section class="section section-muted" aria-labelledby="breg-fit-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">How it fits your organization</p>
+        <h2 id="breg-fit-title">Build your services around a registry you control.</h2>
+        <p>Your organization owns the records and runs the engine and its database on infrastructure you control. Connect staff applications, public services, and other systems through the registry’s interface.</p>
+        <p>Use it to build a new registry or move an existing register into a defined structure, with a planned migration of its records.</p>
+      </div>
+      <dl>
+        <dt>Your team defines the registry</dt><dd>Agree what the records mean, how they relate, and who may use them. Your technical team translates those decisions into the configuration that defines storage, validation, and access.</dd>
+        <dt>Your applications serve the people using it</dt><dd>Your team or delivery partner provides the screens, sign-in, and wider service workflows. The engine handles record storage and operations behind those applications.</dd>
+        <dt>Share facts when another service needs them</dt><dd><a href="/solutions/evidence-gateway/">Evidence Gateway</a> can use a configured connection to answer questions from the registry, such as an age check without a date of birth. Either product can be used independently.</dd>
+      </dl>
+    </div>
+  </section>
+  <section id="developers" class="section" aria-labelledby="breg-developers-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">For developers and implementers</p>
+        <h2 id="breg-developers-title">Create your first registry and work with its records.</h2>
+        <p>The introductory tutorial uses a sample business register. Create and update a record, try a request that should be refused, and inspect the generated interface description.</p>
+        <p><a class="inline-cta" href={product.tutorialHref}>Run the first registry tutorial →</a></p>
+        <p>To explore optional review, a second tutorial uses an asset-location correction: propose a different site, collect two approvals, and apply the change.</p>
+        <p><a class="inline-cta" href="https://docs.registrystack.org/tutorials/review-registry-changes/">Run the reviewed-change tutorial →</a></p>
+      </div>
+      <dl>
+        <dt>Database and application interface</dt><dd>A versioned model defines the PostgreSQL structure, validation, REST API, and OpenAPI description. Existing records require an explicit migration into the registry.</dd>
+        <dt>Changes that belong together</dt><dd>Configured actions can create or update several records in one transaction. Changes to the model are reviewed and tested, with a database migration where the structure changes.</dd>
+        <dt>Continue in the documentation</dt><dd><a href="https://docs.registrystack.org/explanation/configuration-defined-registry/">Read how a configuration-defined registry works</a> for the model, permissions, and application boundary. The tutorials provide their prerequisites and executable steps.</dd>
+      </dl>
+    </div>
+  </section>
+</Product>
+
+<style>
+  .record-example { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr); gap: 24px 40px; align-items: start; margin: 0; }
+  .stored-records { min-width: 0; background: #eaf0f5; border: 1px solid #d4dde6; padding: clamp(16px, 2vw, 24px); }
+  .record-owner { color: var(--registry-blue); font-size: 13px; font-weight: 700; line-height: 1.5; margin: 0 0 16px; }
+  .record-storage { color: var(--registry-body); font-size: 12px; line-height: 1.6; margin: 16px 0 0; }
+  .record-lifecycle { display: grid; gap: 22px; margin: 0; padding-left: 26px; }
+  .record-lifecycle li { padding-left: 10px; }
+  .record-lifecycle li::marker { color: var(--registry-blue); font-family: var(--registry-mono); font-weight: 700; }
+  .record-lifecycle h3 { font-size: 21px; margin: 0 0 6px; }
+  .record-lifecycle p { margin: 0; }
+  .record-example figcaption { grid-column: 1 / -1; color: var(--registry-muted); font-size: 14px; line-height: 1.5; }
+  @media (max-width: 700px) {
+    .record-example { grid-template-columns: 1fr; }
+  }
+</style>

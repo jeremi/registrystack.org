@@ -34,88 +34,127 @@ const server = createServer(async (request, response) => {
 
 await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen));
 const { port } = server.address();
-// The funnel and full scenario gallery live on the use-cases page; the
-// homepage stays an orientation page and must not carry a second mechanism or
-// a full use-case grid.
+// The service-answer figure and full scenario gallery live on use-cases;
+// the homepage introduces the two flagship products.
 const homeUrl = `http://127.0.0.1:${port}/`;
 const url = `http://127.0.0.1:${port}/use-cases/`;
-
-const claimOpacity = async (page) => {
-  const claim = page.locator('.funnel-claim').first();
-  if ((await claim.count()) === 0) return null;
-  return claim.evaluate((el) => Number(getComputedStyle(el).opacity));
-};
 
 const browser = await chromium.launch();
 const failures = [];
 
-// 1. Structure: one funnel figure, one source record feeding several distinct
-//    claims, and a meaningful caption.
+// One source record supports three separate, minimal answers. A refused
+// request must remain separate from those signed results.
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
   const page = await context.newPage();
   await page.goto(url);
 
-  const funnelCount = await page.locator('figure.funnel').count();
-  if (funnelCount !== 1) failures.push(`expected exactly 1 funnel figure, found ${funnelCount}`);
+  const structureFailures = await page.evaluate(() => {
+    const issues = [];
+    const figures = document.querySelectorAll('figure.service-answers');
+    if (figures.length !== 1) return [`expected exactly 1 service-answer figure, found ${figures.length}`];
+    const figure = figures[0];
+    const text = (element) => element?.textContent.trim() ?? '';
+    const caption = figure.querySelector('figcaption');
+    const captionText = text(caption);
+    const captionIds = figure.getAttribute('aria-labelledby')?.split(/\s+/) ?? [];
+    if (!caption?.id || !captionIds.includes(caption.id) || !/illustrat|fictional/i.test(captionText) ||
+        !/record/i.test(captionText) || !/request|answer|service/i.test(captionText)) {
+      issues.push('figure needs an associated caption explaining the illustrative record and service requests');
+    }
 
-  const sourceCount = await page.locator('.funnel-source').count();
-  if (sourceCount !== 1) failures.push(`expected exactly 1 source record (same registry), found ${sourceCount}`);
+    const source = figure.querySelector('.source-step .record-card');
+    if (!source || figure.querySelectorAll('.record-card').length !== 1) {
+      issues.push('figure must show exactly one source record');
+    }
+    const sourceFields = [...(source?.querySelectorAll('.record-field') ?? [])].map((field) => ({
+      label: text(field.querySelector('dt')),
+      value: text(field.querySelector('dd')),
+    }));
+    if (!sourceFields.length || sourceFields.some((field) => !field.label || !field.value)) {
+      issues.push('source record must contain labelled, populated fields');
+    }
+    const identityValues = [...(source?.querySelectorAll('.record-name, .record-id') ?? [])].map(text).filter(Boolean);
+    const sourceValues = sourceFields.map((field) => field.value).filter(Boolean);
+    const privateValues = sourceFields
+      .filter((field) => /date of birth|street address|marital status/i.test(field.label))
+      .map((field) => field.value);
+    if (privateValues.length !== 3) issues.push('source record must include the three fields kept private in this example');
 
-  const claimCount = await page.locator('.funnel-claim').count();
-  if (claimCount < 3) failures.push(`expected at least 3 distinct claims from one record, found ${claimCount}`);
+    const responses = [...figure.querySelectorAll('.returned-answers .service-response')];
+    const answers = [...figure.querySelectorAll('.signed-answer')];
+    if (responses.length !== 3 || answers.length !== 3) {
+      issues.push(`expected 3 separate service responses and signed answers, found ${responses.length} and ${answers.length}`);
+    }
+    const recipients = new Set();
+    const results = new Set();
+    for (const [index, response] of responses.entries()) {
+      const answer = response.querySelector('.signed-answer');
+      const recipient = text(answer?.querySelector('.answer-recipient'));
+      const labels = [...(answer?.querySelectorAll('.answer-result dt') ?? [])];
+      const values = [...(answer?.querySelectorAll('.answer-result dd') ?? [])];
+      if (response.querySelectorAll('.signed-answer').length !== 1 || !text(response.querySelector('.service-question')) ||
+          !recipient || !answer?.getAttribute('aria-label')?.trim()) {
+        issues.push(`service response ${index + 1} needs its own question, recipient, and labelled signed answer`);
+      }
+      if (labels.length !== 1 || values.length !== 1 || !text(labels[0]) || !text(values[0])) {
+        issues.push(`service response ${index + 1} must contain exactly one labelled result`);
+      }
+      if (!text(answer?.querySelector('.answer-signature strong')) || !text(answer?.querySelector('.answer-issuer'))) {
+        issues.push(`service response ${index + 1} must identify the signature and issuer`);
+      }
+      recipients.add(recipient);
+      results.add(`${text(labels[0])}:${text(values[0])}`);
 
-  // A denied request shows the gate enforces purpose, not just trims data.
-  const deniedCount = await page.locator('.funnel-claim-denied').count();
-  if (deniedCount < 1) failures.push(`expected at least 1 denied request, found ${deniedCount}`);
+      // A selected source value may be the agreed result. Other source values,
+      // and all private fields and identity details, must stay out of the card.
+      const result = text(values[0]);
+      const withheld = [...identityValues, ...privateValues, ...sourceValues.filter((value) => value !== result)];
+      if (withheld.some((value) => text(answer).toLowerCase().includes(value.toLowerCase()))) {
+        issues.push(`service response ${index + 1} discloses source information beyond its permitted result`);
+      }
+    }
+    if (recipients.size !== 3 || results.size !== 3) issues.push('the three responses must have distinct recipients and answers');
 
-  // Each granted claim is linked to the source field it derives from.
-  const linked = await page.evaluate(() => {
-    const claims = [...document.querySelectorAll('.funnel-claim[data-source]')];
-    const fieldIds = new Set([...document.querySelectorAll('[data-field]')].map((el) => el.getAttribute('data-field')));
-    const unmatched = claims
-      .map((claim) => claim.getAttribute('data-source'))
-      .filter((source) => !fieldIds.has(source));
-    return { claimCount: claims.length, unmatched };
+    const refusedRequests = figure.querySelectorAll('.refused-request');
+    if (refusedRequests.length !== 1) {
+      issues.push(`expected exactly 1 refused request, found ${refusedRequests.length}`);
+    } else {
+      const refused = refusedRequests[0];
+      if (refused.closest('.returned-answers, .signed-answer') ||
+          refused.querySelector('.signed-answer, .answer-result, .answer-signature, .record-card')) {
+        issues.push('the refused request must remain separate and contain no signed answer or returned record');
+      }
+      if (!text(refused.querySelector('h4')) || !text(refused.querySelector('.refused-status')) ||
+          !text(refused.querySelector('.refused-note'))) {
+        issues.push('the refused request must explain the question, refusal, and absence of returned information');
+      }
+      if ([...identityValues, ...sourceValues].some((value) => text(refused).toLowerCase().includes(value.toLowerCase()))) {
+        issues.push('the refused request discloses a source value');
+      }
+    }
+    return issues;
   });
-  if (linked.claimCount < 3) failures.push(`expected >= 3 claims linked to a source field, found ${linked.claimCount}`);
-  if (linked.unmatched.length > 0) {
-    failures.push(`claim data-source(s) with no matching source field: ${JSON.stringify(linked.unmatched)}`);
-  }
-
-  const replayVisible = await page
-    .locator('.funnel-replay')
-    .first()
-    .isVisible()
-    .catch(() => false);
-  if (!replayVisible) failures.push('replay control is not visible when JavaScript is enabled');
-
-  // The footer must render the same number of field items as the source panel,
-  // not stringified objects.
-  const staysText = (await page.locator('.funnel-stays').first().innerText().catch(() => '')).toLowerCase();
-  if (staysText.includes('[object')) failures.push('stays footer renders "[object Object]" instead of field labels');
-  const sourceFieldCount = await page.locator('.funnel-fields li').count();
-  const staysFieldCount = await page.locator('.funnel-stays-fields li').count();
-  if (staysFieldCount !== sourceFieldCount) {
-    failures.push(`stays footer has ${staysFieldCount} fields, expected ${sourceFieldCount}`);
+  failures.push(...structureFailures);
+  if (await page.locator('section[aria-labelledby="scenarios-title"] .scenario-card').count() === 0) {
+    failures.push('the full scenario gallery must remain on /use-cases/');
   }
 
   await context.close();
 }
 
-// 1b. Homepage: the route is through the two solution cards, so no funnel
-//     figure or full use-case gallery appears there.
+// The homepage routes readers through its two product cards.
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
   const page = await context.newPage();
   await page.goto(homeUrl);
 
-  const homeFunnelCount = await page.locator('figure.funnel').count();
-  if (homeFunnelCount !== 0) {
-    failures.push(`expected no funnel figure on the homepage (it lives on /use-cases/), found ${homeFunnelCount}`);
+  const homeFigureCount = await page.locator('figure.service-answers, figure.funnel').count();
+  if (homeFigureCount !== 0) {
+    failures.push(`expected no service-answer figure on the homepage (it lives on /use-cases/), found ${homeFigureCount}`);
   }
 
-  const homeUseCaseCards = await page.locator('.use-case').count();
+  const homeUseCaseCards = await page.locator('.use-case, .scenario-card').count();
   if (homeUseCaseCards !== 0) {
     failures.push(`expected no full use-case cards on the homepage, found ${homeUseCaseCards}`);
   }
@@ -128,75 +167,53 @@ const failures = [];
   await context.close();
 }
 
-// 2. Reduced motion: the funnel shows its final state immediately, with no
-//    scroll trigger and no motion. The claims must be visible.
-{
-  const context = await browser.newContext({ viewport: { width: 1440, height: 1200 }, reducedMotion: 'reduce' });
-  const page = await context.newPage();
-  await page.goto(url);
-  const opacity = await claimOpacity(page);
-  if (!(opacity > 0.99)) {
-    failures.push(`reduced-motion: claim opacity ${opacity}, expected ~1 (final state shown without animation)`);
+// The static explanation must be readable and exposed to assistive technology
+// on desktop and mobile, including without JavaScript and with reduced motion.
+for (const viewport of [{ width: 1440, height: 1200 }, { width: 390, height: 900 }]) {
+  for (const mode of [
+    { name: 'default', options: {} },
+    { name: 'no JavaScript', options: { javaScriptEnabled: false } },
+    { name: 'reduced motion', options: { reducedMotion: 'reduce' } },
+  ]) {
+    const context = await browser.newContext({ viewport, ...mode.options });
+    const page = await context.newPage();
+    await page.goto(url);
+    const visibilityFailures = await page.locator('figure.service-answers').evaluateAll((figures) => {
+      if (figures.length !== 1) return ['service-answer figure is missing or duplicated'];
+      if (figures[0].querySelectorAll('.record-card').length !== 1 ||
+          figures[0].querySelectorAll('.signed-answer').length !== 3 ||
+          figures[0].querySelectorAll('.refused-request').length !== 1 || !figures[0].querySelector('figcaption')) {
+        return ['source record, three signed answers, refusal, and caption must all be present'];
+      }
+      const elements = [...figures[0].querySelectorAll([
+        'figcaption', '.flow-label', '.source-step h3', '.record-type', '.record-id', '.record-name',
+        '.record-field dt', '.record-field dd', '.source-note', '.gateway-step h3',
+        '.gateway-step p', '.gateway-step h4', '.answers-heading h3', '.service-question',
+        '.answer-recipient', '.answer-result dt', '.answer-result dd',
+        '.answer-signature strong', '.answer-issuer', '.flow-notes p',
+      ].join(', '))];
+      const issues = [];
+      for (const element of elements) {
+        const label = element.textContent.trim().slice(0, 70);
+        if (element.closest('[aria-hidden="true"], [inert]')) {
+          issues.push(`meaningful content is hidden from assistive technology: ${label}`);
+        }
+        const bounds = element.getBoundingClientRect();
+        let hidden = bounds.width <= 0 || bounds.height <= 0;
+        for (let ancestor = element; ancestor; ancestor = ancestor.parentElement) {
+          const style = getComputedStyle(ancestor);
+          if (style.display === 'none' || style.visibility !== 'visible' || Number(style.opacity) <= 0.01) hidden = true;
+        }
+        if (hidden) issues.push(`content is not visible: ${label}`);
+        if (bounds.left < -1 || bounds.right > window.innerWidth + 1) {
+          issues.push(`content extends beyond the viewport: ${label}`);
+        }
+      }
+      return issues;
+    });
+    failures.push(...visibilityFailures.map((failure) => `${viewport.width}px, ${mode.name}: ${failure}`));
+    await context.close();
   }
-  await context.close();
-}
-
-// 3. No JavaScript: progressive enhancement means the funnel is fully visible
-//    even when the IntersectionObserver never runs.
-{
-  const context = await browser.newContext({ viewport: { width: 1440, height: 1200 }, javaScriptEnabled: false });
-  const page = await context.newPage();
-  await page.goto(url);
-  const opacity = await claimOpacity(page);
-  if (!(opacity > 0.99)) {
-    failures.push(`no-js: claim opacity ${opacity}, expected ~1 (funnel visible without JS)`);
-  }
-  await context.close();
-}
-
-// 4. Play on scroll, replayable: with motion allowed the funnel starts hidden,
-//    reveals when scrolled into view, then resets when scrolled back out.
-{
-  const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'no-preference' });
-  const page = await context.newPage();
-  await page.goto(url);
-  await page.evaluate(() => window.scrollTo(0, 0));
-
-  const before = await page.evaluate(() => {
-    const figure = document.querySelector('figure.funnel');
-    const claim = document.querySelector('.funnel-claim');
-    return {
-      inView: figure ? figure.classList.contains('in-view') : null,
-      opacity: claim ? Number(getComputedStyle(claim).opacity) : null,
-    };
-  });
-  if (before.inView !== false) failures.push(`expected funnel not in-view before scroll, got ${before.inView}`);
-  if (!(before.opacity < 0.05)) {
-    failures.push(`expected first claim hidden (~0) before scroll, got ${before.opacity}`);
-  }
-
-  await page.locator('figure.funnel').scrollIntoViewIfNeeded();
-  await page
-    .waitForFunction(() => document.querySelector('figure.funnel')?.classList.contains('in-view'), null, { timeout: 3000 })
-    .catch(() => failures.push('funnel did not gain in-view class after scroll'));
-  await page
-    .waitForFunction(
-      () => {
-        const claim = document.querySelector('.funnel-claim');
-        return claim && Number(getComputedStyle(claim).opacity) > 0.99;
-      },
-      null,
-      { timeout: 4000 }
-    )
-    .catch(() => failures.push('claims did not animate to visible after scroll into view'));
-
-  // Scrolling fully away resets the figure so it can replay on return.
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page
-    .waitForFunction(() => document.querySelector('figure.funnel')?.classList.contains('in-view') === false, null, { timeout: 3000 })
-    .catch(() => failures.push('funnel did not reset (drop in-view) after scrolling away'));
-
-  await context.close();
 }
 
 await browser.close();
@@ -207,4 +224,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log('funnel check passed');
+console.log('service-answer figure check passed');

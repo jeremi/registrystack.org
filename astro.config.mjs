@@ -11,12 +11,13 @@ export default defineConfig({
   redirects: {
     '/why/': '/',
     '/problem/': '/',
-    '/ecosystem/': '/how-it-fits/',
+    '/ecosystem/': '/',
     '/ai/': '/use-cases/',
-    '/pricing/': '/pilot/',
+    '/how-it-fits/': '/',
     '/notary/': '/solutions/evidence-gateway/',
-    '/relay/': 'https://docs.registrystack.org/products/registry-relay/',
+    '/relay/': '/solutions/protected-registry-apis/',
     '/manifest/': 'https://docs.registrystack.org/products/registry-manifest/',
   },
-  integrations: [sitemap()],
+  // The compatibility page redirects visitors and should not be indexed.
+  integrations: [sitemap({ filter: (page) => new URL(page).pathname !== '/pilot/' })],
 });

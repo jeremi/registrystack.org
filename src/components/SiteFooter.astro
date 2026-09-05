@@ -1,81 +1,47 @@
 ---
-// Shared footer for every marketing page. Product names remain visible here as
-// an open-source implementation handoff, rather than as marketing destinations.
 const year = new Date().getFullYear();
 const repoHref = 'https://github.com/registrystack/registry-stack';
-
 const columns = [
-  {
-    title: 'Solutions',
-    links: [
-      { href: '/solutions/evidence-gateway/', label: 'Evidence Gateway' },
-      { href: '/solutions/protected-registry-apis/', label: 'Protected Registry APIs' },
-      { href: '/use-cases/', label: 'Use cases' },
-    ],
-  },
-  {
-    title: 'How it works',
-    links: [
-      { href: '/how-it-fits/', label: 'How it fits' },
-      { href: '/security/', label: 'Security' },
-      { href: '/faq/', label: 'FAQ' },
-    ],
-  },
-  {
-    title: 'Open-source components',
-    links: [
-      { href: 'https://docs.registrystack.org/products/registry-evidence/', label: 'Evidence Gateway' },
-      { href: 'https://docs.registrystack.org/products/registry-relay/', label: 'Registry Relay' },
-      { href: 'https://docs.registrystack.org/start/breg-quickstart/', label: 'Base Registry Engine' },
-      { href: 'https://docs.registrystack.org/products/registry-manifest/', label: 'Registry Manifest' },
-      { href: 'https://docs.registrystack.org/reference/mint/', label: 'Registry Mint' },
-      { href: repoHref, label: 'GitHub repository' },
-    ],
-  },
-  {
-    title: 'Get started',
-    links: [
-      { href: '/pilot/', label: 'Pilot and support' },
-      { href: 'https://docs.registrystack.org/', label: 'Documentation' },
-      { href: 'https://lab.registrystack.org/', label: 'Live demo' },
-    ],
-  },
+  { title: 'Products', links: [
+    { href: '/solutions/base-registry/', label: 'Base Registry Engine' },
+    { href: '/solutions/evidence-gateway/', label: 'Evidence Gateway' },
+    { href: '/solutions/protected-registry-apis/', label: 'Registry Relay' },
+  ] },
+  { title: 'Explore', links: [
+    { href: '/use-cases/', label: 'Use cases' },
+    { href: '/security/', label: 'Security' },
+    { href: '/faq/', label: 'FAQ' },
+  ] },
+  { title: 'For developers', links: [
+    { href: '/#developers', label: 'Try a tutorial' },
+    { href: 'https://docs.registrystack.org/', label: 'Documentation' },
+    { href: repoHref, label: 'Source and releases' },
+  ] },
+  { title: 'Work with us', links: [
+    { href: '/pricing/', label: 'Implementation pilots' },
+    { href: '/pricing/#support', label: 'Support contracts' },
+    { href: '/pricing/#inquiry', label: 'Discuss your needs' },
+  ] },
 ];
 ---
-
 <footer class="site-footer">
   <div class="site-footer-inner">
     <div class="footer-brand">
       <a class="footer-brand-name" href="/">Registry Stack</a>
-      <p>
-        Open-source infrastructure that helps registry owners return signed answers or protected,
-        selected data while source records stay with the registry owner.
-      </p>
-      <p>Built and commercially supported by Aubex.</p>
-      <p><a href="mailto:contact@registrystack.org">contact@registrystack.org</a></p>
+      <p>Open-source building blocks for registries and the services that use them.</p>
+      <p>Built and supported by Aubex.</p>
     </div>
     <nav class="footer-nav" aria-label="Footer">
       {columns.map((column) => (
         <div class="footer-col">
           <p class="footer-col-title">{column.title}</p>
-          <ul>
-            {column.links.map((link) => (
-              <li><a href={link.href}>{link.label}</a></li>
-            ))}
-          </ul>
+          <ul>{column.links.map((link) => (<li><a href={link.href}>{link.label}</a></li>))}</ul>
         </div>
       ))}
     </nav>
   </div>
   <div class="site-footer-base">
-    <p>
-      &copy; {year} Aubex Consulting LLC. Registry Stack products are Apache-2.0 open source.
-      Third-party names and logos belong to their owners; no endorsement is implied.
-    </p>
-    <p>
-      <a href="/privacy/">Privacy</a> &middot; <a href="/terms/">Terms</a> &middot;
-      <a href="/imprint/">Legal notice</a>
-    </p>
-    <p><a href={repoHref}>Source, releases, Scorecard, and Best Practices badges</a></p>
+    <p>&copy; {year} Aubex Consulting LLC. Apache-2.0 open source.</p>
+    <p><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/imprint/">Legal notice</a></p>
   </div>
 </footer>

@@ -1,0 +1,60 @@
+---
+import Base from './Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import type { products } from '../data/products';
+
+interface Props {
+  product: (typeof products)[number];
+  heading: string;
+  description: string;
+  note?: string;
+}
+const { product, heading, description, note } = Astro.props;
+---
+<Base title={product.name + ' | Registry Stack'} description={description}>
+  <SiteHeader current={product.key} />
+  <main class="product-page">
+    <section class="hero" aria-labelledby="product-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">{product.name}</p>
+          <h1 id="product-title">{heading}</h1>
+          <p class="hero-lead">{description}</p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href="#product-example">See it in practice</a>
+            <a class="button button-secondary" href="#developers">For developers</a>
+          </div>
+          {note && <p class="hero-note">{note}</p>}
+        </div>
+      </div>
+    </section>
+    <slot />
+    <section class="final-cta" aria-labelledby="product-pilot-title">
+      <div class="section-inner">
+        <p class="eyebrow">Work with us</p>
+        <h2 id="product-pilot-title">Get help when you need it.</h2>
+        <p>Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the solution.</p>
+        <a class="button button-primary" href="/pricing/">Implementation and support <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .product-page :global(.section-inner) { padding-top: clamp(44px, 6vw, 68px); padding-bottom: clamp(44px, 6vw, 68px); }
+  .product-page :global(h2) { font-size: clamp(28px, 3.7vw, 42px); }
+  .product-page :global(.product-facts) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .product-page :global(.product-facts article) { border-top: 2px solid var(--registry-blue); padding-top: 20px; }
+  .product-page :global(.product-facts p) { margin-bottom: 0; }
+  .product-page :global(.product-fit) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+  .product-page :global(.product-fit dl) { margin: 0; }
+  .product-page :global(.product-fit dt) { font-weight: 700; color: var(--registry-ink); margin-bottom: 5px; }
+  .product-page :global(.product-fit dd) { margin: 0 0 20px; padding-bottom: 18px; border-bottom: 1px solid var(--registry-rule); line-height: 1.55; }
+  .product-page :global(.product-fit dd:last-child) { margin-bottom: 0; }
+  .product-page :global(.product-note) { border-left: 3px solid var(--registry-blue); padding-left: 18px; margin: 28px 0 0; }
+  @media (max-width: 700px) {
+    .product-page :global(.product-facts), .product-page :global(.product-fit) { grid-template-columns: 1fr; gap: 24px; }
+  }
+</style>

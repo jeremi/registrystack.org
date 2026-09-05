@@ -1,7 +1,5 @@
 ---
-// Shared closing CTA. Every marketing page ends with a clear handoff to the
-// docs for the "how", plus a pilot-scope route. Copy can be tuned per page
-// through props while keeping the band consistent.
+// Shared next steps for organizational readers and technical evaluators.
 interface Props {
   eyebrow?: string;
   heading?: string;
@@ -11,29 +9,29 @@ interface Props {
 }
 
 const {
-  eyebrow = 'More information',
-  heading = 'Read the technical documentation or discuss a pilot for one registry.',
-  primaryLabel = 'Read the technical docs',
-  primaryHref = 'https://docs.registrystack.org/',
-  emphasis = 'pilot',
+  eyebrow = 'Take the next step',
+  heading = 'Explore it with your team.',
+  primaryLabel = 'Try a developer tutorial',
+  primaryHref = '/#developers',
+  emphasis = 'docs',
 } = Astro.props;
-const contactHref = 'mailto:contact@registrystack.org?subject=Registry%20Stack%20pilot%20scope';
 ---
 
 <section class="final-cta" aria-labelledby="handoff-title">
   <div class="section-inner">
     <p class="eyebrow">{eyebrow}</p>
     <h2 id="handoff-title">{heading}</h2>
+    <p>Evaluate the open-source software with your team, or get paid implementation help and ongoing support.</p>
     <div class="hero-actions">
       {emphasis === 'pilot' ? (
         <>
-          <a class="button button-primary" href={contactHref}>Discuss a pilot</a>
+          <a class="button button-primary" href="/pricing/">Implementation and support</a>
           <a class="button button-secondary" href={primaryHref}>{primaryLabel}</a>
         </>
       ) : (
         <>
           <a class="button button-primary" href={primaryHref}>{primaryLabel}</a>
-          <a class="button button-secondary" href={contactHref}>Discuss a pilot</a>
+          <a class="button button-secondary" href="/pricing/">Implementation and support</a>
         </>
       )}
     </div>

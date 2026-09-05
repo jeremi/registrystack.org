@@ -41,13 +41,17 @@ const failures = [];
 
 const paths = [
   '/',
+  '/solutions/base-registry/',
   '/solutions/evidence-gateway/',
   '/solutions/protected-registry-apis/',
   '/use-cases/',
-  '/how-it-fits/',
   '/security/',
-  '/pilot/',
+  '/pricing/',
   '/faq/',
+  '/privacy/',
+  '/terms/',
+  '/imprint/',
+  '/404.html',
 ];
 for (const path of paths) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
@@ -55,6 +59,10 @@ for (const path of paths) {
   await page.goto(`http://127.0.0.1:${port}${path}`);
 
   const results = await new AxeBuilder({ page }).analyze();
+  const missingLabels = await page.locator('[aria-labelledby]').evaluateAll((elements) =>
+    elements.flatMap((element) => element.getAttribute('aria-labelledby').split(/\s+/)
+      .filter((id) => !document.getElementById(id))));
+  for (const id of missingLabels) failures.push(`- ${path} missing accessible label target: ${id}`);
   for (const violation of results.violations) {
     failures.push(`- ${path} ${violation.id} (${violation.impact}): ${violation.help}`);
   }

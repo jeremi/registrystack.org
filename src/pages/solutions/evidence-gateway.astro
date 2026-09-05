@@ -1,341 +1,68 @@
 ---
-import Base from '../../layouts/Base.astro';
-import SiteHeader from '../../components/SiteHeader.astro';
-import SiteFooter from '../../components/SiteFooter.astro';
-import DocsHandoff from '../../components/DocsHandoff.astro';
+import Product from '../../layouts/Product.astro';
 import EvidenceGatewayFlow from '../../components/EvidenceGatewayFlow.astro';
-
-const pageTitle = 'Evidence Gateway | Signed minimum-disclosure answers';
-const pageDescription =
-  'Let an approved service ask one predefined question and receive a signed answer without receiving the authoritative source record.';
-
-const goodFit = [
-  'A public or partner service needs to prove one fact, such as an active registration or enrolment status.',
-  'The registry owner wants to agree what can be asked and returned before connecting the service.',
-  'The relying service can verify a signed answer and does not need the source record behind it.',
-];
-
-const agreements = [
-  {
-    marker: '01',
-    title: 'The question and possible answer',
-    body:
-      'Write the question in service language. Define whether the answer is a yes or no, a status, a date, or another small piece of evidence.',
-  },
-  {
-    marker: '02',
-    title: 'Who may ask, and for what purpose',
-    body:
-      'Name the public or partner service, the purpose it may declare, and the authority it must present before any source access.',
-  },
-  {
-    marker: '03',
-    title: 'How long the answer remains useful',
-    body:
-      'Agree how recent the source observation must be and how long the signed assertion may be accepted.',
-  },
-];
-
-const handoffComponents = [
-  {
-    name: 'Evidence Gateway',
-    body:
-      'Authenticates and authorizes predefined requests, executes closed source plans, and signs minimum-disclosure assertions. Registry Mint and the optional OID4VCI adapter support token and wallet delivery.',
-    docs: 'https://docs.registrystack.org/products/registry-evidence/',
-    github: 'https://github.com/registrystack/registry-stack/tree/main/crates/registry-evidence',
-  },
-  {
-    name: 'Registry Relay',
-    body:
-      'Can expose selected registry data or act as one protected HTTP source in an Evidence acquisition plan while retaining its own authorization rules.',
-    docs: 'https://docs.registrystack.org/products/registry-relay/',
-    github: 'https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay-v2',
-  },
-  {
-    name: 'Registry Manifest',
-    body:
-      'Separately publishes portable registry metadata and can describe the evidence and access surfaces an institution offers.',
-    docs: 'https://docs.registrystack.org/products/registry-manifest/',
-    github: 'https://github.com/registrystack/registry-stack/tree/main/products/manifest',
-  },
-];
+import { products } from '../../data/products';
+const product = products[2];
 ---
-
-<Base title={pageTitle} description={pageDescription}>
-  <SiteHeader current="evidence-gateway" />
-
-  <main>
-    <section class="hero solution-hero" aria-labelledby="evidence-gateway-title">
-      <div class="hero-inner">
-        <div class="hero-copy">
-          <p class="eyebrow">Product &middot; Evidence Gateway</p>
-          <h1 id="evidence-gateway-title">Let a service check a fact without receiving the full registry record.</h1>
-          <p class="hero-lead">
-            The registry owner defines one question, who may ask it, for what purpose, and which
-            answer may be returned. Evidence Gateway authorizes the request before source access,
-            executes the reviewed, bounded source plan, and returns a signed minimum-disclosure
-            assertion. The source record stays with the authority.
-          </p>
-          <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="https://docs.registrystack.org/">Read the technical docs</a>
-            <a class="button button-secondary" href="/pilot/">Start with one question</a>
-          </div>
-          <p class="hero-note">
-            At its core, Evidence Gateway is a stateless assertion service, not an eligibility or case-management engine.
-          </p>
-        </div>
+<Product
+  product={product}
+  heading="Answer the question. Keep the records."
+  description="Give approved services signed facts and limited answers from sources your organization maintains. Define what each answer means, what it may reveal, and who may receive it, while keeping the full source record in your own system."
+>
+  <section id="product-example" class="section section-muted" aria-labelledby="evidence-example-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">One example: a supplier registration check</p>
+        <h2 id="evidence-example-title">Does this supplier have an active business registration?</h2>
+        <p>A government procurement service needs the answer before processing a supplier’s application. The business registry can provide that status while keeping addresses, filing history, and other details out of the response.</p>
       </div>
-    </section>
-
-    <section class="section" aria-labelledby="evidence-fit-title">
-      <div class="section-inner split">
-        <div class="section-heading compact">
-          <p class="eyebrow">When to use Evidence Gateway</p>
-          <h2 id="evidence-fit-title">Use it when a service needs proof of a specific fact.</h2>
-          <p>
-            Start with a question that a service needs answered, such as whether a business is
-            registered or a household is enrolled. The service receives the signed answer and
-            verifies it against independently configured trust and request expectations.
-          </p>
-        </div>
-        <ul class="check-list" aria-label="When Evidence Gateway is a good fit">
-          {goodFit.map((item) => (
-            <li>{item}</li>
-          ))}
-        </ul>
+      <EvidenceGatewayFlow />
+      <p class="product-note">The digital signature acts as a seal: the service can check that the expected issuer produced the answer and that it has not been altered. The procurement service remains responsible for deciding what that answer means for the application.</p>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="evidence-define-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">An answer both teams understand</p>
+        <h2 id="evidence-define-title">Agree the question, the source, and who may ask.</h2>
+        <p>An answer can confirm adult status, report registration status, or return a residence region. The registry team and receiving services agree what each answer means. Evidence Gateway applies those definitions and the organization’s access rules to each request.</p>
       </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="evidence-how-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">How it works</p>
-          <h2 id="evidence-how-title">Each request is checked before the registry is consulted.</h2>
-          <p>
-            The registry owner defines the question, purpose, authorized service, and how the
-            answer is represented. Evidence Gateway applies that reviewed definition to every request.
-          </p>
-        </div>
-        <EvidenceGatewayFlow />
+      <div class="product-facts">
+        <article><h3>Define the answer and its source</h3><p>Choose the source information and how to derive the permitted answer. Return only the defined facts, such as a residence region without the street address, or adult status without a date of birth.</p></article>
+        <article><h3>Limit who may ask</h3><p>Authorize services for defined answers and agreed purposes. Evidence Gateway checks that permission before consulting the configured source and records the outcome of the request.</p></article>
+        <article><h3>Keep answers current</h3><p>Set how long an answer is valid. Your team keeps the source current and defines how its age is checked; the receiving service verifies the answer’s dates and signature before use.</p></article>
       </div>
-    </section>
-
-    <section class="section" aria-labelledby="evidence-agreement-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">Define the evidence</p>
-          <h2 id="evidence-agreement-title">Before connecting a service, define the question, purpose, and response.</h2>
-          <p>
-            The registry owner, service team, and policy owner should agree what the answer means,
-            who may receive it, and how long it remains useful.
-          </p>
-        </div>
-        <div class="agreement-grid">
-          {agreements.map((item) => (
-            <article>
-              <span>{item.marker}</span>
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </article>
-          ))}
-        </div>
+    </div>
+  </section>
+  <section class="section section-muted" aria-labelledby="evidence-fit-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">How it fits your organization</p>
+        <h2 id="evidence-fit-title">Keep maintaining the register where it is.</h2>
+        <p>Evidence Gateway can use an existing source. Your organization keeps ownership of its records, continues to maintain them in its current system, and decides which services may receive each answer.</p>
+        <p>Using Evidence Gateway does not require <a href="/solutions/base-registry/">Base Registry Engine</a>. If you choose both, your technical team configures the connection between them.</p>
       </div>
-    </section>
-
-    <section class="claim-band" aria-labelledby="evidence-example-title">
-      <div class="section-inner split">
-        <div class="section-heading compact">
-          <p class="pill">Keep the decision boundary clear</p>
-          <h2 id="evidence-example-title">Evidence Gateway returns the fact. The relying service decides what to do next.</h2>
-        </div>
-        <div class="claim-body">
-          <p>
-            A licensing portal may ask whether a business registration is active. Evidence Gateway can
-            return that signed fact, but it does not decide eligibility, approve a permit, rank a
-            case, or certify that the source itself is correct. Those responsibilities remain
-            with the authoritative institution and the relying service.
-          </p>
-          <a class="inline-cta" href="/use-cases/">See more public-service examples &rarr;</a>
-        </div>
+      <dl>
+        <dt>Your registry team defines the answers</dt><dd>Agree what each fact means, its permitted uses, and the source responsible for the underlying information. The same source can support different defined answers for different services.</dd>
+        <dt>Your technical team connects the source</dt><dd>Configure how Evidence Gateway reads the necessary information, checks requests, and signs answers. Your team operates the service and manages its access rules.</dd>
+        <dt>The receiving service makes its decision</dt><dd>Its team verifies the answer and decides how to use it alongside its own rules and other information. Your organization remains responsible for the decisions its services make.</dd>
+      </dl>
+    </div>
+  </section>
+  <section id="developers" class="section" aria-labelledby="evidence-developers-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">For developers and implementers</p>
+        <h2 id="evidence-developers-title">Request and verify your first signed answer.</h2>
+        <p>The introductory tutorial asks “Is this person an adult?” Run a synthetic source, define the question, and verify the signed answer without returning the person’s name or date of birth.</p>
+        <p><a class="inline-cta" href={product.tutorialHref}>Run the adult-status tutorial →</a></p>
+        <a class="inline-cta" href="https://docs.registrystack.org/products/registry-evidence/">Read the product documentation →</a>
       </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="evidence-choice-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">When a service needs data</p>
-          <h2 id="evidence-choice-title">Use Registry Relay when a service needs selected registry data.</h2>
-          <p>
-            Evidence Gateway provides signed minimum-disclosure assertions. Registry Relay provides
-            selected data from an existing registry through a protected, read-only API. Evidence
-            Gateway may also use a Relay API as a predefined HTTP source without merging the two
-            products&rsquo; authorization models.
-          </p>
-        </div>
-        <div class="solution-choice-row">
-          <a class="button button-primary" href="/solutions/protected-registry-apis/">See Protected Registry APIs</a>
-          <a class="button button-secondary" href="/how-it-fits/">See how it fits existing systems</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section technical-handoff" aria-labelledby="evidence-components-title">
-      <div class="section-inner">
-        <div class="technical-heading">
-          <div>
-            <p class="eyebrow">Runtime and related tooling</p>
-            <h2 id="evidence-components-title">The runtime and components that can work alongside it.</h2>
-          </div>
-          <p>The technical documentation explains how each component is configured and deployed.</p>
-        </div>
-        <div class="technical-component-grid">
-          {handoffComponents.map((component) => (
-            <article>
-              <div>
-                <h3>{component.name}</h3>
-                <p>{component.body}</p>
-              </div>
-              <div class="technical-links">
-                <a href={component.docs}>Docs</a>
-                <a href={component.github}>GitHub</a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <DocsHandoff
-      eyebrow="For your technical team"
-      heading="See how to define a requirement, authorize callers, bind a closed source plan, sign assertions, and operate the audit trail."
-      primaryLabel="Read the technical docs"
-      emphasis="docs"
-    />
-  </main>
-
-  <SiteFooter />
-</Base>
-
-<style>
-  .solution-hero .hero-copy {
-    max-width: 920px;
-  }
-
-  .agreement-grid {
-    display: grid;
-    gap: 16px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin: 0 auto;
-    max-width: 980px;
-  }
-
-  .agreement-grid article {
-    background: #ffffff;
-    border: 1px solid var(--registry-rule);
-    min-width: 0;
-    padding: 22px;
-  }
-
-  .agreement-grid article > span {
-    color: var(--registry-stamp);
-    font-family: var(--registry-mono);
-    font-size: 12px;
-    font-weight: 700;
-  }
-
-  .agreement-grid h3 {
-    font-size: 21px;
-    margin: 14px 0 9px;
-  }
-
-  .agreement-grid p {
-    color: var(--registry-body);
-    line-height: 1.55;
-    margin: 0;
-  }
-
-  .technical-handoff {
-    border-top: 3px solid var(--registry-ink);
-  }
-
-  .technical-handoff .section-inner {
-    padding-bottom: clamp(42px, 6vw, 62px);
-    padding-top: clamp(42px, 6vw, 62px);
-  }
-
-  .technical-heading {
-    align-items: end;
-    display: grid;
-    gap: 18px;
-    grid-template-columns: minmax(0, 1fr) minmax(240px, 0.55fr);
-    margin-bottom: 22px;
-  }
-
-  .technical-heading h2 {
-    font-size: clamp(26px, 3vw, 36px);
-    margin: 6px 0 0;
-  }
-
-  .technical-heading > p {
-    color: var(--registry-body);
-    margin: 0;
-  }
-
-  .technical-component-grid {
-    display: grid;
-    gap: 12px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .technical-component-grid article {
-    background: var(--registry-paper);
-    border: 1px solid var(--registry-rule);
-    display: flex;
-    gap: 18px;
-    justify-content: space-between;
-    min-width: 0;
-    padding: 18px;
-  }
-
-  .technical-component-grid h3 {
-    font-size: 18px;
-    margin: 0 0 5px;
-  }
-
-  .technical-component-grid p {
-    color: var(--registry-body);
-    font-size: 14px;
-    line-height: 1.45;
-    margin: 0;
-  }
-
-  .technical-links {
-    align-content: start;
-    display: flex;
-    flex: 0 0 auto;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .technical-links a {
-    border: 1px solid var(--registry-rule);
-    color: var(--registry-blue);
-    font-family: var(--registry-mono);
-    font-size: 11px;
-    padding: 5px 7px;
-  }
-
-  @media (max-width: 800px) {
-    .agreement-grid,
-    .technical-heading,
-    .technical-component-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 520px) {
-    .technical-component-grid article {
-      display: grid;
-    }
-  }
-</style>
+      <dl>
+        <dt>Source connection</dt><dd>The tutorial supplies a local source. An institutional HTTP source needs a reviewed configuration describing the connection and how to derive the answer.</dd>
+        <dt>Answer and verification</dt><dd>The tutorial covers signed JWS and SD-JWT VC assertions. The receiving service verifies the expected issuer, signature, request binding, and freshness.</dd>
+        <dt>When a service needs selected fields</dt><dd><a href="/solutions/protected-registry-apis/">Registry Relay</a> supplies permitted data fields for services that need more than an answer to a predefined question.</dd>
+      </dl>
+    </div>
+  </section>
+</Product>

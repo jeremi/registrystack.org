@@ -79,12 +79,12 @@ const html = `<!doctype html>
       <span class="wordmark">Registry Stack</span>
     </div>
     <div>
-      <p class="kicker">Open source &middot; For governments and their partners</p>
-      <h1>Answer the question. Keep the records.</h1>
+      <p class="kicker">Open-source software for registries</p>
+      <h1>Maintain your registry.<br>Share only what services need.</h1>
     </div>
     <div class="foot">
       <span class="url">registrystack.org</span>
-      <span class="works">Works alongside OpenCRVS &middot; OpenSPP &middot; DHIS2 &middot; HL7 FHIR &middot; MOSIP &middot; OpenFn</span>
+      <span class="works">Base Registry Engine &middot; Evidence Gateway</span>
     </div>
   </body>
 </html>`;

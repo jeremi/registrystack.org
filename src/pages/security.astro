@@ -6,146 +6,70 @@ import DocsHandoff from '../components/DocsHandoff.astro';
 
 const pageTitle = 'Security | Registry Stack';
 const pageDescription =
-  'How Registry Stack limits access to source data, which threats its controls address, and which security responsibilities remain with the operator.';
+  'How Registry Stack controls changes and access, what a signed answer establishes, and how your organization can review the software.';
 const securityDocsHref = 'https://docs.registrystack.org/spec/rs-sec-g/';
 const securityReportHref =
   'https://github.com/registrystack/registry-stack/security/advisories/new';
 const releaseVerifyHref = 'https://github.com/registrystack/registry-stack/blob/main/release/VERIFY.md';
 
-// Built as a security model, in the order serious projects use: state the
-// properties the model protects, draw the trust boundary, list the controls
-// that bound a compromise, enumerate the threat model in scope and out, split
-// responsibility with the operator, and give disclosure a real home.
-
-// 1. The properties the model protects, each tied to the concrete mechanism
-//    that delivers it.
+// Explain the useful control first, with implementation and operating detail
+// available through the maintained security documentation.
 const properties = [
   {
-    title: 'Confidentiality',
+    title: 'Control changes to the register',
     body:
-      'A connected service can receive only the result allowed by its Evidence grant or Relay access profile. Relay reads compiled properties from reviewed SQLite views; Evidence executes only its reviewed, bounded source plan.',
+      'Base Registry Engine checks who may change a record and whether the change follows your configured rules. It keeps revisions so authorized users can inspect the history through your application.',
   },
   {
-    title: 'Integrity',
+    title: 'Decide what each service receives',
     body:
-      'Evidence Gateway assertions are signed, time-limited, and either audience-scoped or holder-bound under separate verification policies. Registry consultation is read-only, so Registry Stack does not change the source record.',
+      'Evidence Gateway checks permission for a predefined question before reading the source. Registry Relay applies your rules for access to selected fields. Your organization defines those permissions and the information each service may receive.',
   },
   {
-    title: 'Availability',
+    title: 'Verify where an answer came from',
     body:
-      'Each registry can run its own deployment without relying on an Aubex-hosted service to answer requests. Availability still depends on the operator and the connected source system.',
+      'Evidence Gateway signs its answers. A receiving service can check that the answer came from a trusted issuer, has not been altered, and meets the expected purpose and validity requirements.',
   },
   {
-    title: 'Auditability',
+    title: 'Review activity',
     body:
-      'Evidence Gateway records authorized access before a source read and records disclosure before releasing a signed answer. Relay also records protected reads. Retention and independent review remain operator responsibilities.',
+      'The products record audit events for the requests they handle. Evidence Gateway records authorized source access and disclosure before releasing an answer. Your team protects and retains these records for review.',
   },
 ];
 
-// 2. The trust boundary: what a deployment can reach, and what it is built not
-//    to do.
-const access = [
+const responsibilities = [
   {
-    title: 'What a deployment can reach',
-    items: [
-      'The reviewed SQLite views, extracts, or fixed HTTP responses its configured product path is allowed to read.',
-      'Any source credentials configured for Evidence. Relay V2 makes no upstream source call and holds no upstream source credential.',
-      'The audit log it writes about the requests it handles.',
-    ],
+    title: 'Your organization sets the rules',
+    body:
+      'You own the records and decide who may maintain them, which services may ask for information, and for what purpose. Your team defines the rules, reviews the configured permissions, and decides how returned information is used.',
   },
   {
-    title: 'What it is built not to do',
-    items: [
-      'Act as a data warehouse: it reads to answer and returns a minimized result, not a bulk export.',
-      'Return more to a connected service than the configured scope allows.',
-      'Write back to, or change, the source system; source connections are read-only.',
-      'Send records or audit logs to Aubex: you self-host, and those data stay in your environment.',
-    ],
+    title: 'Your operator runs the deployment',
+    body:
+      'You host the software in an environment you control. Your operator manages access to the database or source, protects credentials and audit logs, and handles monitoring, updates, and incident response. The software does not send your records or audit logs to Aubex.',
   },
-];
-
-// 3. Controls that bound the blast radius. The guarantees (signing, audit) are
-//    stated above as properties; these are the containment measures only.
-const controls = [
-  'Least-privilege source access: Relay exposes only reviewed SQLite views, while Evidence uses only predefined HTTP or SQLite acquisitions. Any Evidence source credential should be limited to the records and operations the deployment needs.',
-  'One deployment per registry, in that registry’s own environment, so there is no central pool a single breach could drain.',
-  'Defense in depth: authentication, authorization, predefined questions, and field limits are separate, checked layers, so one misconfiguration is less likely to expose everything.',
-  'Network isolation, secret management, and off-host audit retention, run by the operator, keep the host’s reachable surface and its credentials contained.',
-  'Fail-closed configuration: validation runs at startup, so a malformed grant or an invalid key usage fails loudly before serving, and scopes and field limits are explicit configuration a reviewer can read.',
-];
-
-// 4. Threat model, stated as two explicit sides.
-const defends = [
-  'Eavesdropping or tampering in transit: requests and responses travel over operator-provided TLS, and Evidence Gateway assertions are signed for independent verification.',
-  'A connected service reaching beyond its authority: each product checks its own configured authorization boundary on every request.',
-  'A forged, altered, or stale assertion: verifiers check the signature, trusted issuer, audience or holder proof, purpose, validity, and retained request expectations before use.',
-  'A stolen service access token: short lifetimes, narrow authority, rate limits, and per-request checks reduce what it can reach, while the audit trail records its use.',
-  'Misuse that has to be caught after the fact: hash-chained audit records show who asked what, and what was answered, when the operator retains them in protected storage.',
-];
-
-const outOfScope = [
-  'A compromised connected service can still use the legitimate scope it was granted. If that grant is broad, it can collect many allowed answers, so grants need to stay narrow and revocable.',
-  'An attacker with arbitrary, ongoing control of the host can reach the source data the deployment is configured to read, the credentials it holds, and its audit log. Least-privilege scoping bounds what that is, but cannot remove it.',
-  'The security of the source system itself stays with the team that runs it.',
-  'Establishing who a person is stays with the foundational identity layer.',
-  'Whether a request is lawful stays an institutional and legal decision.',
-  'Hardening the hosting environment stays with the operator who runs the deployment.',
-];
-
-const provides = [
-  'Open-source software designed for read-only registry consultation and hardened deployment.',
-  'Release assets covered by a Sigstore-signed checksum file, a consolidated SPDX software bill of materials (SBOM), a checksum-covered security-evidence archive, and a release manifest, plus published security and audit contracts and local validation tools.',
-  'A hardening checklist in the docs and a coordinated-disclosure process.',
-];
-
-const operates = [
-  'Reviewed Relay source views and, where Evidence calls an upstream API, a least-privilege source credential.',
-  'Hosting hardening, network isolation, TLS termination, secret management, and patching.',
-  'Monitoring, key rotation, audit-log protection, and incident response for the deployment.',
-  'The legal authority and the policy for who may ask, and for what purpose.',
-];
-
-const verify = [
-  'The products are open source, so your team and your auditors can review exactly what runs.',
-  'Sigstore-signed checksums, a consolidated SPDX SBOM, a security-evidence archive, a release manifest, and candidate attestations let you confirm what you deploy.',
-  'Product-specific checks validate Relay projects and Evidence bundles before the service starts.',
-  'You can inspect the hosted synthetic-data demonstration before any real record is touched; it is not a production integration reference.',
 ];
 
 const evidence = [
   {
-    label: 'Security model',
-    href: 'https://docs.registrystack.org/spec/rs-sec-g/',
+    label: 'Security model and responsibilities',
+    href: securityDocsHref,
+    description: 'Trust boundaries, request checks, and the controls your operator supplies.',
   },
   {
     label: 'Security self-assessment',
-    href: 'https://docs.registrystack.org/reference/security-self-assessment/',
+    href: 'https://docs.registrystack.org/security/self-assessment/',
+    description: 'Published security claims and the evidence available to review them.',
   },
   {
-    label: 'OpenSSF evidence',
-    href: 'https://docs.registrystack.org/reference/openssf-evidence/',
+    label: 'Release verification',
+    href: releaseVerifyHref,
+    description: 'How to check release assets against signed checksums and inspect the software bill of materials.',
   },
   {
-    label: 'GitHub releases',
-    href: 'https://github.com/registrystack/registry-stack/releases',
-  },
-];
-
-const assertionProtection = [
-  {
-    title: 'Authority is checked before source access',
-    body:
-      'Evidence Gateway authenticates the requester and authorizes the complete predefined request before it acquires source credentials or reads the registry.',
-  },
-  {
-    title: 'Signing keys rotate without invalidating current answers',
-    body:
-      'The operator rotates the active signing key and keeps retired public keys available long enough for assertions that are still within their validity window.',
-  },
-  {
-    title: 'Assertions expire rather than entering a status lifecycle',
-    body:
-      'A direct Evidence assertion is stateless and time-limited. The optional OID4VCI adapter adds bounded delivery state but no status list, revocation, reissuance, or Evidence signing key.',
+    label: 'Source code and releases',
+    href: 'https://github.com/registrystack/registry-stack',
+    description: 'The public implementation and its release history for your technical team and auditors.',
   },
 ];
 ---
@@ -158,12 +82,11 @@ const assertionProtection = [
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Security</p>
-          <h1 id="security-hero-title">What the security model covers, and what remains your responsibility.</h1>
+          <h1 id="security-hero-title">Your records. Your rules. Controls you can review.</h1>
           <p class="hero-lead">
-            A Registry Stack deployment reads source data and may use source credentials and
-            signing keys configured by its operator. It is therefore a sensitive infrastructure
-            component. This page explains the controls in the software, the risks those controls
-            address, and the security work required from the operating team.
+            Registry Stack helps your organization control changes to its records and access
+            to the information it shares. You define the permissions and operate the deployment;
+            the open-source software applies the configured rules.
           </p>
         </div>
       </div>
@@ -172,11 +95,11 @@ const assertionProtection = [
     <section class="section" aria-labelledby="security-properties-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">Security properties</p>
-          <h2 id="security-properties-title">How Registry Stack addresses confidentiality, integrity, availability, and auditability.</h2>
+          <p class="eyebrow">What the software does</p>
+          <h2 id="security-properties-title">Make each change and disclosure accountable.</h2>
           <p>
-            These properties depend on both the software controls and how the deployment is
-            configured and operated.
+            Base Registry Engine and Evidence Gateway address different responsibilities and
+            can be used independently. Each product checks its own access rules.
           </p>
         </div>
         <div class="security-properties">
@@ -187,167 +110,77 @@ const assertionProtection = [
             </article>
           ))}
         </div>
-        <p class="security-keys-note">
-          A deployment may hold an Evidence source credential, Evidence signing keys, and secrets
-          used for audit integrity and subject pseudonyms. Relay V2 instead binds a read-only
-          SQLite source and holds no upstream source credential. These secrets stay in the
-          operator&rsquo;s secret management system and are not held by Aubex. Audit records can
-          themselves reveal sensitive activity and need access controls and protected retention.
-          The operator also provides TLS and protects the source records at rest.
-        </p>
       </div>
     </section>
 
-    <section class="section section-muted" aria-labelledby="security-boundary-title">
+    <section class="section section-muted" aria-labelledby="security-shared-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">Deployment access</p>
-          <h2 id="security-boundary-title">What a Registry Stack deployment can access.</h2>
+          <p class="eyebrow">Organizational responsibility</p>
+          <h2 id="security-shared-title">Keep authority with the people responsible for the register.</h2>
           <p>
-            A deployment sits between a public or partner service and a registry source. Its source
-            account and network access should be limited to the data required for the configured
-            questions and fields.
+            Software controls support the rules your organization has agreed. They work
+            alongside your governance, source systems, and operating safeguards.
           </p>
         </div>
         <div class="security-pair">
-          {access.map((group) => (
-            <article class="quiet-card">
-              <h3>{group.title}</h3>
-              <ul class="check-list">
-                {group.items.map((item) => (
-                  <li>{item}</li>
-                ))}
-              </ul>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="security-controls-title">
-      <div class="section-inner split">
-        <div class="section-heading compact">
-          <p class="eyebrow">Limiting exposure</p>
-          <h2 id="security-controls-title">Controls that limit the impact of a flaw or compromised deployment.</h2>
-          <p>
-            No control makes a breach impossible. These controls limit what the deployment can
-            reach, isolate registries from each other, and help operators detect misuse.
-          </p>
-        </div>
-        <ul class="check-list">
-          {controls.map((item) => (
-            <li>{item}</li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="security-threat-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">Threat model</p>
-          <h2 id="security-threat-title">Threats addressed by the controls, and risks that remain.</h2>
-          <p>
-            A useful threat model is explicit about both sides. The size of any exposure depends on
-            how narrowly the reviewed source and access boundaries are defined and how well the
-            host is run.
-          </p>
-        </div>
-        <div class="security-pair">
-          <article class="quiet-card">
-            <h3>What the model defends against</h3>
-            <ul class="check-list">
-              {defends.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </article>
-          <article class="quiet-card">
-            <h3>What is out of scope</h3>
-            <ul class="check-list">
-              {outOfScope.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="security-shared-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">Shared responsibility</p>
-          <h2 id="security-shared-title">How security responsibilities are divided.</h2>
-          <p>
-            Registry Stack provides software controls and security documentation. The operator is
-            responsible for the infrastructure, source permissions, secrets, monitoring, and
-            institutional policy used in production.
-          </p>
-        </div>
-        <div class="security-pair">
-          <article class="quiet-card">
-            <h3>Registry Stack provides</h3>
-            <ul class="check-list">
-              {provides.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </article>
-          <article class="quiet-card">
-            <h3>You operate</h3>
-            <ul class="check-list">
-              {operates.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="assertion-protection-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">Signed assertions</p>
-          <h2 id="assertion-protection-title">Authorization, signing, and limited validity.</h2>
-          <p>
-            Evidence Gateway returns signed, time-limited assertions. Audience-scoped and
-            holder-bound modes have separate verification policies, and authority is checked before
-            source access.
-          </p>
-        </div>
-        <div class="security-properties">
-          {assertionProtection.map((item) => (
+          {responsibilities.map((item) => (
             <article class="quiet-card">
               <h3>{item.title}</h3>
               <p>{item.body}</p>
             </article>
           ))}
         </div>
+        <p class="security-note">
+          Your technical team scopes database accounts, source connections, and network access
+          to the work each deployment needs. The maintained security docs explain the threat
+          model, host protection, key management, and audit retention.
+        </p>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="security-verify-title">
+    <section class="section" aria-labelledby="assertion-protection-title">
       <div class="section-inner split">
         <div class="section-heading compact">
-          <p class="eyebrow">Review the implementation</p>
-          <h2 id="security-verify-title">Review the software and release evidence before deployment.</h2>
-          <p>
-            The components are open source and self-hosted. Your team and auditors can inspect the
-            source, verify a release, and test the deployment with synthetic data.
-          </p>
-          <a class="inline-cta" href="https://lab.registrystack.org/">Try the live demo on synthetic data &rarr;</a>
-          <a class="inline-cta" href={releaseVerifyHref}>Verify a release &rarr;</a>
+          <p class="eyebrow">Understanding a signed answer</p>
+          <h2 id="assertion-protection-title">A service can verify the answer before using it.</h2>
         </div>
-        <ul class="check-list">
-          {verify.map((item) => (
-            <li>{item}</li>
-          ))}
+        <div class="security-explanation">
+          <p>
+            In an illustrative procurement check, Evidence Gateway consults the configured
+            business register and signs an answer about a supplier&rsquo;s registration status.
+            The procurement service checks the issuer, signature, intended use, and validity
+            before relying on that answer.
+          </p>
+          <p>
+            The signature establishes the origin and integrity of the answer. The registry
+            owner remains responsible for the source information; the procurement service
+            remains responsible for its purchasing decision.
+          </p>
+          <a class="inline-cta" href="/solutions/evidence-gateway/">Explore Evidence Gateway &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="security-verify-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">For your technical and security teams</p>
+          <h2 id="security-verify-title">Inspect the software and the evidence behind it.</h2>
+          <p>
+            Your team and auditors can review the source, verify a release, and use the local
+            tutorials to assess product behavior with sample data. Detailed threat and operating
+            guidance lives in the maintained documentation.
+          </p>
+        </div>
+        <div class="security-properties">
           {evidence.map((item) => (
-            <li><a href={item.href}>{item.label}</a></li>
+            <article class="quiet-card">
+              <h3><a href={item.href}>{item.label}</a></h3>
+              <p>{item.description}</p>
+            </article>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
 
@@ -355,20 +188,11 @@ const assertionProtection = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">Coordinated disclosure</p>
-          <h2 id="security-report-title">Found a security issue? Tell us privately first.</h2>
+          <h2 id="security-report-title">Report a security issue privately.</h2>
           <p>
-            If you find a vulnerability, please report it through GitHub private vulnerability
-            reporting so it can be fixed before it is public. Do not open a public issue for a
-            security report. We will acknowledge your report and work with you on a coordinated
+            Use GitHub private vulnerability reporting so an issue can be investigated before
+            it is made public. We will acknowledge your report and work with you on coordinated
             disclosure.
-          </p>
-          <p class="security-claim-note">
-            Registry Stack&rsquo;s security posture is verifiable rather than certified: releases
-            publish authenticated checksum inventories and SBOMs, the detailed threat model lives
-            in the docs, and a pilot includes a security review against your own requirements.
-            Audit-log retention periods and data-subject access or erasure over audit records are
-            deployment policy decisions, set by the operating institution and reviewed during a
-            pilot&rsquo;s security review.
           </p>
         </div>
         <div class="solution-choice-row">
@@ -376,7 +200,7 @@ const assertionProtection = [
           <a class="button button-secondary" href={securityDocsHref}>Read the security docs</a>
         </div>
         <p class="security-disclosure-extra">
-          <a class="inline-cta" href="/.well-known/security.txt">Our security.txt, machine-readable (RFC 9116) &rarr;</a>
+          <a class="inline-cta" href="/.well-known/security.txt">Machine-readable reporting details in security.txt &rarr;</a>
         </p>
       </div>
     </section>
@@ -384,7 +208,7 @@ const assertionProtection = [
 
   <DocsHandoff
     eyebrow="For your security team"
-    heading="The detailed threat model, the hardening checklist, and the audit schema live in the docs."
+    heading="Review the detailed security model with your technical team."
     primaryLabel="Read the security docs"
     primaryHref={securityDocsHref}
     emphasis="docs"
@@ -393,30 +217,9 @@ const assertionProtection = [
 </Base>
 
 <style>
-  /* The four protected properties: a balanced 2x2 that reads as a set, not a
-     ranked list. */
-  .security-properties {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin-top: clamp(24px, 4vw, 36px);
-  }
-
-  .security-properties .quiet-card h3 {
-    margin-top: 0;
-  }
-
-  /* The concrete note on keys, transport, and data at rest sits under the
-     properties grid as a single calm paragraph. */
-  .security-keys-note {
-    color: var(--registry-body);
-    margin: clamp(24px, 3vw, 32px) auto 0;
-    max-width: 760px;
-    text-align: center;
-  }
-
-  /* Paired cards for the can/cannot, threat, and responsibility sections: a
-     balanced two-up that reads as a deliberate comparison. */
+  /* Balanced pairs keep the controls and organizational responsibilities easy
+     to compare without ranking them. */
+  .security-properties,
   .security-pair {
     display: grid;
     gap: 20px;
@@ -424,14 +227,25 @@ const assertionProtection = [
     margin-top: clamp(24px, 4vw, 36px);
   }
 
-  .security-pair .quiet-card h3 {
+  .quiet-card h3 {
     margin-top: 0;
   }
 
-  .security-claim-note {
-    color: var(--registry-muted);
-    font-size: 14px;
-    margin-top: 14px;
+  .quiet-card p:last-child,
+  .security-explanation p:last-child {
+    margin-bottom: 0;
+  }
+
+  .security-note {
+    color: var(--registry-body);
+    margin: clamp(24px, 3vw, 32px) auto 0;
+    max-width: 760px;
+    text-align: center;
+  }
+
+  .security-explanation {
+    border-top: 2px solid var(--registry-ink);
+    padding-top: 18px;
   }
 
   .security-disclosure-extra {

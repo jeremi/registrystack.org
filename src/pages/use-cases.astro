@@ -4,17 +4,32 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import DocsHandoff from '../components/DocsHandoff.astro';
 import MinimizationFunnel from '../components/MinimizationFunnel.astro';
+import { products } from '../data/products';
 
 const pageTitle = 'Use cases | Registry Stack';
 const pageDescription =
-  'Government registry scenarios using signed minimum-disclosure answers and protected access to selected data.';
+  'Illustrative examples of maintaining a register, checking a fact, and sharing selected information with services.';
 
 const scenarios = [
   {
+    domain: 'People and households',
+    need: 'A local authority needs to maintain resident records and their household relationships.',
+    choice: 'Base Registry Engine',
+    result: 'Store person and household records, link them, and let authorized staff find and update the information through their application, with a history of changes.',
+    stays: 'The authority defines the records, runs the registry, and controls which details each role can access.',
+  },
+  {
+    domain: 'Businesses and establishments',
+    need: 'A registration authority needs a register of businesses and the establishments they operate.',
+    choice: 'Base Registry Engine',
+    result: 'Store and connect business and establishment records. Create registrations, look up existing entries, and keep addresses and status current under the registry&rsquo;s rules.',
+    stays: 'The authority owns the register and sets the access, validation, and review rules used by its applications.',
+  },
+  {
     domain: 'Civil registration',
-    need: 'A service needs the person&rsquo;s age band, not their date of birth.',
+    need: 'A licensing service needs to check an applicant&rsquo;s age band.',
     choice: 'Evidence Gateway',
-    result: 'Return a clear answer such as “18-64,” calculated from the civil register.',
+    result: 'Return an age band such as “18–64”, calculated from the civil register.',
     stays: 'Date of birth and the rest of the civil-registration record stay with the authority.',
   },
   {
@@ -28,19 +43,19 @@ const scenarios = [
     domain: 'Business registration',
     need: 'A procurement service needs to check whether a supplier is actively registered.',
     choice: 'Evidence Gateway',
-    result: 'Return a signed active or inactive answer tied to the business number.',
+    result: 'Return a signed active or inactive answer for the supplier being checked.',
     stays: 'Filing history, addresses, and ownership records stay in the business register.',
   },
   {
     domain: 'Farmer support',
     need: 'A subsidy program needs both registration status and farm size.',
-    choice: 'Protected Registry APIs',
+    choice: 'Registry Relay',
     result: 'Return the agreed fields, such as registered status and 2.5 hectares.',
     stays: 'Plot coordinates, household members, crop history, and financial records are not returned.',
   },
   {
     domain: 'Residence verification',
-    need: 'A service needs the person&rsquo;s residence region, not their full address or household record.',
+    need: 'A local service needs to check the person&rsquo;s residence region.',
     choice: 'Evidence Gateway',
     result: 'Return a signed region value defined by the registry owner for the approved purpose.',
     stays: 'The street address, household members, and rest of the source record stay with the authority.',
@@ -48,9 +63,24 @@ const scenarios = [
   {
     domain: 'A registry in a spreadsheet',
     need: 'A partner service needs a few fields from an XLSX or CSV source that is currently shared by email.',
-    choice: 'Protected Registry APIs',
-    result: 'Use an institution-owned process to prepare a reviewed SQLite view or extract, then provide agreed fields through a documented API.',
+    choice: 'Registry Relay',
+    result: 'The registry team prepares and maintains a reviewed extract. Registry Relay gives the partner access to the agreed fields.',
     stays: 'The source file, database credentials, and unrelated rows are not distributed to the partner.',
+  },
+];
+
+const tutorialExercises = [
+  {
+    product: 'Base Registry Engine',
+    exercise: 'Create a sample business record, change its label, and try requests the server refuses.',
+  },
+  {
+    product: 'Evidence Gateway',
+    exercise: 'Ask whether a synthetic person is an adult and verify the signed answer.',
+  },
+  {
+    product: 'Registry Relay',
+    exercise: 'Publish a sample business register that returns legal name and legal form, and refuses a request for the address.',
   },
 ];
 ---
@@ -63,10 +93,11 @@ const scenarios = [
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Use cases</p>
-          <h1 id="uc-hero-title">Decide what each service actually needs to receive.</h1>
+          <h1 id="uc-hero-title">Keep records useful. Give services the facts they need.</h1>
           <p class="hero-lead">
-            A service may need one signed answer or several selected fields from a registry.
-            Registry Stack supports both while the source records stay with the registry owner.
+            A local authority maintains resident records. A procurement service checks a supplier.
+            These illustrative examples show how Registry Stack can support the work and
+            what remains under the organization&rsquo;s control.
           </p>
         </div>
       </div>
@@ -75,32 +106,36 @@ const scenarios = [
     <section class="section" aria-labelledby="choices-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">Two types of response</p>
-          <h2 id="choices-title">Choose a signed answer or selected data.</h2>
+          <p class="eyebrow">Two ways to start</p>
+          <h2 id="choices-title">Build a registry or share a verifiable fact.</h2>
         </div>
         <div class="choice-grid">
           <article>
-            <p class="choice-marker">Answer</p>
-            <h3>A fact or status</h3>
-            <p>Use Evidence Gateway when the service needs one predefined fact such as active, enrolled, or an age band.</p>
+            <p class="choice-marker">Base Registry Engine</p>
+            <h3>A registry your team can maintain</h3>
+            <p>Store and manage records about people, households, organizations, or assets. Your applications can create, find, and update them under shared rules, with a history of changes.</p>
+            <a class="inline-cta" href="/solutions/base-registry/">Explore Base Registry Engine →</a>
           </article>
           <article>
-            <p class="choice-marker">Data</p>
-            <h3>Selected data or agreed fields</h3>
-            <p>Use Protected Registry APIs when the service needs specific fields for its own work and the registry owner agrees.</p>
+            <p class="choice-marker">Evidence Gateway</p>
+            <h3>A signed fact or status</h3>
+            <p>An approved service checks a fact held in an existing source. The gateway returns the agreed answer with a signature the service can verify.</p>
+            <a class="inline-cta" href="/solutions/evidence-gateway/">Explore Evidence Gateway →</a>
           </article>
         </div>
+        <p class="choice-note">These products can be used independently. When a service needs selected fields, <a href="/solutions/protected-registry-apis/">Registry Relay</a> provides another option.</p>
       </div>
     </section>
 
     <section class="section section-muted" aria-labelledby="many-answers-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">Different services, different information</p>
+          <p class="eyebrow">Illustration: a civil register</p>
           <h2 id="many-answers-title">One registry can support several services without sharing every field.</h2>
           <p>
-            Different services can receive different answers from the same source record. Each
-            request uses the agreement for that service and purpose.
+            A pension service checks whether a person is alive. A licensing service checks
+            whether they are 18 or older. The registry owner defines the permitted questions and
+            access rules; Evidence Gateway applies those rules to each request.
           </p>
         </div>
         <MinimizationFunnel />
@@ -110,8 +145,9 @@ const scenarios = [
     <section class="section" aria-labelledby="scenarios-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">Public-service examples</p>
-          <h2 id="scenarios-title">How each type of response works in practice.</h2>
+          <p class="eyebrow">Illustrative public-service scenarios</p>
+          <h2 id="scenarios-title">Start with the work your team needs to do.</h2>
+          <p>Each scenario shows a possible configuration. Your organization defines the records, permissions, and service rules for its own use.</p>
         </div>
         <div class="scenario-grid">
           {scenarios.map((scenario) => (
@@ -120,13 +156,14 @@ const scenarios = [
               <h3 set:html={scenario.need} />
               <p class="scenario-choice">{scenario.choice}</p>
               <div>
-                <p class="scenario-label">What is returned</p>
+                <p class="scenario-label">The result</p>
                 <p set:html={scenario.result} />
               </div>
               <div>
-                <p class="scenario-label">What stays at the source</p>
+                <p class="scenario-label">What stays with the institution</p>
                 <p set:html={scenario.stays} />
               </div>
+              <a class="inline-cta" href={products.find((product) => product.name === scenario.choice)?.href}>Explore {scenario.choice} →</a>
             </article>
           ))}
         </div>
@@ -137,31 +174,43 @@ const scenarios = [
       <div class="section-inner ai-context">
         <div class="section-heading compact">
           <p class="eyebrow">AI-assisted services</p>
-          <h2 id="ai-context-title">AI-assisted services follow the same access rules as other services.</h2>
+          <h2 id="ai-context-title">The same access rules apply to an AI-assisted service.</h2>
         </div>
         <div class="ai-context-body">
           <p>
-            If a public service uses AI to guide a person or caseworker, it can use the same
-            configured Registry Stack interface as any other service. The usual identity, purpose,
-            and request checks still apply. The AI does not receive direct access to the source or
-            special permission to query it.
+            A service that uses AI to guide a person or caseworker can call the same configured
+            Registry Stack interface as other services. Registry Stack checks the service&rsquo;s
+            permission for each request and returns only the information its rules allow.
           </p>
           <p>
-            Registry Stack is not an eligibility decision maker, an approval console, or general
-            permission for an AI system to query registries. A model cannot use it to invent a new
-            registry question or choose a different person.
+            The service owner remains responsible for how the application uses that information,
+            including decisions about eligibility, approvals, and the people it makes requests about.
           </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="tutorial-exercises-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">For developers</p>
+          <h2 id="tutorial-exercises-title">Run an introductory exercise with sample data.</h2>
+          <p>The tutorials introduce each product through the exercises below. The scenarios above are illustrations for discussing your own use case.</p>
+        </div>
+        <div class="scenario-grid">
+          {tutorialExercises.map((tutorial) => (
+            <article class="scenario-card">
+              <h3>{tutorial.product}</h3>
+              <p>{tutorial.exercise}</p>
+              <a class="inline-cta" href={products.find((product) => product.name === tutorial.product)?.tutorialHref}>{tutorial.product} introductory tutorial →</a>
+            </article>
+          ))}
         </div>
       </div>
     </section>
   </main>
 
-  <DocsHandoff
-    eyebrow="Technical details"
-    heading="See the supported source types, signed assertion formats, and protected API contracts."
-    primaryLabel="Read the docs"
-    emphasis="docs"
-  />
+  <DocsHandoff />
   <SiteFooter />
 </Base>
 
@@ -180,6 +229,11 @@ const scenarios = [
   .choice-grid h3,
   .choice-grid p {
     margin-bottom: 8px;
+  }
+
+  .choice-note {
+    margin: 24px 0 0;
+    max-width: 760px;
   }
 
   .choice-marker,

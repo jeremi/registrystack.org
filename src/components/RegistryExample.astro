@@ -1,0 +1,43 @@
+---
+import PersonHouseholdRecords from './PersonHouseholdRecords.astro';
+import SignedAnswer from './SignedAnswer.astro';
+---
+
+<figure class="registry-example" aria-labelledby="registry-example-caption">
+  <div class="example-source">
+    <div class="example-heading">
+      <p class="example-product">Base Registry Engine</p>
+      <p class="example-description">Stores and manages linked records</p>
+    </div>
+    <PersonHouseholdRecords />
+    <p class="example-history">
+      <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 8a7 7 0 1 1 1 6M3 3v5h5m2-3v5l3 2" /></svg>
+      Current records and their change history
+    </p>
+  </div>
+  <div class="example-exchange">
+    <div class="example-heading">
+      <p class="example-product">Evidence Gateway</p>
+      <p class="example-description">Answers an approved question</p>
+    </div>
+    <p class="example-question">Is Amara 18 or older?</p>
+    <SignedAnswer fieldLabel="18 or older" value="Yes" recipient="Licensing service" issuer="Registry authority" />
+    <p class="example-detail">Date of birth and household details stay in the registry.</p>
+  </div>
+  <figcaption id="registry-example-caption">Fictional records and a configured connection. Each product can also be used independently.</figcaption>
+</figure>
+
+<style>
+  .registry-example { color: var(--registry-ink); background: #fff; border-top: 4px solid var(--registry-brass); box-shadow: 12px 12px 0 #0d2855; margin: 0; width: 100%; }
+  .example-source { padding: 20px; background: #f4f6f8; }
+  .example-heading { margin-bottom: 16px; }
+  .example-product { color: var(--registry-blue); font-size: 14px; font-weight: 700; line-height: 1.4; margin: 0 0 3px; }
+  .example-description { color: var(--registry-body); font-size: 12px; line-height: 1.5; margin: 0; }
+  .example-history { display: flex; gap: 7px; align-items: center; color: var(--registry-body); font-size: 11px; line-height: 1.5; margin: 13px 0 0; }
+  .example-history svg { flex: 0 0 16px; }
+  .example-exchange { border-top: 1px solid #d7dee6; padding: 20px; }
+  .example-exchange .example-heading { margin-bottom: 11px; }
+  .example-question { font-size: 16px; font-weight: 600; line-height: 1.45; color: var(--registry-ink); margin: 0 0 12px; }
+  .example-detail { color: var(--registry-muted); font-size: 12px; line-height: 1.5; margin: 12px 0 0; }
+  figcaption { background: #f4f6f8; border-top: 1px solid #e0e5eb; color: var(--registry-body); padding: 12px 20px; font-size: 11px; line-height: 1.5; }
+</style>

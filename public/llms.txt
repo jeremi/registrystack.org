@@ -1,19 +1,26 @@
 # Registry Stack
 
-> Registry Stack is open-source infrastructure that helps government registries return signed minimum-disclosure answers or protected, selected data while source records stay with the authority that holds them. Evidence Gateway and Protected Registry APIs are the two product paths; Evidence and Registry Relay are their independent runtimes. Registry Mint and Registry Manifest provide supporting token and metadata capabilities. Aubex Consulting LLC provides pilot delivery and commercial support.
+> Open-source software for organizations that maintain registries and the services that rely on them. Base Registry Engine stores and manages records about people, households, organizations, assets, and more. It supports record creation, retrieval, relationships, controlled updates, and history, with review where required. Evidence Gateway lets approved services receive signed answers about defined facts without receiving the full source record. Each product works independently. Registry Relay publishes selected data from existing registries.
 
-## Pages
+Organizations own their records and define the rules for access and changes. The software is Apache-2.0 open source. Paid implementation pilots and annual support contracts are available for teams that need help, separate from self-service use. Current starting prices and scope are on the pricing page.
 
-- [Home](https://registrystack.org/): How Registry Stack helps a registry owner provide signed answers or selected data.
-- [Evidence Gateway](https://registrystack.org/solutions/evidence-gateway/): Return one signed, minimum-disclosure assertion for a predefined question.
-- [Protected Registry APIs](https://registrystack.org/solutions/protected-registry-apis/): Provide read-only access to agreed registry fields without distributing the source.
-- [Use cases](https://registrystack.org/use-cases/): Worked public-service scenarios and how to choose between a signed answer and selected data.
-- [How it fits](https://registrystack.org/how-it-fits/): Registry Stack is deployed next to the source registry and before any exchange layer; the page also covers identity systems, catalogs, and standards.
-- [Pilot and support](https://registrystack.org/pilot/): What is open source, what paid help covers, and how to start with one registry.
-- [Security](https://registrystack.org/security/): The security model: what it protects, what a deployment can reach, and the threat model in and out of scope.
-- [FAQ](https://registrystack.org/faq/): Short answers to the questions program teams, security reviewers, and engineers ask first.
+## Website
 
-## Related sites
+- [Home](https://registrystack.org/): Registry maintenance and fact-sharing examples, product choices, and next steps.
+- [Base Registry Engine](https://registrystack.org/solutions/base-registry/): Build and run a registry with defined records and relationships, storage, access controls, and change history behind the organization's applications.
+- [Evidence Gateway](https://registrystack.org/solutions/evidence-gateway/): Return signed answers from an existing registry or another configured source.
+- [Registry Relay](https://registrystack.org/solutions/protected-registry-apis/): Publish selected fields through read-only APIs.
+- [Use cases](https://registrystack.org/use-cases/): Illustrative registry and public-service workflows.
+- [Implementation and support](https://registrystack.org/pricing/): Implementation pilots, annual support contracts, and a written inquiry covering need, budget, and timing.
+- [Security](https://registrystack.org/security/): Access, accountability, and organizational responsibilities.
+- [FAQ](https://registrystack.org/faq/): Product fit, adoption, evaluation, and licensing questions.
 
-- [Documentation](https://docs.registrystack.org/): Technical reference and specifications for Evidence, Registry Relay, Registry Mint, and Registry Manifest.
-- [Live demo](https://lab.registrystack.org/): A hosted synthetic-data demonstration, not a production integration reference.
+## Technical evaluation
+
+- [Base Registry Engine tutorial](https://docs.registrystack.org/tutorials/first-breg/): Create and update sample records, then test a refused request.
+- [Evidence Gateway tutorial](https://docs.registrystack.org/tutorials/first-evidence-assertion/): Request a signed adult-status answer from a synthetic source and verify it.
+- [Registry Relay tutorial](https://docs.registrystack.org/tutorials/publish-governed-sqlite-registry/): Read permitted fields from a reviewed SQLite view, test a refused field, and inspect the audit record.
+- [Documentation](https://docs.registrystack.org/): Maintained tutorials, technical contracts, release status, and operational guidance.
+- [Source and releases](https://github.com/registrystack/registry-stack): Public source code and released software.
+
+Website examples illustrate possible workflows; they are not live software demonstrations.

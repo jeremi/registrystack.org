@@ -76,7 +76,6 @@ for (const file of htmlFiles) {
 
 const requiredExternal = [
   "https://docs.registrystack.org/",
-  "https://lab.registrystack.org/",
   "https://github.com/registrystack/registry-stack",
   "https://github.com/registrystack/registry-stack/security/advisories/new",
   "https://docs.registrystack.org/products/registry-relay/",

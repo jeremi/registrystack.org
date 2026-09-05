@@ -1,30 +1,18 @@
 ---
 // Shared top navigation for every marketing page. Marketing is organized by
 // the outcomes a team needs; product implementation detail lives in the docs.
+import { products } from '../data/products';
 const { current } = Astro.props;
-
-const solutions = [
-  {
-    href: '/solutions/evidence-gateway/',
-    label: 'Evidence Gateway',
-    blurb: 'Return a signed answer without sharing the source record',
-    key: 'evidence-gateway',
-  },
-  {
-    href: '/solutions/protected-registry-apis/',
-    label: 'Protected Registry APIs',
-    blurb: 'Give services read-only access to selected registry fields',
-    key: 'protected-registry-apis',
-  },
-];
+const solutions = products.filter((product) => product.featured).map((product) => ({
+  ...product, label: product.name, blurb: product.intent,
+}));
 
 const links = [
   { href: '/use-cases/', label: 'Use cases', key: 'use-cases' },
-  { href: '/how-it-fits/', label: 'How it fits', key: 'how-it-fits' },
-  { href: '/pilot/', label: 'Pilot and support', key: 'pilot' },
+  { href: '/pricing/', label: 'Pricing', key: 'pricing' },
 ];
 
-const onSolutionPage = solutions.some((solution) => solution.key === current);
+const onSolutionPage = products.some((product) => product.key === current);
 ---
 
 <header class="site-header">
@@ -48,6 +36,6 @@ const onSolutionPage = solutions.some((solution) => solution.key === current);
       <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
     ))}
     <a href="https://docs.registrystack.org/">Docs</a>
-    <a class="nav-emphasis" href="https://lab.registrystack.org/">Try the demo</a>
+    <a class="nav-emphasis" href="/#developers">For developers</a>
   </nav>
 </header>

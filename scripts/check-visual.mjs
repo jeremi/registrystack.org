@@ -47,12 +47,12 @@ const viewports = [
 
 const routes = [
   { name: 'home', path: '/' },
+  { name: 'base-registry', path: '/solutions/base-registry/' },
   { name: 'evidence-gateway', path: '/solutions/evidence-gateway/' },
   { name: 'protected-registry-access', path: '/solutions/protected-registry-apis/' },
   { name: 'use-cases', path: '/use-cases/' },
-  { name: 'how-it-fits', path: '/how-it-fits/' },
   { name: 'security', path: '/security/' },
-  { name: 'pilot', path: '/pilot/' },
+  { name: 'pricing', path: '/pricing/' },
   { name: 'faq', path: '/faq/' },
 ];
 
@@ -121,7 +121,7 @@ for (const viewport of viewports) {
     }
   }
 
-  // On desktop the homepage solution cards are the main routing decision and
+  // On desktop the homepage product cards are the main routing decision and
   // should read as a balanced pair.
   if (route.path === '/' && viewport.name === 'desktop') {
     const align = await page.evaluate(() => {
@@ -160,6 +160,19 @@ for (let i = 0; i < Math.min(focusableCount, 20); i += 1) {
     failures.push(`keyboard focus is not visibly outlined at tab stop ${i + 1}`);
     break;
   }
+}
+// Closing a disclosure from one of its links must leave a usable keyboard
+// position instead of dropping focus back to the page body.
+await page.goto(`http://127.0.0.1:${port}/`);
+await page.locator('.nav-group summary').focus();
+await page.keyboard.press('Enter');
+await page.keyboard.press('Tab');
+const enteredMenu = await page.locator('.nav-group a').first().evaluate((link) => link === document.activeElement);
+await page.keyboard.press('Escape');
+const restoredMenuFocus = await page.locator('.nav-group').evaluate((menu) =>
+  !menu.open && document.activeElement === menu.querySelector('summary'));
+if (!enteredMenu || !restoredMenuFocus) {
+  failures.push('Escape from a solution link must close the menu and return focus to its summary');
 }
 await page.close();
 await browser.close();

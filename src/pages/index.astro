@@ -2,639 +2,168 @@
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import HeroAnswerCard from '../components/HeroAnswerCard.astro';
-import RegistrySeal from '../components/RegistrySeal.astro';
+import RegistryExample from '../components/RegistryExample.astro';
+import { products } from '../data/products';
 
-const pageTitle = 'Registry Stack | Answer the question. Keep the records.';
-const pageDescription =
-  'Registry Stack helps government registries return signed minimum-disclosure answers or protected, selected data while source records stay with the authority that holds them.';
-const repoHref = 'https://github.com/registrystack/registry-stack';
-const roadmapHref = 'https://github.com/registrystack/registry-stack/blob/main/ROADMAP.md';
-const releaseVerifyHref = 'https://github.com/registrystack/registry-stack/blob/main/release/VERIFY.md';
-
-const heroAnswers = [
-  {
-    domain: 'Civil registration',
-    question: 'Which age band applies to this person?',
-    answer: 'Age band · 18-64',
-  },
-  {
-    domain: 'Social protection',
-    question: 'Is this household enrolled?',
-    answer: 'Enrolled household',
-  },
-  {
-    domain: 'Business registry',
-    question: 'Is this supplier actively registered?',
-    answer: 'Active',
-  },
-  {
-    domain: 'Farmer registry',
-    question: 'Is this a registered farmer, and what is the farm size?',
-    answer: 'Registered farmer · 2.5 ha',
-  },
-];
-
-const workflowSteps = [
-  {
-    number: '01',
-    title: 'Connect the registry you already have.',
-    body:
-      'Start with the system of record already in use. Prepare the reviewed view, extract, or fixed source connection required by the chosen product without replacing the registry.',
-  },
-  {
-    number: '02',
-    title: 'Agree what can be asked and returned.',
-    body:
-      'Define who may ask, for what purpose, and whether the service should receive one signed answer or selected fields.',
-  },
-  {
-    number: '03',
-    title: 'Return only what was agreed.',
-    body:
-      'Check each request against the reviewed definition, read the source, and return the agreed answer or selected data.',
-  },
-  {
-    number: '04',
-    title: 'Keep a record of what happened.',
-    body:
-      'The registry owner can see who asked, the purpose they gave, and whether evidence was provided or the request was refused.',
-  },
-];
-
-const programOutcomes = [
-  {
-    title: 'Services ask for the fact they need',
-    body:
-      'Evidence Gateway lets an approved service ask one predefined question and receive a signed answer instead of collecting the source facts again.',
-  },
-  {
-    title: 'Registries disclose less data',
-    body:
-      'A clear answer or a few agreed fields can replace a database login, a full export, or another copy of the registry.',
-  },
-  {
-    title: 'New service connections can reuse existing definitions',
-    body:
-      'Once an authority has reviewed its Evidence requirements or Relay resources, another connection can start from those definitions instead of reopening every source decision.',
-  },
-];
-
-const exampleAnswers = [
-  {
-    domain: 'Civil registration',
-    question: 'Which age band applies to this person?',
-    answer: 'Age band · 18-64',
-    denied: false,
-  },
-  {
-    domain: 'Social protection',
-    question: 'Is this household enrolled?',
-    answer: 'Enrolled household',
-    denied: false,
-  },
-  {
-    domain: 'Business registry',
-    question: 'Is this supplier actively registered?',
-    answer: 'Active',
-    denied: false,
-  },
-  {
-    domain: 'Farmer registry',
-    question: 'Send the full list of registered farmers.',
-    answer: 'Refused · outside the agreed scope',
-    denied: true,
-  },
-];
-
-const solutions = [
-  {
-    eyebrow: 'When a service needs proof',
-    title: 'Evidence Gateway',
-    body:
-      'Answer one predefined question against an authoritative source and return a signed, minimum-disclosure assertion.',
-    href: '/solutions/evidence-gateway/',
-    cta: 'See the Evidence Gateway',
-    points: [
-      'Answer defined questions such as “is this business actively registered?”',
-      'The requesting service receives the answer, not the source record behind it.',
-    ],
-  },
-  {
-    eyebrow: 'When a service needs registry data',
-    title: 'Protected Registry APIs',
-    body:
-      'Provide read-only access to defined registry fields without giving out a database login or distributing copies of the source.',
-    href: '/solutions/protected-registry-apis/',
-    cta: 'See Protected Registry APIs',
-    points: [
-      'Return agreed fields, metadata, or allowed counts through a protected API.',
-      'Keep the existing registry as the official record and record each read.',
-    ],
-  },
-];
-
-const audiences = [
-  {
-    marker: 'Owner',
-    title: 'Registry authorities',
-    body:
-      'Provide signed answers or selected data while keeping the source records and deciding what each service may receive.',
-  },
-  {
-    marker: 'Service',
-    title: 'Public-service teams',
-    body:
-      'Confirm facts such as enrollment, registration, or status without collecting more information than the service needs.',
-  },
-  {
-    marker: 'Deliver',
-    title: 'Digital delivery partners',
-    body:
-      'Connect existing systems without creating another central database, and leave infrastructure the government can inspect and operate.',
-  },
-];
-
-// Neighbor platforms shown as monochrome marks. Display sizes are tuned per
-// logo for visual parity, not taken from the source files.
-const worksAlongside = [
-  { name: 'OpenCRVS', src: '/logos/opencrvs.svg', width: 128, height: 24 },
-  { name: 'OpenSPP', src: '/logos/openspp.svg', width: 114, height: 24 },
-  { name: 'DHIS2', src: '/logos/dhis2.svg', width: 92, height: 28 },
-  { name: 'HL7 FHIR', src: '/logos/fhir.svg', width: 92, height: 30 },
-  { name: 'MOSIP', src: '/logos/mosip.png', width: 75, height: 34 },
-  { name: 'OpenFn', src: '/logos/openfn.png', width: 81, height: 30 },
-];
-
-const proofPoints = [
-  {
-    title: 'Try the synthetic demo',
-    body:
-      'The hosted lab illustrates registry-backed requests and protected reads with synthetic data. It is a demonstration, not a production integration reference.',
-    fact: 'No install or sign-up',
-  },
-  {
-    title: 'Inspect and deploy the software',
-    body:
-      'The products and documentation are Apache-2.0. Run them on infrastructure controlled by the government or its chosen operator.',
-    fact: 'Open source and self-hosted',
-  },
-  {
-    title: 'Get help with the first registry',
-    body:
-      'Aubex provides pilot design, source integration, deployment, training, and ongoing engineering support.',
-    fact: 'Delivery and support available',
-  },
-];
+const pageTitle = 'Registry Stack | Maintain your registry. Share only what services need.';
+const pageDescription = 'Open-source software to store and manage records about people, households, organizations, and assets, and share verifiable facts with services. Explore Base Registry Engine and Evidence Gateway.';
 ---
 
 <Base title={pageTitle} description={pageDescription}>
   <SiteHeader />
-
   <main>
     <section class="hero hero-cover" aria-labelledby="hero-title">
       <div class="hero-inner">
         <div class="hero-top">
           <div class="hero-copy">
-            <p class="eyebrow">Open-source infrastructure for government registries and their partners</p>
-            <h1 id="hero-title">Answer the question. Keep the records.</h1>
-            <p class="hero-thesis">
-              Registry Stack helps the registries a government already runs provide what another
-              service needs: one signed answer or selected data. The records stay with the
-              authority that holds them.
-            </p>
+            <p class="eyebrow">Open-source software for registries</p>
+            <h1 id="hero-title">Maintain your registry. Share only what services need.</h1>
+            <p class="hero-lead">People, households, businesses, assets: your organization keeps records that others rely on. Registry Stack helps you store and manage those records, and share the facts services need without handing over the full record.</p>
             <div class="hero-actions" aria-label="Primary actions">
-              <a class="button button-primary" href="https://lab.registrystack.org/">Try the live demo</a>
-              <a class="button button-secondary" href="/pilot/">Start with one registry</a>
+              <a class="button button-primary" href="#how-it-works">See how it works</a>
+              <a class="button button-secondary" href="#developers">For developers</a>
             </div>
-            <p class="hero-note">
-              The demo uses synthetic data only. No sign-up required.
-            </p>
+            <p class="hero-note">Your organization controls the records, the rules, and who gets access.</p>
           </div>
-
-          <div class="hero-figure" aria-hidden="true">
-            <div class="hero-card-wrap">
-              <HeroAnswerCard answers={heroAnswers} />
-              <div class="hero-seal"><RegistrySeal size={110} /></div>
-            </div>
-          </div>
+          <div class="hero-figure"><RegistryExample /></div>
         </div>
       </div>
     </section>
 
-    <section class="partner-strip" aria-label="Platforms Registry Stack works alongside">
-      <div class="partner-strip-inner">
-        <span>Works alongside the platforms governments already run</span>
-        <ul class="partner-logos">
-          {worksAlongside.map((item) => (
-            <li>
-              <img src={item.src} alt={item.name} width={item.width} height={item.height} loading="lazy" />
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    <section class="section home-workflow-section" id="how-it-works" aria-labelledby="workflow-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">How it works</p>
-          <h2 id="workflow-title">How Registry Stack handles a request to an existing registry.</h2>
-          <p>
-            The registry owner defines who may request an answer or selected data, for what
-            purpose, and what may be returned. Registry Stack applies those rules and records each
-            request.
-          </p>
-        </div>
-        <ol class="home-workflow" aria-label="Registry Stack workflow">
-          {workflowSteps.map((step) => (
-            <li>
-              <span class="workflow-number">{step.number}</span>
-              <h3>{step.title}</h3>
-              <p>{step.body}</p>
-            </li>
-          ))}
-        </ol>
-        <div class="home-workflow-cta">
-          <a class="inline-cta" href="/pilot/">See how to start with one registry &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" id="outcomes" aria-labelledby="outcomes-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">What this changes</p>
-          <h2 id="outcomes-title">Services can use registry information without copying the full record.</h2>
-          <p>
-            A service can receive a signed answer or selected data directly. The source record
-            remains with the registry owner.
-          </p>
-        </div>
-        <div class="home-outcome-grid">
-          {programOutcomes.map((outcome) => (
-            <article>
-              <h3>{outcome.title}</h3>
-              <p>{outcome.body}</p>
-            </article>
-          ))}
-        </div>
-        <div class="centered-action">
-          <a class="inline-cta" href="/how-it-fits/">See where Registry Stack fits &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="in-practice" aria-labelledby="practice-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">In practice</p>
-          <h2 id="practice-title">Start with questions services already ask.</h2>
-          <p>
-            A pension program may need an age band. A payment system may need a supplier&rsquo;s
-            registration status. Neither needs the complete record behind the answer.
-          </p>
-        </div>
-        <div class="answer-examples">
-          {exampleAnswers.map((row) => (
-            <div class={row.denied ? 'answer-example is-denied' : 'answer-example'}>
-              <span class="ae-domain">{row.domain}</span>
-              <p class="ae-question">&ldquo;{row.question}&rdquo;</p>
-              <span class="ae-answer">{row.answer}</span>
-            </div>
-          ))}
-        </div>
-        <div class="centered-action">
-          <a class="inline-cta" href="/use-cases/">See the worked scenarios &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" id="solutions" aria-labelledby="solutions-title">
-      <div class="section-inner">
-        <div class="section-heading center">
+    <section class="section" id="how-it-works" aria-labelledby="solutions-title">
+      <div class="section-inner" id="solutions">
+        <div class="section-heading">
           <p class="eyebrow">Two ways to start</p>
-          <h2 id="solutions-title">Sometimes a service needs an answer. Sometimes it needs a few fields.</h2>
-          <p>
-            Registry Stack supports both through separate products. Evidence Gateway returns a
-            signed minimum-disclosure assertion. Registry Relay exposes protected, selected data.
-          </p>
+          <h2 id="solutions-title">Keep records current. Put them to use.</h2>
+          <p>Build and run a registry, or let services check facts against one you already have. Choose the product for the job; each works independently.</p>
         </div>
         <div class="home-solution-grid">
-          {solutions.map((solution) => (
-            <article class="home-solution-card">
-              <p class="eyebrow">{solution.eyebrow}</p>
-              <h3>{solution.title}</h3>
-              <p>{solution.body}</p>
-              <ul>
-                {solution.points.map((point) => (
-                  <li>{point}</li>
-                ))}
-              </ul>
-              <a class="inline-cta" href={solution.href}>{solution.cta} &rarr;</a>
-            </article>
-          ))}
+          <article class="home-solution-card">
+            <p class="eyebrow">Base Registry Engine</p>
+            <h3>Build and run your registry.</h3>
+            <p>Store records about people, households, organizations, assets, and more. Give your applications a consistent way to create, find, and update them, with access controls and a history of changes.</p>
+            <div class="product-introduction">
+              <h4>Shaped around your information</h4>
+              <p>Define the records, their relationships, and the rules they must follow. For example, connect people to households and keep their details current as circumstances change.</p>
+            </div>
+            <a class="inline-cta" href="/solutions/base-registry/">Explore Base Registry Engine <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="home-solution-card">
+            <p class="eyebrow">Evidence Gateway</p>
+            <h3>Share a fact a service can verify.</h3>
+            <p>Let approved services check information held in your registry. Return a signed answer, such as an age check, residence region, or registration status, while keeping unrelated details private.</p>
+            <div class="product-introduction">
+              <h4>Only the information needed</h4>
+              <p>Define which questions each service may ask. For example, a licensing service can check that someone is 18 or older without receiving their date of birth.</p>
+            </div>
+            <a class="inline-cta" href="/solutions/evidence-gateway/">Explore Evidence Gateway <span aria-hidden="true">→</span></a>
+          </article>
         </div>
-        <div class="centered-action">
-          <a class="inline-cta" href="/use-cases/">Compare real use cases &rarr;</a>
+        <div class="existing-registry">
+          <div><h3>When a service needs selected fields</h3><p>Registry Relay publishes selected data from an existing registry, with rules for what each service may receive.</p></div>
+          <a class="inline-cta" href="/solutions/protected-registry-apis/">Explore Relay <span aria-hidden="true">→</span></a>
         </div>
+        <p class="example-note"><a href="/use-cases/">Explore examples for public services and registry teams</a>.</p>
       </div>
     </section>
 
-    <section class="claim-band" id="build-a-registry" aria-labelledby="breg-title">
-      <div class="section-inner split">
-        <div class="section-heading compact">
-          <p class="pill">When there is no registry yet</p>
-          <h2 id="breg-title">Base Registry Engine builds the registry itself.</h2>
-        </div>
-        <div class="claim-body">
-          <p>
-            Evidence Gateway and Registry Relay work in front of a registry the institution
-            already runs. Base Registry Engine compiles an authored data model into a registry
-            service, built for institutions that hold records but do not yet have a system for
-            them.
-          </p>
-          <a class="inline-cta" href="https://docs.registrystack.org/start/breg-quickstart/">Read the Base Registry Engine docs &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="who-it-is-for" aria-labelledby="audience-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">Who it is for</p>
-          <h2 id="audience-title">For teams that need registries to work together.</h2>
-          <p>
-            Registry Stack is government-first. It helps registry owners, public-service teams,
-            and their implementation partners agree what can be asked, then make that agreement
-            work in practice.
-          </p>
-        </div>
-        <div class="home-audience-grid">
-          {audiences.map((audience) => (
-            <article>
-              <span>{audience.marker}</span>
-              <h3>{audience.title}</h3>
-              <p>{audience.body}</p>
-            </article>
-          ))}
-        </div>
-        <p class="private-sector-note">
-          The same infrastructure can support regulated private-sector networks where one
-          organization needs evidence held by another, but should not receive the source records.
-        </p>
-      </div>
-    </section>
-
-    <section class="proof-band" id="built-in-the-open" aria-labelledby="proof-title">
+    <section class="section section-muted" aria-labelledby="ownership-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">Evaluate Registry Stack</p>
-          <h2 id="proof-title">Try the demo, review the software, and plan a pilot.</h2>
-          <p>
-            Current releases are for evaluation, integration pilots, and public review. The
-            <a href={roadmapHref}>public roadmap</a> records the work toward stable deployment and
-            compatibility commitments.
-          </p>
+          <p class="eyebrow">Under your organization’s control</p>
+          <h2 id="ownership-title">Your registry. Your responsibilities.</h2>
+          <p>The software supports the people responsible for the records and the services that use them.</p>
         </div>
-        <div class="proof-grid">
-          {proofPoints.map((point) => (
-            <article>
-              <h3>{point.title}</h3>
-              <p>{point.body}</p>
-              <p class="proof-fact">{point.fact}</p>
-            </article>
-          ))}
-        </div>
-        <div class="proof-steward">
-          <h3>Built and supported by Aubex</h3>
-          <p>
-            Registry Stack is built by Aubex. Founder Jeremi Joslin brings experience from
-            OpenSPP. Aubex also participates in Digital Convergence Initiative standards work and
-            has contributed to the GovStack registry building block. Our engineers work directly
-            with pilot teams and publish the code, documentation, releases, and security material
-            for review.
-          </p>
-        </div>
-        <div class="proof-links">
-          <a href="https://lab.registrystack.org/">Open the live lab &rarr;</a>
-          <a href="/how-it-fits/">See how it fits existing systems &rarr;</a>
-          <a href="/pilot/">See implementation and support &rarr;</a>
-          <a href={repoHref}>Browse the code on GitHub &rarr;</a>
-          <a href={releaseVerifyHref}>Verify a release &rarr;</a>
+        <div class="ownership-grid">
+          <article>
+            <h3>Your team sets the rules</h3>
+            <p>Define what your records contain, who can read or change them, and what another service may learn from them.</p>
+            <a class="inline-cta" href="/security/">Read about access and accountability <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Work with the systems you use</h3>
+            <p>Base Registry Engine stores and manages records behind your applications. Evidence Gateway can connect to a source you already maintain.</p>
+            <a class="inline-cta" href="/faq/">Explore adoption questions <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Choose how to deliver it</h3>
+            <p>Your team or delivery partner can run the open-source software on infrastructure you control. Paid implementation and support are available when you need them.</p>
+            <a class="inline-cta" href="/pricing/">Explore implementation and support <span aria-hidden="true">→</span></a>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="final-cta" aria-labelledby="final-title">
-      <div class="section-inner">
-        <p class="pill">Plan a pilot</p>
-        <h2 id="final-title">Start with one registry and one service need.</h2>
-        <p class="final-cta-copy">
-          We can help determine whether the service should receive one signed answer through
-          Evidence Gateway or selected data through Registry Relay. We then define a pilot around
-          that decision.
-        </p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="/pilot/">Start with one registry</a>
-          <a class="button button-secondary" href="https://lab.registrystack.org/">Try the demo first</a>
+    <section class="section" id="developers" aria-labelledby="developers-title">
+      <div class="section-inner" id="start-testing">
+        <div class="section-heading">
+          <p class="eyebrow">For developers and technical teams</p>
+          <h2 id="developers-title">Try a working example.</h2>
+          <p>Run a local tutorial with sample data. Each guide includes the setup and steps to inspect the result.</p>
         </div>
+        <div class="developer-grid">
+          {products.filter((product) => product.featured).map((product) => (
+            <article>
+              <h3>{product.name}</h3>
+              <p>{product.firstResult}</p>
+              <a class="inline-cta developer-tutorial" href={product.tutorialHref}>{product.tutorialLabel} <span aria-hidden="true">↗</span></a>
+            </article>
+          ))}
+        </div>
+        <p class="developer-note"><a href="https://docs.registrystack.org/">Browse the documentation</a> or <a href="https://github.com/registrystack/registry-stack">inspect the source and releases</a>. The software is Apache-2.0 open source.</p>
+      </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="pilot-title">
+      <div class="section-inner pilot-invitation">
+        <div>
+          <p class="eyebrow">Work with us</p>
+          <h2 id="pilot-title">Get help when you need it.</h2>
+          <p>Build with your own team, or get help through a paid implementation pilot or ongoing support.</p>
+        </div>
+        <a class="button button-primary" href="/pricing/">Implementation and support <span aria-hidden="true">→</span></a>
       </div>
     </section>
   </main>
-
   <SiteFooter />
 </Base>
 
 <style>
-  .home-workflow-section {
-    overflow: hidden;
+  .hero-top { grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr); gap: clamp(32px, 5vw, 56px); }
+  .hero-inner { padding-top: clamp(40px, 5vw, 68px); padding-bottom: clamp(44px, 6vw, 76px); }
+  .hero-lead { font-size: clamp(18px, 1.8vw, 21px); line-height: 1.55; }
+  .hero-figure { padding-right: 12px; }
+  .home-solution-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: none; margin-top: 0; }
+  .home-solution-card { display: flex; flex-direction: column; gap: 18px; border-top: 3px solid var(--registry-blue); padding: 30px; }
+  .home-solution-card .eyebrow { font-size: 12px; }
+  .home-solution-card h3 { font-size: 28px; line-height: 1.2; }
+  .home-solution-card > p:not(.eyebrow) { font-size: 16px; }
+  .product-introduction { border-top: 1px solid var(--registry-rule); padding-top: 18px; margin-top: auto; }
+  .product-introduction h4 { font-size: 17px; margin: 0; }
+  .product-introduction p { font-size: 15px; margin-top: 8px; }
+  .home-solution-card .inline-cta { font-size: 14px; }
+  .example-note, .developer-note { font-size: 14px; color: var(--registry-muted); margin: 24px 0 0; }
+  .existing-registry { display: flex; gap: 24px; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--registry-rule); padding: 28px 0; }
+  .existing-registry h3 { font-size: 17px; margin-bottom: 6px; }
+  .existing-registry p { font-size: 15px; margin: 0; color: var(--registry-muted); }
+  .existing-registry a { flex-shrink: 0; font-size: 14px; }
+  .ownership-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+  .ownership-grid article, .developer-grid article { border-top: 1px solid #c9d0c5; padding-top: 22px; }
+  .ownership-grid h3, .developer-grid h3 { font-size: 21px; }
+  .ownership-grid p, .developer-grid p { font-size: 16px; }
+  .ownership-grid a, .developer-grid a { font-size: 14px; }
+  .developer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+  .pilot-invitation { display: flex; gap: 32px; align-items: center; justify-content: space-between; }
+  .pilot-invitation h2 { font-size: clamp(28px, 3.4vw, 40px); }
+  .pilot-invitation p:not(.eyebrow) { max-width: 660px; margin-bottom: 0; }
+  .pilot-invitation .button { flex-shrink: 0; gap: 18px; }
+  @media (max-width: 900px) {
+    .hero-top { grid-template-columns: 1fr; }
+    .hero-figure { max-width: 520px; }
+    .ownership-grid { grid-template-columns: 1fr; gap: 24px; }
+    .pilot-invitation, .existing-registry { align-items: flex-start; flex-direction: column; }
   }
-
-  .home-workflow-section .section-heading {
-    margin-bottom: 0;
-  }
-
-  .home-workflow {
-    counter-reset: workflow;
-    display: grid;
-    column-gap: clamp(22px, 3vw, 34px);
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    list-style: none;
-    margin: clamp(32px, 4vw, 46px) 0 0;
-    padding: 0;
-    row-gap: 40px;
-  }
-
-  .home-workflow li {
-    border-top: 1px solid var(--registry-rule);
-    min-width: 0;
-    padding: 26px 8px 0 0;
-    position: relative;
-  }
-
-  .home-workflow li::before {
-    background: var(--registry-blue);
-    content: '';
-    height: 3px;
-    left: 0;
-    position: absolute;
-    top: -2px;
-    width: 44px;
-  }
-
-  .home-workflow li:not(:last-child)::after {
-    background: #ffffff;
-    color: var(--registry-blue);
-    content: '\2192';
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1;
-    padding: 0 5px;
-    position: absolute;
-    right: calc(clamp(22px, 3vw, 34px) / -2 - 12px);
-    top: -11px;
-    z-index: 1;
-  }
-
-  .workflow-number {
-    color: var(--registry-stamp);
-    display: block;
-    font-family: var(--registry-mono);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    margin-bottom: 18px;
-  }
-
-  .home-workflow h3 {
-    color: var(--registry-ink);
-    font-size: clamp(20px, 2vw, 25px);
-    line-height: 1.2;
-    margin: 0 0 12px;
-  }
-
-  .home-workflow p {
-    color: var(--registry-body);
-    font-size: 15px;
-    line-height: 1.55;
-    margin: 0;
-  }
-
-  .home-workflow-cta {
-    margin-top: 32px;
-    text-align: center;
-  }
-
-  .home-outcome-grid {
-    display: grid;
-    gap: clamp(20px, 3vw, 40px);
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: clamp(28px, 4vw, 44px);
-  }
-
-  .home-outcome-grid article {
-    border-top: 2px solid var(--registry-ink);
-    min-width: 0;
-    padding-top: 16px;
-  }
-
-  .home-outcome-grid h3 {
-    color: var(--registry-ink);
-    font-size: 19px;
-    line-height: 1.25;
-    margin: 0 0 10px;
-  }
-
-  .home-outcome-grid p {
-    color: var(--registry-body);
-    font-size: 15px;
-    line-height: 1.55;
-    margin: 0;
-  }
-
-  .home-audience-grid {
-    display: grid;
-    gap: 16px;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    margin-top: clamp(28px, 4vw, 44px);
-  }
-
-  .home-audience-grid article {
-    border: 1px solid var(--registry-rule);
-    min-width: 0;
-    padding: 22px;
-  }
-
-  .home-audience-grid span {
-    color: var(--registry-blue);
-    display: block;
-    font-family: var(--registry-mono);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    margin-bottom: 18px;
-    text-transform: uppercase;
-  }
-
-  .home-audience-grid h3 {
-    color: var(--registry-ink);
-    font-size: 18px;
-    margin: 0 0 10px;
-  }
-
-  .home-audience-grid p {
-    color: var(--registry-body);
-    font-size: 15px;
-    line-height: 1.55;
-    margin: 0;
-  }
-
-  .private-sector-note {
-    border-left: 3px solid var(--registry-blue);
-    color: var(--registry-body);
-    font-size: 15px;
-    line-height: 1.55;
-    margin: 28px auto 0;
-    max-width: 840px;
-    padding: 4px 0 4px 18px;
-  }
-
-  .final-cta-copy {
-    color: var(--registry-body);
-    font-size: 18px;
-    line-height: 1.55;
-    margin: 0 0 24px;
-    max-width: 760px;
-  }
-
-  @media (max-width: 1080px) {
-    .home-workflow,
-    .home-audience-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .home-workflow li:not(:last-child)::after {
-      content: none;
-    }
-  }
-
   @media (max-width: 620px) {
-    .home-workflow,
-    .home-outcome-grid,
-    .home-audience-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .home-workflow li {
-      padding-right: 0;
-    }
-
-    .home-workflow li:not(:last-child)::after {
-      background: transparent;
-      bottom: -32px;
-      content: '\2193';
-      padding: 0;
-      right: auto;
-      top: auto;
-    }
+    .home-solution-grid, .developer-grid { grid-template-columns: 1fr; }
   }
 </style>

@@ -38,7 +38,8 @@ const supersededRoutes = [
   '/problem/',
   '/ecosystem/',
   '/ai/',
-  '/pricing/',
+  '/how-it-fits/',
+  '/pilot/',
 ];
 for (const relativePath of sweptFiles) {
   const source = readSource(relativePath);
@@ -49,68 +50,35 @@ for (const relativePath of sweptFiles) {
   }
 }
 
-// 2. Homepage guardrails.
+// 2. Homepage orientation and the two flagship evaluation paths.
 const homeSource = readSource('src/pages/index.astro');
-
-// The homepage hero must carry the looping answer card as its visual anchor.
+const productSource = readSource('src/data/products.ts');
 const heroMatch = homeSource.match(/<section class="hero[^"]*"[\s\S]*?<\/section>/);
-if (!heroMatch) {
-  failures.push('missing hero section');
-} else if (!heroMatch[0].includes('HeroAnswerCard')) {
-  failures.push('hero is missing the answer-card visual anchor');
+if (!homeSource.includes('<RegistryExample')) {
+  failures.push('homepage is missing its explanatory registry example');
 }
-
-// The homepage now routes first to the two solution patterns; the live lab
-// remains present as proof. Product implementation detail stays in the docs.
-// Like the nav check below, the routes count whether they appear as literal
-// href attributes (double-quoted) or in a data array (single-quoted).
-const workflowIndex = homeSource.indexOf('class="home-workflow"');
-const solutionGridIndex = homeSource.indexOf('class="home-solution-grid"');
-if (workflowIndex === -1) {
-  failures.push('homepage is missing the outcome-first workflow');
-} else if (solutionGridIndex !== -1 && workflowIndex > solutionGridIndex) {
-  failures.push('homepage must explain the institutional workflow before routing to solutions');
+if (!heroMatch || !heroMatch[0].includes('href="#how-it-works"') || !heroMatch[0].includes('href="#developers"')) {
+  failures.push('homepage hero is missing its explanation and developer actions');
 }
-
-const workflowSource = homeSource.match(/const workflowSteps = \[([\s\S]*?)\n\];/)?.[1] ?? '';
-const workflowStepCount = (workflowSource.match(/\bnumber:/g) ?? []).length;
-if (workflowStepCount !== 4) {
-  failures.push(`homepage workflow must contain 4 steps, found ${workflowStepCount}`);
+for (const anchor of ['how-it-works', 'developers', 'start-testing']) {
+  if (!homeSource.includes(`id="${anchor}"`)) failures.push(`homepage is missing the ${anchor} destination`);
 }
-
-for (const route of ['/solutions/evidence-gateway/', '/solutions/protected-registry-apis/']) {
-  if (!homeSource.includes(`href="${route}"`) && !homeSource.includes(`'${route}'`)) {
-    failures.push(`homepage primary solution routing is missing ${route}`);
-  }
+if (!homeSource.includes('home-solution-grid') || !homeSource.includes('developer-tutorial')) {
+  failures.push('homepage is missing its product choices or developer tutorials');
 }
-if (!homeSource.includes('https://lab.registrystack.org/')) {
-  failures.push('homepage is missing the live demo link (lab.registrystack.org)');
+for (const route of [
+  '/solutions/base-registry/',
+  '/solutions/evidence-gateway/',
+  '/solutions/protected-registry-apis/',
+]) {
+  if (!productSource.includes(route)) failures.push('product data is missing ' + route);
 }
-if (!homeSource.includes('home-solution-grid')) {
-  failures.push('homepage is missing the two-card solution routing grid');
-}
-if (!homeSource.includes('home-audience-grid')) {
-  failures.push('homepage is missing the government customer audience grid');
-}
-if (!homeSource.includes('/how-it-fits/')) {
-  failures.push('homepage is missing the How it fits handoff');
-}
-if (!homeSource.includes('Base Registry Engine')) {
-  failures.push('homepage does not mention Base Registry Engine');
-}
-if (!homeSource.includes('https://docs.registrystack.org/start/breg-quickstart/')) {
-  failures.push('homepage is missing the Base Registry Engine docs link');
-}
-for (const productRoute of ['/notary/', '/relay/', '/manifest/']) {
-  if (homeSource.includes(`href="${productRoute}"`) || homeSource.includes(`'${productRoute}'`)) {
-    failures.push(`homepage links to removed product marketing route ${productRoute}`);
-  }
-}
-if (homeSource.includes('home-product-strip')) {
-  failures.push('homepage still contains the removed product marketing strip');
-}
-if (homeSource.includes('class="use-case"') || homeSource.includes('class="use-case-grid"')) {
-  failures.push('homepage still carries the full use-case gallery; /use-cases/ owns that depth');
+for (const route of [
+  'https://docs.registrystack.org/tutorials/first-breg/',
+  'https://docs.registrystack.org/tutorials/first-evidence-assertion/',
+  'https://docs.registrystack.org/tutorials/publish-governed-sqlite-registry/',
+]) {
+  if (!productSource.includes(route)) failures.push('product data is missing a current tutorial: ' + route);
 }
 
 // 3. Site wiring: shared navigation and footer reach every marketing route.
@@ -118,15 +86,17 @@ const navigationSource = [
   homeSource,
   readSource('src/components/SiteHeader.astro'),
   readSource('src/components/SiteFooter.astro'),
+  productSource,
 ].join('\n');
 for (const route of [
+  '/solutions/base-registry/',
   '/solutions/evidence-gateway/',
   '/solutions/protected-registry-apis/',
   '/use-cases/',
-  '/how-it-fits/',
   '/security/',
   '/faq/',
-  '/pilot/',
+  '/pricing/',
+  '/#developers',
 ]) {
   // The nav and footer build their links from data arrays (single-quoted
   // route strings) as well as literal href attributes (double-quoted), so a
@@ -142,15 +112,14 @@ if (!footerSource.includes('Base Registry Engine')) {
 }
 
 const headerSource = readSource('src/components/SiteHeader.astro');
-for (const staleRoute of ['/notary/', '/relay/', '/manifest/', '/problem/', '/ecosystem/', '/ai/', '/pricing/']) {
+for (const staleRoute of supersededRoutes) {
   if (headerSource.includes(`'${staleRoute}'`) || headerSource.includes(`"${staleRoute}"`)) {
     failures.push(`header still links to superseded route ${staleRoute}`);
   }
 }
-// Product marketing pages are removed. Their former routes must go directly to
-// technical documentation, while consolidated editorial routes redirect to
-// the page that absorbed their useful material.
-for (const oldPage of ['notary', 'relay', 'manifest', 'problem', 'ecosystem', 'ai', 'pricing']) {
+// Former routes redirect to the product, pricing page, home explanation, or
+// technical documentation that now owns the reader's next step.
+for (const oldPage of ['notary', 'relay', 'manifest', 'problem', 'ecosystem', 'ai', 'how-it-fits']) {
   if (existsSync(resolve(`src/pages/${oldPage}.astro`))) {
     failures.push(`superseded marketing page still exists: src/pages/${oldPage}.astro`);
   }
@@ -159,36 +128,56 @@ const redirectsSource = readSource('astro.config.mjs');
 const expectedRedirects = [
   "'/why/': '/'",
   "'/problem/': '/'",
-  "'/ecosystem/': '/how-it-fits/'",
+  "'/ecosystem/': '/'",
+  "'/how-it-fits/': '/'",
   "'/ai/': '/use-cases/'",
-  "'/pricing/': '/pilot/'",
   "'/notary/': '/solutions/evidence-gateway/'",
-  "'/relay/': 'https://docs.registrystack.org/products/registry-relay/'",
+  "'/relay/': '/solutions/protected-registry-apis/'",
   "'/manifest/': 'https://docs.registrystack.org/products/registry-manifest/'",
 ];
 for (const redirect of expectedRedirects) {
   if (!redirectsSource.includes(redirect)) failures.push(`missing redirect: ${redirect}`);
 }
 
-// Each solution teaches the customer journey and then hands technical readers
-// to the open-source components in the docs.
+// The retired pilot route has a small redirect document so existing section
+// links can retain their destination, with native refresh as the no-JS fallback.
+const pilotRedirect = readSource('src/pages/pilot.astro');
+if (!/<meta\b[^>]*http-equiv=["']refresh["']/i.test(pilotRedirect) ||
+    !pilotRedirect.includes('/pricing/') || !/rel=["']canonical["']/.test(pilotRedirect) ||
+    /<Base\b|<SiteHeader\b|<DocsHandoff\b|<section\b/.test(pilotRedirect)) {
+  failures.push('pilot route must be a redirect-only document with canonical pricing and a native refresh fallback');
+}
+
+// Product pages explain the product before handing developers to a tutorial.
 for (const page of [
+  'src/pages/solutions/base-registry.astro',
   'src/pages/solutions/evidence-gateway.astro',
   'src/pages/solutions/protected-registry-apis.astro',
 ]) {
   const source = readSource(page);
-  if (!source.includes('class="technical-component-grid"')) {
-    failures.push(`${page} is missing the open-source component handoff`);
+  if (!source.includes('<Product')) failures.push(page + ' is missing the product layout');
+  if (!source.includes('id="product-example"') || !source.includes('id="developers"') ||
+      !source.includes('href={product.tutorialHref}')) {
+    failures.push(page + ' is missing its example, developer section, or maintained tutorial');
   }
-  if (!source.includes('https://docs.registrystack.org/products/')) {
-    failures.push(`${page} does not link product detail to the technical docs`);
-  }
+}
+const productLayout = readSource('src/layouts/Product.astro');
+if (!productLayout.includes('href="#product-example"') || !productLayout.includes('href="#developers"')) {
+  failures.push('product layout is missing its example or developer action');
+}
+const productClosing = productLayout.match(/<section class="final-cta"[\s\S]*?<\/section>/);
+const productContentIndex = productLayout.indexOf('<slot');
+if (!productClosing || !productClosing[0].includes('href="/pricing/"') || productContentIndex < 0 ||
+    productClosing.index < productContentIndex) {
+  failures.push('product layout is missing a shared closing pricing CTA after its page content');
 }
 
 // 4. Every non-home marketing page hands off to the docs for the "how".
 // Legal and error pages end on their own terms, not a marketing handoff.
 const handoffExempt = new Set([
   'src/pages/index.astro',
+  'src/pages/pricing.astro',
+  'src/pages/pilot.astro',
   'src/pages/privacy.astro',
   'src/pages/terms.astro',
   'src/pages/imprint.astro',
@@ -196,14 +185,25 @@ const handoffExempt = new Set([
 ]);
 for (const relativePath of sweptFiles) {
   if (!relativePath.startsWith('src/pages/') || handoffExempt.has(relativePath)) continue;
-  if (!readSource(relativePath).includes('DocsHandoff')) {
+  if (!/DocsHandoff|<Product/.test(readSource(relativePath))) {
     failures.push(`${relativePath} is missing the docs handoff CTA (DocsHandoff)`);
   }
 }
 
 const handoffSource = readSource('src/components/DocsHandoff.astro');
-if (handoffSource && !handoffSource.includes('https://docs.registrystack.org/')) {
-  failures.push('DocsHandoff component does not link to the docs site');
+if (!handoffSource.includes('/#developers') || !handoffSource.includes('/pricing/')) {
+  failures.push('DocsHandoff component is missing the developer chooser or pricing path');
+}
+if (handoffSource.includes('mailto:')) {
+  failures.push('DocsHandoff must show pricing before opening a commercial inquiry');
+}
+
+const pricingSource = readSource('src/pages/pricing.astro');
+if (!pricingSource.includes('US$20,000') || !pricingSource.includes('US$7,500') || !pricingSource.includes('mailto:')) {
+  failures.push('pricing page is missing a pilot/support starting price or inquiry action');
+}
+if (!pricingSource.includes('/#developers')) {
+  failures.push('pricing page is missing the self-service developer path');
 }
 
 // 5. Social sharing: the layout declares a large-image card, so it must point

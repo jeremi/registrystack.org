@@ -68,6 +68,12 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Links embedded in body copy remain identifiable without relying on color. */
+p a:not(.button),
+dd a {
+  text-decoration: underline;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1657,4 +1663,10 @@ code {
   .site-footer-base {
     flex-direction: column;
   }
+}
+
+/* Keep in-page next steps below the desktop navigation. */
+section[id], .section-inner[id] { scroll-margin-top: 80px; }
+@media (max-width: 900px) {
+  section[id], .section-inner[id] { scroll-margin-top: 16px; }
 }

@@ -9,9 +9,9 @@ interface Props {
 }
 
 const {
-  title = 'Registry Stack | Answer the question. Keep the records.',
+  title = 'Registry Stack | Maintain your registry. Share only what services need',
   description =
-    'Registry Stack helps government registries return signed minimum-disclosure answers or protected, selected data while source records stay with the authority that holds them.',
+    'Open-source software to store and manage records about people, households, organizations, and assets, and share verifiable facts with services. Explore Base Registry Engine and Evidence Gateway.',
   noindex = false,
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, 'https://registrystack.org').toString();
@@ -67,12 +67,12 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Registry Stack: Answer the question. Keep the records." />
+    <meta property="og:image:alt" content="Registry Stack: Maintain your registry. Share only what services need." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
-    <script type="application/ld+json" set:html={JSON.stringify(organizationLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationLd)} />
     {
       umamiWebsiteId && (
         <script is:inline defer src={umamiScriptSrc} data-website-id={umamiWebsiteId} data-domains={umamiDomains}></script>
@@ -111,6 +111,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
           target_path: url.pathname,
           source_path: window.location.pathname,
           link_text: textLabel(anchor),
+          journey: anchor.dataset.journey || targetSite,
         });
       };
 
@@ -138,7 +139,9 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
       document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
         for (const menu of document.querySelectorAll('.nav-group[open]')) {
+          const restoreFocus = menu.contains(document.activeElement);
           menu.removeAttribute('open');
+          if (restoreFocus) menu.querySelector('summary')?.focus();
         }
       });
     </script>

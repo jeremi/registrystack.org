@@ -1,371 +1,67 @@
 ---
-import Base from '../../layouts/Base.astro';
-import SiteHeader from '../../components/SiteHeader.astro';
-import SiteFooter from '../../components/SiteFooter.astro';
-import DocsHandoff from '../../components/DocsHandoff.astro';
+import Product from '../../layouts/Product.astro';
 import ProtectedRegistryApiFlow from '../../components/ProtectedRegistryApiFlow.astro';
-
-const pageTitle = 'Protected Registry APIs | Selected reads from existing registries';
-const pageDescription =
-  'Give authorized services read-only access to selected fields from an existing registry while the source records stay with the registry owner.';
-
-const goodFit = [
-  'A registry already exists and can provide a reviewed, read-only SQLite view directly or through an institution-owned extract process.',
-  'A public or partner service needs several agreed fields, not a complete export or direct source login.',
-  'The registry owner needs a repeatable way to apply the same field rules and record each read.',
-];
-
-const agreements = [
-  {
-    marker: '01',
-    title: 'Describe data in service language',
-    body:
-      'Name people, households, businesses, or other useful records. Describe fields so service teams do not need to understand source tables.',
-  },
-  {
-    marker: '02',
-    title: 'Agree fields service by service',
-    body:
-      'For each public or partner service, write down the purpose and the fields it may read. Fields outside that agreement are not returned.',
-  },
-  {
-    marker: '03',
-    title: 'Keep updates with the registry owner',
-    body:
-      'Protected Registry APIs do not become a second registry. Corrections and updates continue in the source system controlled by its authority.',
-  },
-];
-
-const boundaries = [
-  {
-    title: 'What the service receives',
-    body:
-      'Selected data from the agreed fields for this service and purpose, plus the information needed to understand the response.',
-  },
-  {
-    title: 'What is not returned',
-    body:
-      'Fields outside the agreement, the SQLite source, deployment secrets, and the rest of the record are not returned to the service.',
-  },
-  {
-    title: 'What stays with the registry owner',
-    body:
-      'The source records stay with the authority. Every allowed or refused read leaves an audit record.',
-  },
-];
-
-const handoffComponents = [
-  {
-    name: 'Registry Relay',
-    body:
-      'Compiles a reviewed registry contract and serves selected, read-only data from approved SQLite views.',
-    docs: 'https://docs.registrystack.org/products/registry-relay/',
-    github: 'https://github.com/registrystack/registry-stack/tree/main/crates/registry-relay-v2',
-  },
-  {
-    name: 'Registry Manifest',
-    body:
-      'Separately publishes portable descriptions of the registry, its useful data, and policy information for partners.',
-    docs: 'https://docs.registrystack.org/products/registry-manifest/',
-    github: 'https://github.com/registrystack/registry-stack/tree/main/products/manifest',
-  },
-];
+import { products } from '../../data/products';
+const product = products[1];
 ---
-
-<Base title={pageTitle} description={pageDescription}>
-  <SiteHeader current="protected-registry-apis" />
-
-  <main>
-    <section class="hero solution-hero" aria-labelledby="protected-registry-apis-title">
-      <div class="hero-inner">
-        <div class="hero-copy">
-          <p class="eyebrow">Product &middot; Protected Registry APIs</p>
-          <h1 id="protected-registry-apis-title">Give services read-only access to selected registry fields.</h1>
-          <p class="hero-lead">
-            The registry owner exposes a reviewed, read-only SQLite view from the registry it
-            already operates, either directly or through an institution-owned extract process. It
-            defines which fields each public or partner service may read. The service receives only
-            those fields, every request is recorded, and the system of record remains authoritative.
-          </p>
-          <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="https://lab.registrystack.org/#services">See a selected read</a>
-            <a class="button button-secondary" href="/pilot/">Start with one source</a>
-          </div>
-          <p class="hero-note">
-            The live demo shows read-only access to synthetic registry data through an API.
-          </p>
-        </div>
+<Product
+  product={product}
+  heading="Publish selected registry data."
+  description="Registry Relay gives other services a controlled interface to look up and read selected data from an existing registry. Define the fields, their meaning, and the rules for access, while keeping record maintenance in the source system."
+>
+  <section id="product-example" class="section section-muted" aria-labelledby="relay-example-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">One example: information for a public assistance service</p>
+        <h2 id="relay-example-title">Share enrollment details without the rest of the household record.</h2>
+        <p>A public assistance service needs a household’s reference, district, and enrollment status to process an application. The registry team agrees to provide those fields while withholding the home address and payment details.</p>
       </div>
-    </section>
-
-    <section class="section" aria-labelledby="protected-fit-title">
-      <div class="section-inner split">
-        <div class="section-heading compact">
-          <p class="eyebrow">When to use Protected Registry APIs</p>
-          <h2 id="protected-fit-title">Use it when a service needs several fields from an existing registry.</h2>
-          <p>
-            A registry does not need to be replaced before it can support another service.
-            Registry Relay adds a protected, read-only API over reviewed SQLite views while the
-            registry owner keeps the system of record and remains responsible for corrections and
-            updates.
-          </p>
-        </div>
-        <ul class="check-list" aria-label="When Protected Registry APIs are a good fit">
-          {goodFit.map((item) => (
-            <li>{item}</li>
-          ))}
-        </ul>
+      <ProtectedRegistryApiFlow />
+    </div>
+  </section>
+  <section class="section" aria-labelledby="relay-access-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">A reusable interface for your registry</p>
+        <h2 id="relay-access-title">Define what services can read and how they find it.</h2>
+        <p>Publish agreed information about people, households, businesses, facilities, or other records your organization maintains. Define permitted reads and lookups, with consistent field meanings and access rules for receiving services.</p>
       </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="protected-how-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">How it works</p>
-          <h2 id="protected-how-title">The registry owner defines which fields each service can read.</h2>
-          <p>
-            Registry Relay applies that agreement to every request. It returns the
-            permitted fields, refuses fields outside the agreement, and writes an audit record.
-          </p>
-        </div>
-        <ProtectedRegistryApiFlow />
+      <div class="product-facts">
+        <article><h3>Describe the data you publish</h3><p>Choose the records and fields to expose, and define their names and meaning for other services. Relay produces the interface and its documentation from that reviewed definition.</p></article>
+        <article><h3>Give services specific access</h3><p>Specify which reads and lookups are available and the records and fields each service may receive. A service can ask for fewer permitted fields, but its request cannot widen the access you have granted.</p></article>
+        <article><h3>Keep context and a record of the read</h3><p>Record identifiers and source context accompany the selected information so the receiving service can interpret it. Relay records the request and its outcome for audit.</p></article>
       </div>
-    </section>
-
-    <section class="section" aria-labelledby="protected-agreement-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">Define the data access</p>
-          <h2 id="protected-agreement-title">Before connecting a service, define the data, purpose, and permitted fields.</h2>
-          <p>
-            The registry owner and service team document the access in terms that policy,
-            security, and delivery teams can review.
-          </p>
-        </div>
-        <div class="agreement-grid">
-          {agreements.map((item) => (
-            <article>
-              <span>{item.marker}</span>
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </article>
-          ))}
-        </div>
+    </div>
+  </section>
+  <section class="section section-muted" aria-labelledby="relay-fit-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">How it fits your organization</p>
+        <h2 id="relay-fit-title">Keep corrections in the source register.</h2>
+        <p>Your organization owns and maintains the records. Registry Relay provides a read-only interface for other services, so a request for information leaves the source records unchanged.</p>
+        <p>Agree which information is useful, who may receive it, and how current the published data needs to be.</p>
       </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="protected-boundary-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">What the service can receive</p>
-          <h2 id="protected-boundary-title">Each service receives only the fields agreed for its purpose.</h2>
-          <p>
-            The source record remains in the registry. A request for any other field is refused
-            and recorded.
-          </p>
-        </div>
-        <div class="boundary-grid">
-          {boundaries.map((item, index) => (
-            <article class={index === 1 ? 'boundary-stop-card' : ''}>
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </article>
-          ))}
-        </div>
+      <dl>
+        <dt>Your registry team agrees the information</dt><dd>Define the published records, field meanings, and access each service needs. Keep responsibility for corrections and updates with the source register.</dd>
+        <dt>Your technical team prepares the data</dt><dd>Provide the reviewed source view and any extraction or update process it requires. Configure Relay’s interface and access rules, and connect the receiving service.</dd>
+        <dt>Choose the response your service needs</dt><dd>When a service needs a defined fact, such as adult status or a residence region, <a href="/solutions/evidence-gateway/">Evidence Gateway</a> can derive and sign that answer from a configured source.</dd>
+      </dl>
+    </div>
+  </section>
+  <section id="developers" class="section" aria-labelledby="relay-developers-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">For developers and implementers</p>
+        <h2 id="relay-developers-title">Publish selected fields from a sample register.</h2>
+        <p>The introductory tutorial uses a synthetic business register in SQLite. Publish its legal name and legal form, try a request for the withheld address, and inspect the audit record.</p>
+        <p><a class="inline-cta" href={product.tutorialHref}>Run the SQLite publication tutorial →</a></p>
+        <a class="inline-cta" href="https://docs.registrystack.org/products/registry-relay/">Read the product documentation →</a>
       </div>
-    </section>
-
-    <section class="claim-band" aria-labelledby="protected-choice-title">
-      <div class="section-inner split">
-        <div class="section-heading compact">
-          <p class="pill">When a service needs evidence</p>
-          <h2 id="protected-choice-title">Use Evidence Gateway when a service only needs proof of one fact.</h2>
-        </div>
-        <div class="claim-body">
-          <p>
-            Registry Relay returns selected data. When a service needs only one predefined,
-            signed fact, use Evidence Gateway.
-          </p>
-          <a class="inline-cta" href="/solutions/evidence-gateway/">See the Evidence Gateway &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section technical-handoff" aria-labelledby="protected-components-title">
-      <div class="section-inner">
-        <div class="technical-heading">
-          <div>
-            <p class="eyebrow">Runtime and related tooling</p>
-            <h2 id="protected-components-title">The runtime and related metadata tooling.</h2>
-          </div>
-          <p>The technical documentation explains how each component is configured and deployed.</p>
-        </div>
-        <div class="technical-component-grid">
-          {handoffComponents.map((component) => (
-            <article>
-              <div>
-                <h3>{component.name}</h3>
-                <p>{component.body}</p>
-              </div>
-              <div class="technical-links">
-                <a href={component.docs}>Docs</a>
-                <a href={component.github}>GitHub</a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <DocsHandoff
-      eyebrow="For your technical team"
-      heading="See how to prepare a reviewed SQLite source, define access profiles, and deploy Registry Relay."
-      primaryLabel="Read the technical docs"
-      primaryHref="https://docs.registrystack.org/products/registry-relay/"
-      emphasis="docs"
-    />
-  </main>
-
-  <SiteFooter />
-</Base>
-
-<style>
-  .solution-hero .hero-copy {
-    max-width: 920px;
-  }
-
-  .agreement-grid,
-  .boundary-grid {
-    display: grid;
-    gap: 16px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin: 0 auto;
-    max-width: 980px;
-  }
-
-  .agreement-grid article,
-  .boundary-grid article {
-    background: #ffffff;
-    border: 1px solid var(--registry-rule);
-    min-width: 0;
-    padding: 22px;
-  }
-
-  .agreement-grid article > span {
-    color: var(--registry-stamp);
-    font-family: var(--registry-mono);
-    font-size: 12px;
-    font-weight: 700;
-  }
-
-  .agreement-grid h3,
-  .boundary-grid h3 {
-    font-size: 21px;
-    margin: 14px 0 9px;
-  }
-
-  .boundary-grid h3 {
-    margin-top: 0;
-  }
-
-  .agreement-grid p,
-  .boundary-grid p {
-    color: var(--registry-body);
-    line-height: 1.55;
-    margin: 0;
-  }
-
-  .boundary-grid article {
-    border-top: 4px solid var(--registry-blue);
-  }
-
-  .boundary-grid .boundary-stop-card {
-    border-top-color: var(--registry-stamp);
-  }
-
-  .technical-handoff {
-    border-top: 3px solid var(--registry-ink);
-  }
-
-  .technical-handoff .section-inner {
-    padding-bottom: clamp(42px, 6vw, 62px);
-    padding-top: clamp(42px, 6vw, 62px);
-  }
-
-  .technical-heading {
-    align-items: end;
-    display: grid;
-    gap: 18px;
-    grid-template-columns: minmax(0, 1fr) minmax(240px, 0.55fr);
-    margin-bottom: 22px;
-  }
-
-  .technical-heading h2 {
-    font-size: clamp(26px, 3vw, 36px);
-    margin: 6px 0 0;
-  }
-
-  .technical-heading > p {
-    color: var(--registry-body);
-    margin: 0;
-  }
-
-  .technical-component-grid {
-    display: grid;
-    gap: 12px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .technical-component-grid article {
-    background: var(--registry-paper);
-    border: 1px solid var(--registry-rule);
-    display: flex;
-    gap: 18px;
-    justify-content: space-between;
-    min-width: 0;
-    padding: 18px;
-  }
-
-  .technical-component-grid h3 {
-    font-size: 18px;
-    margin: 0 0 5px;
-  }
-
-  .technical-component-grid p {
-    color: var(--registry-body);
-    font-size: 14px;
-    line-height: 1.45;
-    margin: 0;
-  }
-
-  .technical-links {
-    align-content: start;
-    display: flex;
-    flex: 0 0 auto;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .technical-links a {
-    border: 1px solid var(--registry-rule);
-    color: var(--registry-blue);
-    font-family: var(--registry-mono);
-    font-size: 11px;
-    padding: 5px 7px;
-  }
-
-  @media (max-width: 800px) {
-    .agreement-grid,
-    .boundary-grid,
-    .technical-heading,
-    .technical-component-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 520px) {
-    .technical-component-grid article {
-      display: grid;
-    }
-  }
-</style>
+      <dl>
+        <dt>Source preparation</dt><dd>Relay reads reviewed, read-only SQLite views. Spreadsheets and other databases require an organization-owned preparation step.</dd>
+        <dt>Published interface</dt><dd>The configuration defines resource names, fields, and access and disclosure rules. Relay generates the API contract and returns selected data with record context. These responses are unsigned.</dd>
+        <dt>Building a register as well?</dt><dd><a href="/solutions/base-registry/">Base Registry Engine</a> stores and manages records for people, households, businesses, and other entities, with controlled changes and a history your team can inspect.</dd>
+      </dl>
+    </div>
+  </section>
+</Product>
