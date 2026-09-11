@@ -12,7 +12,7 @@ interface Props {
 }
 const { product, heading, description, note } = Astro.props;
 ---
-<Base title={product.name + ' | Registry Stack'} description={description}>
+<Base title={product.solution + ' | Registry Stack'} description={description}>
   <SiteHeader current={product.key} />
   <main class="product-page">
     <section class="hero" aria-labelledby="product-title">

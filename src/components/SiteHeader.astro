@@ -4,7 +4,7 @@
 import { products } from '../data/products';
 const { current } = Astro.props;
 const solutions = products.filter((product) => product.menu).map((product) => ({
-  ...product, label: product.name, blurb: product.intent,
+  ...product, label: product.solution, blurb: product.intent,
 }));
 
 const links = [

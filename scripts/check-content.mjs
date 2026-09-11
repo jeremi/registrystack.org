@@ -111,8 +111,8 @@ for (const route of [
 }
 
 const footerSource = readSource('src/components/SiteFooter.astro');
-if (!footerSource.includes('Base Registry Engine')) {
-  failures.push('footer open-source components column is missing Base Registry Engine');
+if (!footerSource.includes('Base registry')) {
+  failures.push('footer solutions column is missing Base registry');
 }
 
 const headerSource = readSource('src/components/SiteHeader.astro');

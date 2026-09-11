@@ -1,16 +1,16 @@
 # Registry Stack
 
-> Open-source software for organizations that maintain registries and the services that rely on them. Base Registry Engine stores and manages records about people, households, organizations, assets, and more. It supports record creation, retrieval, relationships, controlled updates, and history, with review where required. Evidence Gateway lets approved services receive signed answers about defined facts without receiving the full source record. Each product works independently. Registry Relay publishes selected data from existing registries. Registry Casework gives the officers who review registry changes one accountable inbox, with the registry keeping its own rules about who may change a record.
+> Open-source software for organizations that maintain registries and the services that rely on them. Base Registry Engine stores and manages records about people, households, organizations, assets, and more. It supports record creation, retrieval, relationships, controlled updates, and history, with review where required. Evidence Gateway lets approved services receive signed answers about defined facts without receiving the full source record. Each product works independently. Registry Relay publishes selected data from existing registries. Registry Casework gives the staff who review requests one accountable inbox over whichever system owns the work; that system keeps its own rules about who may change a record.
 
 Organizations own their records and define the rules for access and changes. The software is Apache-2.0 open source. Paid implementation pilots and annual support contracts are available for teams that need help, separate from self-service use. Current starting prices and scope are on the pricing page.
 
 ## Website
 
 - [Home](https://registrystack.org/): Registry maintenance and fact-sharing examples, product choices, and next steps.
-- [Base Registry Engine](https://registrystack.org/solutions/base-registry/): Build and run a registry with defined records and relationships, storage, access controls, and change history behind the organization's applications.
+- [Base registry](https://registrystack.org/solutions/base-registry/): Build and run the base registry other services rely on, with defined records and relationships, storage, access controls, and change history behind the organization's applications.
 - [Evidence Gateway](https://registrystack.org/solutions/evidence-gateway/): Return signed answers from an existing registry or another configured source.
 - [Registry Relay](https://registrystack.org/solutions/protected-registry-apis/): Publish selected fields through read-only APIs.
-- [Registry Casework](https://registrystack.org/solutions/casework/): Coordinate the human decisions behind a registry: queues, holders, due dates, and decisions applied under the officer's own account.
+- [Casework](https://registrystack.org/solutions/casework/): One inbox for the work that needs a person to decide, from a registry or any other source system: queues, holders, due dates, and decisions applied under the officer's own account.
 - [Use cases](https://registrystack.org/use-cases/): Illustrative registry and public-service workflows.
 - [Blog](https://registrystack.org/blog/): Field guides for registry owners and reviewers, such as defining the question before connecting a registry and reconstructing who accessed what. RSS at https://registrystack.org/rss.xml.
 - [Implementation and support](https://registrystack.org/pricing/): Implementation pilots, annual support contracts, and a written inquiry covering need, budget, and timing.

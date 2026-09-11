@@ -6,8 +6,8 @@ const product = products[0];
 ---
 <Product
   product={product}
-  heading="Build and run the registry your organization needs."
-  description="People, households, organizations, assets: define the records that matter to your work and how they relate to each other. Base Registry Engine stores those records and gives your applications a consistent way to create, find, and update them, with your rules for access and data quality."
+  heading="Build and run the base registry others rely on."
+  description="A base registry is the register one organization is responsible for and other services use instead of asking people for the same information again: residents, businesses, addresses, licences, assets. Base Registry Engine stores those records with your rules for access, data quality, and change, and gives your applications one consistent way to create, find, and update them."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="registry-lifecycle-title">
     <div class="section-inner">
@@ -45,7 +45,22 @@ const product = products[0];
       </div>
     </div>
   </section>
-  <section class="section section-muted" aria-labelledby="breg-fit-title">
+  <section class="section section-muted" aria-labelledby="breg-duties-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">One solution, several products</p>
+        <h2 id="breg-duties-title">What a base registry owes the services around it.</h2>
+        <p>The term comes from public-sector interoperability: the Dutch basisregistratie, the Belgian authentic source, the foundational registries of identification programmes. Whatever the name, a base registry carries the same duties, and Registry Stack has a product for each. Start with the engine and add the others when a duty becomes real.</p>
+      </div>
+      <dl>
+        <dt>Hold the authoritative records</dt><dd>Base Registry Engine stores the records and their history and applies your rules for who may read or change what.</dd>
+        <dt>Let other services rely on the register without copying it</dt><dd><a href="/solutions/evidence-gateway/">Evidence Gateway</a> answers a defined question, such as an age check, with a signed fact and no full record. <a href="/solutions/protected-registry-apis/">Registry Relay</a> publishes the fields each service is allowed to receive.</dd>
+        <dt>Take back corrections and decide on them</dt><dd>A service that spots a wrong record has to report it, and someone has to review it. <a href="/solutions/casework/">Casework</a> gives the officers who do that one accountable inbox, and the registry keeps its own rules about who may change a record.</dd>
+        <dt>Answer for it afterwards</dt><dd>Every change and refused request is journaled with who asked and who decided, so a reviewer can reconstruct what happened without asking the people involved.</dd>
+      </dl>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="breg-fit-title">
     <div class="section-inner product-fit">
       <div class="section-heading compact">
         <p class="eyebrow">How it fits your organization</p>
@@ -55,12 +70,12 @@ const product = products[0];
       </div>
       <dl>
         <dt>Your team defines the registry</dt><dd>Agree what the records mean, how they relate, and who may use them. Your technical team translates those decisions into the configuration that defines storage, validation, and access.</dd>
-        <dt>Your applications serve the people using it</dt><dd>Your team or delivery partner provides the screens, sign-in, and wider service workflows. The engine handles record storage and operations behind those applications. When that review has to be given to a person, tracked against a due date, and chased, <a href="/solutions/casework/">Registry Casework</a> gives your team one accountable inbox for that work.</dd>
-        <dt>Share facts when another service needs them</dt><dd><a href="/solutions/evidence-gateway/">Evidence Gateway</a> can use a configured connection to answer questions from the registry, such as an age check without a date of birth. Either product can be used independently.</dd>
+        <dt>Your applications serve the people using it</dt><dd>Your team or delivery partner provides the screens, sign-in, and wider service workflows. The engine handles record storage and operations behind those applications.</dd>
+        <dt>Add the other products when a duty becomes real</dt><dd>Each product runs on its own. Connect Evidence Gateway, Registry Relay, or Casework to the registry when another service needs a fact, a data feed, or a person’s decision, and not before.</dd>
       </dl>
     </div>
   </section>
-  <section id="developers" class="section" aria-labelledby="breg-developers-title">
+  <section id="developers" class="section section-muted" aria-labelledby="breg-developers-title">
     <div class="section-inner product-fit">
       <div class="section-heading compact">
         <p class="eyebrow">For developers and implementers</p>

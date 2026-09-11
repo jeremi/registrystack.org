@@ -40,12 +40,12 @@ const browser = await chromium.launch();
 const failures = [];
 
 const products = [
-  { path: '/solutions/base-registry/', name: 'Base Registry Engine', tutorial: '/tutorials/first-breg/' },
-  { path: '/solutions/evidence-gateway/', name: 'Evidence Gateway', tutorial: '/tutorials/first-evidence-assertion/' },
-  { path: '/solutions/protected-registry-apis/', name: 'Registry Relay', tutorial: '/tutorials/publish-governed-sqlite-registry/' },
-  { path: '/solutions/casework/', name: 'Registry Casework', tutorial: '/start/casework/' },
+  { path: '/solutions/base-registry/', name: 'Base Registry Engine', solution: 'Base registry', tutorial: '/tutorials/first-breg/' },
+  { path: '/solutions/evidence-gateway/', name: 'Evidence Gateway', solution: 'Evidence Gateway', tutorial: '/tutorials/first-evidence-assertion/' },
+  { path: '/solutions/protected-registry-apis/', name: 'Registry Relay', solution: 'Protected registry APIs', tutorial: '/tutorials/publish-governed-sqlite-registry/' },
+  { path: '/solutions/casework/', name: 'Registry Casework', solution: 'Casework', tutorial: '/start/casework/' },
 ];
-// The Solutions menu lists the flagships and Registry Casework; Relay is reached
+// The Solutions menu lists the flagships and Casework; Relay is reached
 // from the homepage and footer instead. Both supporting products also have a
 // homepage row below the flagship cards.
 const menuRoutes = [products[0].path, products[1].path, products[3].path];
@@ -119,7 +119,7 @@ for (const options of [
     (links) => links.map((link) => new URL(link.href).pathname),
   );
   if (menuLinks.length !== menuRoutes.length || menuRoutes.some((route) => !menuLinks.includes(route))) {
-    fail('main navigation must feature Base Registry Engine, Evidence Gateway, and Registry Casework');
+    fail('main navigation must feature Base registry, Evidence Gateway, and Casework');
   }
   const navLinks = await page.locator('.top-nav a').evaluateAll((links) => links.map((link) => {
     const { origin, pathname, hash } = new URL(link.href);
@@ -158,7 +158,7 @@ for (const options of [
     await link.click();
     await page.waitForLoadState('domcontentloaded');
     if (new URL(page.url()).pathname !== product.path || !await page.locator('h1').isVisible() ||
-        !(await page.title()).includes(product.name)) {
+        !(await page.title()).includes(product.solution)) {
       fail(`${product.name} link did not open its product page`);
       continue;
     }
