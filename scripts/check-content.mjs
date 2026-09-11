@@ -70,6 +70,7 @@ for (const route of [
   '/solutions/base-registry/',
   '/solutions/evidence-gateway/',
   '/solutions/protected-registry-apis/',
+  '/solutions/casework/',
 ]) {
   if (!productSource.includes(route)) failures.push('product data is missing ' + route);
 }
@@ -77,6 +78,7 @@ for (const route of [
   'https://docs.registrystack.org/tutorials/first-breg/',
   'https://docs.registrystack.org/tutorials/first-evidence-assertion/',
   'https://docs.registrystack.org/tutorials/publish-governed-sqlite-registry/',
+  'https://docs.registrystack.org/start/casework/',
 ]) {
   if (!productSource.includes(route)) failures.push('product data is missing a current tutorial: ' + route);
 }
@@ -92,7 +94,9 @@ for (const route of [
   '/solutions/base-registry/',
   '/solutions/evidence-gateway/',
   '/solutions/protected-registry-apis/',
+  '/solutions/casework/',
   '/use-cases/',
+  '/blog/',
   '/security/',
   '/faq/',
   '/pricing/',
@@ -153,6 +157,7 @@ for (const page of [
   'src/pages/solutions/base-registry.astro',
   'src/pages/solutions/evidence-gateway.astro',
   'src/pages/solutions/protected-registry-apis.astro',
+  'src/pages/solutions/casework.astro',
 ]) {
   const source = readSource(page);
   if (!source.includes('<Product')) failures.push(page + ' is missing the product layout');
@@ -185,9 +190,13 @@ const handoffExempt = new Set([
 ]);
 for (const relativePath of sweptFiles) {
   if (!relativePath.startsWith('src/pages/') || handoffExempt.has(relativePath)) continue;
-  if (!/DocsHandoff|<Product/.test(readSource(relativePath))) {
+  if (!/DocsHandoff|<Product|<Article/.test(readSource(relativePath))) {
     failures.push(`${relativePath} is missing the docs handoff CTA (DocsHandoff)`);
   }
+}
+// Blog articles reach the handoff through their shared layout.
+if (!readSource('src/layouts/Article.astro').includes('DocsHandoff')) {
+  failures.push('blog Article layout is missing the docs handoff CTA (DocsHandoff)');
 }
 
 const handoffSource = readSource('src/components/DocsHandoff.astro');
@@ -196,6 +205,17 @@ if (!handoffSource.includes('/#developers') || !handoffSource.includes('/pricing
 }
 if (handoffSource.includes('mailto:')) {
   failures.push('DocsHandoff must show pricing before opening a commercial inquiry');
+}
+
+// The blog posts point readers at two downloadable worksheets; both must
+// ship with the site.
+for (const relativePath of [
+  'public/downloads/registry-question-worksheet.yaml',
+  'public/downloads/registry-access-review-checklist.md',
+]) {
+  if (!existsSync(resolve(relativePath))) {
+    failures.push(`missing download: ${relativePath}`);
+  }
 }
 
 const pricingSource = readSource('src/pages/pricing.astro');

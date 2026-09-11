@@ -1,0 +1,70 @@
+---
+import Product from '../../layouts/Product.astro';
+import CaseworkFlow from '../../components/CaseworkFlow.astro';
+import { products } from '../../data/products';
+const product = products[3];
+---
+<Product
+  product={product}
+  heading="Run the review work behind your registry."
+  description="Some registry changes need a person to look first: a correction to a licence, a disputed detail, a request another service cannot settle on its own. Registry Casework gives your team one place to receive that work, take it, decide it, and show who did what and when. The registry keeps its own rules about who may change a record."
+>
+  <section id="product-example" class="section section-muted" aria-labelledby="casework-example-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">One example: a licence scope correction</p>
+        <h2 id="casework-example-title">Correct a licence with one officer accountable from request to decision.</h2>
+        <p>A professional register receives a request to correct the scope of a licence. The registry team wants corrections reviewed by an officer before they take effect, a first response within 48 hours, and a clear record of who decided.</p>
+      </div>
+      <CaseworkFlow />
+      <p class="product-note">Casework never changes the register on its own. The officer who approves the correction applies it under their own account, so the register records the change against the person who made it, with the permissions that person already has.</p>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="casework-inbox-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">One inbox for the work that needs a person</p>
+        <h2 id="casework-inbox-title">Know who holds each item, what is due, and who decided.</h2>
+        <p>Work arrives from your registry or from another service. Casework routes it to the agreed queue, and everyone with access sees the same picture: what is waiting, who is working on it, and when the first response is due.</p>
+      </div>
+      <div class="product-facts">
+        <article><h3>Take work and keep it visible</h3><p>An officer claims an item to work on it and releases it if they cannot continue. Colleagues see who holds it. Draft notes stay private to the officer until a decision is recorded.</p></article>
+        <article><h3>Ask the applicant before deciding</h3><p>When information is missing, the officer records a correction request and the item waits for the applicant. The response clock pauses while the item is awaiting the applicant, so measured response times reflect the time your team controlled.</p></article>
+        <article><h3>Decide, then apply in the officer’s name</h3><p>Approval and application are separate steps. The officer applies the approved change to the register under their own account, and the register records who made it. If the register’s answer is uncertain, the attempt is kept and recovered; no outcome is invented.</p></article>
+      </div>
+    </div>
+  </section>
+  <section class="section section-muted" aria-labelledby="casework-fit-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">How it fits your organization</p>
+        <h2 id="casework-fit-title">Run the team without opening the database.</h2>
+        <p>Casework holds the queue, the holder, and the clocks. Your registry keeps eligibility, permissions, and the records themselves. Supervisors and administrators run the team from Casework rather than from database access.</p>
+        <p>Use it for review requests from a registry you run with <a href="/solutions/base-registry/">Base Registry Engine</a>, or for a small decision another service needs a person to take. The service hands in the request and follows its progress; it cannot claim or decide the item.</p>
+        <p>If the review you need is a fixed number of approvals and nothing more, the registry can require them on its own: Base Registry Engine holds the proposal until the approvals are in. Casework is for review work that has to be given to a person, tracked against a due date, chased when it stalls, and answered back to whoever asked.</p>
+      </div>
+      <dl>
+        <dt>Your registry team agrees the queues and targets</dt><dd>Decide which requests need a person to look first, which queue receives each kind of work, the response target for each queue, and the working-day calendar that reminders and escalation steps follow.</dd>
+        <dt>Supervisors keep the caseload moving</dt><dd>See what each officer holds and for how long, reassign an item, move a caseload when someone is away, and review the reminders and escalations that are due. Casework works out when they fall due; a person decides what happens next, and no message is sent automatically.</dd>
+        <dt>Administrators manage teams, not cases</dt><dd>Set up teams, the queues each team serves, and the holiday calendar. Administrator access covers the team directory only and does not open the content of any item.</dd>
+      </dl>
+    </div>
+  </section>
+  <section id="developers" class="section" aria-labelledby="casework-developers-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">For developers and implementers</p>
+        <h2 id="casework-developers-title">Connect a registry or a requesting service and run the first queue.</h2>
+        <p>Start with the overview: what runs where, how work reaches the inbox from a registry or a requesting service, and which guide an author, an operator, or an application developer opens next.</p>
+        <p><a class="inline-cta" href={product.tutorialHref}>Read the Casework overview →</a></p>
+        <p>The configuration guide then walks through a starter project: declare queues, routing, and clock policies, test them against synthetic fixtures, and package the reviewed policy for deployment.</p>
+        <p><a class="inline-cta" href="https://docs.registrystack.org/configure/casework/">Configure queues, routing, and clocks →</a></p>
+      </div>
+      <dl>
+        <dt>Two sources of work</dt><dd>Casework presents review requests from Base Registry Engine and hosted decisions that another service creates through the API. The registry remains the authority on who may see a record and who may change it, and Casework never acts with more access than the person it is acting for.</dd>
+        <dt>Interface and clients</dt><dd>One HTTP API covers both kinds of work, with maintained Rust, Node.js, and Python clients. Casework supplies the API and clients; the staff screens come from your own application or an existing staff tool.</dd>
+        <dt>Continue in the documentation</dt><dd><a href="https://docs.registrystack.org/operate/casework/">Run and operate Casework</a> for the database, identity, and audit requirements, and <a href="https://docs.registrystack.org/reference/apis/registry-casework/">read the API reference</a> for the exact operations, headers, and recovery responses.</dd>
+      </dl>
+    </div>
+  </section>
+</Product>

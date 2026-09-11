@@ -43,7 +43,12 @@ const products = [
   { path: '/solutions/base-registry/', name: 'Base Registry Engine', tutorial: '/tutorials/first-breg/' },
   { path: '/solutions/evidence-gateway/', name: 'Evidence Gateway', tutorial: '/tutorials/first-evidence-assertion/' },
   { path: '/solutions/protected-registry-apis/', name: 'Registry Relay', tutorial: '/tutorials/publish-governed-sqlite-registry/' },
+  { path: '/solutions/casework/', name: 'Registry Casework', tutorial: '/start/casework/' },
 ];
+// The Solutions menu lists the flagships and Registry Casework; Relay is reached
+// from the homepage and footer instead. Both supporting products also have a
+// homepage row below the flagship cards.
+const menuRoutes = [products[0].path, products[1].path, products[3].path];
 const redirects = [
   ['/why/', '/'],
   ['/problem/', '/'],
@@ -113,8 +118,8 @@ for (const options of [
   const menuLinks = await page.locator('.nav-group a').evaluateAll(
     (links) => links.map((link) => new URL(link.href).pathname),
   );
-  if (menuLinks.length !== 2 || products.slice(0, 2).some((product) => !menuLinks.includes(product.path))) {
-    fail('main navigation must feature Base Registry Engine and Evidence Gateway');
+  if (menuLinks.length !== menuRoutes.length || menuRoutes.some((route) => !menuLinks.includes(route))) {
+    fail('main navigation must feature Base Registry Engine, Evidence Gateway, and Registry Casework');
   }
   const navLinks = await page.locator('.top-nav a').evaluateAll((links) => links.map((link) => {
     const { origin, pathname, hash } = new URL(link.href);

@@ -50,7 +50,9 @@ const routes = [
   { name: 'base-registry', path: '/solutions/base-registry/' },
   { name: 'evidence-gateway', path: '/solutions/evidence-gateway/' },
   { name: 'protected-registry-access', path: '/solutions/protected-registry-apis/' },
+  { name: 'casework', path: '/solutions/casework/' },
   { name: 'use-cases', path: '/use-cases/' },
+  { name: 'blog', path: '/blog/' },
   { name: 'security', path: '/security/' },
   { name: 'pricing', path: '/pricing/' },
   { name: 'faq', path: '/faq/' },
@@ -100,8 +102,8 @@ for (const viewport of viewports) {
     failures.push(`${label}: text extends outside viewport`);
   }
 
-  // The Solutions disclosure must present both solution routes at tappable
-  // size once opened, on every checked route and viewport.
+  // The Solutions disclosure must present every listed solution route at
+  // tappable size once opened, on every checked route and viewport.
   {
     const menus = await page.evaluate(() =>
       [...document.querySelectorAll('.nav-group')].map((details) => {
@@ -114,7 +116,7 @@ for (const viewport of viewports) {
         return { links };
       }),
     );
-    if (menus.length !== 1 || menus[0].links.length !== 2) {
+    if (menus.length !== 1 || menus[0].links.length !== 3) {
       failures.push(`${label}: nav disclosure link counts do not match expected menus`);
     } else if (menus.flatMap((menu) => menu.links).some((rect) => rect.width < 36 || rect.height < 36)) {
       failures.push(`${label}: open nav menu links are below 36px`);

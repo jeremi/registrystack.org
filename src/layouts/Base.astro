@@ -6,6 +6,12 @@ interface Props {
   description?: string;
   // Error pages (404) have no canonical route and should stay out of indexes.
   noindex?: boolean;
+  type?: 'website' | 'article';
+  publishedAt?: string;
+  updatedAt?: string;
+  author?: string;
+  ogImagePath?: string;
+  ogImageAlt?: string;
 }
 
 const {
@@ -13,9 +19,16 @@ const {
   description =
     'Open-source software to store and manage records about people, households, organizations, and assets, and share verifiable facts with services. Explore Base Registry Engine and Evidence Gateway.',
   noindex = false,
+  type = 'website',
+  publishedAt,
+  updatedAt,
+  author = 'Registry Stack',
+  ogImagePath = '/og-image.png',
+  ogImageAlt = 'Registry Stack: Maintain your registry. Share only what services need.',
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, 'https://registrystack.org').toString();
-const ogImageUrl = new URL('/og-image.png', 'https://registrystack.org').toString();
+const ogImageUrl = new URL(ogImagePath, 'https://registrystack.org').toString();
+const articleHeadline = title.replace(/ \| Registry Stack$/, '');
 const organizationLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -38,6 +51,33 @@ const organizationLd = {
   },
   sameAs: ['https://github.com/registrystack'],
 };
+const articleLd =
+  type === 'article' && publishedAt
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: articleHeadline,
+        description,
+        datePublished: publishedAt,
+        ...(updatedAt ? { dateModified: updatedAt } : {}),
+        author: {
+          '@type': 'Organization',
+          name: author,
+          url: 'https://registrystack.org',
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'Registry Stack',
+          url: 'https://registrystack.org',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://registrystack.org/og-image.png',
+          },
+        },
+        mainEntityOfPage: canonicalUrl,
+        image: ogImageUrl,
+      }
+    : null;
 const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID?.trim();
 const umamiScriptSrc =
   import.meta.env.PUBLIC_UMAMI_SCRIPT_SRC?.trim() || 'https://stats.registrystack.org/script.js';
@@ -59,7 +99,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
@@ -67,12 +107,16 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Registry Stack: Maintain your registry. Share only what services need." />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    {publishedAt && <meta property="article:published_time" content={publishedAt} />}
+    {updatedAt && <meta property="article:modified_time" content={updatedAt} />}
+    {type === 'article' && <meta property="article:author" content={author} />}
     <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationLd)} />
+    {articleLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(articleLd)} />}
     {
       umamiWebsiteId && (
         <script is:inline defer src={umamiScriptSrc} data-website-id={umamiWebsiteId} data-domains={umamiDomains}></script>

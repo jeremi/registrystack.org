@@ -40,7 +40,7 @@ const product = products[0];
       </div>
       <div class="product-facts">
         <article><h3>Model the information you need</h3><p>Define record types, required fields, valid values, and relationships. Your registry can hold several kinds of records together, such as people, households, and memberships.</p></article>
-        <article><h3>Control access and changes</h3><p>Decide which records and fields each role can read or change. Allow routine updates directly and require review where needed. Related changes can be applied together so they stay consistent.</p></article>
+        <article><h3>Control access and changes</h3><p>Decide which records and fields each role can read or change. Allow routine updates directly and require review where needed, including a set number of approvals before a change takes effect. Related changes can be applied together so they stay consistent.</p></article>
         <article><h3>Keep continuity over time</h3><p>Inspect earlier revisions and prevent an older edit from overwriting a newer change. As your needs evolve, update the record definitions through versioned configuration and planned data migrations.</p></article>
       </div>
     </div>
@@ -55,7 +55,7 @@ const product = products[0];
       </div>
       <dl>
         <dt>Your team defines the registry</dt><dd>Agree what the records mean, how they relate, and who may use them. Your technical team translates those decisions into the configuration that defines storage, validation, and access.</dd>
-        <dt>Your applications serve the people using it</dt><dd>Your team or delivery partner provides the screens, sign-in, and wider service workflows. The engine handles record storage and operations behind those applications.</dd>
+        <dt>Your applications serve the people using it</dt><dd>Your team or delivery partner provides the screens, sign-in, and wider service workflows. The engine handles record storage and operations behind those applications. When that review has to be given to a person, tracked against a due date, and chased, <a href="/solutions/casework/">Registry Casework</a> gives your team one accountable inbox for that work.</dd>
         <dt>Share facts when another service needs them</dt><dd><a href="/solutions/evidence-gateway/">Evidence Gateway</a> can use a configured connection to answer questions from the registry, such as an age check without a date of birth. Either product can be used independently.</dd>
       </dl>
     </div>

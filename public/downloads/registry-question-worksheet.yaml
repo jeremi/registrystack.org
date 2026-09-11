@@ -1,0 +1,76 @@
+# Registry-question worksheet
+# One file per distinct service question.
+# This is a review and scoping artifact, not a Registry Stack runtime configuration.
+
+service:
+  name: ""
+  procedure_or_user_journey: ""
+  decision_owner: ""
+  action_after_the_answer: ""
+
+requester:
+  institution: ""
+  system_or_role: ""
+  authentication_mode: ""
+  required_scope: ""
+  declared_purpose: ""
+
+authority:
+  institution: ""
+  source_name: ""
+  why_authoritative_for_this_fact: ""
+  source_owner: ""
+
+target:
+  type: ""
+  permitted_identifier: ""
+  matching_rule_owner: ""
+  ambiguity_handling: ""
+
+question:
+  id: ""
+  plain_language: ""
+  source_owned_fact_or_decision: ""
+  permitted_answer:
+    shape: "" # selected_fields | aggregate | value | predicate | credential | decision
+    fields_or_claims: []
+  must_not_disclose: []
+
+freshness:
+  source_mode: "" # scan | snapshot | other
+  maximum_acceptable_age: ""
+  consumer_check: ""
+
+failure_states:
+  matched_false: ""
+  no_match: ""
+  ambiguous: ""
+  denied: ""
+  unavailable: ""
+  stale: ""
+  verification_failure: ""
+
+review:
+  policy_owner: ""
+  registry_approver: ""
+  service_approver: ""
+  security_or_data_protection_reviewer: ""
+  change_approval_process: ""
+
+audit:
+  reviewer_must_reconstruct:
+    - requester
+    - purpose
+    - policy_and_claim_version
+    - source_consultation
+    - disclosure
+    - outcome_or_denial
+  retention_owner: ""
+  off_host_or_anchor_requirement: ""
+
+acceptance_tests:
+  - allowed_request_returns_only_the_permitted_answer
+  - denied_request_reads_no_source_data
+  - no_match_is_not_collapsed_to_false
+  - ambiguous_and_unavailable_are_distinct
+  - excluded_information_never_appears_in_response_or_logs

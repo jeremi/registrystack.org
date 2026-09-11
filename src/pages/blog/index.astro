@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+
+const posts = (await getCollection('blog', ({ data }) => data.status === 'published')).sort(
+  (left, right) =>
+    right.data.publishedAt.valueOf() - left.data.publishedAt.valueOf() ||
+    left.data.order - right.data.order,
+);
+const dateFormatter = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<Base
+  title="Registry Stack blog"
+  description="Practical guides for defining registry questions, choosing protected access or bounded evidence, and reviewing what happened afterwards."
+  ogImagePath="/blog-field-notes-og.png"
+  ogImageAlt="Registry Stack Field Notes: Define the question. Choose the boundary. Preserve the evidence."
+>
+  <SiteHeader current="blog" />
+  <main>
+    <header class="blog-intro">
+      <div class="blog-intro-inner">
+        <div class="blog-intro-copy">
+          <p class="eyebrow">Registry Stack</p>
+          <h1 id="blog-title">Blog</h1>
+          <p>
+            Practical guides on opening registry data to approved services, returning bounded
+            evidence, and preserving enough context for review.
+          </p>
+        </div>
+        <a class="blog-rss" href="/rss.xml">RSS feed <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </header>
+
+    <section class="blog-feed" aria-labelledby="articles-title">
+      <div class="blog-feed-inner">
+        <div class="blog-feed-heading">
+          <h2 id="articles-title">Articles</h2>
+          <p>{posts.length} practical guides</p>
+        </div>
+
+        <div class="blog-grid">
+          {
+            posts.map((post) => (
+              <article class="blog-card">
+                <div class="blog-card-copy">
+                  <p class="blog-card-kicker">
+                    <span>{post.data.category}</span>
+                    <span aria-hidden="true">·</span>
+                    <time datetime={post.data.publishedAt.toISOString()}>
+                      {dateFormatter.format(post.data.publishedAt)}
+                    </time>
+                    <span aria-hidden="true">·</span>
+                    <span>{post.data.readingMinutes} min read</span>
+                  </p>
+                  <h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+                  <p>{post.data.description}</p>
+                  <p class="blog-card-link"><a href={`/blog/${post.id}/`}>Read article <span aria-hidden="true">&rarr;</span></a></p>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+  <DocsHandoff />
+  <SiteFooter />
+</Base>

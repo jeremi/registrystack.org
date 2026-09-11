@@ -1,0 +1,97 @@
+---
+import RecordCard from './RecordCard.astro';
+
+const requestFields = [
+  { label: 'Licence', value: 'LIC-4471' },
+  { label: 'Requested change', value: 'Scope of practice' },
+  { label: 'Submitted by', value: 'Licence holder' },
+  { label: 'Received', value: 'Tuesday 09:14' },
+];
+const licenceFields = [
+  { label: 'Scope of practice', value: 'Corrected' },
+  { label: 'Changed by', value: 'R. Adeyemi' },
+  { label: 'Applied', value: 'Wednesday 10:02' },
+  { label: 'Revision', value: '12' },
+];
+---
+
+<figure class="casework-flow" aria-labelledby="casework-flow-title">
+  <div class="flow-intro">
+    <p class="flow-kicker">An illustrative correction request</p>
+    <h3 id="casework-flow-title">One officer takes the request. The register records the change in their name.</h3>
+  </div>
+
+  <div class="work-journey" role="group" aria-label="Fictional licence correction moving from request to inbox to applied change">
+    <section class="request-panel" aria-labelledby="request-panel-title">
+      <div class="panel-heading">
+        <p class="panel-label">Professional register</p>
+        <h4 id="request-panel-title">Correction request</h4>
+      </div>
+      <RecordCard recordType="Correction request" recordId="REQ-3106" icon="data" fields={requestFields} />
+      <p class="panel-note">The register keeps the licence record and decides who may change it.</p>
+    </section>
+
+    <section class="inbox-panel" aria-labelledby="inbox-panel-title">
+      <div class="panel-heading">
+        <p class="panel-label">Registry Casework</p>
+        <h4 id="inbox-panel-title">Queue: Licence corrections</h4>
+      </div>
+      <ol class="item-history">
+        <li><strong>Received</strong><span>Routed to Licence corrections. First response due within 48 hours.</span></li>
+        <li><strong>Claimed</strong><span>Held by R. Adeyemi. Draft notes stay private to the holder.</span></li>
+        <li><strong>Correction requested</strong><span>Certificate missing. The clock pauses while the item awaits the applicant.</span></li>
+        <li><strong>Approved</strong><span>Decision recorded inside the 48-hour target. The paused time did not count.</span></li>
+      </ol>
+      <p class="panel-note">Supervisors see who holds each item and for how long.</p>
+    </section>
+
+    <section class="register-panel" aria-labelledby="register-panel-title">
+      <div class="panel-heading">
+        <p class="panel-label">Professional register</p>
+        <h4 id="register-panel-title">Change applied</h4>
+      </div>
+      <div class="applied-record">
+        <p class="applied-label"><span aria-hidden="true">↳</span> Applied by the officer</p>
+        <RecordCard recordType="Licence record" recordId="LIC-4471" icon="person" fields={licenceFields} />
+      </div>
+      <p class="panel-note">The officer applies the approved change under their own account, with the access they already have.</p>
+    </section>
+
+    <div class="audit-slip">
+      <svg class="audit-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h4" />
+      </svg>
+      <p><strong>History</strong> Who received, held, asked, approved, and applied the item, and when. Supervisors read it without opening the database.</p>
+    </div>
+  </div>
+
+  <figcaption>Fictional licence data. The register keeps the record and its permissions; Casework keeps the queue, the holder, and the clock.</figcaption>
+</figure>
+
+<style>
+  .casework-flow { margin: 0 auto; max-width: var(--registry-max); }
+  .flow-intro { border-bottom: 1px solid #d7ddd5; margin-bottom: 25px; padding-bottom: 20px; }
+  .flow-intro h3 { font-size: 20px; line-height: 1.4; margin: 7px 0 0; }
+  .flow-kicker, .panel-label { color: var(--registry-blue); font: 11px/1.5 var(--registry-mono); margin: 0; text-transform: uppercase; }
+  .work-journey { align-items: start; display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr); }
+  .request-panel, .inbox-panel, .register-panel { min-width: 0; }
+  .panel-heading { margin-bottom: 13px; }
+  .panel-heading h4 { font-size: 20px; line-height: 1.3; margin: 5px 0 0; }
+  .panel-note { color: var(--registry-muted); font-size: 13px; line-height: 1.5; margin: 14px 0 0; }
+  .item-history { background: #eaf0f5; border: 1px solid #d4dde6; display: grid; gap: 14px; list-style: none; margin: 0; padding: 16px 18px; }
+  .item-history li { border-left: 2px solid var(--registry-blue); display: grid; gap: 3px; padding-left: 12px; }
+  .item-history strong { color: var(--registry-ink); font-size: 14px; line-height: 1.4; }
+  .item-history span { color: var(--registry-body); font-size: 13px; line-height: 1.5; }
+  .applied-record { background: #e8eef8; padding: 0 10px 10px; }
+  .applied-label { align-items: center; color: var(--registry-blue); display: flex; gap: 8px; font: 11px/1.5 var(--registry-mono); margin: 0; padding: 10px 5px; }
+  .applied-label > span { font-size: 17px; }
+  .audit-slip { align-items: center; border-top: 1px solid #d7ddd5; display: flex; gap: 12px; grid-column: 1 / -1; padding-top: 18px; }
+  .audit-mark { color: var(--registry-blue); flex: 0 0 auto; height: 25px; stroke: currentColor; stroke-width: 1.5; width: 25px; }
+  .audit-slip p { color: var(--registry-muted); font-size: 13px; line-height: 1.5; margin: 0; }
+  .audit-slip strong { color: var(--registry-body); font-weight: 600; margin-right: 8px; }
+  .casework-flow figcaption { color: var(--registry-muted); font-size: 12px; line-height: 1.5; margin-top: 16px; }
+  @media (max-width: 800px) {
+    .work-journey { gap: 20px; grid-template-columns: minmax(0, 1fr); }
+    .audit-slip { align-items: start; }
+  }
+</style>

@@ -18,7 +18,7 @@ const pageDescription = 'Open-source software to store and manage records about 
           <div class="hero-copy">
             <p class="eyebrow">Open-source software for registries</p>
             <h1 id="hero-title">Maintain your registry. Share only what services need.</h1>
-            <p class="hero-lead">People, households, businesses, assets: your organization keeps records that others rely on. Registry Stack helps you store and manage those records, and share the facts services need without handing over the full record.</p>
+            <p class="hero-lead">People, households, businesses, assets: your organization keeps records that others rely on. Registry Stack helps you store and manage those records, share the facts services need without handing over the full record, and coordinate the changes that need a person’s decision first.</p>
             <div class="hero-actions" aria-label="Primary actions">
               <a class="button button-primary" href="#how-it-works">See how it works</a>
               <a class="button button-secondary" href="#developers">For developers</a>
@@ -60,6 +60,10 @@ const pageDescription = 'Open-source software to store and manage records about 
           </article>
         </div>
         <div class="existing-registry">
+          <div><h3>When a change needs a person’s decision first</h3><p>Registry Casework gives the officers who review registry changes one accountable inbox: who holds each item, what is due, and who decided. The registry keeps its own rules about who may change a record.</p></div>
+          <a class="inline-cta" href="/solutions/casework/">Explore Casework <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="existing-registry">
           <div><h3>When a service needs selected fields</h3><p>Registry Relay publishes selected data from an existing registry, with rules for what each service may receive.</p></div>
           <a class="inline-cta" href="/solutions/protected-registry-apis/">Explore Relay <span aria-hidden="true">→</span></a>
         </div>
@@ -71,7 +75,7 @@ const pageDescription = 'Open-source software to store and manage records about 
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Under your organization’s control</p>
-          <h2 id="ownership-title">Your registry. Your responsibilities.</h2>
+          <h2 id="ownership-title" class="ownership-heading"><span>Your registry.</span><span>Your rules.</span><span>Your infrastructure.</span></h2>
           <p>The software supports the people responsible for the records and the services that use them.</p>
         </div>
         <div class="ownership-grid">
@@ -82,7 +86,7 @@ const pageDescription = 'Open-source software to store and manage records about 
           </article>
           <article>
             <h3>Work with the systems you use</h3>
-            <p>Base Registry Engine stores and manages records behind your applications. Evidence Gateway can connect to a source you already maintain.</p>
+            <p>Base Registry Engine stores and manages records behind your applications. Evidence Gateway can connect to a source you already maintain. Registry Casework brings the changes that need an officer’s review to your team, and the officer who decides applies each change in the registry under their own account.</p>
             <a class="inline-cta" href="/faq/">Explore adoption questions <span aria-hidden="true">→</span></a>
           </article>
           <article>
@@ -147,6 +151,9 @@ const pageDescription = 'Open-source software to store and manage records about 
   .existing-registry h3 { font-size: 17px; margin-bottom: 6px; }
   .existing-registry p { font-size: 15px; margin: 0; color: var(--registry-muted); }
   .existing-registry a { flex-shrink: 0; font-size: 14px; }
+  /* One line per phrase, matching the three responsibilities below, so the
+     heading breaks where the meaning does instead of mid-sentence. */
+  .ownership-heading { display: grid; font-size: clamp(28px, 3.6vw, 46px); gap: 2px; }
   .ownership-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
   .ownership-grid article, .developer-grid article { border-top: 1px solid #c9d0c5; padding-top: 22px; }
   .ownership-grid h3, .developer-grid h3 { font-size: 21px; }

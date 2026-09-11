@@ -9,7 +9,15 @@ const warnings = [];
 // already-deployed site are just as dead: blocking this build would not protect
 // anyone. Unreachability there warns; everywhere else it fails.
 const warnOnlyOrigins = ["https://lab.registrystack.org"];
-const warnOnlyLinks = [];
+// The Casework documentation pages publish when the Casework merge lands in
+// the product repository. Until docs.registrystack.org serves them, these
+// links warn instead of failing the build. Empty this list once they resolve.
+const warnOnlyLinks = [
+  "https://docs.registrystack.org/start/casework/",
+  "https://docs.registrystack.org/configure/casework/",
+  "https://docs.registrystack.org/operate/casework/",
+  "https://docs.registrystack.org/reference/apis/registry-casework/",
+];
 const isWarnOnly = (href) =>
   warnOnlyLinks.includes(href) ||
   warnOnlyOrigins.some(

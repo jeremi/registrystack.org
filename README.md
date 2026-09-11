@@ -90,7 +90,9 @@ page explains paid delivery before opening a structured email inquiry.
 - `/solutions/base-registry/`: build and maintain a registry.
 - `/solutions/evidence-gateway/`: return a signed answer to a predefined question.
 - `/solutions/protected-registry-apis/`: publish selected existing data with Relay.
+- `/solutions/casework/`: coordinate the human decisions behind a registry with Casework.
 - `/use-cases/`: illustrative registry and service scenarios.
+- `/blog/`: field guides for registry owners and reviewers, published from `src/content/blog/` with an RSS feed at `/rss.xml`.
 - `/pricing/`: implementation pilots, annual support contracts, and a budget-qualified inquiry.
 - `/security/` and `/faq/`: boundaries, responsibilities, and adoption questions.
 
