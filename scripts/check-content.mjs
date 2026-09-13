@@ -225,6 +225,25 @@ if (!pricingSource.includes('US$20,000') || !pricingSource.includes('US$7,500') 
 if (!pricingSource.includes('/#developers')) {
   failures.push('pricing page is missing the self-service developer path');
 }
+// The AI-assisted build kit ships with both paid options and is explained once,
+// at an anchor the product pages point to. Each paid option names it, and the
+// product pages that have skills today identify it near the top.
+if (!pricingSource.includes('id="build-kit"')) {
+  failures.push('pricing page is missing the build-kit anchor the product pages link to');
+}
+const serviceOptions = pricingSource.match(/<article id="(pilot|support)"[\s\S]*?<\/article>/g) ?? [];
+if (serviceOptions.length !== 2 || serviceOptions.some((option) => !option.includes('#build-kit'))) {
+  failures.push('both paid options must name the included build kit');
+}
+for (const page of [
+  'src/pages/solutions/base-registry.astro',
+  'src/pages/solutions/evidence-gateway.astro',
+]) {
+  const source = readSource(page);
+  if (!source.includes('/pricing/#build-kit') || !/slot="note"|\bnote=/.test(source)) {
+    failures.push(page + ' must identify the build kit in its hero note and link to the pricing anchor');
+  }
+}
 
 // 5. Social sharing: the layout declares a large-image card, so it must point
 // at a real OG image asset that actually exists.

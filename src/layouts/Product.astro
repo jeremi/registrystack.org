@@ -25,7 +25,7 @@ const { product, heading, description, note } = Astro.props;
             <a class="button button-primary" href="#product-example">See it in practice</a>
             <a class="button button-secondary" href="#developers">For developers</a>
           </div>
-          {note && <p class="hero-note">{note}</p>}
+          <slot name="note">{note && <p class="hero-note">{note}</p>}</slot>
         </div>
       </div>
     </section>

@@ -44,6 +44,7 @@ const contactHref = `mailto:contact@registrystack.org?subject=${encodeURICompone
             <p class="starting-fee"><span>From</span> <strong>US$20,000</strong></p>
             <p class="fee-basis">Per scoped pilot engagement</p>
             <p>Work with us to deliver a defined pilot. Scope may include registry design, source integration, implementation, and handover.</p>
+            <p>Includes the <a href="#build-kit">AI-assisted build kit</a>, which your team keeps after handover.</p>
           </article>
           <article id="support" aria-labelledby="support-title">
             <p class="option-label">Your team leads</p>
@@ -51,7 +52,21 @@ const contactHref = `mailto:contact@registrystack.org?subject=${encodeURICompone
             <p class="starting-fee"><span>From</span> <strong>US$7,500</strong> <span>/ year</span></p>
             <p class="fee-basis">For teams implementing and operating Registry Stack</p>
             <p>Your team builds and runs the solution. We provide ongoing technical support, with coverage and response expectations agreed in the contract.</p>
+            <p>Includes the <a href="#build-kit">AI-assisted build kit</a> for the work your team leads.</p>
           </article>
+        </div>
+        <div id="build-kit" class="build-kit">
+          <div class="build-kit-intro">
+            <p class="eyebrow">Included with both paid options</p>
+            <h3 id="build-kit-title">An AI-assisted build kit for your team’s coding agent.</h3>
+            <p>Paid customers get access to a private repository with agent skills, a starter registry configuration, and reference applications. A skill is a set of instructions a coding agent follows; the kit works with Claude Code, Codex, and any other host that reads the agentskills.io format. Your team starts from its own policy documents and forms, and reviews every decision the agent proposes.</p>
+          </div>
+          <dl class="build-kit-facts">
+            <div><dt>Configure a registry</dt><dd>The agent asks what the register records and who may change it, writes the decisions into a brief, and turns them into a validated Base Registry Engine configuration.</dd></div>
+            <div><dt>Build the applications</dt><dd>Self-service, staff, and public lookup screens adapted from the reference applications to your journeys and your organization’s branding.</dd></div>
+            <div><dt>Author evidence answers</dt><dd>Define, test, and package the questions an Evidence Gateway may answer, and configure the deployment that serves them.</dd></div>
+          </dl>
+          <p class="build-kit-note">Skills currently cover Base Registry Engine and Evidence Gateway; new skills reach paid customers as they are released. Nothing in the running software depends on an AI service, and the same guides work without an agent. If a contract ends, your team keeps the kit version it has and everything it built with it.</p>
         </div>
         <p class="options-next"><a class="inline-cta" href="#inquiry">Discuss your needs <span aria-hidden="true">→</span></a></p>
       </div>
@@ -84,7 +99,7 @@ const contactHref = `mailto:contact@registrystack.org?subject=${encodeURICompone
         <div class="section-heading compact">
           <p class="eyebrow">Open-source self-service</p>
           <h2 id="self-service-title">Use Registry Stack with your own team.</h2>
-          <p>The software is open source, with no software license fee. Your team can evaluate, implement, and operate it using the documentation and source code.</p>
+          <p>The software is open source, with no software license fee. Your team can evaluate, implement, and operate it using the documentation and source code. The build kit and private support come with the paid options.</p>
           <a class="button button-secondary" href="/#developers">Explore developer tutorials</a>
         </div>
         <div class="stewardship" id="stewardship">
@@ -109,6 +124,15 @@ const contactHref = `mailto:contact@registrystack.org?subject=${encodeURICompone
   .starting-fee strong { font-size: 30px; line-height: 1.2; }
   .fee-basis { color: var(--registry-muted); font-size: 13px; line-height: 1.5; min-height: 40px; margin: 8px 0 18px; }
   .options-next { margin: 24px 0 0; }
+  /* The kit sits under the two paid cards as one quiet ledger-paper panel:
+     it belongs to both options and is explained once, not per card. */
+  .build-kit { background: var(--registry-paper); border: 1px solid var(--registry-rule); margin-top: 28px; padding: clamp(22px, 3vw, 32px); }
+  .build-kit h3 { font-size: 22px; margin: 0 0 12px; }
+  .build-kit-intro p:not(.eyebrow) { margin: 0; }
+  .build-kit-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 24px 0 0; }
+  .build-kit-facts dt { color: var(--registry-ink); font-weight: 700; margin-bottom: 5px; }
+  .build-kit-facts dd { line-height: 1.55; margin: 0; }
+  .build-kit-note { color: var(--registry-muted); font-size: 14px; line-height: 1.6; margin: 24px 0 0; }
   .pilot-brief { background: #fff; border-top: 3px solid var(--registry-blue); padding: clamp(20px, 3vw, 28px); }
   .pilot-brief h3 { font-size: 26px; }
   .pilot-brief ol { line-height: 1.6; margin: 24px 0; padding-left: 22px; }
@@ -123,5 +147,6 @@ const contactHref = `mailto:contact@registrystack.org?subject=${encodeURICompone
   @media (max-width: 700px) {
     .service-options { grid-template-columns: 1fr; }
     .fee-basis { min-height: 0; }
+    .build-kit-facts { grid-template-columns: 1fr; }
   }
 </style>
