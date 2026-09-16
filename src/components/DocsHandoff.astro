@@ -5,6 +5,7 @@ interface Props {
   heading?: string;
   primaryLabel?: string;
   primaryHref?: string;
+  body?: string;
   emphasis?: 'docs' | 'pilot';
 }
 
@@ -13,6 +14,7 @@ const {
   heading = 'Explore it with your team.',
   primaryLabel = 'Try a developer tutorial',
   primaryHref = '/#developers',
+  body = 'Evaluate the open-source software with your team, or get paid implementation help and ongoing support.',
   emphasis = 'docs',
 } = Astro.props;
 ---
@@ -21,7 +23,7 @@ const {
   <div class="section-inner">
     <p class="eyebrow">{eyebrow}</p>
     <h2 id="handoff-title">{heading}</h2>
-    <p>Evaluate the open-source software with your team, or get paid implementation help and ongoing support.</p>
+    <p>{body}</p>
     <div class="hero-actions">
       {emphasis === 'pilot' ? (
         <>
