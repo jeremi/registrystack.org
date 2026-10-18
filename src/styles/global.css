@@ -319,7 +319,7 @@ h2 {
 
 h3 {
   color: var(--registry-ink);
-  font-size: 19px;
+  font-size: var(--type-subhead);
   line-height: 1.2;
   margin-bottom: 12px;
 }
@@ -330,7 +330,7 @@ p {
 
 .hero-lead {
   color: var(--registry-body);
-  font-size: clamp(18px, 2vw, 23px);
+  font-size: var(--type-lead);
   line-height: 1.4;
   margin-left: auto;
   margin-right: auto;
@@ -1103,7 +1103,7 @@ code {
   align-self: center;
   color: var(--registry-ink);
   font-family: var(--registry-mono);
-  font-size: 22px;
+  font-size: var(--type-xl);
 }
 
 /* Four cards across need more room than the standard column, or every
@@ -1715,7 +1715,7 @@ section[id], .section-inner[id] { scroll-margin-top: 80px; }
 }
 
 .blog-feed-heading h2 {
-  font-size: clamp(28px, 3vw, 38px);
+  font-size: var(--type-title);
   margin: 0;
 }
 
@@ -1805,13 +1805,13 @@ section[id], .section-inner[id] { scroll-margin-top: 80px; }
 }
 
 .article-header h1 {
-  font-size: clamp(38px, 5vw, 64px);
+  font-size: var(--type-hero);
   max-width: 960px;
 }
 
 .article-standfirst {
   color: var(--registry-body);
-  font-size: clamp(19px, 2vw, 24px);
+  font-size: var(--type-lead);
   line-height: 1.45;
   max-width: 780px;
 }
@@ -1875,7 +1875,7 @@ section[id], .section-inner[id] { scroll-margin-top: 80px; }
 }
 
 .article-body h3 {
-  font-size: 22px;
+  font-size: var(--type-xl);
   margin: 38px 0 14px;
 }
 

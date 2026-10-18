@@ -156,12 +156,12 @@ const pageDescription = 'Open-source software to store and manage records about 
   .ownership-heading { display: grid; font-size: clamp(28px, 3.6vw, 46px); gap: 2px; }
   .ownership-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
   .ownership-grid article, .developer-grid article { border-top: 1px solid #c9d0c5; padding-top: 22px; }
-  .ownership-grid h3, .developer-grid h3 { font-size: 21px; }
+  .ownership-grid h3, .developer-grid h3 { font-size: var(--type-subhead); }
   .ownership-grid p, .developer-grid p { font-size: var(--type-body-sm); }
   .ownership-grid a, .developer-grid a { font-size: var(--type-base); }
   .developer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
   .pilot-invitation { display: flex; gap: 32px; align-items: center; justify-content: space-between; }
-  .pilot-invitation h2 { font-size: clamp(28px, 3.4vw, 40px); }
+  .pilot-invitation h2 { font-size: var(--type-title); }
   .pilot-invitation p:not(.eyebrow) { max-width: 660px; margin-bottom: 0; }
   .pilot-invitation .button { flex-shrink: 0; gap: 18px; }
   @media (max-width: 900px) {
