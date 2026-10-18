@@ -24,13 +24,13 @@ const { fieldLabel, value, recipient, issuer } = Astro.props;
 
 <style>
   .signed-answer { min-width: 0; color: var(--registry-blue); background: var(--registry-active); border: 1px solid var(--registry-blue-rule-strong); border-top: 3px solid var(--registry-blue); }
-  .answer-recipient { color: var(--registry-blue); padding: 14px 18px 0; margin: 0; font: 11px/1.5 var(--registry-mono); text-transform: uppercase; }
+  .answer-recipient { color: var(--registry-blue); padding: 14px 18px 0; margin: 0; font: var(--type-2xs)/1.5 var(--registry-mono); text-transform: uppercase; }
   .answer-result { margin: 0; padding: 13px 18px 17px; }
-  .answer-result dt { font-size: 14px; line-height: 1.4; color: var(--registry-body); }
+  .answer-result dt { font-size: var(--type-base); line-height: 1.4; color: var(--registry-body); }
   .answer-result dd { font-size: clamp(28px, 3vw, 36px); font-weight: 700; line-height: 1.2; margin: 6px 0 0; }
   .answer-signature { display: flex; align-items: center; gap: 10px; padding: 11px 18px; border-top: 1px solid #c6d4e7; }
   .answer-signature svg { flex: 0 0 20px; }
   .answer-signature > span { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; }
-  .answer-signature strong { font-size: 12px; line-height: 1.4; }
-  .answer-issuer { font-size: 11px; line-height: 1.4; color: var(--registry-body); }
+  .answer-signature strong { font-size: var(--type-xs); line-height: 1.4; }
+  .answer-issuer { font-size: var(--type-2xs); line-height: 1.4; color: var(--registry-body); }
 </style>

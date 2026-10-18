@@ -50,7 +50,7 @@ const { answers } = Astro.props;
   .answer-card-kicker {
     color: var(--registry-blue);
     font-family: var(--registry-mono);
-    font-size: 12px;
+    font-size: var(--type-xs);
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
@@ -77,14 +77,14 @@ const { answers } = Astro.props;
   .answer-card-domain {
     color: var(--registry-muted);
     font-family: var(--registry-mono);
-    font-size: 12px;
+    font-size: var(--type-xs);
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
   .answer-card-q {
     color: var(--registry-body);
-    font-size: 15px;
+    font-size: var(--type-md);
     margin: 0;
   }
 
@@ -92,7 +92,7 @@ const { answers } = Astro.props;
     align-items: center;
     color: var(--registry-ink);
     display: flex;
-    font-size: 28px;
+    font-size: var(--type-2xl);
     font-weight: 700;
     gap: 12px;
     line-height: 1.12;
@@ -106,7 +106,7 @@ const { answers } = Astro.props;
     color: var(--registry-blue);
     display: inline-flex;
     flex: none;
-    font-size: 18px;
+    font-size: var(--type-lg);
     height: 34px;
     justify-content: center;
     width: 34px;
@@ -122,7 +122,7 @@ const { answers } = Astro.props;
 
   .answer-card-meta li {
     color: var(--registry-body);
-    font-size: 13px;
+    font-size: var(--type-sm);
     padding-left: 18px;
     position: relative;
   }

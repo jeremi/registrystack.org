@@ -97,14 +97,14 @@ const product = products[0];
 <style>
   .record-example { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr); gap: 24px 40px; align-items: start; margin: 0; }
   .stored-records { min-width: 0; background: var(--registry-slate-tint); border: 1px solid var(--registry-slate-rule); padding: clamp(16px, 2vw, 24px); }
-  .record-owner { color: var(--registry-blue); font-size: 13px; font-weight: 700; line-height: 1.5; margin: 0 0 16px; }
-  .record-storage { color: var(--registry-body); font-size: 12px; line-height: 1.6; margin: 16px 0 0; }
+  .record-owner { color: var(--registry-blue); font-size: var(--type-sm); font-weight: 700; line-height: 1.5; margin: 0 0 16px; }
+  .record-storage { color: var(--registry-body); font-size: var(--type-xs); line-height: 1.6; margin: 16px 0 0; }
   .record-lifecycle { display: grid; gap: 22px; margin: 0; padding-left: 26px; }
   .record-lifecycle li { padding-left: 10px; }
   .record-lifecycle li::marker { color: var(--registry-blue); font-family: var(--registry-mono); font-weight: 700; }
   .record-lifecycle h3 { font-size: 21px; margin: 0 0 6px; }
   .record-lifecycle p { margin: 0; }
-  .record-example figcaption { grid-column: 1 / -1; color: var(--registry-muted); font-size: 14px; line-height: 1.5; }
+  .record-example figcaption { grid-column: 1 / -1; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.5; }
   @media (max-width: 700px) {
     .record-example { grid-template-columns: 1fr; }
   }

@@ -101,13 +101,13 @@ const contactHref = `mailto:contact@registrystack.org?subject=${encodeURICompone
 <style>
   .service-options { display: grid; gap: 28px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .service-options article { border: 1px solid var(--registry-rule); border-top: 3px solid var(--registry-blue); padding: clamp(22px, 3vw, 32px); }
-  .option-label { color: var(--registry-blue); font: 12px/1.5 var(--registry-mono); margin: 0 0 16px; }
+  .option-label { color: var(--registry-blue); font: var(--type-xs)/1.5 var(--registry-mono); margin: 0 0 16px; }
   .service-options h3 { font-size: 26px; margin: 0 0 20px; }
   .service-options article > p:last-child { margin-bottom: 0; }
   .starting-fee { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 9px; color: var(--registry-ink); margin: 0; }
-  .starting-fee span { font-size: 15px; }
+  .starting-fee span { font-size: var(--type-md); }
   .starting-fee strong { font-size: 30px; line-height: 1.2; }
-  .fee-basis { color: var(--registry-muted); font-size: 13px; line-height: 1.5; min-height: 40px; margin: 8px 0 18px; }
+  .fee-basis { color: var(--registry-muted); font-size: var(--type-sm); line-height: 1.5; min-height: 40px; margin: 8px 0 18px; }
   .options-next { margin: 24px 0 0; }
   .pilot-brief { background: var(--registry-white); border-top: 3px solid var(--registry-blue); padding: clamp(20px, 3vw, 28px); }
   .pilot-brief h3 { font-size: 26px; }
@@ -116,8 +116,8 @@ const contactHref = `mailto:contact@registrystack.org?subject=${encodeURICompone
   .pilot-brief li::marker { color: var(--registry-stamp); font-family: var(--registry-mono); }
   .pilot-brief li p { margin: 4px 0 0; }
   .inquiry-action { border-top: 1px solid var(--registry-rule); padding-top: 22px; }
-  .inquiry-action > p:first-child { font-size: 15px; line-height: 1.6; }
-  .email-note { font-size: 14px; margin: 16px 0 0; overflow-wrap: anywhere; }
+  .inquiry-action > p:first-child { font-size: var(--type-md); line-height: 1.6; }
+  .email-note { font-size: var(--type-base); margin: 16px 0 0; overflow-wrap: anywhere; }
   .stewardship { border-top: 2px solid var(--registry-blue); padding-top: 22px; }
   .stewardship h3 { font-size: 26px; }
   @media (max-width: 700px) {
