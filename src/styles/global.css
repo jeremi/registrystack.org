@@ -14,7 +14,7 @@
 }
 
 html {
-  background: #ffffff;
+  background: var(--registry-white);
   color: var(--registry-body);
   font-family: var(--registry-font);
   scroll-padding-top: 78px;
@@ -34,7 +34,7 @@ textarea {
 
 ::selection {
   background: var(--registry-blue);
-  color: #ffffff;
+  color: var(--registry-white);
 }
 
 a {
@@ -104,7 +104,7 @@ dd a {
 .brand-mark {
   align-items: center;
   background: var(--registry-blue);
-  color: #ffffff;
+  color: var(--registry-white);
   display: inline-flex;
   font-family: var(--registry-mono);
   font-size: 13px;
@@ -145,13 +145,13 @@ dd a {
 
 .top-nav .nav-emphasis {
   background: var(--registry-blue);
-  color: #ffffff;
+  color: var(--registry-white);
   padding: 0 14px;
 }
 
 .top-nav .nav-emphasis:hover {
   background: var(--registry-ink);
-  color: #ffffff;
+  color: var(--registry-white);
 }
 
 /* The two solution routes fold into a disclosure. Plain <details> keeps the
@@ -196,7 +196,7 @@ dd a {
 }
 
 .nav-group-panel {
-  background: #ffffff;
+  background: var(--registry-white);
   border: 1px solid var(--registry-ink);
   box-shadow: 4px 4px 0 rgba(12, 27, 58, 0.15);
   display: grid;
@@ -387,7 +387,7 @@ p {
 
 .button-primary {
   background: var(--registry-blue);
-  color: #ffffff;
+  color: var(--registry-white);
 }
 
 .button-primary:hover {
@@ -395,7 +395,7 @@ p {
 }
 
 .button-secondary {
-  background: #ffffff;
+  background: var(--registry-white);
   color: var(--registry-blue);
 }
 
@@ -432,7 +432,7 @@ p {
 /* Neighbor marks directly under the hero: borrowed institutional trust before
    any claims are made. Uses the same ink treatment as .partner-logos. */
 .partner-strip {
-  background: #ffffff;
+  background: var(--registry-white);
   border-bottom: 1px solid var(--registry-rule);
 }
 
@@ -572,7 +572,7 @@ p {
 }
 
 .hero-cover h1 {
-  color: #ffffff;
+  color: var(--registry-white);
   font-weight: 800;
   letter-spacing: -0.015em;
 }
@@ -586,7 +586,7 @@ p {
 }
 
 .hero-cover .hero-note a {
-  color: #ffffff;
+  color: var(--registry-white);
   font-weight: 700;
   text-decoration-thickness: 2px;
 }
@@ -594,7 +594,7 @@ p {
 /* The thesis line: the faster/safer/simpler triad, set just under the H1 as
    the page's promise before the longer lead. */
 .hero-thesis {
-  color: #ffffff;
+  color: var(--registry-white);
   font-size: clamp(17px, 1.8vw, 21px);
   font-weight: 600;
   line-height: 1.35;
@@ -608,8 +608,8 @@ p {
 }
 
 .hero-cover .button-primary {
-  background: #ffffff;
-  border-color: #ffffff;
+  background: var(--registry-white);
+  border-color: var(--registry-white);
   color: var(--registry-blue);
 }
 
@@ -620,11 +620,11 @@ p {
 .hero-cover .button-secondary {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.85);
-  color: #ffffff;
+  color: var(--registry-white);
 }
 
 .hero-cover :focus-visible {
-  outline-color: #ffffff;
+  outline-color: var(--registry-white);
 }
 
 .hero-cover .hero-proof-grid article {
@@ -632,7 +632,7 @@ p {
 }
 
 .hero-cover .hero-proof-grid h2 {
-  color: #ffffff;
+  color: var(--registry-white);
 }
 
 .hero-cover .hero-proof-grid p {
@@ -641,7 +641,7 @@ p {
 
 .assurance-band {
   background: var(--registry-blue);
-  color: #ffffff;
+  color: var(--registry-white);
   border-bottom: 1px solid var(--registry-rule);
 }
 
@@ -652,7 +652,7 @@ p {
 }
 
 .assurance-band p {
-  color: #ffffff;
+  color: var(--registry-white);
   font-size: clamp(24px, 3.4vw, 42px);
   font-weight: 700;
   line-height: 1.12;
@@ -718,7 +718,7 @@ code {
 }
 
 .section {
-  background: #ffffff;
+  background: var(--registry-white);
   border-bottom: 1px solid var(--registry-rule);
   scroll-margin-top: 78px;
 }
@@ -726,7 +726,7 @@ code {
 .section-muted {
   /* Half-strength ledger paper, so the quiet sections sit in the same
      family as the heroes instead of a neutral gray. */
-  background: #f6f8f5;
+  background: var(--registry-paper-half);
 }
 
 .section-inner {
@@ -792,7 +792,7 @@ code {
 .ecosystem-grid article,
 .principle-card,
 .implementation-grid article {
-  background: #ffffff;
+  background: var(--registry-white);
   border: 1px solid var(--registry-rule);
   min-width: 0;
   padding: 22px;
@@ -870,7 +870,7 @@ code {
 }
 
 .solution-control-list span {
-  background: #ffffff;
+  background: var(--registry-white);
   border: 1px solid var(--registry-rule);
   color: var(--registry-ink);
   font-size: 15px;
@@ -892,7 +892,7 @@ code {
 }
 
 .solution-product-grid article {
-  background: #ffffff;
+  background: var(--registry-white);
   border: 1px solid var(--registry-rule);
   display: grid;
   gap: 12px;
@@ -915,7 +915,7 @@ code {
 }
 
 .solution-protection-grid li {
-  background: #ffffff;
+  background: var(--registry-white);
   border: 1px solid var(--registry-rule);
   color: var(--registry-body);
   line-height: 1.5;
@@ -938,7 +938,7 @@ code {
 }
 
 .home-solution-card {
-  background: #ffffff;
+  background: var(--registry-white);
   border: 1px solid var(--registry-rule);
   display: grid;
   gap: 16px;
@@ -979,7 +979,7 @@ code {
 }
 
 .home-product-strip article {
-  background: #ffffff;
+  background: var(--registry-white);
   border: 1px solid var(--registry-rule);
   display: grid;
   gap: 12px;
@@ -1246,7 +1246,7 @@ code {
    dividers: a pill label, a large heading, body set on a pale civic-blue
    tint. */
 .claim-band {
-  background: #dbe4f3;
+  background: var(--registry-blue-band);
 }
 
 .claim-band h2 {
@@ -1256,7 +1256,7 @@ code {
 }
 
 .claim-band .section-heading p:not(.eyebrow) {
-  color: #26375c;
+  color: var(--registry-blue-body);
 }
 
 .claim-band a {
@@ -1271,7 +1271,7 @@ code {
 }
 
 .claim-body p {
-  color: #26375c;
+  color: var(--registry-blue-body);
   font-size: 18px;
   margin-bottom: 18px;
 }
@@ -1295,7 +1295,7 @@ code {
 /* Deep ink proof band. */
 .proof-band {
   background: var(--registry-ink-band-deep);
-  color: #ffffff;
+  color: var(--registry-white);
 }
 
 .proof-band .eyebrow {
@@ -1304,7 +1304,7 @@ code {
 
 .proof-band h2,
 .proof-band p {
-  color: #ffffff;
+  color: var(--registry-white);
 }
 
 .proof-band .section-heading p:not(.eyebrow) {
@@ -1312,7 +1312,7 @@ code {
 }
 
 .proof-band a {
-  color: #ffffff;
+  color: var(--registry-white);
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -1333,7 +1333,7 @@ code {
 }
 
 .proof-grid h3 {
-  color: #ffffff;
+  color: var(--registry-white);
   font-size: 18px;
   margin-bottom: 10px;
 }
@@ -1368,7 +1368,7 @@ code {
 }
 
 .proof-steward h3 {
-  color: #ffffff;
+  color: var(--registry-white);
   font-size: 16px;
   margin: 0 0 8px;
 }
@@ -1384,7 +1384,7 @@ code {
 /* The closing call to action mirrors the claim band's divider tint, so the
    two tinted bands bookend the white body of the page. */
 .final-cta {
-  background: #dbe4f3;
+  background: var(--registry-blue-band);
 }
 
 .final-cta h2 {
@@ -1397,7 +1397,7 @@ code {
    opens on the cover and closes on the ledger. */
 .site-footer {
   background: var(--registry-ink-band-deep);
-  color: #ffffff;
+  color: var(--registry-white);
 }
 
 .site-footer-inner {
@@ -1431,7 +1431,7 @@ code {
 }
 
 .footer-brand a:not(.footer-brand-name):hover {
-  color: #ffffff;
+  color: var(--registry-white);
 }
 
 .footer-nav {
@@ -1464,7 +1464,7 @@ code {
 }
 
 .footer-col a:hover {
-  color: #ffffff;
+  color: var(--registry-white);
 }
 
 .site-footer-base {
@@ -1492,7 +1492,7 @@ code {
 }
 
 .site-footer :focus-visible {
-  outline-color: #ffffff;
+  outline-color: var(--registry-white);
 }
 
 @media (max-width: 900px) {
@@ -1697,7 +1697,7 @@ section[id], .section-inner[id] { scroll-margin-top: 80px; }
 }
 
 .blog-feed {
-  background: #ffffff;
+  background: var(--registry-white);
 }
 
 .blog-feed-inner {
@@ -1939,7 +1939,7 @@ section[id], .section-inner[id] { scroll-margin-top: 80px; }
 
 .article-body pre {
   background: var(--registry-ink-band-deep);
-  color: #ffffff;
+  color: var(--registry-white);
   margin: 28px 0 36px;
   max-width: 100%;
   overflow-x: auto;

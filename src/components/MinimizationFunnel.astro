@@ -102,14 +102,14 @@ const answers = [
   .step-heading h3, .gateway-heading h3, .answers-heading h3 { color: var(--registry-ink); font-size: 21px; line-height: 1.3; margin: 5px 0 0; }
   .source-note { color: var(--registry-muted); font-size: 13px; line-height: 1.5; margin: 14px 0 0; }
   .source-connector { color: var(--registry-blue); height: 32px; stroke: currentColor; stroke-width: 1.5; width: 100%; }
-  .gateway-step { background: #fff; border: 1px solid #c4d2e9; border-top: 3px solid var(--registry-blue); padding: clamp(20px, 2.5vw, 28px); }
+  .gateway-step { background: var(--registry-white); border: 1px solid var(--registry-blue-rule); border-top: 3px solid var(--registry-blue); padding: clamp(20px, 2.5vw, 28px); }
   .gateway-heading { align-items: center; display: flex; gap: 14px; }
   .gateway-heading > svg { color: var(--registry-blue); flex: 0 0 32px; height: 32px; stroke: currentColor; stroke-width: 1.5; }
   .gateway-step > p { color: var(--registry-body); font-size: 15px; line-height: 1.6; margin: 18px 0; }
   .permitted-request { border-left: 2px solid var(--registry-blue); padding-left: 13px; }
   .permitted-request p { color: var(--registry-body); font-size: 14px; line-height: 1.5; margin: 4px 0 0; }
   .permitted-request .permission-label { color: var(--registry-blue); font-size: 12px; font-weight: 700; margin: 0; }
-  .refused-request { background: #fbf7f5; border: 1px solid #e2d4ce; border-left: 3px solid var(--registry-stamp); margin-top: 24px; padding: 15px 17px; }
+  .refused-request { background: var(--registry-stamp-tint); border: 1px solid #e2d4ce; border-left: 3px solid var(--registry-stamp); margin-top: 24px; padding: 15px 17px; }
   .request-origin { color: var(--registry-body); font: 11px/1.5 var(--registry-mono); margin: 0; text-transform: uppercase; }
   .refused-request h4 { color: var(--registry-ink); font-size: 14px; font-weight: 500; line-height: 1.5; margin: 6px 0 14px; }
   .refused-status { align-items: center; color: var(--registry-stamp); display: flex; font-size: 14px; font-weight: 700; gap: 7px; line-height: 1.4; margin: 0; }
@@ -122,7 +122,7 @@ const answers = [
   .service-response { display: flex; flex-direction: column; min-width: 0; }
   .service-question { color: var(--registry-ink); font-size: 15px; font-weight: 600; line-height: 1.5; margin: 0 0 12px; }
   .service-response :global(.signed-answer) { margin-top: auto; }
-  .flow-notes { border-top: 1px solid #d7ddd5; display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 24px; padding-top: 16px; }
+  .flow-notes { border-top: 1px solid var(--registry-paper-rule); display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 24px; padding-top: 16px; }
   .flow-notes p { color: var(--registry-muted); font-size: 13px; line-height: 1.5; margin: 0; }
   .flow-notes strong { color: var(--registry-body); font-weight: 600; margin-right: 7px; }
   @media (max-width: 900px) {
