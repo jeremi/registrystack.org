@@ -2,6 +2,7 @@
 @import '@fontsource/public-sans/600.css';
 @import '@fontsource/public-sans/700.css';
 @import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/600.css';
 @import './tokens.css';
 
 :root {
@@ -108,6 +109,7 @@ dd a {
   display: inline-flex;
   font-family: var(--registry-mono);
   font-size: var(--type-sm);
+  font-weight: 600;
   height: 34px;
   justify-content: center;
   width: 34px;
@@ -286,7 +288,7 @@ dd a {
    entry in a register, stamped in red. */
 .reg-no {
   color: var(--registry-stamp);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.08em;
 }
 
@@ -1156,7 +1158,7 @@ code {
   color: var(--registry-blue);
   font-family: var(--registry-mono);
   font-size: var(--type-2xs);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.04em;
   padding: 4px 8px;
   text-transform: uppercase;
@@ -1689,7 +1691,7 @@ section[id], .section-inner[id] { scroll-margin-top: 80px; }
   flex: 0 0 auto;
   font-family: var(--registry-mono);
   font-size: var(--type-xs);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.06em;
   margin-bottom: 4px;
   padding-bottom: 3px;
@@ -1756,7 +1758,7 @@ section[id], .section-inner[id] { scroll-margin-top: 80px; }
 
 .blog-card-kicker span:first-child {
   color: var(--registry-blue);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .blog-card h3 {
@@ -1783,7 +1785,7 @@ section[id], .section-inner[id] { scroll-margin-top: 80px; }
 .blog-card-link {
   font-family: var(--registry-mono);
   font-size: var(--type-xs);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.04em;
   margin: 18px 0 0;
   text-transform: uppercase;
@@ -1934,6 +1936,7 @@ section[id], .section-inner[id] { scroll-margin-top: 80px; }
   color: var(--registry-ink);
   font-family: var(--registry-mono);
   font-size: var(--type-xs);
+  font-weight: 600;
   letter-spacing: 0.02em;
 }
 
