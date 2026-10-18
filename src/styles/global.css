@@ -2,31 +2,10 @@
 @import '@fontsource/public-sans/600.css';
 @import '@fontsource/public-sans/700.css';
 @import '@fontsource/ibm-plex-mono/400.css';
+@import './tokens.css';
 
 :root {
   color-scheme: light;
-  --registry-blue: #173b7a; /* Intentional global override for docs blue #000091. */
-  --registry-blue-dark: #102a56;
-  --registry-ink: #161616;
-  --registry-body: #3a3a3a;
-  --registry-muted: #6a6a6a;
-  --registry-rule: #e5e5e5;
-  --registry-sidebar: #fafafa;
-  --registry-active: #eef3ff;
-  --registry-code-bg: #f3f4f6;
-  /* Civic-print palette: the visual language of official records. Quiet
-     ledger-green paper, ink bands, a stamp red used sparingly for seals and
-     register numbers. */
-  --registry-paper: #eef2ec;
-  --registry-ink-band-deep: #161616;
-  --registry-stamp: #9d2c1d;
-  --registry-brass: #d4af4e;
-  --registry-max: 1120px;
-  --registry-font: 'Public Sans', system-ui, sans-serif;
-  --registry-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  /* One shared timing for the whole interaction layer; reduced motion
-     disables it wholesale below. */
-  --registry-ease: 150ms ease;
 }
 
 * {
