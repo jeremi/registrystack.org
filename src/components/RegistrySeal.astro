@@ -3,6 +3,7 @@
 // outer ring, circular microtext, monogram center. Decorative only; always
 // rendered with aria-hidden by the page that places it. The text ring turns
 // very slowly, and stays still under a reduced-motion preference.
+// The ring text is fitted to its circle (2 x pi x 54 = 339.3 units).
 interface Props {
   size?: number;
 }
@@ -18,7 +19,7 @@ const ringText = 'REGISTRY STACK · SIGNED ANSWERS · OPEN SOURCE · ';
     <g class="seal-text-ring">
       <path id="seal-text-path" d="M 21 75 a 54 54 0 1 1 108 0 a 54 54 0 1 1 -108 0" fill="none" />
       <text class="seal-text">
-        <textPath href="#seal-text-path" startOffset="0">{ringText}</textPath>
+        <textPath href="#seal-text-path" startOffset="0" textLength="339.3" lengthAdjust="spacing">{ringText}</textPath>
       </text>
     </g>
     <circle class="seal-ring seal-ring-inner" cx="75" cy="75" r="36" />
@@ -67,7 +68,7 @@ const ringText = 'REGISTRY STACK · SIGNED ANSWERS · OPEN SOURCE · ';
     fill: var(--registry-stamp);
     font-family: var(--registry-mono);
     font-size: var(--type-2xl);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 2px;
   }
 
