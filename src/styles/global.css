@@ -279,6 +279,7 @@ dd a {
   color: var(--registry-blue);
   font-family: var(--registry-mono);
   font-size: var(--type-xs);
+  font-weight: 600;
   letter-spacing: 0.08em;
   margin: 0 0 14px;
   text-transform: uppercase;
