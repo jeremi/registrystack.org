@@ -200,7 +200,7 @@ dd a {
 .nav-group-panel {
   background: var(--registry-white);
   border: 1px solid var(--registry-ink);
-  box-shadow: 4px 4px 0 rgba(12, 27, 58, 0.15);
+  box-shadow: var(--offset-md);
   display: grid;
   left: 50%;
   min-width: 320px;
@@ -378,7 +378,7 @@ p {
 /* Hover lifts the button off the page with a hard offset shadow, like a
    letterpress block, not a soft app glow. */
 .button:hover {
-  box-shadow: 3px 3px 0 rgba(12, 27, 58, 0.25);
+  box-shadow: var(--offset-sm);
   text-decoration: none;
   transform: translate(-1px, -1px);
 }

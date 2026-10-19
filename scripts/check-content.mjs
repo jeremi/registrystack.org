@@ -241,6 +241,23 @@ if (!existsSync(resolve('public/og-image.png'))) {
   failures.push('public/og-image.png is missing (run npm run build:og)');
 }
 
+// 6. Every shadow is one of the brand's offset tokens: a hard edge with no
+// blur. An inset rule draws an accent underline, not a shadow, so it stays.
+// HeroAnswerCard is unused and waits on the branch cleanup that may remove it.
+const shadowExempt = new Set(['src/components/HeroAnswerCard.astro']);
+for (const relativePath of [
+  'src/styles/global.css',
+  ...listAstroFiles('src/layouts'),
+  ...sweptFiles,
+]) {
+  if (shadowExempt.has(relativePath)) continue;
+  for (const [, value] of readSource(relativePath).matchAll(/box-shadow\s*:\s*([^;}]+)/g)) {
+    const shadow = value.trim();
+    if (shadow === 'none' || shadow.startsWith('inset ') || /^var\(--offset-(sm|md|lg)\)$/.test(shadow)) continue;
+    failures.push(`${relativePath} sets a shadow that is not an offset token: ${shadow}`);
+  }
+}
+
 if (failures.length > 0) {
   console.error(failures.map((failure) => `- ${failure}`).join('\n'));
   process.exit(1);
