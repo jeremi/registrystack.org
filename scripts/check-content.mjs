@@ -258,6 +258,29 @@ for (const relativePath of [
   }
 }
 
+// 7. Public Sans is the brand's one variable file, so every weight is drawn
+// true; weights stay to the brand's set (weight-regular to weight-bold), so a
+// stray value does not slip in now that the font no longer refuses it.
+const globalStyles = readSource('src/styles/global.css');
+if (!globalStyles.includes("@import '@fontsource-variable/public-sans';")) {
+  failures.push('global.css does not load the variable Public Sans');
+}
+if (globalStyles.includes('@fontsource/public-sans/')) {
+  failures.push('global.css still loads static Public Sans files');
+}
+const brandWeights = new Set(['400', '500', '600', '700']);
+for (const relativePath of [
+  'src/styles/global.css',
+  ...listAstroFiles('src/layouts'),
+  ...sweptFiles,
+]) {
+  for (const [, value] of readSource(relativePath).matchAll(/font-weight\s*:\s*([^;}]+)/g)) {
+    if (!brandWeights.has(value.trim())) {
+      failures.push(`${relativePath} sets font-weight ${value.trim()}, outside the brand's 400, 500, 600 and 700`);
+    }
+  }
+}
+
 if (failures.length > 0) {
   console.error(failures.map((failure) => `- ${failure}`).join('\n'));
   process.exit(1);
