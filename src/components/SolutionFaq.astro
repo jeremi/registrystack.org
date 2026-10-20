@@ -1,0 +1,54 @@
+---
+// Questions a reader asks before deciding, at the foot of a solution area
+// page. The answers carry the implementation vocabulary the page itself keeps
+// off, and link to the starter, product or docs page that holds the depth.
+interface Item {
+  q: string;
+  a: string;
+  link?: { href: string; label: string };
+}
+
+interface Props {
+  heading?: string;
+  items: Item[];
+  muted?: boolean;
+}
+
+const { heading = 'Questions before you decide', items, muted = false } = Astro.props;
+---
+<section id="faq" class={muted ? 'section section-muted' : 'section'} aria-labelledby="solution-faq-title">
+  <div class="section-inner">
+    <div class="section-heading compact">
+      <p class="eyebrow">Questions</p>
+      <h2 id="solution-faq-title">{heading}</h2>
+    </div>
+    <div class="faq-list">
+      {items.map((item) => (
+        <details class="faq-item">
+          <summary>{item.q}</summary>
+          <div class="faq-answer">
+            <p>{item.a}</p>
+            {item.link && <p><a class="inline-cta" href={item.link.href}>{item.link.label} <span aria-hidden="true">→</span></a></p>}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-list { display: grid; gap: 12px; margin-top: clamp(20px, 3vw, 28px); max-width: 820px; }
+  .faq-item { background: var(--registry-white); border: 1px solid var(--registry-rule); }
+  .faq-item summary {
+    align-items: center; color: var(--registry-ink); cursor: pointer; display: flex; font-size: var(--type-body);
+    font-weight: 700; gap: 16px; justify-content: space-between; list-style: none; padding: 18px 20px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  /* A register tick that opens into a cross, as on the FAQ page. */
+  .faq-item summary::after { color: var(--registry-blue); content: '+'; font-family: var(--registry-mono); font-size: var(--type-subhead); line-height: 1; transition: transform 0.15s ease; }
+  .faq-item[open] summary::after { transform: rotate(45deg); }
+  .faq-item summary:hover { color: var(--registry-blue); }
+  .faq-answer { border-top: 1px solid var(--registry-rule); display: grid; gap: 12px; padding: 16px 20px 20px; }
+  .faq-answer p { color: var(--registry-body); line-height: 1.6; margin: 0; }
+  @media (prefers-reduced-motion: reduce) { .faq-item summary::after { transition: none; } }
+</style>

@@ -31,7 +31,13 @@ secondary audience.
 - Treat developer and implementer experience as a product design requirement,
   not as the default editorial audience for every public page.
 - Lead with the register a reader keeps: the solution areas and the starters.
-  Products are the second layer and keep their full pages. Within that layer,
+  Products are the second layer and keep their full pages. A solution area
+  page is written for the office that runs that kind of register and has the
+  problem: it opens with the pain and the promise, heads each section with
+  what changes for that office, and keeps implementation vocabulary (record
+  types, access profiles, signed answers, APIs, starters as zips) for its FAQ,
+  the starter pages and the product pages. `scripts/check-content.mjs`
+  enforces the vocabulary rule. Within that layer,
   Base Registry Engine and Evidence Gateway remain the flagship products, with
   Registry Relay in a supporting role and its own product page. Use the full **Base Registry Engine** name in public copy; its abbreviation
   belongs in technical documentation and command names.
@@ -87,9 +93,16 @@ catalogue data lives in `src/data/starters.json`, read through
 made by `registry-starters export-catalogue` in the breg-registry-starters
 repository. The starter zips are assets of the GitHub release named by the tag,
 published with that repository's `scripts/publish-catalogue-release`; the site
-links to them and never stores them, so refreshing the catalogue adds no
-binaries to this repository. `src/upstream/starters.json` records the release
+never stores them, so refreshing the catalogue adds no binaries to this
+repository. Until that release is public, a starter page does not link its zip:
+it asks for a request by email (`contact@registrystack.org`, journey
+`starter-request`), and the content check enforces that. `src/upstream/starters.json` records the release
 tag, the starters revision and the catalogue digest the site was built from.
+A register family may name a `featuredStarter`, the starter its page's example
+is about and the one shown first with a "Start here" tag; the content check
+requires it to be in the family's list. A family without one highlights none. A starter page shows the catalogue's identifiers in
+words (`src/data/starter-words.ts`, covered by `npm test`), with the
+identifiers themselves in "Technical details" disclosures.
 Product names, summaries, and tutorial destinations
 live in `src/data/products.ts`. Product pages live under `/products/` and share
 `src/layouts/Product.astro`.
@@ -128,7 +141,7 @@ npm run dev
 npm run check
 ```
 
-`npm run check` runs content wiring, Astro diagnostics, the production build,
+`npm run check` runs the unit tests, content wiring, Astro diagnostics, the production build,
 links, accessibility, responsive layout, keyboard navigation, data-sharing illustrations,
 and the homepage evaluation journey. The journey check covers no-JavaScript and
 reduced-motion visitors. Existing optional analytics distinguishes outgoing tutorial links and the paid

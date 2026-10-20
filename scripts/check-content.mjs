@@ -235,6 +235,26 @@ for (const { area, file } of solutionPageFiles) {
   else warnings.push(message);
 }
 
+// Solution area pages are written for the person who runs the register, not
+// for a technical evaluator: the implementation vocabulary belongs on the
+// starter and product pages. Each term is matched as a whole word, ignoring
+// case, in the page's visible text and attributes alike.
+const solutionPageVocabulary = [
+  'record type', 'record types', 'access profile', 'access profiles', 'mutation mode', 'create-only',
+  'scopes', 'signed answer', 'signed answers', 'schema', 'schemas', 'API', 'APIs', 'zip', 'toolchain',
+];
+for (const { area, file } of solutionPageFiles) {
+  const source = readSource(file);
+  if (!source) continue;
+  // Only the template body: the frontmatter imports product and area data by name.
+  const body = source.replace(/^---[\s\S]*?---/, '');
+  for (const term of solutionPageVocabulary) {
+    const pattern = new RegExp(`(^|[^A-Za-z-])${term.replace(/[-]/g, '\\-')}(?=$|[^A-Za-z-])`, 'im');
+    if (pattern.test(body)) failures.push(`solution page ${file} uses the term "${term}"; keep implementation vocabulary on starter and product pages`);
+  }
+  if (source.includes('SolutionDevelopers')) failures.push(`solution page ${file} renders a developer section; developer next steps live in its FAQ`);
+}
+
 // The starters catalogue: every starter belongs to exactly one register
 // family, every id a family lists is in the catalogue, every download points
 // at the site or the starters repository's GitHub releases, and the sync
@@ -243,10 +263,12 @@ const startersCatalogue = JSON.parse(readSource('src/data/starters.json') || '{"
 const catalogueStarters = startersCatalogue.starters ?? [];
 const catalogueIds = new Set(catalogueStarters.map((starter) => starter.id));
 const familyStarterIds = [...solutionsSource.matchAll(
-  /key: '([^']+)',[\s\S]*?starters: \[([^\]]*)\]/g,
-)].map(([, key, list]) => ({ key, ids: [...list.matchAll(/'([^']+)'/g)].map(([, id]) => id) }));
+  /key: '([^']+)',[\s\S]*?starters: \[([^\]]*)\],(?:\s*featuredStarter: '([^']+)',)?/g,
+)].map(([, key, list, featured]) => ({ key, ids: [...list.matchAll(/'([^']+)'/g)].map(([, id]) => id), featured }));
 const familiesByStarter = new Map();
-for (const { key, ids } of familyStarterIds) {
+for (const { key, ids, featured } of familyStarterIds) {
+  // A family that names a starter to open first names one from its own list.
+  if (featured && !ids.includes(featured)) failures.push(`solution area ${key} features starter ${featured}, which is not in its starters list`);
   for (const id of ids) {
     if (!catalogueIds.has(id)) failures.push(`solution area ${key} lists starter ${id}, which is not in src/data/starters.json`);
     familiesByStarter.set(id, [...(familiesByStarter.get(id) ?? []), key]);
@@ -265,6 +287,11 @@ for (const starter of catalogueStarters) {
     failures.push(`starter ${starter.id} download ${downloadPath || '(none)'} is neither /downloads/starters/${starter.id}-starter.zip nor a breg-registry-starters release asset`);
   }
 }
+// Until the catalogue is published for download, a starter page asks for a
+// request by email and never links the zip.
+const starterPageSource = readSource('src/pages/starters/[id].astro');
+if (starterPageSource.includes('href={starter.download.path}')) failures.push('starter page links the zip; starters are sent on request');
+if (!starterPageSource.includes('data-journey="starter-request"')) failures.push('starter page is missing the starter request action');
 const startersUpstream = JSON.parse(readSource('src/upstream/starters.json') || '{}');
 if (startersUpstream.starterCount !== catalogueStarters.length) {
   failures.push(`src/upstream/starters.json starterCount ${startersUpstream.starterCount} does not match the ${catalogueStarters.length} starters in src/data/starters.json`);

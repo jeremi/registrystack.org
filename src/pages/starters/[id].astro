@@ -1,14 +1,18 @@
 ---
 // One page per starter. Every fact on the page comes from the catalogue
 // entry in src/data/starters.json; the prose only explains what it means.
+// The page reads the way Registry Studio shows a project: record types,
+// fields and roles in words, with the identifiers in technical details.
 import Base from '../../layouts/Base.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import StarterIncludes from '../../components/StarterIncludes.astro';
+import StarterRecordType from '../../components/StarterRecordType.astro';
+import StarterTechnical from '../../components/StarterTechnical.astro';
 import { products } from '../../data/products';
-import { areaForStarter, starters, startersSource, type Starter } from '../../data/starters';
-import startersUpstream from '../../upstream/starters.json';
+import { areaForStarter, featuredStarterForArea, starters, startersSource, type Starter } from '../../data/starters';
+import { words } from '../../data/starter-words';
 
 export function getStaticPaths() {
   return starters.map((starter) => ({ params: { id: starter.id }, props: { starter } }));
@@ -21,20 +25,25 @@ const { starter } = Astro.props;
 
 const area = areaForStarter(starter.id);
 if (!area) throw new Error(`starter ${starter.id} is not assigned to a register family in solutions.ts`);
+const featured = featuredStarterForArea(area)?.id === starter.id;
 const baseRegistry = products.find((p) => p.key === 'base-registry')!;
-const startersRepository = startersUpstream.source.repository;
+
+// A starter is sent on request, free of charge, until the catalogue is
+// published for download. The request asks for the register the office
+// keeps, which is also how we learn what a starter lacks.
+const requestFields = ['Organization', 'Your role', 'The register you keep', 'What this starter should cover that it does not'];
+const requestHref = `mailto:contact@registrystack.org?subject=${encodeURIComponent(`Starter request: ${starter.title}`)}&body=${encodeURIComponent(
+  [`Starter: ${starter.id}`, '', ...requestFields.map((field) => `${field}: `)].join('\n'),
+)}`;
 
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
+const list = (items: string[]) => items.join(', ');
 const recordTypeLabel = (id: string) => starter.recordTypes.find((type) => type.id === id)?.label ?? id;
 const actionLabel = (id: string) => starter.actions.find((action) => action.id === id)?.label ?? id;
 const sizeKb = Math.round(starter.download.bytes / 1024);
 const zipName = starter.download.path.split('/').pop();
 const firstSentence = starter.task.split(/(?<=[.!?])\s+(?=[A-Z])/)[0];
-const sources = starter.sourceUrls.map((href) => {
-  const url = new URL(href);
-  const rest = `${url.pathname}${url.search}`;
-  return { href, host: url.hostname, rest: rest === '/' ? '' : rest };
-});
+const requiredFields = starter.recordTypes.some((type) => type.fields.some((field) => field.required));
 
 const pageTitle = `${starter.title} starter | Registry Stack`;
 ---
@@ -45,13 +54,17 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     <section class="hero" aria-labelledby="starter-title">
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="eyebrow"><a href={area.slug}>{area.name}</a></p>
+          <p class="eyebrow">
+            <a href={area.slug}>{area.name}</a>
+            {featured && <span class="starter-featured">Start here</span>}
+          </p>
           <h1 id="starter-title">{starter.title}</h1>
           <p class="hero-lead">{starter.task}</p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href={starter.download.path}>Download the starter (zip, {sizeKb} KB)</a>
-            <a class="button button-secondary" href="#whats-inside">What is included</a>
+            <a class="button button-primary" href={requestHref} data-journey="starter-request">Request the starter</a>
+            <a class="button button-secondary" href="#whats-inside">What you receive</a>
           </div>
+          <p class="hero-note">Free of charge, sent by email on request. A starter is a starting point: your team adds what its register needs, and the request is where you tell us what is missing.</p>
           {starter.summary !== starter.task && <p class="hero-note">{starter.summary}</p>}
         </div>
       </div>
@@ -60,30 +73,14 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     <section class="section" aria-labelledby="records-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <p class="eyebrow">{plural(starter.counts.recordTypes, 'record type', 'record types')}</p>
-          <h2 id="records-title">What this starter records</h2>
-          <p>Each record type is one kind of entry in the register. Create-only records are written once and not changed; mutable records can be changed through the actions below.</p>
+          <p class="eyebrow">{plural(starter.counts.recordTypes, 'kind of record', 'kinds of record')}</p>
+          <h2 id="records-title">What it holds</h2>
+          <p>Each box is one kind of record the register keeps, with the fields an entry has. Some records are added once and never changed; later events, such as a renewal or a correction, are added as records of their own.</p>
         </div>
-        <ul class="starter-records">
-          {starter.recordTypes.map((type) => (
-            <li>
-              <h3>{type.label}</h3>
-              <p>{type.description}</p>
-              <p class="starter-tags">
-                <span>{type.mutationMode}</span>
-                {type.classification && <span>{type.classification}</span>}
-                <span>{plural(type.fieldCount, 'field', 'fields')}</span>
-              </p>
-              {type.references.length > 0 && (
-                <ul class="starter-links">
-                  {type.references.map((reference) => (
-                    <li><code>{reference.field}</code> links to {recordTypeLabel(reference.target)}</li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
+        <div class="starter-records">
+          {starter.recordTypes.map((type) => <StarterRecordType type={type} recordTypeLabel={recordTypeLabel} />)}
+        </div>
+        {requiredFields && <p class="starter-legend"><span aria-hidden="true">*</span> A field every entry must have.</p>}
       </div>
     </section>
 
@@ -92,7 +89,7 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
         <div class="section-heading compact">
           <p class="eyebrow">{plural(starter.counts.actions, 'action', 'actions')}</p>
           <h2 id="actions-title">What staff can do</h2>
-          <p>An action is a defined change that staff make to the register.</p>
+          <p>Each action is one change staff make to the register. The register keeps who made it and when.</p>
         </div>
         <dl class="starter-actions">
           {starter.actions.map((action) => (
@@ -108,36 +105,29 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     <section class="section" aria-labelledby="access-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <p class="eyebrow">{plural(starter.accessProfiles.length, 'access profile', 'access profiles')}</p>
+          <p class="eyebrow">{plural(starter.accessProfiles.length, 'role', 'roles')}</p>
           <h2 id="access-title">Who can do what</h2>
-          <p>An access profile groups the actions one role may run and the record types it may read. Each profile requires the scopes and purposes listed with it. Your team decides who holds each profile.</p>
+          <p>The starter sets out roles: what each may record and which records it may see. Your team decides which people and systems hold each role.</p>
         </div>
-        <div class="starter-table-wrap" role="region" aria-labelledby="access-title" tabindex="0">
-          <table class="starter-access">
-            <thead>
-              <tr>
-                <th scope="col">Profile</th>
-                <th scope="col">Actions it may run</th>
-                <th scope="col">Record types it reads</th>
-                <th scope="col">Required purposes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {starter.accessProfiles.map((profile) => (
-                <tr>
-                  <th scope="row">
-                    {profile.id}
-                    {profile.requiredScopes.length > 0 && (
-                      <span class="starter-scopes">{profile.requiredScopes.join(', ')}</span>
-                    )}
-                  </th>
-                  <td>{profile.actions.length > 0 ? profile.actions.map(actionLabel).join(', ') : 'Read only'}</td>
-                  <td>{profile.recordTypes.length > 0 ? profile.recordTypes.map(recordTypeLabel).join(', ') : 'None'}</td>
-                  <td class="starter-mono">{profile.requiredPurposes.length > 0 ? profile.requiredPurposes.join(', ') : 'None'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div class="starter-roles">
+          {starter.accessProfiles.map((profile) => (
+            <article class="starter-role">
+              <h3>{words(profile.id)}</h3>
+              <dl>
+                <dt>Can record</dt>
+                <dd>{profile.actions.length > 0 ? list(profile.actions.map(actionLabel)) : 'Nothing. This role only looks things up.'}</dd>
+                <dt>Can see</dt>
+                <dd>{profile.recordTypes.length > 0 ? list(profile.recordTypes.map(recordTypeLabel)) : 'No records'}</dd>
+              </dl>
+              <StarterTechnical
+                items={[
+                  { term: 'Access profile', value: profile.id },
+                  { term: 'Required scopes', value: profile.requiredScopes.length > 0 ? list(profile.requiredScopes) : 'none' },
+                  { term: 'Required purposes', value: profile.requiredPurposes.length > 0 ? list(profile.requiredPurposes) : 'none' },
+                ]}
+              />
+            </article>
+          ))}
         </div>
       </div>
     </section>
@@ -145,58 +135,39 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     <section class="section section-muted" id="whats-inside" aria-labelledby="inside-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <p class="eyebrow">In the download</p>
-          <h2 id="inside-title">What is included</h2>
-          <p>The zip is a source template. A developer generates the registry project from it with the {baseRegistry.name} command-line tools; nothing in it runs on its own.</p>
+          <p class="eyebrow">Free of charge</p>
+          <h2 id="inside-title">What you receive</h2>
+          <p>One zip file with the configuration above, sent by email when you request it. A developer turns it into a registry project with the {baseRegistry.name} command-line tools; nothing in it runs on its own.</p>
         </div>
         <div class="starter-inside">
           <div>
             <h3>Parts of this starter</h3>
-            <p class="starter-tags">
-              <span>{plural(starter.counts.recordTypes, 'record type', 'record types')}</span>
-              <span>{plural(starter.counts.actions, 'action', 'actions')}</span>
-              <span>{plural(starter.counts.values, 'value', 'values')}</span>
-            </p>
             <StarterIncludes includes={starter.includes} variant="list" />
           </div>
           <div>
-            <h3>Values your team fills in</h3>
-            <p>These are the fields a team fills in for its own jurisdiction. The download ships with synthetic example values.</p>
-            <ul class="starter-mono-list">
-              {starter.valuesKeys.map((key) => <li>{key}</li>)}
+            <h3>Details your team fills in</h3>
+            <p>The starter ships with example values for these; your team replaces them with its own.</p>
+            <ul class="starter-values">
+              {starter.valuesKeys.map((key) => <li>{words(key)}</li>)}
             </ul>
             <h3>Files in the zip</h3>
             <p>A README that says what the starter records and what it leaves to other systems, a description of the record model, the values file, the project files, and the Apache 2.0 licence, notice, and PublicSchema CC BY 4.0 licence files.</p>
-            <p>The zip is published with the releases of the <a href={`${startersRepository}/releases`} rel="noopener">starters repository on GitHub</a>. Compare its SHA-256 checksum with the one below to confirm you have the same file.</p>
-            <dl class="starter-facts">
-              <dt>File</dt>
-              <dd class="starter-mono">{zipName}</dd>
-              <dt>SHA-256</dt>
-              <dd class="starter-mono">{starter.download.sha256}</dd>
-              <dt>Exported with</dt>
-              <dd class="starter-mono">{baseRegistry.name} {startersSource.breg.version}, PublicSchema {startersSource.publicschema.version}</dd>
-            </dl>
+            <h3>Not exactly your register?</h3>
+            <p>No starter matches a register as it is kept. If yours needs a field, a kind of record or a role this one lacks, your team adds it after generating the project. Say what is missing when you request the starter; it is how the catalogue gets better.</p>
+            <p class="starter-request"><a class="button button-primary" href={requestHref} data-journey="starter-request">Request the starter</a></p>
+            <div class="starter-inside-technical">
+              <StarterTechnical
+                items={[
+                  { term: 'File', value: `${zipName} (${sizeKb} KB), checksum confirms the file you receive` },
+                  { term: 'SHA-256', value: starter.download.sha256 },
+                  { term: 'Exported with', value: `${baseRegistry.name} ${startersSource.breg.version}, PublicSchema ${startersSource.publicschema.version}` },
+                  { term: 'Values keys', value: list(starter.valuesKeys) },
+                ]}
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="sources-title">
-      <div class="section-inner">
-        <div class="section-heading compact">
-          <p class="eyebrow">Sources</p>
-          <h2 id="sources-title">Modelled on</h2>
-          <p>The starter was modelled on {starter.sourceUrls.length === 1 ? 'this public register' : 'these public registers'}. Using them as a model does not mean their operators use or endorse the starter.</p>
-        </div>
-        <ul class="starter-sources">
-          {sources.map((source) => (
-            <li>
-              <a href={source.href} rel="noopener">{source.host}</a>
-              {source.rest && <span class="starter-source-path">{source.rest}</span>}
-            </li>
-          ))}
-        </ul>
-        <p class="starter-attribution">PublicSchema registry catalogue {starter.catalogueRows.length === 1 ? 'row' : 'rows'} <span class="starter-mono">{starter.catalogueRows.join(', ')}</span>. The record definitions draw on <a href={startersSource.publicschema.repository} rel="noopener">PublicSchema</a> {startersSource.publicschema.version}, published under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">Creative Commons Attribution 4.0 licence</a> (CC BY 4.0). The starter itself is published under the Apache 2.0 licence.</p>
+        <p class="starter-attribution">The record definitions draw on <a href={startersSource.publicschema.repository} rel="noopener">PublicSchema</a> {startersSource.publicschema.version}, published under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">Creative Commons Attribution 4.0 licence</a>. The starter itself is published under the Apache 2.0 licence.</p>
       </div>
     </section>
 
@@ -225,6 +196,19 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     text-decoration: underline;
   }
 
+  .starter-featured {
+    background: var(--registry-brass);
+    color: var(--registry-ink);
+    font-family: var(--registry-mono);
+    font-size: var(--type-2xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    margin-left: 10px;
+    padding: 3px 7px;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
   .starter-page h2 {
     font-size: clamp(28px, 3.7vw, 42px);
   }
@@ -238,65 +222,21 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     font-size: var(--type-body);
   }
 
-  .starter-mono,
-  .starter-scopes,
-  .starter-mono-list,
-  .starter-source-path,
-  .starter-records code {
-    font-family: var(--registry-mono);
-    overflow-wrap: anywhere;
-  }
-
   .starter-records {
     display: grid;
     gap: 16px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    list-style: none;
-    margin: 0;
-    padding: 0;
   }
 
-  .starter-records > li {
-    background: var(--registry-white);
-    border: 1px solid var(--registry-rule);
-    padding: 22px;
-  }
-
-  .starter-records p {
-    margin-bottom: 12px;
-  }
-
-  .starter-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .starter-tags span {
-    border: 1px solid var(--registry-rule);
-    color: var(--registry-ink);
-    font-family: var(--registry-mono);
-    font-size: var(--type-2xs);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    padding: 3px 7px;
-    text-transform: uppercase;
-  }
-
-  .starter-links {
-    border-top: 1px solid var(--registry-rule);
-    list-style: none;
-    margin: 0;
-    padding: 10px 0 0;
-  }
-
-  .starter-links li {
-    font-size: var(--type-md);
-    margin-top: 4px;
-  }
-
-  .starter-records code {
+  .starter-legend {
+    color: var(--registry-muted);
     font-size: var(--type-sm);
+    margin: 14px 0 0;
+  }
+
+  .starter-legend span {
+    color: var(--registry-stamp);
+    font-weight: 700;
   }
 
   .starter-actions {
@@ -322,56 +262,48 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     margin: 0;
   }
 
-  .starter-table-wrap {
+  .starter-roles {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .starter-role {
+    background: var(--registry-white);
     border: 1px solid var(--registry-rule);
-    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
   }
 
-  .starter-access {
-    border-collapse: collapse;
-    font-size: var(--type-md);
-    min-width: 640px;
-    width: 100%;
+  .starter-role h3 {
+    margin: 0;
+    padding: 18px 18px 10px;
   }
 
-  .starter-access th,
-  .starter-access td {
-    border-bottom: 1px solid var(--registry-rule);
-    padding: 12px 14px;
-    text-align: left;
-    vertical-align: top;
+  .starter-role dl {
+    margin: 0;
+    padding: 0 18px 14px;
   }
 
-  .starter-access tbody tr:last-child > * {
-    border-bottom: 0;
-  }
-
-  .starter-access thead th {
-    background: var(--registry-paper-half);
+  .starter-role dt {
     color: var(--registry-muted);
-    font-family: var(--registry-mono);
     font-size: var(--type-xs);
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
+    margin-top: 8px;
     text-transform: uppercase;
   }
 
-  .starter-access tbody th {
-    color: var(--registry-ink);
-    font-family: var(--registry-mono);
-    font-weight: 600;
+  .starter-role dd {
+    color: var(--registry-body);
+    font-size: var(--type-md);
+    margin: 2px 0 0;
   }
 
-  .starter-scopes {
-    color: var(--registry-muted);
-    display: block;
-    font-size: var(--type-xs);
-    font-weight: 400;
-    margin-top: 4px;
-  }
-
-  .starter-access .starter-mono {
-    font-size: var(--type-sm);
+  .starter-role :global(.starter-technical) {
+    border-top: 1px solid var(--registry-rule);
+    margin-top: auto;
   }
 
   .starter-inside {
@@ -384,72 +316,35 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     margin-top: 28px;
   }
 
-  .starter-inside .starter-tags {
-    margin-bottom: 16px;
-  }
-
-  .starter-mono-list {
+  .starter-values {
     border-left: 3px solid var(--registry-blue);
-    font-size: var(--type-sm);
+    font-size: var(--type-md);
     list-style: none;
     margin: 0;
     padding: 2px 0 2px 18px;
   }
 
-  .starter-mono-list li + li {
+  .starter-values li + li {
     margin-top: 4px;
   }
 
-  .starter-facts {
-    margin: 0;
+  .starter-inside-technical {
+    background: var(--registry-white);
+    border: 1px solid var(--registry-rule);
+    margin-top: 16px;
   }
 
-  .starter-facts dt {
-    color: var(--registry-muted);
-    font-family: var(--registry-mono);
-    font-size: var(--type-xs);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    margin-top: 12px;
-    text-transform: uppercase;
-  }
-
-  .starter-facts dd {
-    font-size: var(--type-sm);
-    margin: 4px 0 0;
-  }
-
-  .starter-sources {
-    list-style: none;
-    margin: 0 0 24px;
-    padding: 0;
-  }
-
-  .starter-sources li {
-    border-bottom: 1px solid var(--registry-rule);
-    padding: 10px 0;
-  }
-
-  .starter-sources li:first-child {
-    border-top: 1px solid var(--registry-rule);
-  }
-
-  .starter-sources a {
-    font-weight: 700;
-    text-decoration: underline;
-  }
-
-  .starter-source-path {
-    color: var(--registry-muted);
-    display: block;
-    font-size: var(--type-xs);
-    margin-top: 2px;
+  .starter-request {
+    margin: 18px 0 0;
   }
 
   .starter-attribution {
+    border-top: 1px solid var(--registry-rule);
     color: var(--registry-body);
     font-size: var(--type-md);
+    margin: 40px 0 0;
     max-width: 760px;
+    padding-top: 20px;
   }
 
   .starter-next {
@@ -460,9 +355,16 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     padding: 0;
   }
 
+  @media (max-width: 900px) {
+    .starter-roles {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   @media (max-width: 700px) {
     .starter-records,
     .starter-actions,
+    .starter-roles,
     .starter-inside {
       grid-template-columns: 1fr;
       gap: 24px;

@@ -1,23 +1,33 @@
 ---
 // One starter in the catalogue: its title, what it records, and its size.
+// `featured` marks the starter its family suggests first; `eyebrow` names
+// the family when the card sits outside its family's section.
 import type { Starter } from '../data/starters';
 import StarterIncludes from './StarterIncludes.astro';
 
 interface Props {
   starter: Starter;
+  featured?: boolean;
+  eyebrow?: string;
 }
-const { starter } = Astro.props;
+const { starter, featured = false, eyebrow } = Astro.props;
 
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
 // The first sentence of the task keeps the catalogue scannable; the starter's
 // own page carries the full task.
 const firstSentence = starter.task.split(/(?<=[.!?])\s+(?=[A-Z])/)[0];
 ---
-<article class="starter-card">
+<article class:list={['starter-card', { 'is-featured': featured }]}>
+  {(eyebrow || featured) && (
+    <p class="starter-card-eyebrow">
+      {eyebrow && <span>{eyebrow}</span>}
+      {featured && <span class="starter-card-featured">Start here</span>}
+    </p>
+  )}
   <h3><a href={`/starters/${starter.id}/`}>{starter.title}</a></h3>
   <p>{firstSentence}</p>
   <p class="starter-card-counts">
-    {plural(starter.counts.recordTypes, 'record type', 'record types')}
+    {plural(starter.counts.recordTypes, 'kind of record', 'kinds of record')}
     <span aria-hidden="true"> · </span>
     {plural(starter.counts.actions, 'action', 'actions')}
   </p>
@@ -33,9 +43,34 @@ const firstSentence = starter.task.split(/(?<=[.!?])\s+(?=[A-Z])/)[0];
     padding: 22px;
   }
 
+  .starter-card.is-featured {
+    border-color: var(--registry-blue-rule-strong);
+    border-top: 3px solid var(--registry-brass);
+  }
+
   .starter-card h3 {
     font-size: var(--type-body);
     margin-bottom: 8px;
+  }
+
+  .starter-card .starter-card-eyebrow {
+    color: var(--registry-muted);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: var(--type-xs);
+    gap: 6px 10px;
+    margin-bottom: 10px;
+  }
+
+  .starter-card-featured {
+    background: var(--registry-brass);
+    color: var(--registry-ink);
+    font-family: var(--registry-mono);
+    font-size: var(--type-2xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 2px 6px;
+    text-transform: uppercase;
   }
 
   .starter-card p {

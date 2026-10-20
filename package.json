@@ -11,6 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "test": "node --test",
     "build:og": "node scripts/build-og.mjs",
     "sync:starters": "node scripts/sync-starters.mjs",
     "check:content": "node scripts/check-content.mjs",
@@ -19,7 +20,7 @@
     "check:visual": "node scripts/check-visual.mjs",
     "check:funnel": "node scripts/check-funnel.mjs",
     "check:hero": "node scripts/check-hero.mjs",
-    "check": "npm run check:content && astro check && npm run build && npm run check:links && npm run check:a11y && npm run check:visual && npm run check:funnel && npm run check:hero"
+    "check": "npm test && npm run check:content && astro check && npm run build && npm run check:links && npm run check:a11y && npm run check:visual && npm run check:funnel && npm run check:hero"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",

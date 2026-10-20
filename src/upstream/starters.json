@@ -1,13 +1,13 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "source": {
     "repository": "https://github.com/registrystack/breg-registry-starters",
     "release": "catalogue-2026-10-20",
     "revision": "cee99d7579f76ff16f2660b92ba93e031ca5129c",
-    "dirty": false
+    "dirty": true
   },
   "exportCommand": "registry-starters export-catalogue",
-  "catalogueSha256": "475495cb0e06f76f95fc92250b83f074bc491be8da5c9af523bfbaf8b55946a5",
+  "catalogueSha256": "0fe195a10940eb5d031787c0078682596158bf96e8802f7ada106c770aeda2e0",
   "starterCount": 84,
   "syncedAt": "2026-10-20"
 }

@@ -3,7 +3,7 @@ import Solution from '../../layouts/Solution.astro';
 import SolutionExample from '../../components/SolutionExample.astro';
 import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
-import SolutionDevelopers from '../../components/SolutionDevelopers.astro';
+import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas } from '../../data/solutions';
 const area = solutionAreas.find((a) => a.key === 'licensing')!;
@@ -11,52 +11,81 @@ const area = solutionAreas.find((a) => a.key === 'licensing')!;
 <Solution
   area={area}
   heading="Know who holds each licence, on what terms, and what changed."
-  description="Licensing authorities keep registers of driving entitlements, professional licences, premises licences, and firearms permissions. The authority decides who gets a licence; the register records that decision, its terms, and each later renewal, suspension, or revocation. Employers, inspectors, and other services then need to check a licence without reading the licensing file."
+  description="Employers, inspectors, and other services ask your licensing office whether a licence is valid, and every correction waits for someone to find the file. Registry Stack gives your office one register of the licences it has issued, lets other services check a licence without seeing the file, and puts the changes an officer has to decide in one queue."
 >
   <SolutionExample
     eyebrow="One example: a licence scope correction"
-    heading="Correct a licence with one officer accountable from request to decision."
-    intro="A professional register receives a request to correct the scope of a licence. The registry team wants each correction reviewed by an officer before it takes effect, a first response within 48 hours, and a clear record of who decided."
+    heading="A correction with one officer accountable from request to decision."
+    intro="A professional register receives a request to correct the scope of a licence. The office wants an officer to review each correction before it takes effect, a first response within 48 hours, and a clear record of who decided."
     items={[
       { term: 'Who asks', body: 'The licence holder, or a service that spotted the wrong scope, sends a correction request to the register.' },
-      { term: 'What the team wants', body: 'One officer holds the request, the 48-hour response clock is visible to the team, and nothing changes in the register until the officer approves.' },
-      { term: 'What happens', body: 'The request reaches the licensing team’s inbox in Casework. An officer takes it, asks the holder for a missing document if needed, and approves it. The officer then applies the correction in the register under their own account.' },
-      { term: 'What stays with the institution', body: 'The licence record, its rules, and its history stay in the register, which keeps the earlier scope and records who changed it.' },
+      { term: 'What the office wants', body: 'One officer holds the request, the 48-hour clock is visible to the team, and nothing changes in the register until that officer approves.' },
+      { term: 'What happens', body: 'The request lands in the licensing team’s queue. An officer takes it, asks the holder for a missing document if needed, and approves it. The officer then applies the correction in the register under their own name.' },
+      { term: 'What stays with your office', body: 'The licence, its terms, and its history stay in your register, which keeps the earlier scope and shows who changed it.' },
     ]}
     link={{ href: '/products/casework/#product-example', label: 'See the correction step by step' }}
   />
-  <SolutionStarters
-    area={area}
-    heading="Start from a licence register like yours."
-    intro="Each starter is a starting configuration for a common licence register. It records a licence after the authority has issued it; your team adapts the records and rules to its own licensing law."
-  />
-  <section class="section section-muted" aria-labelledby="licensing-control-title">
+  <section class="section" aria-labelledby="licensing-change-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">What you keep control of</p>
-        <h2 id="licensing-control-title">The licence, who may act on it, and its history.</h2>
+        <p class="eyebrow">What changes for your office</p>
+        <h2 id="licensing-change-title">Fewer calls about the file, and a register that explains itself.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>The licence and its terms</h3><p>Decide what a licence record holds: the holder, the category or scope, and the term it runs for. In the professional licensing starter, a renewal, a suspension, or a revocation is added as its own entry, so an earlier term is never rewritten.</p></article>
-        <article><h3>Who may issue, suspend, or read</h3><p>Give each role its own permission and purpose. An issuing officer records a licence, a regulatory officer records a suspension, and a reader looks up a licence for licence administration. The licensing starters mark their records restricted.</p></article>
-        <article><h3>The history of each licence</h3><p>Each change is kept with who made it and when. When a licence is suspended and the suspension is later lifted, the register shows both decisions in order.</p></article>
+        <article><h3>Other services stop asking for the file</h3><p>An employer or inspector asks whether a licence is active for a category and gets that answer, with your register’s name on it. They do not see the holder’s address, the complaint history, or anything else in the file.</p></article>
+        <article><h3>A suspension never overwrites the licence it suspends</h3><p>Each renewal, suspension, or revocation is added as its own entry, with who recorded it and when. When a suspension is later lifted, the register shows both decisions in order, so nobody reconstructs the history from emails.</p></article>
+        <article><h3>Every correction has one owner and a due date</h3><p>Correction requests and disputes go into one queue. One officer holds each item, the response clock is visible to the whole team, and the register does not change until that officer says so.</p></article>
       </div>
     </div>
   </section>
+  <SolutionStarters
+    area={area}
+    heading="Start from a licence register like yours."
+    intro="A starter sets out what a register of this kind holds and who may change it, for one common kind of licence. Your team takes the closest one and adapts it to its own licensing law."
+  />
   <SolutionFit
     area={area}
     heading="Keep deciding licences where you decide them today."
     jobs={{
-      'base-registry': 'Stores the licence register: holders, licences, terms, and the decisions recorded against them, with your rules for who may record each one.',
-      'evidence-gateway': 'Answers a defined question, such as whether a licence is active for a category, with a signed answer an employer or inspector can verify.',
-      casework: 'Gives the officers who review corrections and disputes one inbox, with a due date for each item and a record of who decided.',
+      'base-registry': 'Holds the register: who holds each licence, on what terms, and every later decision, under your rules for who may record what.',
+      'evidence-gateway': 'Answers an employer’s or inspector’s question about a licence, and nothing more.',
+      casework: 'Gives the officers who handle corrections and disputes one queue, with a due date on each item and a record of who decided.',
     }}
     extra={[
-      { term: 'Your licensing process keeps deciding', body: 'Applications, fees, and the licensing decision stay in the systems that handle them today. The starters record a licence once it is issued; they do not take applications or decide who qualifies.' },
+      { term: 'Your licensing process keeps deciding', body: 'Applications, fees, and the decision to grant a licence stay in the systems that handle them today. The register records a licence once it is issued; it does not take applications or decide who qualifies.' },
     ]}
+    muted
   >
-    <p>Each product runs on its own. Start with the register, and add the others when a service needs to check a licence or a correction needs an officer.</p>
+    <p>Each product runs on its own. Most offices start with the register, and add the others when a service needs to check a licence or a correction needs an officer.</p>
   </SolutionFit>
-  <SolutionDevelopers area={area} muted />
+  <SolutionFaq
+    items={[
+      {
+        q: 'Does this replace our licensing system?',
+        a: 'No. It holds the register of licences your office has issued and serves questions about them. The system that takes applications, collects fees, and issues the licence stays where it is and records the result in the register.',
+        link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
+      },
+      {
+        q: 'Can an employer check a licence without an account on our system?',
+        a: 'The employer’s service asks your register a question you have agreed to answer, such as whether a licence is active for a category, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
+        link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
+      },
+      {
+        q: 'Who can see a licence record?',
+        a: 'Your office decides, role by role: who may record a licence, who may record a suspension, who may look one up, and for what reason. Every look-up and every change is kept with who did it and when.',
+        link: { href: '/security/', label: 'Who is responsible for what' },
+      },
+      {
+        q: 'What is a starter, exactly?',
+        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
+        link: { href: '/starters/', label: 'Browse the starters' },
+      },
+      {
+        q: 'Where does our technical team start?',
+        a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
+        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
+      },
+    ]}
+  />
   <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
 </Solution>

@@ -1,0 +1,202 @@
+---
+// One kind of record a starter holds, drawn the way Registry Studio draws a
+// record type: its name, how sensitive it is, how it changes, and each field
+// in words with its type. The identifiers sit in a technical details
+// disclosure so the page stays readable without them.
+import type { StarterRecordType } from '../data/starters';
+import { classificationWords, fieldTypeWords, mutationWords, words } from '../data/starter-words';
+import StarterTechnical from './StarterTechnical.astro';
+
+interface Props {
+  type: StarterRecordType;
+  // The label of a record type, by id, for the records a field links to.
+  recordTypeLabel: (id: string) => string;
+}
+const { type, recordTypeLabel } = Astro.props;
+
+const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
+const restrictedFields = type.fields.filter((field) => field.classification === 'restricted');
+// A restricted field is marked only when the record as a whole is not.
+const markRestricted = type.classification !== 'restricted' && restrictedFields.length > 0;
+---
+<article class="starter-record" id={`record-${type.id}`}>
+  <header class="starter-record-head">
+    <h3>{type.label}</h3>
+    {type.classification && (
+      <span class:list={['starter-record-class', `is-${type.classification}`]}>{classificationWords(type.classification)}</span>
+    )}
+  </header>
+  {type.description && <p class="starter-record-description">{type.description}</p>}
+  <p class="starter-record-counts">
+    {plural(type.fieldCount, 'field', 'fields')}
+    {type.mutationMode && <><span aria-hidden="true"> · </span>{mutationWords(type.mutationMode)}</>}
+  </p>
+  <ul class="starter-record-fields">
+    {type.fields.map((field) => (
+      <li>
+        <span class="starter-field-name">
+          {words(field.id)}
+          {field.required && <span class="starter-field-required"><span aria-hidden="true">*</span><span class="visually-hidden"> required</span></span>}
+        </span>
+        <span class="starter-field-type">
+          {field.type === 'reference' ? (
+            <>Link to <a href={`#record-${field.target}`}>{recordTypeLabel(field.target ?? '')}</a></>
+          ) : (
+            fieldTypeWords(field)
+          )}
+          {markRestricted && field.classification === 'restricted' && <span class="starter-field-restricted">Restricted</span>}
+        </span>
+      </li>
+    ))}
+  </ul>
+  <div class="starter-record-technical">
+    <StarterTechnical
+      items={[
+        { term: 'Record type', value: type.id },
+        { term: 'Mutation mode', value: type.mutationMode || 'not set' },
+        { term: 'Classification', value: type.classification || 'not set' },
+        {
+          term: 'Fields',
+          value: type.fields
+            .map((field) => `${field.id}: ${field.type}${field.target ? ` -> ${field.target}` : ''}${field.classification ? `, ${field.classification}` : ''}`)
+            .join('; '),
+        },
+      ]}
+    />
+  </div>
+</article>
+
+<style>
+  .starter-record {
+    background: var(--registry-white);
+    border: 1px solid var(--registry-slate-rule);
+    border-top: 3px solid var(--registry-blue);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    scroll-margin-top: 24px;
+  }
+
+  .starter-record-head {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    justify-content: space-between;
+    padding: 18px 18px 0;
+  }
+
+  .starter-record h3 {
+    font-size: var(--type-lg);
+    margin: 0;
+  }
+
+  .starter-record-class {
+    border: 1px solid var(--registry-rule);
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: var(--type-2xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 3px 7px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .starter-record-class.is-restricted {
+    background: var(--registry-stamp-tint);
+    border-color: #d7cecb;
+    color: #7b4339;
+  }
+
+  .starter-record-class.is-public {
+    background: var(--registry-blue-tint);
+    border-color: var(--registry-blue-rule);
+    color: var(--registry-blue);
+  }
+
+  .starter-record-description {
+    color: var(--registry-body);
+    font-size: var(--type-md);
+    margin: 8px 0 0;
+    padding: 0 18px;
+  }
+
+  .starter-record-counts {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: var(--type-xs);
+    letter-spacing: 0.04em;
+    margin: 12px 0 0;
+    padding: 0 18px 12px;
+  }
+
+  .starter-record-fields {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .starter-record-fields li {
+    align-items: baseline;
+    border-top: 1px solid var(--registry-slate-rule-light);
+    display: grid;
+    font-size: var(--type-sm);
+    gap: 6px 16px;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    line-height: 1.45;
+    padding: 9px 18px;
+  }
+
+  .starter-field-name {
+    color: var(--registry-ink);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .starter-field-required {
+    color: var(--registry-stamp);
+    font-weight: 700;
+    margin-left: 2px;
+  }
+
+  .starter-field-type {
+    color: var(--registry-muted);
+    overflow-wrap: anywhere;
+    text-align: right;
+  }
+
+  .starter-field-type a {
+    color: var(--registry-blue);
+    text-decoration: underline;
+  }
+
+  .starter-field-restricted {
+    background: var(--registry-stamp-tint);
+    border: 1px solid #d7cecb;
+    color: #7b4339;
+    display: inline-block;
+    font-family: var(--registry-mono);
+    font-size: var(--type-3xs);
+    line-height: 1.3;
+    margin-left: 8px;
+    padding: 1px 5px;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  .starter-record-technical {
+    border-top: 1px solid var(--registry-slate-rule-light);
+    margin-top: auto;
+  }
+
+  .visually-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+</style>

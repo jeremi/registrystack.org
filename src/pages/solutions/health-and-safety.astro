@@ -3,7 +3,7 @@ import Solution from '../../layouts/Solution.astro';
 import SolutionExample from '../../components/SolutionExample.astro';
 import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
-import SolutionDevelopers from '../../components/SolutionDevelopers.astro';
+import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas } from '../../data/solutions';
 const area = solutionAreas.find((a) => a.key === 'health-and-safety')!;
@@ -11,51 +11,80 @@ const area = solutionAreas.find((a) => a.key === 'health-and-safety')!;
 <Solution
   area={area}
   heading="Know which facilities, products, and operators are authorized."
-  description="Health and safety regulators keep registers of health facilities, clinical trials, medical devices, radiation sources, and cooling towers. Each entry records an authorization, a registration, or a notified hazard. Insurers, procurement teams, inspectors, and the public need to check those entries."
+  description="Insurers, procurement teams, and inspectors ask your office whether a clinic, a device maker, or the holder of a radiation source is authorized, and each answer means an officer finds the file and replies by hand. Registry Stack gives your office one register of the authorizations it has issued, and lets those services check one without seeing the rest of the file."
 >
   <SolutionExample
     eyebrow="One example: an insurer checks a facility"
     heading="Tell a health insurance fund whether a clinic is authorized to operate."
-    intro="A health insurance fund needs to know whether a clinic holds a current operating authorization before it signs a contract with it. The health authority’s facility register holds that authorization."
+    intro="A health insurance fund needs to know whether a clinic holds a current operating authorization before it signs a contract with it. Your facility register holds that authorization."
     items={[
       { term: 'Who asks', body: 'The insurance fund, for the clinic it is about to contract.' },
-      { term: 'What the team wants', body: 'A signed answer stating whether the clinic’s operating authorization is current, which the fund can check came from the health authority.' },
-      { term: 'What happens', body: 'The fund asks Evidence Gateway. The gateway checks that the fund may ask this question, reads the authorization from the facility register, and returns a signed answer. The fund decides what the answer means for the contract.' },
-      { term: 'What stays with the institution', body: 'The rest of the facility file, including its owners and any inspection history, stays with the health authority.' },
+      { term: 'What the authority wants', body: 'The fund learns whether the clinic’s operating authorization is current, and nothing more, with an answer it can check came from your register.' },
+      { term: 'What happens', body: 'The fund asks the question. Your office has agreed that the fund may ask it, so the answer is read from your facility register and sent back. The fund decides what the answer means for the contract.' },
+      { term: 'What stays with your office', body: 'The rest of the facility file, including its owners and any inspection history, stays in your register.' },
     ]}
-    link={{ href: '/products/evidence-gateway/', label: 'See how Evidence Gateway signs an answer' }}
+    link={{ href: '/products/evidence-gateway/', label: 'See how Evidence Gateway answers the fund' }}
   />
-  <SolutionStarters
-    area={area}
-    heading="Start from a health or safety register like yours."
-    intro="Each starter is a starting configuration for a common register of facilities, trials, devices, or hazards. It records an authorization or a registration the regulator has issued; your team adapts the records and rules to its own law."
-  />
-  <section class="section section-muted" aria-labelledby="health-control-title">
+  <section class="section" aria-labelledby="health-change-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">What you keep control of</p>
-        <h2 id="health-control-title">The authorizations, what is public, and how a notice changes.</h2>
+        <p class="eyebrow">What changes for your office</p>
+        <h2 id="health-change-title">Fewer calls to confirm an authorization, and notices the public can follow.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Authorizations and what they cover</h3><p>Record the operator, the facility or product, and the authorization issued for it. The pharmaceutical operator licensing starter links an organization, an establishment, and an operating authorization.</p></article>
-        <article><h3>What is public and what is restricted</h3><p>Some entries are meant to be read widely: the medicine shortages starter marks its disruption notices public. Donation preferences are restricted and released only as a bounded result to a service that is already authorized.</p></article>
-        <article><h3>Notices that change over time</h3><p>A medicine shortage is recorded, closed, or withdrawn, each as its own action. Each step stays in the record’s history, so a reader can see when the shortage was recognized and when it ended.</p></article>
+        <article><h3>Every authorization is tied to what it covers</h3><p>Each operator, facility, or product is recorded once, with the authorization your office issued for it. A pharmaceutical wholesaler’s licence is linked to the company and to the site it covers, so an inspector visiting one site sees the right authorization.</p></article>
+        <article><h3>Public notices stay public, and private entries stay closed</h3><p>Some entries are meant for everyone, such as a medicine shortage notice a pharmacist or patient can read. A person’s organ donation instruction is never shown; a hospital that is already entitled to ask gets only the answer it needs.</p></article>
+        <article><h3>A shortage notice shows when it started and when it ended</h3><p>A medicine shortage is recorded, then closed or withdrawn, each step added on its own. The earlier steps stay in the history, so anyone reading the notice can see when the shortage was recognized and when it ended.</p></article>
       </div>
     </div>
   </section>
+  <SolutionStarters
+    area={area}
+    heading="Start from a health or safety register like yours."
+    intro="A starter sets out what a register of this kind holds and who may change it, for one common register of facilities, trials, devices, or hazards. Your team takes the closest one and adapts it to its own health or safety law."
+  />
   <SolutionFit
     area={area}
     heading="Keep clinical data in clinical systems."
     jobs={{
-      'base-registry': 'Stores the register of facilities, trials, devices, or sources, with your rules for who may record and read each entry.',
-      'evidence-gateway': 'Answers a defined question, such as whether a facility holds a current authorization, with a signed answer the receiving service can verify.',
+      'base-registry': 'Holds the register of facilities, trials, devices, or radiation sources, under your rules for who may record and look up each entry.',
+      'evidence-gateway': 'Answers a question such as whether a facility’s authorization is current, in a form the service can check came from your register.',
     }}
     extra={[
-      { term: 'Registers, not patient records', body: 'The starters record authorizations and registrations, not clinical records. The medicine shortages starter refers to each medicine through an external FHIR product definition rather than copying it.' },
+      { term: 'Registers, not patient records', body: 'The register holds the authorizations and registrations your office has issued. Applications, inspections, the decision to authorize, and patient records stay in the systems that handle them today.' },
     ]}
+    muted
   >
-    <p>Each product runs on its own. Evidence Gateway can answer from a register you already run, and health information systems can serve as its source; Base Registry Engine is for a register you build or move into a defined structure.</p>
+    <p>Each product runs on its own. Evidence Gateway can answer from a register or health information system you already run, so an office can start there and use the Base Registry Engine when it builds or moves its register.</p>
   </SolutionFit>
-  <SolutionDevelopers area={area} muted />
+  <SolutionFaq
+    items={[
+      {
+        q: 'Does this hold patient or clinical data?',
+        a: 'No. It holds registers of facilities, trials, devices, operators, and radiation sources. Where an entry needs to point to a medicine, such as a shortage notice, it refers to the medicine’s entry in the existing medicines catalogue instead of copying it.',
+        link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
+      },
+      {
+        q: 'Can an insurer check a clinic without an account on our system?',
+        a: 'The insurer’s service asks your register a question you have agreed to answer, such as whether a clinic’s authorization is current, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
+        link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
+      },
+      {
+        q: 'Who can see an entry, and what does the public see?',
+        a: 'Your office decides, entry by entry and role by role: what the public may read, who may record an authorization, and who may look one up. Every look-up and every change is kept with who did it and when.',
+        link: { href: '/security/', label: 'Who is responsible for what' },
+      },
+      {
+        q: 'What is a starter, exactly?',
+        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
+        link: { href: '/starters/#health-and-safety', label: 'Browse the health and safety starters' },
+      },
+      {
+        q: 'Where does our technical team start?',
+        a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
+        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
+      },
+    ]}
+  />
   <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
 </Solution>

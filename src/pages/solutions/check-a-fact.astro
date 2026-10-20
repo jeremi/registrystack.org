@@ -2,38 +2,39 @@
 import Solution from '../../layouts/Solution.astro';
 import MinimizationFunnel from '../../components/MinimizationFunnel.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
+import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas } from '../../data/solutions';
 import { products } from '../../data/products';
 const area = solutionAreas.find((a) => a.key === 'check-a-fact')!;
-const tutorials = area.products.map((key) => products.find((p) => p.key === key)!);
+const evidence = products.find((p) => p.key === 'evidence-gateway')!;
+const relay = products.find((p) => p.key === 'protected-registry-apis')!;
 ---
 <Solution
   area={area}
   heading="Let a service check a fact without receiving the record."
-  description="A pension service needs to know whether a person is alive. A licensing service needs to know whether an applicant is 18 or older. Each can ask the register that holds the answer and receive only that answer, while the record stays with the institution that keeps it."
+  description="Other services ask your office for copies of records when all they need is one fact: whether a person is alive, whether an applicant is 18 or older, whether a business is registered. Registry Stack lets those services ask your register that one question and receive only the answer, while the record stays with your office."
 >
   <section id="example" class="section section-muted" aria-labelledby="check-example-title">
     <div class="section-inner">
       <div class="section-heading center">
         <p class="eyebrow">One example: a civil register</p>
-        <h2 id="check-example-title">One registry can support several services without sharing every field.</h2>
-        <p>A pension service checks whether a person is alive. A licensing service checks whether they are 18 or older. The registry owner defines the permitted questions and access rules; Evidence Gateway applies those rules to each request.</p>
+        <h2 id="check-example-title">One register answers several services without sending the record.</h2>
+        <p>A pension service asks whether a person is alive. A licensing service asks whether they are 18 or older. Your office decides which questions each service may ask. A question it has not agreed to is refused, and nothing from the record is sent.</p>
       </div>
       <MinimizationFunnel />
     </div>
   </section>
-  <section class="section" aria-labelledby="check-control-title">
+  <section class="section" aria-labelledby="check-change-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">What the register owner decides</p>
-        <h2 id="check-control-title">The question, who may ask it, and how long the answer holds.</h2>
-        <p>Every register family has facts other services ask for: whether a licence is active, whether a supplier is registered, whether a household is enrolled. The team that keeps the register decides how each one is answered.</p>
+        <p class="eyebrow">What changes for your office</p>
+        <h2 id="check-change-title">Fewer copies leave your office, and each answer can be checked.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>The question and its answer</h3><p>Agree what each answer means and how it is derived from the record. A residence region can be returned without the street address, and adult status without a date of birth.</p></article>
-        <article><h3>Who may ask, and for what purpose</h3><p>Authorize each service for the questions and purposes agreed with it. A request outside those rules is refused, and each request and its outcome are recorded.</p></article>
-        <article><h3>How long an answer holds</h3><p>Set how long an answer is valid. The receiving service checks the answer’s dates and signature before it relies on the answer.</p></article>
+        <article><h3>A service gets the answer, not the file</h3><p>Your office agrees with each service what a question means and how it is worked out from the record. A service can learn the region a person lives in without the street address, or that they are an adult without their date of birth.</p></article>
+        <article><h3>Only the services you agreed with can ask</h3><p>Each service may ask the questions agreed with it, for the reason agreed with it. Anything else is refused. Every question and its outcome are kept, so your office can show who asked what, and when.</p></article>
+        <article><h3>The receiving service can trust the answer without calling you</h3><p>Your office sets how long an answer holds. Before relying on it, the receiving service checks that the answer came from your register, was not altered, and is still in date.</p></article>
       </div>
     </div>
   </section>
@@ -41,44 +42,56 @@ const tutorials = area.products.map((key) => products.find((p) => p.key === key)
     <div class="section-inner product-fit">
       <div class="section-heading compact">
         <p class="eyebrow">AI-assisted services</p>
-        <h2 id="check-ai-title">The same access rules apply to an AI-assisted service.</h2>
+        <h2 id="check-ai-title">An AI-assisted service asks under the same rules.</h2>
       </div>
       <div>
-        <p>A service that uses AI to guide a person or caseworker can call the same configured Registry Stack interface as other services. Registry Stack checks the service’s permission for each request and returns only the information its rules allow.</p>
-        <p>The choice is the same as for any other service: copy the records, or ask the question. A housing benefit service could receive a copy of each applicant’s income records and let its application work them out. Or the registry owner defines one question, such as whether annual net income is below the benefit threshold, and the registry returns that answer. The registry may hold gross monthly income while the rule needs net annual income; the definition of the question carries that translation, and the AI-assisted service never holds the record.</p>
-        <p>The service owner remains responsible for how the application uses that information, including decisions about eligibility, approvals, and the people it makes requests about.</p>
+        <p>Some services use AI to guide an applicant or a caseworker. Such a service asks your register the way any other service does: it may ask only the questions agreed with it, and it gets only the answer.</p>
+        <p>The choice is the same as for any other service: send copies of the records, or answer the question. A housing benefit service could receive each applicant’s income records and let its application work them out. Or your office agrees one question, such as whether annual net income is below the benefit threshold, and your register returns that answer. If your register holds gross monthly income and the rule needs net annual income, the agreed question carries that conversion, and the AI-assisted service never holds the record.</p>
+        <p>The service that asks stays responsible for what it does with the answer, including decisions about eligibility and approvals, and how it treats the people it asks about.</p>
       </div>
     </div>
   </section>
   <SolutionFit
     area={area}
-    heading="Choose a signed answer or agreed fields."
+    heading="Give a service a checked answer, or the fields it needs."
     jobs={{
-      'evidence-gateway': 'Choose a signed answer when the service needs a yes or no, a status, or a band it can verify, such as adult status or registration status. The answer carries a signature showing which register issued it.',
-      'protected-registry-apis': 'Choose agreed fields when the service needs values to work with, such as a business’s legal name and legal form, or a farmer’s registered status and farm size.',
+      'evidence-gateway': 'Use it when the other service needs a yes or no, or a status, such as whether a person is an adult or a business is registered: it gets that answer and can check it came from your register and was not altered.',
+      'protected-registry-apis': 'Use it when the other service has to work with the values themselves, such as a business’s legal name and legal form, or a farmer’s registered status and farm size: it gets the fields your office agreed, and no others.',
     }}
     extra={[
-      { term: 'The register stays where it is', body: 'Both can read from a register you already run, and neither requires Base Registry Engine. If you choose both, your technical team configures the connection.' },
+      { term: 'Your register stays where it is', body: 'Both work from a register your office already runs, and neither requires Base Registry Engine. If you use both, your technical team sets up the connection to your register.' },
     ]}
   >
-    <p>A signed answer tells a service a fact. Agreed fields give it data it will process. Start from what the receiving service has to decide, and give it the least that decision needs.</p>
+    <p>Start from what the other service has to decide, and give it the least that decision needs. A good first question is the one your office is asked for most often.</p>
   </SolutionFit>
-  <section id="developers" class="section section-muted" aria-labelledby="check-developers-title">
-    <div class="section-inner product-fit">
-      <div class="section-heading compact">
-        <p class="eyebrow">For developers and implementers</p>
-        <h2 id="check-developers-title">Run both exercises with sample data.</h2>
-        <p>Each tutorial runs locally against a synthetic source and includes its own setup.</p>
-      </div>
-      <dl>
-        {tutorials.map((product) => (
-          <>
-            <dt>{product.name}</dt>
-            <dd>{product.firstResult} <a href={product.tutorialHref}>{product.tutorialLabel}</a>.</dd>
-          </>
-        ))}
-      </dl>
-    </div>
-  </section>
-  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team defines the questions and connects the register." emphasis="pilot" />
+  <SolutionFaq
+    muted
+    items={[
+      {
+        q: 'Do we have to move our register?',
+        a: 'No. Both products read from the register your office already runs. Your staff keep recording and correcting records where they do today, and the answers reflect what the register holds.',
+        link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
+      },
+      {
+        q: 'How does the receiving service know an answer is genuine?',
+        a: 'Each answer carries a digital signature from your register and the dates it is valid for. The receiving service checks both itself, so it does not need to call your office to confirm the answer.',
+        link: { href: evidence.href, label: `About ${evidence.name}` },
+      },
+      {
+        q: 'Does this replace our data-sharing agreements?',
+        a: 'No. The agreement still says what a service may know and why. The questions and fields your office sets up follow that agreement, and a request outside it is refused and kept on record.',
+      },
+      {
+        q: 'Where does our technical team start?',
+        a: `With the ${evidence.name} tutorial, which answers a yes-or-no question from sample data and checks the answer, on a laptop. If a service needs the values themselves, the ${relay.name} tutorial is the next step.`,
+        link: { href: evidence.tutorialHref, label: evidence.tutorialLabel },
+      },
+      {
+        q: 'And if a service needs the values themselves?',
+        a: `The ${relay.name} tutorial returns two agreed fields from a sample register, refuses a third, and shows the record of each request.`,
+        link: { href: relay.tutorialHref, label: relay.tutorialLabel },
+      },
+    ]}
+  />
+  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team agrees the questions and connects the register." emphasis="pilot" />
 </Solution>

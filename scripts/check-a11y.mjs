@@ -56,6 +56,7 @@ const paths = [
   '/solutions/check-a-fact/',
   '/solutions/review-changes/',
   '/starters/',
+  '/starters/professional-licensing/',
   '/blog/',
   '/blog/before-you-connect-a-registry-define-the-question/',
   '/security/',

@@ -3,7 +3,7 @@ import Solution from '../../layouts/Solution.astro';
 import SolutionExample from '../../components/SolutionExample.astro';
 import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
-import SolutionDevelopers from '../../components/SolutionDevelopers.astro';
+import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas } from '../../data/solutions';
 const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')!;
@@ -11,53 +11,82 @@ const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')
 <Solution
   area={area}
   heading="Keep records about people current, and let programmes check them."
-  description="Population registers, social registries, electoral rolls, and learner records hold information about people and the households they live in. The authority that keeps them decides who is entered and on what basis. Benefit, school, and licensing services need a fact from those records, such as enrollment status, without receiving the person’s file."
+  description="Benefit programmes, schools, and pension services ask your office about the people in your register, and each request means a copy of someone’s file or a phone call. Registry Stack gives your office one register of people and households, and lets a programme check the one fact it needs without seeing the person’s file."
 >
   <SolutionExample
     eyebrow="One example: a school meal programme checks enrollment"
     heading="Tell a school meal programme whether a household is enrolled."
-    intro="A school meal programme needs to know whether a household is enrolled in social protection. The social registry owner agrees what “enrolled” means and which programmes may ask."
+    intro="A school meal programme needs to know whether a household is enrolled in social protection. The social registry team agrees what “enrolled” means and which programmes may ask."
     items={[
-      { term: 'Who asks', body: 'The school meal programme, for the household on the application.' },
-      { term: 'What the team wants', body: 'The current enrollment status, as the social registry owner has defined it, in a signed answer the programme can verify.' },
-      { term: 'What happens', body: 'The programme asks Evidence Gateway. The gateway checks the programme’s permission and purpose, reads the status from the social registry, and returns a signed answer. The programme decides what the answer means for the application.' },
-      { term: 'What stays with the institution', body: 'The household case file, income details, and payment history are not returned.' },
+      { term: 'Who asks', body: 'The school meal programme, for the household named on the application.' },
+      { term: 'What the office wants', body: 'The programme learns whether the household is enrolled, as your social registry defines it, in an answer it can check came from your register, and learns nothing else.' },
+      { term: 'What happens', body: 'The programme asks Evidence Gateway. The gateway confirms your office has agreed this programme may ask, for this reason, reads the status from your registry, and returns the answer. The programme decides what it means for the application.' },
+      { term: 'What stays with your office', body: 'The household’s case file, income details, and payment history stay in your registry.' },
     ]}
-    note="The same registry can support a local authority’s own work on resident records: staff register people, link them to households, and update details as circumstances change."
+    note="The same register can support a local authority’s own work on residents: staff register people, link them to households, and update details as circumstances change."
     link={{ href: '/products/base-registry/#product-example', label: 'See resident and household records' }}
   />
-  <SolutionStarters
-    area={area}
-    heading="Start from a register of people like yours."
-    intro="Each starter is a starting configuration for a common register about people. It records an entry after the responsible authority has made its decision; your team adapts the records and rules to its own law."
-  />
-  <section class="section section-muted" aria-labelledby="people-control-title">
+  <section class="section" aria-labelledby="people-change-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">What you keep control of</p>
-        <h2 id="people-control-title">The records about people, who may look them up, and what changed.</h2>
+        <p class="eyebrow">What changes for your office</p>
+        <h2 id="people-change-title">Programmes get their answer, and the person’s file stays with you.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>People, households, and the links between them</h3><p>Define the person, the household, and how they relate. The population register starter records a person, a citizenship recognition already decided, and a sector identifier together, in one action.</p></article>
-        <article><h3>Who may look up a person</h3><p>Records about people are personal data. In the voter registration, learner records, and criminal records starters, the default reader cannot list the collection; a service looks up a record it already knows.</p></article>
-        <article><h3>What changed and who decided</h3><p>The register records decisions the responsible authority has made, such as an enrollment or a final conviction, and keeps each later change in the record’s history. Eligibility decisions stay with the programme.</p></article>
+        <article><h3>Each person is entered once and linked to their household</h3><p>A person is one entry, linked to the household they live in. When someone moves out, your team changes the link and the earlier household stays in the history. A citizenship already recognized and the person’s identifiers in other sectors are recorded with them in one step.</p></article>
+        <article><h3>Nobody pages through the list of people</h3><p>Records about people are personal data. A service your office allows to look someone up finds a person it already knows; it cannot list the register. For voter rolls, learner records, and criminal records, that is how the register works from the start.</p></article>
+        <article><h3>Every change shows who decided it and when</h3><p>Your register records what the responsible authority has decided, such as an enrollment or a final conviction. Each later change is kept in the person’s history with who made it.</p></article>
       </div>
     </div>
   </section>
+  <SolutionStarters
+    area={area}
+    heading="Start from a register of people like yours."
+    intro="A starter sets out what a register of this kind holds and who may change it, for one common register about people. Your team takes the closest one and adapts it to its own law."
+  />
   <SolutionFit
     area={area}
     heading="Keep the records with the authority that is responsible for them."
     jobs={{
-      'base-registry': 'Stores records about people and households, with your rules for who may create, read, and change each one.',
-      'evidence-gateway': 'Answers a defined question, such as enrollment status or adult status, with a signed answer and no date of birth or address.',
-      casework: 'Gives the officers who review corrections to a person’s record one inbox, with a due date and a record of who decided.',
+      'base-registry': 'Holds the register of people and households, under your rules for who may record, change, or look up each entry.',
+      'evidence-gateway': 'Answers a programme’s question, such as whether a household is enrolled or a person is an adult, without giving out a date of birth or an address.',
+      casework: 'Gives the officers who review corrections to a person’s record one queue, with a due date on each item and a record of who decided.',
     }}
     extra={[
-      { term: 'Programmes keep their own decisions', body: 'A programme that receives an answer decides what it means for its applicant, under its own rules. The starters do not assess eligibility or calculate benefits.' },
+      { term: 'Programmes keep their own decisions', body: 'A programme that receives an answer decides what it means for its applicant, under its own rules. Registry Stack does not assess eligibility or calculate benefits.' },
     ]}
+    muted
   >
-    <p>Each product runs on its own. Evidence Gateway can answer from a population or social registry you already run; Base Registry Engine is for a register you build or move into a defined structure.</p>
+    <p>Each product runs on its own. An office that already runs a population or social registry usually starts by letting programmes check facts from it; an office building a register starts with the register itself.</p>
   </SolutionFit>
-  <SolutionDevelopers area={area} muted />
+  <SolutionFaq
+    items={[
+      {
+        q: 'Does this replace our population register or social registry?',
+        a: 'No. Evidence Gateway can answer programmes’ questions from a register you already run. Base Registry Engine is for a register you build new, or decide to move.',
+        link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
+      },
+      {
+        q: 'Can a programme check a fact without seeing the person’s file?',
+        a: 'Yes. The programme asks a question your office has agreed to answer, such as whether a household is enrolled, and gets that answer and nothing else. Your office decides which programmes may ask, which questions, and for what reason.',
+        link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
+      },
+      {
+        q: 'Who can see a person’s record?',
+        a: 'Your office decides, role by role: who may record a person, who may change a household, and who may look someone up, and for what reason. Every look-up and every change is kept with who did it and when.',
+        link: { href: '/security/', label: 'Who is responsible for what' },
+      },
+      {
+        q: 'What is a starter, exactly?',
+        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
+        link: { href: '/starters/#people-and-social-programmes', label: 'Browse the starters for registers of people' },
+      },
+      {
+        q: 'Where does our technical team start?',
+        a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
+        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
+      },
+    ]}
+  />
   <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
 </Solution>

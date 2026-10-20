@@ -18,7 +18,7 @@ import { execFileSync } from 'node:child_process';
 //   --repo PATH    the starters checkout the export was made from; its HEAD and
 //                  working-tree state are recorded in the pin file.
 
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 const DATA_FILE = 'src/data/starters.json';
 const PIN_FILE = 'src/upstream/starters.json';
 const REPOSITORY_URL = 'https://github.com/registrystack/breg-registry-starters';

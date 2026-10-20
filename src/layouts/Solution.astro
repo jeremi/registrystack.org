@@ -28,7 +28,7 @@ const primary = Astro.props.primary ?? (area.kind === 'register-family'
   : { href: '#example', label: 'See the example' });
 const secondary = Astro.props.secondary ?? { href: '#fit', label: 'How it fits' };
 ---
-<Base title={area.name + ' | Registry Stack'} description={description}>
+<Base title={area.pageTitle + ' | Registry Stack'} description={description}>
   <SiteHeader current={area.key} />
   <main class="solution-page">
     <section class="hero" aria-labelledby="solution-title">

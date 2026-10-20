@@ -5,6 +5,15 @@
 import catalogue from './starters.json';
 import { solutionAreaForStarter, type SolutionArea } from './solutions';
 
+export interface StarterField {
+  id: string;
+  type: string;
+  required: boolean;
+  classification: string;
+  // The record type a reference field links to.
+  target?: string;
+}
+
 export interface StarterRecordType {
   id: string;
   label: string;
@@ -12,6 +21,7 @@ export interface StarterRecordType {
   mutationMode: string;
   classification: string;
   fieldCount: number;
+  fields: StarterField[];
   references: { field: string; target: string }[];
 }
 
@@ -63,12 +73,18 @@ export const starterCount = starters.length;
 
 export const starterById = (id: string): Starter | undefined => starters.find((starter) => starter.id === id);
 
-// Starters in the order the solution area lists them, so the family page and
-// the catalogue agree.
+// Starters in the order the solution area lists them, with the family's
+// featured starter first, so the family page and the catalogue agree.
 export const startersForArea = (area: SolutionArea): Starter[] =>
-  area.starters.flatMap((id) => {
-    const starter = starterById(id);
-    return starter ? [starter] : [];
-  });
+  [...area.starters]
+    .sort((a, b) => Number(b === area.featuredStarter) - Number(a === area.featuredStarter))
+    .flatMap((id) => {
+      const starter = starterById(id);
+      return starter ? [starter] : [];
+    });
+
+// The starter a family suggests first, when it names one.
+export const featuredStarterForArea = (area: SolutionArea): Starter | undefined =>
+  area.featuredStarter ? starterById(area.featuredStarter) : undefined;
 
 export const areaForStarter = solutionAreaForStarter;

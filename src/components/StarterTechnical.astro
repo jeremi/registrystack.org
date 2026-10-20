@@ -1,0 +1,63 @@
+---
+// A closed "Technical details" disclosure, the place on a starter page for
+// identifiers, codes and checksums. Each item is a term and its value, shown
+// in monospace.
+interface Props {
+  items: { term: string; value: string }[];
+}
+const { items } = Astro.props;
+---
+<details class="starter-technical">
+  <summary>Technical details</summary>
+  <dl>
+    {items.map((item) => (
+      <div>
+        <dt>{item.term}</dt>
+        <dd>{item.value}</dd>
+      </div>
+    ))}
+  </dl>
+</details>
+
+<style>
+  .starter-technical summary {
+    color: var(--registry-muted);
+    cursor: pointer;
+    font-family: var(--registry-mono);
+    font-size: var(--type-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 12px 18px;
+    text-transform: uppercase;
+  }
+
+  .starter-technical summary:hover,
+  .starter-technical[open] summary {
+    color: var(--registry-blue);
+  }
+
+  .starter-technical dl {
+    margin: 0;
+    padding: 0 18px 16px;
+  }
+
+  .starter-technical dl > div + div {
+    margin-top: 10px;
+  }
+
+  .starter-technical dt {
+    color: var(--registry-muted);
+    font-size: var(--type-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .starter-technical dd {
+    color: var(--registry-ink);
+    font-family: var(--registry-mono);
+    font-size: var(--type-sm);
+    margin: 2px 0 0;
+    overflow-wrap: anywhere;
+  }
+</style>

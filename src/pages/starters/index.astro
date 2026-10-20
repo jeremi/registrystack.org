@@ -8,12 +8,14 @@ import DocsHandoff from '../../components/DocsHandoff.astro';
 import StarterCard from '../../components/StarterCard.astro';
 import { registerFamilies } from '../../data/solutions';
 import { products } from '../../data/products';
-import { starterCount, startersForArea, startersSource } from '../../data/starters';
-import startersUpstream from '../../upstream/starters.json';
+import { featuredStarterForArea, starterCount, startersForArea, startersSource } from '../../data/starters';
 
 const baseRegistry = products.find((p) => p.key === 'base-registry')!;
-const startersRepository = startersUpstream.source.repository;
 const groups = registerFamilies.map((area) => ({ area, starters: startersForArea(area) }));
+const featured = registerFamilies.flatMap((area) => {
+  const starter = featuredStarterForArea(area);
+  return starter ? [{ area, starter }] : [];
+});
 
 const pageTitle = 'Starters | Registry Stack';
 const pageDescription = 'Starting configurations for common registers, grouped by the kind of register an organization keeps.';
@@ -27,14 +29,27 @@ const pageDescription = 'Starting configurations for common registers, grouped b
         <div class="hero-copy">
           <p class="eyebrow">Starters</p>
           <h1 id="starters-title">Start from a register like yours.</h1>
-          <p class="hero-lead">A starter is a starting configuration for a common register. It sets out the records the register keeps, the actions staff take on them, and who may do what. Your team downloads it, fills in the details of its own jurisdiction, and adapts the rest. A starter is not a running registry and does not show that the register is in use anywhere.</p>
-          <p class="hero-note">{starterCount} starters in {groups.length} register families. <a href="#whats-in-a-starter">What a download contains</a>.</p>
+          <p class="hero-lead">A starter is a starting configuration for a common register. It sets out the records the register keeps, the actions staff take on them, and who may do what. Your team requests it, free of charge, fills in the details of its own jurisdiction, and adapts the rest. A starter is a starting point, not a running registry, and does not show that the register is in use anywhere.</p>
+          <p class="hero-note">{starterCount} starters in {groups.length} register families. <a href="#start-here">Where to start</a>, or <a href="#whats-in-a-starter">what you receive</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="start-here" aria-labelledby="start-here-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <p class="eyebrow">Start here</p>
+          <h2 id="start-here-title">The starters to open first.</h2>
+          <p>Each is the register every office of its kind keeps, and the one its family page walks through. These are the starters we work on most. The rest of the catalogue are starting points for the registers around them, and some families have no single starter to open first.</p>
+        </div>
+        <div class="starter-grid">
+          {featured.map(({ area, starter }) => <StarterCard starter={starter} featured eyebrow={area.name} />)}
         </div>
       </div>
     </section>
 
     {groups.map(({ area, starters }, index) => (
-      <section class:list={['section', 'starter-family', { 'section-muted': index % 2 === 0 }]} id={area.key} aria-labelledby={`${area.key}-title`}>
+      <section class:list={['section', 'starter-family', { 'section-muted': index % 2 === 1 }]} id={area.key} aria-labelledby={`${area.key}-title`}>
         <div class="section-inner">
           <div class="section-heading compact">
             <p class="eyebrow">{starters.length === 1 ? '1 starter' : `${starters.length} starters`}</p>
@@ -42,7 +57,7 @@ const pageDescription = 'Starting configurations for common registers, grouped b
             <p>{area.intent}.</p>
           </div>
           <div class="starter-grid">
-            {starters.map((starter) => <StarterCard starter={starter} />)}
+            {starters.map((starter) => <StarterCard starter={starter} featured={starter.id === area.featuredStarter} />)}
           </div>
         </div>
       </section>
@@ -51,9 +66,10 @@ const pageDescription = 'Starting configurations for common registers, grouped b
     <section class="section" id="whats-in-a-starter" aria-labelledby="starter-contents-title">
       <div class="section-inner starter-contents">
         <div class="section-heading compact">
-          <p class="eyebrow">What you get</p>
-          <h2 id="starter-contents-title">A source template your team generates and adapts.</h2>
-          <p>Each starter downloads as one zip file, published with the releases of the <a href={`${startersRepository}/releases`} rel="noopener">starters repository on GitHub</a>. Each starter's page gives the file's SHA-256 checksum so you can confirm you have the same file. The zip holds the configuration a developer turns into a registry project on their own machine. Nothing in it runs until your team generates the project and deploys it.</p>
+          <p class="eyebrow">What you receive</p>
+          <h2 id="starter-contents-title">A starting point your team generates and adapts.</h2>
+          <p>Each starter is free. Request it from its page, with a word on the register you keep, and we send it by email as one zip file. The zip holds the configuration a developer turns into a registry project on their own machine. Nothing in it runs until your team generates the project and deploys it.</p>
+          <p>No starter matches a register exactly as it is kept. Take the closest one, add the fields, kinds of record and roles yours needs, and tell us what was missing when you ask for it.</p>
         </div>
         <dl>
           <dt>In the zip</dt>

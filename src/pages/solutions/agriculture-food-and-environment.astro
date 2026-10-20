@@ -3,7 +3,7 @@ import Solution from '../../layouts/Solution.astro';
 import SolutionExample from '../../components/SolutionExample.astro';
 import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
-import SolutionDevelopers from '../../components/SolutionDevelopers.astro';
+import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas } from '../../data/solutions';
 const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environment')!;
@@ -11,52 +11,81 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
 <Solution
   area={area}
   heading="Keep the registers of farms, animals, food businesses, and permits current."
-  description="Agriculture, food safety, and environment authorities register farms and farmers, animal movements, food establishments, and the permits issued for water, land, and emissions. Subsidy programmes, inspectors, and trading partners need facts from those registers, such as whether a farmer is registered or a permit is valid."
+  description="Subsidy programmes, inspectors, and exporters ask your office whether a farm is registered or a permit is valid, and each answer means someone opens the file and copies it out. Registry Stack gives your office one register of the holdings, establishments, and permits it has recorded, and lets those services get the answer they need without seeing the rest of the file."
 >
   <SolutionExample
     eyebrow="One example: a subsidy programme checks a farm"
     heading="Give a subsidy programme the farmer’s status and farm size."
-    intro="A subsidy programme needs both a farmer’s registration status and the size of the farm before it can process a claim. The farmer registry agrees to provide those two fields."
+    intro="A subsidy programme needs a farmer’s registration status and the size of the farm before it can process a claim. Your office agrees to give it those two details and nothing else."
     items={[
-      { term: 'Who asks', body: 'The subsidy programme, for the farmer named on the claim.' },
-      { term: 'What the team wants', body: 'The agreed fields, such as registered status and 2.5 hectares, from the register the agriculture authority maintains.' },
-      { term: 'What happens', body: 'Registry Relay returns the two agreed fields to the programme. A request for any other field is refused, and each request is recorded.' },
-      { term: 'What stays with the institution', body: 'Plot coordinates, household members, crop history, and financial records are not returned.' },
+      { term: 'Who asks', body: 'The subsidy programme, for the farmer named on a claim.' },
+      { term: 'What the authority wants', body: 'The two details, such as registered and 2.5 hectares, from the register your office keeps, and no more.' },
+      { term: 'What happens', body: 'The programme asks your register about the farmer and gets back those two details. A request for anything else is refused, and every request is kept with who asked and when.' },
+      { term: 'What stays with your office', body: 'Plot coordinates, household members, crop history, and financial records stay in your register and are never sent.' },
     ]}
-    link={{ href: '/products/registry-relay/', label: 'See how Registry Relay shares agreed fields' }}
+    link={{ href: '/products/registry-relay/', label: 'See how Registry Relay shares agreed details' }}
   />
-  <SolutionStarters
-    area={area}
-    heading="Start from an agriculture, food, or environment register like yours."
-    intro="Each starter is a starting configuration for a common register of holdings, animals, establishments, or permits. It records a registration or a permit after the authority has decided it; your team adapts the records and rules to its own law."
-  />
-  <section class="section section-muted" aria-labelledby="agriculture-control-title">
+  <section class="section" aria-labelledby="agriculture-change-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">What you keep control of</p>
-        <h2 id="agriculture-control-title">The holdings and permits, who may record them, and each change of status.</h2>
+        <p class="eyebrow">What changes for your office</p>
+        <h2 id="agriculture-change-title">Fewer requests for the file, and a status history nobody has to rebuild.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Holdings, establishments, and permits</h3><p>Record the farm, the establishment, or the site, and link each registration or permit to it. The food business establishments starter records the operator, its establishment, and the establishment’s registration as three linked record types.</p></article>
-        <article><h3>Who may record and who may read</h3><p>Give the registrar, the inspector, and the reader separate permissions, each tied to a purpose. In the animal-health status starter, the compliance assessment is restricted while the certification it supports is internal.</p></article>
-        <article><h3>Each change of status</h3><p>Permits and authorizations change status. The environmental permits and plant-protection products starters record a later status as its own action, and the earlier status stays in the record’s history.</p></article>
+        <article><h3>Every permit is tied to the site it covers</h3><p>Each farm, food establishment, or site is recorded once, and every registration or permit your office issues is linked to it. When one food business runs two establishments, each has its own registration, and an inspector can see which one is current.</p></article>
+        <article><h3>Assessments stay with the officers who made them</h3><p>Your office decides who may record a registration, who may inspect, and who may only look one up. A herd’s animal-health assessment stays with the veterinary officers, while colleagues who need it can see the certificate it supports.</p></article>
+        <article><h3>A change of status never erases the earlier one</h3><p>When a permit is suspended or a product authorization withdrawn, the new status is added on its own, with who recorded it and when. The earlier status stays in the history, so the register shows what was valid on the day of an inspection.</p></article>
       </div>
     </div>
   </section>
+  <SolutionStarters
+    area={area}
+    heading="Start from an agriculture, food, or environment register like yours."
+    intro="A starter sets out what a register of this kind holds and who may change it, for one common register of holdings, animals, establishments, or permits. Your team takes the closest one and adapts it to its own agriculture, food, or environmental law."
+  />
   <SolutionFit
     area={area}
     heading="Keep inspections and decisions in your own process."
     jobs={{
-      'base-registry': 'Stores the register of farms, animals, establishments, or permits, with your rules for who may record each change.',
-      'evidence-gateway': 'Answers a defined question, such as whether a farmer is registered, with a signed answer and no plot or household details.',
-      'protected-registry-apis': 'Shares agreed fields, such as registered status and farm size, with a programme that needs more than a yes or no.',
+      'base-registry': 'Holds the register of farms, animals, establishments, or permits, and every later change of status, under your rules for who may record what.',
+      'evidence-gateway': 'Answers a yes-or-no question, such as whether a farmer is registered, without sending plot or household details.',
+      'protected-registry-apis': 'Gives a programme the few details it has agreed with your office, such as registered status and farm size, when a yes or no is not enough.',
     }}
     extra={[
-      { term: 'The authority keeps deciding', body: 'The starters record a registration, an assessment, or a permit after the authority has decided it. They do not decide who qualifies, establish land ownership, or infer programme eligibility.' },
+      { term: 'Your office keeps deciding', body: 'Inspections, assessments, and the decision to register a farm or grant a permit stay in your own process. The register records the result; it does not decide who qualifies for a subsidy or who owns the land.' },
     ]}
+    muted
   >
-    <p>Each product runs on its own. Evidence Gateway and Registry Relay can read from a register you already run; Base Registry Engine is for a register you build or move into a defined structure.</p>
+    <p>Each product runs on its own. Evidence Gateway and Registry Relay can answer from a register you already run, so an office can start there and use the Base Registry Engine when it builds or moves its register.</p>
   </SolutionFit>
-  <SolutionDevelopers area={area} muted />
+  <SolutionFaq
+    items={[
+      {
+        q: 'Does this replace our farm register or animal identification system?',
+        a: 'Not necessarily. Evidence Gateway and Registry Relay can answer from the register you run today. The Base Registry Engine is for a register you build or move off spreadsheets.',
+        link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
+      },
+      {
+        q: 'Can a subsidy programme check a farmer without an account on our system?',
+        a: 'The programme’s service asks your register a question you have agreed to answer, such as whether a farmer is registered, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
+        link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
+      },
+      {
+        q: 'Who can see a farmer’s record?',
+        a: 'Your office decides, role by role: who may record a registration, who may record a permit, who may look one up, and for what reason. Every look-up and every change is kept with who did it and when.',
+        link: { href: '/security/', label: 'Who is responsible for what' },
+      },
+      {
+        q: 'What is a starter, exactly?',
+        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
+        link: { href: '/starters/#agriculture-food-and-environment', label: 'Browse the agriculture, food and environment starters' },
+      },
+      {
+        q: 'Where does our technical team start?',
+        a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
+        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
+      },
+    ]}
+  />
   <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
 </Solution>

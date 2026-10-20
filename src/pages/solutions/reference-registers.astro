@@ -3,7 +3,7 @@ import Solution from '../../layouts/Solution.astro';
 import SolutionExample from '../../components/SolutionExample.astro';
 import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
-import SolutionDevelopers from '../../components/SolutionDevelopers.astro';
+import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas } from '../../data/solutions';
 const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
@@ -11,7 +11,7 @@ const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
 <Solution
   area={area}
   heading="Publish the lists other registers rely on, from one maintained source."
-  description="Directories of public bodies, administrative territories, tax regimes, and trusted service providers are registers in their own right. Other registers point to them for a code, a name, or an authorization. When each team keeps its own copy, the copies drift apart."
+  description="Other registers and services keep their own copies of your codes and names, so when your office renames a territory or withdraws a tax regime, each copy drifts out of date on its own schedule. Registry Stack gives your office one maintained list that every register reads from, with the history of each entry."
 >
   <SolutionExample
     eyebrow="One example: official codes for administrative areas"
@@ -19,43 +19,72 @@ const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
     intro="An address register and a statistics office both need the official code and name of each administrative area. Today each keeps its own copy, updated from a spreadsheet sent by email."
     items={[
       { term: 'Who asks', body: 'The address register team and the statistics office, each for the areas it uses.' },
-      { term: 'What the team wants', body: 'One maintained list with each area’s code, level, parent area, and effective dates, so neither team keeps its own copy.' },
-      { term: 'What happens', body: 'The territorial authority keeps the list in its register. Registry Relay gives each service the agreed fields, and each service reads the current list instead of a file.' },
-      { term: 'What stays with the institution', body: 'The authority decides when a name or boundary changes. The boundary geometry stays in the mapping system the list refers to.' },
+      { term: 'What the office wants', body: 'One list with each area’s code, level, parent area, and the dates it applies, so neither team keeps its own copy.' },
+      { term: 'What happens', body: 'Your office keeps the list in its register. Each service gets the details it has agreed with you and reads the current list instead of waiting for the next spreadsheet.' },
+      { term: 'What stays with your office', body: 'Your office decides when a name or boundary changes. The boundary maps stay in the mapping system the list refers to.' },
     ]}
-    link={{ href: '/products/registry-relay/', label: 'See how Registry Relay shares agreed fields' }}
+    link={{ href: '/products/registry-relay/', label: 'See how Registry Relay shares agreed details' }}
   />
-  <SolutionStarters
-    area={area}
-    heading="Start from a reference list like yours."
-    intro="Each starter is a starting configuration for a common reference list or catalogue. Your team adapts the entries and rules to the list it maintains."
-  />
-  <section class="section section-muted" aria-labelledby="reference-control-title">
+  <section class="section" aria-labelledby="reference-change-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">What you keep control of</p>
-        <h2 id="reference-control-title">The list, who may change it, and when each entry applied.</h2>
+        <p class="eyebrow">What changes for your office</p>
+        <h2 id="reference-change-title">One list to maintain, and no copies drifting apart.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>The list and its codes</h3><p>Define each entry with its official code, its parent where there is one, and the period it applies. The geographic reference starter records an area’s code, administrative level, parent, and naming status.</p></article>
-        <article><h3>Who may change an entry</h3><p>Only the team that owns the list records a change. Readers see the entries their role allows; the public organizations starter keeps its directory for staff to maintain.</p></article>
-        <article><h3>When each entry applied</h3><p>Entries carry an effective period. A renamed territory or a withdrawn tax regime keeps its earlier entry, so a record that pointed to it still makes sense.</p></article>
+        <article><h3>Every register uses the same code for the same place</h3><p>Each entry carries its official code, its parent where there is one, and the dates it applies. The address register and the statistics office read the same list, so a district has one code and one name in both.</p></article>
+        <article><h3>Only your team changes the list</h3><p>Your staff record every change, whether a new district, a renamed ministry, or a withdrawn tax regime. Other teams read the entries your office lets them see; the directory of public bodies is kept by your staff, not edited by each body listed in it.</p></article>
+        <article><h3>A renamed territory keeps its old entry</h3><p>When a territory is renamed or a tax regime withdrawn, the earlier entry stays, with the dates it applied. A record that pointed to the old name years ago still makes sense today.</p></article>
       </div>
     </div>
   </section>
+  <SolutionStarters
+    area={area}
+    heading="Start from a reference register like yours."
+    intro="A starter sets out what a list of this kind holds and who may change it, for one common directory, code list, or catalogue. Your team takes the closest one and adapts it to the list it maintains."
+  />
   <SolutionFit
     area={area}
     heading="Give other registers one source to refer to."
     jobs={{
-      'base-registry': 'Stores the list and its history, with your rules for who may record an entry.',
-      'protected-registry-apis': 'Shares agreed fields of the list with the registers and services that use it.',
+      'base-registry': 'Holds the list and the history of every entry, under your rules for who may record a change.',
+      'protected-registry-apis': 'Gives each register and service that uses the list the details it has agreed with your office, always current.',
     }}
     extra={[
-      { term: 'Other registers refer to the list by code', body: 'Starters in the other register families refer to territories, organizations, and products by identifier. A maintained reference list gives those identifiers one source.' },
+      { term: 'Other registers refer to the list by code', body: 'Registers of businesses, land, licences, and people refer to territories, public bodies, and products by code. A maintained list gives those codes one source.' },
+      { term: 'Your office keeps deciding', body: 'The decision to create a district, rename a ministry, or change a tax regime is taken where it is taken today. The list records the result once it is decided.' },
     ]}
+    muted
   >
-    <p>Each product runs on its own. Registry Relay can share a list you already maintain; Base Registry Engine is for a list you build or move into a defined structure.</p>
+    <p>Each product runs on its own. An office that already keeps its list in a database can start by sharing it through Registry Relay, and move the list into the Base Registry Engine later.</p>
   </SolutionFit>
-  <SolutionDevelopers area={area} muted />
+  <SolutionFaq
+    items={[
+      {
+        q: 'Does this replace the spreadsheet we send out?',
+        a: 'It replaces the copies. Your team still maintains the list, in the register instead of a spreadsheet, and each service reads the current version from it instead of keeping its own.',
+        link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
+      },
+      {
+        q: 'What happens to records that point to an old code?',
+        a: 'They keep working. A renamed or withdrawn entry stays in the list with the dates it applied, so a record that used it still points to a real entry, and anyone reading it can see when it stopped applying.',
+      },
+      {
+        q: 'Who can change the list?',
+        a: 'Only the people your office names. Your office decides who may record a new entry, who may close one, and who may only read; every change is kept with who made it and when.',
+        link: { href: '/security/', label: 'Who is responsible for what' },
+      },
+      {
+        q: 'What is a starter, exactly?',
+        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
+        link: { href: '/starters/#reference-registers', label: 'Browse the reference register starters' },
+      },
+      {
+        q: 'Where does our technical team start?',
+        a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
+        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
+      },
+    ]}
+  />
   <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
 </Solution>
