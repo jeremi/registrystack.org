@@ -1,0 +1,52 @@
+---
+// "How it fits your organization" for a solution area: each product the area
+// leads to, from products.ts, with its job in this area, then how the area
+// sits with systems the organization already runs.
+import type { SolutionArea } from '../data/solutions';
+import { products } from '../data/products';
+
+interface Item {
+  term: string;
+  body: string;
+}
+
+interface Props {
+  area: SolutionArea;
+  heading: string;
+  jobs: Record<string, string>;
+  extra?: Item[];
+  muted?: boolean;
+}
+
+const { area, heading, jobs, extra = [], muted = false } = Astro.props;
+const areaProducts = area.products.map((key) => {
+  const product = products.find((p) => p.key === key);
+  if (!product) throw new Error(`solution area ${area.key} names unknown product ${key}`);
+  const job = jobs[key];
+  if (!job) throw new Error(`solution area ${area.key} has no job sentence for product ${key}`);
+  return { product, job };
+});
+---
+<section id="fit" class={muted ? 'section section-muted' : 'section'} aria-labelledby="solution-fit-title">
+  <div class="section-inner product-fit">
+    <div class="section-heading compact">
+      <p class="eyebrow">How it fits your organization</p>
+      <h2 id="solution-fit-title">{heading}</h2>
+      <slot />
+    </div>
+    <dl>
+      {areaProducts.map(({ product, job }) => (
+        <>
+          <dt><a href={product.href}>{product.name}</a></dt>
+          <dd>{job}</dd>
+        </>
+      ))}
+      {extra.map((item) => (
+        <>
+          <dt>{item.term}</dt>
+          <dd>{item.body}</dd>
+        </>
+      ))}
+    </dl>
+  </div>
+</section>

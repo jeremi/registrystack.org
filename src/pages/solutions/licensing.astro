@@ -1,0 +1,62 @@
+---
+import Solution from '../../layouts/Solution.astro';
+import SolutionExample from '../../components/SolutionExample.astro';
+import SolutionStarters from '../../components/SolutionStarters.astro';
+import SolutionFit from '../../components/SolutionFit.astro';
+import SolutionDevelopers from '../../components/SolutionDevelopers.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import { solutionAreas } from '../../data/solutions';
+const area = solutionAreas.find((a) => a.key === 'licensing')!;
+---
+<Solution
+  area={area}
+  heading="Know who holds each licence, on what terms, and what changed."
+  description="Licensing authorities keep registers of driving entitlements, professional licences, premises licences, and firearms permissions. The authority decides who gets a licence; the register records that decision, its terms, and each later renewal, suspension, or revocation. Employers, inspectors, and other services then need to check a licence without reading the licensing file."
+>
+  <SolutionExample
+    eyebrow="One example: a licence scope correction"
+    heading="Correct a licence with one officer accountable from request to decision."
+    intro="A professional register receives a request to correct the scope of a licence. The registry team wants each correction reviewed by an officer before it takes effect, a first response within 48 hours, and a clear record of who decided."
+    items={[
+      { term: 'Who asks', body: 'The licence holder, or a service that spotted the wrong scope, sends a correction request to the register.' },
+      { term: 'What the team wants', body: 'One officer holds the request, the 48-hour response clock is visible to the team, and nothing changes in the register until the officer approves.' },
+      { term: 'What happens', body: 'The request reaches the licensing team’s inbox in Casework. An officer takes it, asks the holder for a missing document if needed, and approves it. The officer then applies the correction in the register under their own account.' },
+      { term: 'What stays with the institution', body: 'The licence record, its rules, and its history stay in the register, which keeps the earlier scope and records who changed it.' },
+    ]}
+    link={{ href: '/products/casework/#product-example', label: 'See the correction step by step' }}
+  />
+  <SolutionStarters
+    area={area}
+    heading="Start from a licence register like yours."
+    intro="Each starter is a starting configuration for a common licence register. It records a licence after the authority has issued it; your team adapts the records and rules to its own licensing law."
+  />
+  <section class="section section-muted" aria-labelledby="licensing-control-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">What you keep control of</p>
+        <h2 id="licensing-control-title">The licence, who may act on it, and its history.</h2>
+      </div>
+      <div class="product-facts">
+        <article><h3>The licence and its terms</h3><p>Decide what a licence record holds: the holder, the category or scope, and the term it runs for. In the professional licensing starter, a renewal, a suspension, or a revocation is added as its own entry, so an earlier term is never rewritten.</p></article>
+        <article><h3>Who may issue, suspend, or read</h3><p>Give each role its own permission and purpose. An issuing officer records a licence, a regulatory officer records a suspension, and a reader looks up a licence for licence administration. The licensing starters mark their records restricted.</p></article>
+        <article><h3>The history of each licence</h3><p>Each change is kept with who made it and when. When a licence is suspended and the suspension is later lifted, the register shows both decisions in order.</p></article>
+      </div>
+    </div>
+  </section>
+  <SolutionFit
+    area={area}
+    heading="Keep deciding licences where you decide them today."
+    jobs={{
+      'base-registry': 'Stores the licence register: holders, licences, terms, and the decisions recorded against them, with your rules for who may record each one.',
+      'evidence-gateway': 'Answers a defined question, such as whether a licence is active for a category, with a signed answer an employer or inspector can verify.',
+      casework: 'Gives the officers who review corrections and disputes one inbox, with a due date for each item and a record of who decided.',
+    }}
+    extra={[
+      { term: 'Your licensing process keeps deciding', body: 'Applications, fees, and the licensing decision stay in the systems that handle them today. The starters record a licence once it is issued; they do not take applications or decide who qualifies.' },
+    ]}
+  >
+    <p>Each product runs on its own. Start with the register, and add the others when a service needs to check a licence or a correction needs an officer.</p>
+  </SolutionFit>
+  <SolutionDevelopers area={area} muted />
+  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+</Solution>

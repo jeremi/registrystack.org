@@ -2,7 +2,7 @@
 import Product from '../../layouts/Product.astro';
 import EvidenceGatewayFlow from '../../components/EvidenceGatewayFlow.astro';
 import { products } from '../../data/products';
-const product = products[2];
+const product = products.find((p) => p.key === 'evidence-gateway')!;
 ---
 <Product
   product={product}
@@ -40,7 +40,7 @@ const product = products[2];
         <p class="eyebrow">How it fits your organization</p>
         <h2 id="evidence-fit-title">Keep maintaining the register where it is.</h2>
         <p>Evidence Gateway can use an existing source. Your organization keeps ownership of its records, continues to maintain them in its current system, and decides which services may receive each answer.</p>
-        <p>Using Evidence Gateway does not require <a href="/solutions/base-registry/">Base Registry Engine</a>. If you choose both, your technical team configures the connection between them.</p>
+        <p>Using Evidence Gateway does not require <a href="/products/base-registry/">Base Registry Engine</a>. If you choose both, your technical team configures the connection between them.</p>
       </div>
       <dl>
         <dt>Your registry team defines the answers</dt><dd>Agree what each fact means, its permitted uses, and the source responsible for the underlying information. The same source can support different defined answers for different services.</dd>
@@ -62,7 +62,7 @@ const product = products[2];
       <dl>
         <dt>Source connection</dt><dd>The tutorial supplies a local source. An institutional HTTP source needs a reviewed configuration describing the connection and how to derive the answer.</dd>
         <dt>Answer and verification</dt><dd>The tutorial covers signed JWS and SD-JWT VC assertions. The receiving service verifies the expected issuer, signature, request binding, and freshness.</dd>
-        <dt>When a service needs selected fields</dt><dd><a href="/solutions/protected-registry-apis/">Registry Relay</a> supplies permitted data fields for services that need more than an answer to a predefined question.</dd>
+        <dt>When a service needs selected fields</dt><dd><a href="/products/registry-relay/">Registry Relay</a> supplies permitted data fields for services that need more than an answer to a predefined question.</dd>
       </dl>
     </div>
   </section>

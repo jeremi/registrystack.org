@@ -11,6 +11,9 @@ is the current primary focus and main source of examples. Keep general
 explanations applicable to other organizations, including NGOs and banks, and
 make sector-specific assumptions explicit. Possible applications do not imply
 existing deployments, compliance, or demonstrated readiness for every sector.
+A starter is a starting configuration, never a deployment or readiness claim.
+Starter pages state what each starter includes from the catalogue data rather
+than from prose.
 
 Write primarily for people responsible for an organization's registries and
 services: decision makers, programme and service owners, data stewards, and
@@ -27,9 +30,10 @@ secondary audience.
   link to the relevant next step for technical readers.
 - Treat developer and implementer experience as a product design requirement,
   not as the default editorial audience for every public page.
-- Give Base Registry Engine and Evidence Gateway the most prominent product
-  paths, with Registry Relay in a supporting role and its own product page.
-  Use the full **Base Registry Engine** name in public copy; its abbreviation
+- Lead with the register a reader keeps: the solution areas and the starters.
+  Products are the second layer and keep their full pages. Within that layer,
+  Base Registry Engine and Evidence Gateway remain the flagship products, with
+  Registry Relay in a supporting role and its own product page. Use the full **Base Registry Engine** name in public copy; its abbreviation
   belongs in technical documentation and command names.
 - Describe the products as independent choices. The organization owns its
   records; connecting components requires explicit configuration.
@@ -75,8 +79,20 @@ content sequence within that design.
 
 ## Site implementation
 
-Product names, summaries, and tutorial destinations live in
-`src/data/products.ts`. Product pages share `src/layouts/Product.astro`.
+Solution areas (the register families and the cross-cutting jobs) and the
+starters each family groups live in `src/data/solutions.ts`. The starters
+catalogue data lives in `src/data/starters.json`, read through
+`src/data/starters.ts`. That file is generated, not edited: run
+`npm run sync:starters -- EXPORT_DIR --release TAG --repo PATH` on an export
+made by `registry-starters export-catalogue` in the breg-registry-starters
+repository. The starter zips are assets of the GitHub release named by the tag,
+published with that repository's `scripts/publish-catalogue-release`; the site
+links to them and never stores them, so refreshing the catalogue adds no
+binaries to this repository. `src/upstream/starters.json` records the release
+tag, the starters revision and the catalogue digest the site was built from.
+Product names, summaries, and tutorial destinations
+live in `src/data/products.ts`. Product pages live under `/products/` and share
+`src/layouts/Product.astro`.
 The main page uses a static, labeled example that works without JavaScript.
 Data illustrations use shared record and signed-answer components. Keep each
 entity's fields inside its own labelled record; show relationships between
@@ -86,18 +102,20 @@ page explains paid delivery before opening a structured email inquiry.
 
 ## Pages
 
-- `/`: organizational needs, examples, product choices, and evaluation paths.
-- `/solutions/base-registry/`: build and maintain a registry.
-- `/solutions/evidence-gateway/`: return a signed answer to a predefined question.
-- `/solutions/protected-registry-apis/`: publish selected existing data with Relay.
-- `/solutions/casework/`: coordinate the human decisions behind a registry with Casework.
-- `/use-cases/`: illustrative registry and service scenarios.
+- `/`: organizational needs, examples, product choices, register families, and evaluation paths.
+- `/solutions/` and `/solutions/<area>/`: one page per solution area in `src/data/solutions.ts`.
+- `/starters/` and `/starters/<id>/`: the starters catalogue, one page per starter.
+- `/products/base-registry/`: build and maintain a registry.
+- `/products/evidence-gateway/`: return a signed answer to a predefined question.
+- `/products/registry-relay/`: publish selected existing data with Relay.
+- `/products/casework/`: coordinate the human decisions behind a registry with Casework.
 - `/blog/`: field guides for registry owners and reviewers, published from `src/content/blog/` with an RSS feed at `/rss.xml`.
 - `/pricing/`: implementation pilots, annual support contracts, and a budget-qualified inquiry.
 - `/security/` and `/faq/`: boundaries, responsibilities, and adoption questions.
 
 Former product and editorial routes retain redirects in `astro.config.mjs`,
-including `/how-it-fits/` to the homepage. The redirect-only `/pilot/` page
+including `/how-it-fits/` to the homepage, the former `/solutions/<product>/`
+pages to `/products/`, and `/use-cases/` to `/solutions/`. The redirect-only `/pilot/` page
 preserves known section links to `/pricing/`, with a native fallback to the
 pricing page when JavaScript is disabled.
 Historical site plans do not override this structure.

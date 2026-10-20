@@ -1,0 +1,67 @@
+---
+// Shared frame for the solution area pages under /solutions/<area>/. The
+// sections reuse the product page classes (product-facts, product-fit,
+// product-note) so the two layers of the site read as one.
+import Base from './Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import type { SolutionArea } from '../data/solutions';
+
+interface Action {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  area: SolutionArea;
+  heading: string;
+  description: string;
+  primary?: Action;
+  secondary?: Action;
+}
+
+const { area, heading, description } = Astro.props;
+// A register family leads to its starters; a cross-cutting area has none and
+// leads to its example instead.
+const primary = Astro.props.primary ?? (area.kind === 'register-family'
+  ? { href: '#starters', label: 'See the starters' }
+  : { href: '#example', label: 'See the example' });
+const secondary = Astro.props.secondary ?? { href: '#fit', label: 'How it fits' };
+---
+<Base title={area.name + ' | Registry Stack'} description={description}>
+  <SiteHeader current={area.key} />
+  <main class="solution-page">
+    <section class="hero" aria-labelledby="solution-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">{area.name}</p>
+          <h1 id="solution-title">{heading}</h1>
+          <p class="hero-lead">{description}</p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href={primary.href}>{primary.label}</a>
+            <a class="button button-secondary" href={secondary.href}>{secondary.label}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <slot />
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .solution-page :global(.section-inner) { padding-top: clamp(44px, 6vw, 68px); padding-bottom: clamp(44px, 6vw, 68px); }
+  .solution-page :global(h2) { font-size: clamp(28px, 3.7vw, 42px); }
+  .solution-page :global(.product-facts) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .solution-page :global(.product-facts article) { border-top: 2px solid var(--registry-blue); padding-top: 20px; }
+  .solution-page :global(.product-facts p) { margin-bottom: 0; }
+  .solution-page :global(.product-fit) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+  .solution-page :global(.product-fit dl) { margin: 0; }
+  .solution-page :global(.product-fit dt) { font-weight: 700; color: var(--registry-ink); margin-bottom: 5px; }
+  .solution-page :global(.product-fit dd) { margin: 0 0 20px; padding-bottom: 18px; border-bottom: 1px solid var(--registry-rule); line-height: 1.55; }
+  .solution-page :global(.product-fit dd:last-child) { margin-bottom: 0; }
+  .solution-page :global(.product-note) { border-left: 3px solid var(--registry-blue); padding-left: 18px; margin: 28px 0 0; }
+  @media (max-width: 700px) {
+    .solution-page :global(.product-facts), .solution-page :global(.product-fit) { grid-template-columns: 1fr; gap: 24px; }
+  }
+</style>

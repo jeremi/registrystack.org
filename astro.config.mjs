@@ -8,14 +8,21 @@ export default defineConfig({
   trailingSlash: 'always',
   // Keep old inbound links useful while the marketing site stays organized
   // around solutions. Product routes hand technical readers straight to docs.
+  // Static output renders each redirect as a meta-refresh page, which is what
+  // GitHub Pages can serve.
   redirects: {
     '/why/': '/',
     '/problem/': '/',
     '/ecosystem/': '/',
-    '/ai/': '/use-cases/',
+    '/ai/': '/solutions/',
+    '/use-cases/': '/solutions/',
     '/how-it-fits/': '/',
-    '/notary/': '/solutions/evidence-gateway/',
-    '/relay/': '/solutions/protected-registry-apis/',
+    '/notary/': '/products/evidence-gateway/',
+    '/relay/': '/products/registry-relay/',
+    '/solutions/base-registry/': '/products/base-registry/',
+    '/solutions/evidence-gateway/': '/products/evidence-gateway/',
+    '/solutions/casework/': '/products/casework/',
+    '/solutions/protected-registry-apis/': '/products/registry-relay/',
     '/manifest/': 'https://docs.registrystack.org/products/registry-manifest/',
   },
   // The compatibility page redirects visitors and should not be indexed.

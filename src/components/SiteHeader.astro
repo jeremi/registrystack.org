@@ -1,19 +1,23 @@
 ---
 // Shared top navigation for every marketing page. Marketing is organized by
-// the outcomes a team needs; product implementation detail lives in the docs.
+// the register a team keeps, then the products; implementation detail lives
+// in the docs.
 import { products } from '../data/products';
+import { solutionAreas } from '../data/solutions';
 const { current } = Astro.props;
-const solutions = products.filter((product) => product.menu).map((product) => ({
-  ...product, label: product.solution, blurb: product.intent,
-}));
+const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
+const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 
 const links = [
-  { href: '/use-cases/', label: 'Use cases', key: 'use-cases' },
+  { href: '/starters/', label: 'Starters', key: 'starters' },
   { href: '/blog/', label: 'Blog', key: 'blog' },
   { href: '/pricing/', label: 'Pricing', key: 'pricing' },
 ];
 
-const onSolutionPage = products.some((product) => product.key === current);
+const onSolutionPage = current === 'solutions' || solutionAreas.some((area) => area.key === current);
+const onProductPage = products.some((product) => product.key === current);
+// The flagship products lead the menu; the data order is otherwise kept.
+const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
 ---
 
 <header class="site-header">
@@ -25,10 +29,28 @@ const onSolutionPage = products.some((product) => product.key === current);
     <details class="nav-group">
       <summary aria-current={onSolutionPage ? 'page' : undefined}>Solutions</summary>
       <div class="nav-group-panel">
-        {solutions.map((solution) => (
-          <a href={solution.href} aria-current={current === solution.key ? 'page' : undefined}>
-            <span class="nav-entry-name">{solution.label}</span>
-            <span class="nav-entry-blurb">{solution.blurb}</span>
+        {registerFamilies.map((area) => (
+          <a href={area.slug} aria-current={current === area.key ? 'page' : undefined}>
+            <span class="nav-entry-name">{area.name}</span>
+            <span class="nav-entry-blurb">{area.intent}</span>
+          </a>
+        ))}
+        <hr class="nav-group-rule" />
+        {crossCutting.map((area) => (
+          <a href={area.slug} aria-current={current === area.key ? 'page' : undefined}>
+            <span class="nav-entry-name">{area.name}</span>
+            <span class="nav-entry-blurb">{area.intent}</span>
+          </a>
+        ))}
+      </div>
+    </details>
+    <details class="nav-group">
+      <summary aria-current={onProductPage ? 'page' : undefined}>Products</summary>
+      <div class="nav-group-panel">
+        {productEntries.map((product) => (
+          <a href={product.href} aria-current={current === product.key ? 'page' : undefined}>
+            <span class="nav-entry-name">{product.name}</span>
+            <span class="nav-entry-blurb">{product.intent}</span>
           </a>
         ))}
       </div>

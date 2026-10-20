@@ -107,8 +107,8 @@ answer:** Evidence Gateway. **The service needs records:** publish them
 deliberately, field by field. Registry Relay, Casework, Manifest and Discovery
 have their own pages.
 
-Check against the [Base Registry Engine](/solutions/base-registry/) and
-[Evidence Gateway](/solutions/evidence-gateway/) pages and the
+Check against the [Base Registry Engine](/products/base-registry/) and
+[Evidence Gateway](/products/evidence-gateway/) pages and the
 [known limitations](https://docs.registrystack.org/explanation/known-limitations/).
 If the service question is still fuzzy, start with
 [Before you connect a registry, define the question](/blog/before-you-connect-a-registry-define-the-question/).

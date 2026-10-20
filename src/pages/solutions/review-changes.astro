@@ -1,0 +1,71 @@
+---
+import Solution from '../../layouts/Solution.astro';
+import SolutionExample from '../../components/SolutionExample.astro';
+import SolutionFit from '../../components/SolutionFit.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import { solutionAreas } from '../../data/solutions';
+import { products } from '../../data/products';
+const area = solutionAreas.find((a) => a.key === 'review-changes')!;
+const casework = products.find((p) => p.key === 'casework')!;
+---
+<Solution
+  area={area}
+  heading="Put each change that needs a decision in front of the person who decides."
+  description="Corrections, disputes, and requests to change a record cannot always be applied straight away. Someone has to look, ask for what is missing, decide, and answer back. The register keeps its own rules about who may change a record; the review work needs an owner and a due date."
+>
+  <SolutionExample
+    eyebrow="One example: a licence scope correction"
+    heading="Correct a licence with one officer accountable from request to decision."
+    intro="A professional register receives a request to correct the scope of a licence. The registry team wants corrections reviewed by an officer before they take effect, a first response within 48 hours, and a clear record of who decided."
+    items={[
+      { term: 'Who asks', body: 'The licence holder, or a service that spotted the wrong scope.' },
+      { term: 'What the team wants', body: 'One officer holds each request, the 48-hour response clock is visible to the team, and nothing changes in the register until the officer approves.' },
+      { term: 'What happens', body: 'The request reaches the team’s inbox. An officer takes it, asks the applicant for what is missing, and approves the correction. The officer then applies it in the register under their own account.' },
+      { term: 'What stays with the institution', body: 'The register keeps the licence, its rules about who may change it, and the history of the change. The inbox keeps who held the request and when it was answered.' },
+    ]}
+    link={{ href: '/products/casework/#product-example', label: 'See the correction step by step' }}
+  />
+  <section class="section" aria-labelledby="review-control-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">What you keep control of</p>
+        <h2 id="review-control-title">Which changes wait, who decides, and the record afterwards.</h2>
+        <p>Every register family has changes that should not take effect on request: a licence scope, a parcel holder, a household member. The team that keeps the register decides which ones wait for a person.</p>
+      </div>
+      <div class="product-facts">
+        <article><h3>Which changes need a person</h3><p>Allow routine updates directly and send the rest to review. Decide which queue receives each kind of request and the response target for each queue.</p></article>
+        <article><h3>Who may decide</h3><p>The register stays the authority on who may see and change a record. The officer who approves a change applies it under their own account, with the permissions that person already has.</p></article>
+        <article><h3>The record afterwards</h3><p>Each request keeps who held it, who decided, and when. The register records the change against the person who made it, so a reviewer can follow it later without asking the people involved.</p></article>
+      </div>
+    </div>
+  </section>
+  <SolutionFit
+    area={area}
+    heading="Approvals in the register, or work in an inbox."
+    muted
+    jobs={{
+      casework: 'Gives the work to a person, tracks it against a due date, lets a supervisor chase it when it stalls, and answers back to whoever asked.',
+      'base-registry': 'Holds a proposed change until a fixed number of approvals are in, when that is all the review needs.',
+    }}
+    extra={[
+      { term: 'Work from other systems', body: 'Base Registry Engine ships with an adapter for Casework. Another system needs an adapter written against the published contract, and any service can hand in a request through the API and follow its progress.' },
+    ]}
+  >
+    <p>If a fixed number of approvals is enough, the engine can require them on its own. Choose Casework when the work has to be given to a person, tracked against a due date, chased, and answered.</p>
+  </SolutionFit>
+  <section id="developers" class="section" aria-labelledby="review-developers-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">For developers and implementers</p>
+        <h2 id="review-developers-title">Start with approvals in the engine, or with the inbox.</h2>
+      </div>
+      <dl>
+        <dt>Base Registry Engine</dt>
+        <dd>An asset-location correction: propose a different site, collect two approvals, and apply the change. <a href="https://docs.registrystack.org/tutorials/review-registry-changes/">Run the reviewed-change tutorial</a>.</dd>
+        <dt>{casework.name}</dt>
+        <dd>{casework.firstResult} <a href={casework.tutorialHref}>{casework.tutorialLabel}</a>.</dd>
+      </dl>
+    </div>
+  </section>
+  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team sets up review for its register." emphasis="pilot" />
+</Solution>

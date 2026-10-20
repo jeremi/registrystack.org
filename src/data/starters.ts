@@ -1,0 +1,74 @@
+// The published starters catalogue. src/data/starters.json is written by
+// scripts/sync-starters.mjs from an export of the breg-registry-starters
+// repository; edit the starters there, not here. src/upstream/starters.json
+// records which revision the data came from.
+import catalogue from './starters.json';
+import { solutionAreaForStarter, type SolutionArea } from './solutions';
+
+export interface StarterRecordType {
+  id: string;
+  label: string;
+  description: string;
+  mutationMode: string;
+  classification: string;
+  fieldCount: number;
+  references: { field: string; target: string }[];
+}
+
+export interface StarterAction {
+  id: string;
+  label: string;
+  description: string;
+}
+
+export interface StarterAccessProfile {
+  id: string;
+  requiredScopes: string[];
+  requiredPurposes: string[];
+  actions: string[];
+  recordTypes: string[];
+}
+
+export interface Starter {
+  id: string;
+  title: string;
+  task: string;
+  summary: string;
+  catalogueRows: string[];
+  sourceUrls: string[];
+  counts: { recordTypes: number; actions: number; values: number };
+  includes: {
+    staffUi: boolean;
+    evidenceCompanion: boolean;
+    clients: boolean;
+    statistics: boolean;
+    modules: boolean;
+  };
+  recordTypes: StarterRecordType[];
+  actions: StarterAction[];
+  accessProfiles: StarterAccessProfile[];
+  valuesKeys: string[];
+  download: { path: string; sha256: string; bytes: number };
+}
+
+export interface StarterSource {
+  catalogueVersion: number;
+  breg: { repository: string; revision: string; version: string };
+  publicschema: { repository: string; revision: string; version: string; license: string };
+}
+
+export const starters: readonly Starter[] = catalogue.starters;
+export const startersSource: StarterSource = catalogue.source;
+export const starterCount = starters.length;
+
+export const starterById = (id: string): Starter | undefined => starters.find((starter) => starter.id === id);
+
+// Starters in the order the solution area lists them, so the family page and
+// the catalogue agree.
+export const startersForArea = (area: SolutionArea): Starter[] =>
+  area.starters.flatMap((id) => {
+    const starter = starterById(id);
+    return starter ? [starter] : [];
+  });
+
+export const areaForStarter = solutionAreaForStarter;

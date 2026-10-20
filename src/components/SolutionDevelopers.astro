@@ -1,0 +1,35 @@
+---
+// Developer next steps for a register family: the Base Registry Engine
+// tutorial and the family's first starter.
+import type { SolutionArea } from '../data/solutions';
+import { products } from '../data/products';
+import { startersForArea } from '../data/starters';
+
+interface Props {
+  area: SolutionArea;
+  muted?: boolean;
+}
+
+const { area, muted = false } = Astro.props;
+const engine = products.find((p) => p.key === 'base-registry')!;
+const firstStarter = startersForArea(area)[0];
+if (!firstStarter) throw new Error(`solution area ${area.key} has no starters`);
+---
+<section id="developers" class={muted ? 'section section-muted' : 'section'} aria-labelledby="solution-developers-title">
+  <div class="section-inner product-fit">
+    <div class="section-heading compact">
+      <p class="eyebrow">For developers and implementers</p>
+      <h2 id="solution-developers-title">Run the tutorial, then open a starter.</h2>
+      <p>The {engine.name} tutorial uses a sample business register. {engine.firstResult}</p>
+      <p><a class="inline-cta" href={engine.tutorialHref}>{engine.tutorialLabel} <span aria-hidden="true">→</span></a></p>
+      <p>Then open a starter from this family to see its record types, actions, and access profiles.</p>
+      <p><a class="inline-cta" href={`/starters/${firstStarter.id}/`}>Starter: {firstStarter.title} <span aria-hidden="true">→</span></a></p>
+    </div>
+    <dl>
+      <dt>What a starter is</dt>
+      <dd>A starter zip is a source template. The tutorial toolchain generates a project from it, which your team reviews, adapts to its own records and rules, and then runs. A starter is not a running registry, and using one does not make a register ready for a sector.</dd>
+      <dt>Continue in the documentation</dt>
+      <dd><a href="https://docs.registrystack.org/explanation/configuration-defined-registry/">Read how a configuration-defined registry works</a> for the model, permissions, and application boundary.</dd>
+    </dl>
+  </div>
+</section>

@@ -1,0 +1,63 @@
+---
+import Solution from '../../layouts/Solution.astro';
+import SolutionExample from '../../components/SolutionExample.astro';
+import SolutionStarters from '../../components/SolutionStarters.astro';
+import SolutionFit from '../../components/SolutionFit.astro';
+import SolutionDevelopers from '../../components/SolutionDevelopers.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import { solutionAreas } from '../../data/solutions';
+const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')!;
+---
+<Solution
+  area={area}
+  heading="Keep records about people current, and let programmes check them."
+  description="Population registers, social registries, electoral rolls, and learner records hold information about people and the households they live in. The authority that keeps them decides who is entered and on what basis. Benefit, school, and licensing services need a fact from those records, such as enrollment status, without receiving the person’s file."
+>
+  <SolutionExample
+    eyebrow="One example: a school meal programme checks enrollment"
+    heading="Tell a school meal programme whether a household is enrolled."
+    intro="A school meal programme needs to know whether a household is enrolled in social protection. The social registry owner agrees what “enrolled” means and which programmes may ask."
+    items={[
+      { term: 'Who asks', body: 'The school meal programme, for the household on the application.' },
+      { term: 'What the team wants', body: 'The current enrollment status, as the social registry owner has defined it, in a signed answer the programme can verify.' },
+      { term: 'What happens', body: 'The programme asks Evidence Gateway. The gateway checks the programme’s permission and purpose, reads the status from the social registry, and returns a signed answer. The programme decides what the answer means for the application.' },
+      { term: 'What stays with the institution', body: 'The household case file, income details, and payment history are not returned.' },
+    ]}
+    note="The same registry can support a local authority’s own work on resident records: staff register people, link them to households, and update details as circumstances change."
+    link={{ href: '/products/base-registry/#product-example', label: 'See resident and household records' }}
+  />
+  <SolutionStarters
+    area={area}
+    heading="Start from a register of people like yours."
+    intro="Each starter is a starting configuration for a common register about people. It records an entry after the responsible authority has made its decision; your team adapts the records and rules to its own law."
+  />
+  <section class="section section-muted" aria-labelledby="people-control-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">What you keep control of</p>
+        <h2 id="people-control-title">The records about people, who may look them up, and what changed.</h2>
+      </div>
+      <div class="product-facts">
+        <article><h3>People, households, and the links between them</h3><p>Define the person, the household, and how they relate. The population register starter records a person, a citizenship recognition already decided, and a sector identifier together, in one action.</p></article>
+        <article><h3>Who may look up a person</h3><p>Records about people are personal data. In the voter registration, learner records, and criminal records starters, the default reader cannot list the collection; a service looks up a record it already knows.</p></article>
+        <article><h3>What changed and who decided</h3><p>The register records decisions the responsible authority has made, such as an enrollment or a final conviction, and keeps each later change in the record’s history. Eligibility decisions stay with the programme.</p></article>
+      </div>
+    </div>
+  </section>
+  <SolutionFit
+    area={area}
+    heading="Keep the records with the authority that is responsible for them."
+    jobs={{
+      'base-registry': 'Stores records about people and households, with your rules for who may create, read, and change each one.',
+      'evidence-gateway': 'Answers a defined question, such as enrollment status or adult status, with a signed answer and no date of birth or address.',
+      casework: 'Gives the officers who review corrections to a person’s record one inbox, with a due date and a record of who decided.',
+    }}
+    extra={[
+      { term: 'Programmes keep their own decisions', body: 'A programme that receives an answer decides what it means for its applicant, under its own rules. The starters do not assess eligibility or calculate benefits.' },
+    ]}
+  >
+    <p>Each product runs on its own. Evidence Gateway can answer from a population or social registry you already run; Base Registry Engine is for a register you build or move into a defined structure.</p>
+  </SolutionFit>
+  <SolutionDevelopers area={area} muted />
+  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+</Solution>

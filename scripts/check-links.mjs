@@ -8,7 +8,23 @@ const warnings = [];
 // The lab redeploys on its own schedule, and while it is down the links on the
 // already-deployed site are just as dead: blocking this build would not protect
 // anyone. Unreachability there warns; everywhere else it fails.
-const warnOnlyOrigins = ["https://lab.registrystack.org"];
+// Starter zips are assets of a release of the starters repository, listed in
+// src/upstream/starters.json. The site can be built before that release is
+// published, and 84 asset checks against GitHub can hit its rate limit, so an
+// unreachable asset warns instead of failing the build.
+const warnOnlyOrigins = [
+  "https://lab.registrystack.org",
+  "https://github.com/registrystack/breg-registry-starters/releases",
+];
+// The public registers each starter was modelled on come from the starters
+// catalogue, not from this site's copy, and several of them answer automated
+// requests with 403 or 503. They warn here; fixing one means fixing it in
+// breg-registry-starters and syncing the catalogue again.
+const catalogueSourceLinks = new Set(
+  JSON.parse(readFileSync(resolve("src/data/starters.json"), "utf8")).starters.flatMap(
+    (starter) => starter.sourceUrls,
+  ),
+);
 // The Casework documentation pages publish when the Casework merge lands in
 // the product repository. Until docs.registrystack.org serves them, these
 // links warn instead of failing the build. Empty this list once they resolve.
@@ -20,6 +36,7 @@ const warnOnlyLinks = [
 ];
 const isWarnOnly = (href) =>
   warnOnlyLinks.includes(href) ||
+  catalogueSourceLinks.has(href) ||
   warnOnlyOrigins.some(
     (origin) => href === origin || href.startsWith(`${origin}/`),
   );

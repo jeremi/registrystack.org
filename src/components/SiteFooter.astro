@@ -1,15 +1,18 @@
 ---
+import { products } from '../data/products';
+import { solutionAreas } from '../data/solutions';
 const year = new Date().getFullYear();
 const repoHref = 'https://github.com/registrystack/registry-stack';
+const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
+const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
+// The flagship products lead the column, as they do in the header menu.
+const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
 const columns = [
-  { title: 'Solutions', links: [
-    { href: '/solutions/base-registry/', label: 'Base registry' },
-    { href: '/solutions/evidence-gateway/', label: 'Evidence Gateway' },
-    { href: '/solutions/protected-registry-apis/', label: 'Protected registry APIs' },
-    { href: '/solutions/casework/', label: 'Casework' },
-  ] },
+  { title: 'Solutions', links: registerFamilies.map((area) => ({ href: area.slug, label: area.name })) },
+  { title: 'Products', links: productEntries.map((product) => ({ href: product.href, label: product.name })) },
   { title: 'Explore', links: [
-    { href: '/use-cases/', label: 'Use cases' },
+    { href: '/starters/', label: 'Starters' },
+    ...crossCutting.map((area) => ({ href: area.slug, label: area.name })),
     { href: '/blog/', label: 'Blog' },
     { href: '/security/', label: 'Security' },
     { href: '/faq/', label: 'FAQ' },

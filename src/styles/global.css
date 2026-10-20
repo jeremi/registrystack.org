@@ -154,8 +154,8 @@ dd a {
   color: var(--registry-white);
 }
 
-/* The two solution routes fold into a disclosure. Plain <details> keeps the
-   menu usable without JavaScript. */
+/* Solutions and Products each fold into a disclosure. Plain <details> keeps
+   the menus usable without JavaScript. */
 .nav-group {
   position: relative;
 }
@@ -222,6 +222,13 @@ dd a {
 .nav-group-panel a:hover {
   background: var(--registry-active);
   text-decoration: none;
+}
+
+/* Separates the register families from the cross-cutting entries. */
+.nav-group-rule {
+  border: 0;
+  border-top: 1px solid var(--registry-rule);
+  margin: 6px 12px;
 }
 
 .nav-group-panel a[aria-current='page'] .nav-entry-name {
@@ -1401,10 +1408,12 @@ code {
   color: var(--registry-white);
 }
 
+/* The brand sits above the five link columns so the longer solution names
+   have room to read. */
 .site-footer-inner {
   display: grid;
   gap: clamp(28px, 5vw, 56px);
-  grid-template-columns: minmax(220px, 1fr) 2.4fr;
+  grid-template-columns: 1fr;
   margin: 0 auto;
   max-width: var(--registry-max);
   padding: 48px clamp(16px, 4vw, 42px) 32px;
@@ -1438,7 +1447,7 @@ code {
 .footer-nav {
   display: grid;
   gap: clamp(20px, 3vw, 40px);
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .footer-col-title {
@@ -1452,6 +1461,7 @@ code {
 
 .footer-col ul {
   display: grid;
+  gap: 4px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -1497,6 +1507,10 @@ code {
 }
 
 @media (max-width: 900px) {
+  .footer-nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   html {
     scroll-padding-top: 16px;
   }
@@ -1627,10 +1641,6 @@ code {
   }
 
   .flow-node ol {
-    grid-template-columns: 1fr;
-  }
-
-  .site-footer-inner {
     grid-template-columns: 1fr;
   }
 }

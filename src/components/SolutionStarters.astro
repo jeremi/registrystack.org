@@ -1,0 +1,50 @@
+---
+// The starters a register family groups, in the order solutions.ts lists
+// them. Titles, tasks, and counts come from the starters catalogue data.
+import type { SolutionArea } from '../data/solutions';
+import { startersForArea, starterCount } from '../data/starters';
+
+interface Props {
+  area: SolutionArea;
+  heading: string;
+  intro: string;
+}
+
+const { area, heading, intro } = Astro.props;
+const areaStarters = startersForArea(area);
+
+// The listing shows the first sentence of each task; the starter page has the rest.
+const firstSentence = (text: string) => text.match(/^.*?[.!?](?=\s+[A-Z]|$)/)?.[0] ?? text;
+const count = (n: number, singular: string) => (n === 0 ? `No ${singular}s` : `${n} ${singular}${n === 1 ? '' : 's'}`);
+---
+<section id="starters" class="section" aria-labelledby="solution-starters-title">
+  <div class="section-inner">
+    <div class="section-heading">
+      <p class="eyebrow">Starters for this register</p>
+      <h2 id="solution-starters-title">{heading}</h2>
+      <p>{intro}</p>
+    </div>
+    <ul class="solution-starter-list">
+      {areaStarters.map((starter) => (
+        <li>
+          <h3><a href={`/starters/${starter.id}/`}>{starter.title}</a></h3>
+          <p>{firstSentence(starter.task)}</p>
+          <p class="solution-starter-counts">{count(starter.counts.recordTypes, 'record type')} · {count(starter.counts.actions, 'action').toLowerCase()}</p>
+        </li>
+      ))}
+    </ul>
+    <p class="solution-starter-all"><a class="inline-cta" href="/starters/">Browse all {starterCount} starters <span aria-hidden="true">→</span></a></p>
+  </div>
+</section>
+
+<style>
+  .solution-starter-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; list-style: none; margin: 0; padding: 0; }
+  .solution-starter-list li { border-top: 1px solid var(--registry-rule); padding: 20px 0 22px; min-width: 0; }
+  .solution-starter-list h3 { font-size: var(--type-body); margin: 0 0 6px; }
+  .solution-starter-list p { color: var(--registry-body); font-size: var(--type-md); margin: 0; }
+  .solution-starter-list .solution-starter-counts { color: var(--registry-muted); font-family: var(--registry-mono); font-size: var(--type-xs); margin-top: 10px; }
+  .solution-starter-all { font-size: var(--type-base); margin: 24px 0 0; }
+  @media (max-width: 700px) {
+    .solution-starter-list { grid-template-columns: 1fr; }
+  }
+</style>

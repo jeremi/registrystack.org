@@ -1,0 +1,54 @@
+---
+// One starter in the catalogue: its title, what it records, and its size.
+import type { Starter } from '../data/starters';
+import StarterIncludes from './StarterIncludes.astro';
+
+interface Props {
+  starter: Starter;
+}
+const { starter } = Astro.props;
+
+const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
+// The first sentence of the task keeps the catalogue scannable; the starter's
+// own page carries the full task.
+const firstSentence = starter.task.split(/(?<=[.!?])\s+(?=[A-Z])/)[0];
+---
+<article class="starter-card">
+  <h3><a href={`/starters/${starter.id}/`}>{starter.title}</a></h3>
+  <p>{firstSentence}</p>
+  <p class="starter-card-counts">
+    {plural(starter.counts.recordTypes, 'record type', 'record types')}
+    <span aria-hidden="true"> · </span>
+    {plural(starter.counts.actions, 'action', 'actions')}
+  </p>
+  <StarterIncludes includes={starter.includes} />
+</article>
+
+<style>
+  .starter-card {
+    background: var(--registry-white);
+    border: 1px solid var(--registry-rule);
+    display: flex;
+    flex-direction: column;
+    padding: 22px;
+  }
+
+  .starter-card h3 {
+    font-size: var(--type-body);
+    margin-bottom: 8px;
+  }
+
+  .starter-card p {
+    font-size: var(--type-md);
+    margin-bottom: 12px;
+  }
+
+  .starter-card .starter-card-counts {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: var(--type-xs);
+    letter-spacing: 0.06em;
+    margin: auto 0 0;
+    text-transform: uppercase;
+  }
+</style>

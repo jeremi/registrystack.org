@@ -1,0 +1,62 @@
+---
+import Solution from '../../layouts/Solution.astro';
+import SolutionExample from '../../components/SolutionExample.astro';
+import SolutionStarters from '../../components/SolutionStarters.astro';
+import SolutionFit from '../../components/SolutionFit.astro';
+import SolutionDevelopers from '../../components/SolutionDevelopers.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import { solutionAreas } from '../../data/solutions';
+const area = solutionAreas.find((a) => a.key === 'business-and-tax')!;
+---
+<Solution
+  area={area}
+  heading="Keep the register of businesses that other services check."
+  description="Registration authorities, tax administrations, and financial supervisors keep records of businesses, taxpayers, suppliers, filings, and the rights over them. Procurement, licensing, and tax services need to know whether a business is registered and active. They rarely need its filing history or its owners."
+>
+  <SolutionExample
+    eyebrow="One example: a supplier registration check"
+    heading="Tell a procurement service whether a supplier is active."
+    intro="A government procurement service needs to know whether a supplier is actively registered before it processes the supplier’s application. The business register can answer that question without sending the supplier’s file."
+    items={[
+      { term: 'Who asks', body: 'The procurement service, for the supplier named on the application.' },
+      { term: 'What the team wants', body: 'A signed active or inactive answer for that supplier, which the procurement service can check came from the business register.' },
+      { term: 'What happens', body: 'The procurement service asks Evidence Gateway. The gateway checks that the service may ask this question, reads the status from the business register, and returns a signed answer. The procurement service decides what the answer means for the application.' },
+      { term: 'What stays with the institution', body: 'Filing history, addresses, and ownership records stay in the business register.' },
+    ]}
+    link={{ href: '/products/evidence-gateway/#product-example', label: 'See the supplier check step by step' }}
+  />
+  <SolutionStarters
+    area={area}
+    heading="Start from a business or tax register like yours."
+    intro="Each starter is a starting configuration for a common register of businesses, taxpayers, filings, or financial rights. It records a registration or a right after the authority has decided it; your team adapts the records and rules to its own law."
+  />
+  <section class="section section-muted" aria-labelledby="business-control-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">What you keep control of</p>
+        <h2 id="business-control-title">The register, who may look up a business, and its filings.</h2>
+      </div>
+      <div class="product-facts">
+        <article><h3>The organization and its registrations</h3><p>Define the organization once and link each registration, tax category, or authorization to it. The business register and taxpayer registration starters keep the organization and its registration as separate record types.</p></article>
+        <article><h3>Who may look up a business, and why</h3><p>Ownership, credit, and account records carry personal and financial information. The bank account register starter limits access to known records and a named statutory purpose. The central credit register starter records the lending commitment and leaves repayments out.</p></article>
+        <article><h3>Filings and status over time</h3><p>Record a filing when it is received, then record its review and publication status as the authority decides them. The earlier status stays in the record’s history.</p></article>
+      </div>
+    </div>
+  </section>
+  <SolutionFit
+    area={area}
+    heading="Keep the register where it is, or build it new."
+    jobs={{
+      'base-registry': 'Stores the register of businesses, taxpayers, or filings, with your rules for who may record and read each one.',
+      'evidence-gateway': 'Answers a defined question, such as whether a supplier is actively registered, with a signed answer and no filing history.',
+      'protected-registry-apis': 'Shares agreed fields, such as legal name and legal form, with a service that needs more than a yes or no.',
+    }}
+    extra={[
+      { term: 'An existing register can stay where it is', body: 'Evidence Gateway and Registry Relay can read from a register you already run. Base Registry Engine is for a register you build, or move into a defined structure with a planned migration.' },
+    ]}
+  >
+    <p>Each product runs on its own. A tax administration with a working register may only need services to check a status; a new register of beneficial owners may start with the engine.</p>
+  </SolutionFit>
+  <SolutionDevelopers area={area} muted />
+  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+</Solution>

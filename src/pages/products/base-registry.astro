@@ -2,7 +2,7 @@
 import Product from '../../layouts/Product.astro';
 import PersonHouseholdRecords from '../../components/PersonHouseholdRecords.astro';
 import { products } from '../../data/products';
-const product = products[0];
+const product = products.find((p) => p.key === 'base-registry')!;
 ---
 <Product
   product={product}
@@ -54,8 +54,8 @@ const product = products[0];
       </div>
       <dl>
         <dt>Hold the authoritative records</dt><dd>Base Registry Engine stores the records and their history and applies your rules for who may read or change what.</dd>
-        <dt>Let other services rely on the register without copying it</dt><dd><a href="/solutions/evidence-gateway/">Evidence Gateway</a> answers a defined question, such as an age check, with a signed fact and no full record. <a href="/solutions/protected-registry-apis/">Registry Relay</a> publishes the fields each service is allowed to receive.</dd>
-        <dt>Take back corrections and decide on them</dt><dd>A service that spots a wrong record has to report it, and someone has to review it. <a href="/solutions/casework/">Casework</a> gives the officers who do that one accountable inbox, and the registry keeps its own rules about who may change a record.</dd>
+        <dt>Let other services rely on the register without copying it</dt><dd><a href="/products/evidence-gateway/">Evidence Gateway</a> answers a defined question, such as an age check, with a signed fact and no full record. <a href="/products/registry-relay/">Registry Relay</a> publishes the fields each service is allowed to receive.</dd>
+        <dt>Take back corrections and decide on them</dt><dd>A service that spots a wrong record has to report it, and someone has to review it. <a href="/products/casework/">Casework</a> gives the officers who do that one accountable inbox, and the registry keeps its own rules about who may change a record.</dd>
         <dt>Answer for it afterwards</dt><dd>Every change and refused request is journaled with who asked and who decided, so a reviewer can reconstruct what happened without asking the people involved.</dd>
       </dl>
     </div>

@@ -1,0 +1,117 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import { solutionAreas, registerFamilies } from '../../data/solutions';
+import { products } from '../../data/products';
+import { startersForArea, starterCount } from '../../data/starters';
+
+const pageTitle = 'Solutions | Registry Stack';
+const pageDescription = 'Find the kind of register your organization keeps, the starters that model registers like it, and the products that do the work around it.';
+const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
+// The flagship products lead, as in the Products menu; the data order is otherwise kept.
+const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="solutions" />
+  <main class="solutions-index">
+    <section class="hero" aria-labelledby="solutions-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Solutions</p>
+          <h1 id="solutions-title">Start from the register you keep.</h1>
+          <p class="hero-lead">Find the kind of register your organization keeps: licences, businesses, people, land, farms, facilities, or reference lists. Each area shows the starters that model registers like yours, then the products that do the work around them.</p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href="#registers">Find your register</a>
+            <a class="button button-secondary" href="/starters/">Browse the {starterCount} starters</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="registers" class="section" aria-labelledby="registers-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">By the register you keep</p>
+          <h2 id="registers-title">Find the kind of register you keep.</h2>
+          <p>Each area groups registers that do the same kind of work, with starting configurations your team can adapt and the products that fit.</p>
+        </div>
+        <ul class="solution-area-grid">
+          {registerFamilies.map((area) => (
+            <li>
+              <a href={area.slug}>
+                <span class="solution-area-name">{area.name}</span>
+                <span class="solution-area-intent">{area.intent}</span>
+                <span class="solution-area-count">{startersForArea(area).length} starters</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="shared-work-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Work every register shares</p>
+          <h2 id="shared-work-title">Check facts between services. Review the changes that need a person.</h2>
+          <p>Whatever the register holds, other services ask it questions and some changes wait for an officer’s decision.</p>
+        </div>
+        <ul class="solution-area-grid solution-area-pair">
+          {crossCutting.map((area) => (
+            <li>
+              <a href={area.slug}>
+                <span class="solution-area-name">{area.name}</span>
+                <span class="solution-area-intent">{area.intent}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="products-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Products</p>
+          <h2 id="products-title">The products that do the work.</h2>
+          <p>Each product runs on its own. Your organization chooses which ones a register needs and configures any connection between them.</p>
+        </div>
+        <ul class="solution-area-grid solution-product-row">
+          {productEntries.map((product) => (
+            <li>
+              <a href={product.href}>
+                <span class="solution-area-name">{product.name}</span>
+                <span class="solution-area-intent">{product.intent}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <DocsHandoff />
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .solution-area-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; list-style: none; margin: 0; padding: 0; }
+  .solution-area-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .solution-product-row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .solution-area-grid li { border-top: 1px solid #c9d0c5; }
+  .solution-area-grid a { display: grid; gap: 4px; padding: 18px 0 20px; }
+  .solution-area-grid a:hover { text-decoration: none; }
+  .solution-area-grid a:hover .solution-area-name { color: var(--registry-blue); }
+  .solution-area-name { color: var(--registry-ink); font-size: var(--type-body); font-weight: 700; }
+  .solution-area-intent { color: var(--registry-muted); font-size: var(--type-md); }
+  .solution-area-count { color: var(--registry-blue); font-family: var(--registry-mono); font-size: var(--type-xs); margin-top: 6px; }
+  @media (max-width: 900px) {
+    .solution-area-grid, .solution-product-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 620px) {
+    .solution-area-grid, .solution-area-pair, .solution-product-row { grid-template-columns: 1fr; }
+  }
+</style>

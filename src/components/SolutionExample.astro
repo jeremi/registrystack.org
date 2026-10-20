@@ -1,0 +1,38 @@
+---
+// "One example" section for a solution area page: who asks, what the team
+// wants, what happens, and what stays with the institution.
+interface Item {
+  term: string;
+  body: string;
+}
+
+interface Props {
+  eyebrow: string;
+  heading: string;
+  intro: string;
+  items: Item[];
+  note?: string;
+  link?: { href: string; label: string };
+}
+
+const { eyebrow, heading, intro, items, note, link } = Astro.props;
+---
+<section id="example" class="section section-muted" aria-labelledby="solution-example-title">
+  <div class="section-inner product-fit">
+    <div class="section-heading compact">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 id="solution-example-title">{heading}</h2>
+      <p>{intro}</p>
+      {note && <p class="product-note">{note}</p>}
+      {link && <p><a class="inline-cta" href={link.href}>{link.label} <span aria-hidden="true">→</span></a></p>}
+    </div>
+    <dl>
+      {items.map((item) => (
+        <>
+          <dt>{item.term}</dt>
+          <dd>{item.body}</dd>
+        </>
+      ))}
+    </dl>
+  </div>
+</section>

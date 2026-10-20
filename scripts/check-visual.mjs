@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
@@ -12,6 +12,14 @@ if (!existsSync(htmlPath)) {
 }
 
 mkdirSync(outputDir, { recursive: true });
+
+// The header has two menus: Solutions lists every solution area, Products
+// every product. Count both from the data files the header is built from.
+const countMatches = (relativePath, pattern) => (readFileSync(resolve(relativePath), 'utf8').match(pattern) ?? []).length;
+const expectedMenuLinks = [
+  countMatches('src/data/solutions.ts', /slug: '\/solutions\//g),
+  countMatches('src/data/products.ts', /href: '\/products\//g),
+];
 
 const server = createServer(async (request, response) => {
   const { readFile } = await import('node:fs/promises');
@@ -47,11 +55,21 @@ const viewports = [
 
 const routes = [
   { name: 'home', path: '/' },
-  { name: 'base-registry', path: '/solutions/base-registry/' },
-  { name: 'evidence-gateway', path: '/solutions/evidence-gateway/' },
-  { name: 'protected-registry-access', path: '/solutions/protected-registry-apis/' },
-  { name: 'casework', path: '/solutions/casework/' },
-  { name: 'use-cases', path: '/use-cases/' },
+  { name: 'base-registry', path: '/products/base-registry/' },
+  { name: 'evidence-gateway', path: '/products/evidence-gateway/' },
+  { name: 'registry-relay', path: '/products/registry-relay/' },
+  { name: 'casework', path: '/products/casework/' },
+  { name: 'solutions', path: '/solutions/' },
+  { name: 'solutions-licensing', path: '/solutions/licensing/' },
+  { name: 'solutions-business-and-tax', path: '/solutions/business-and-tax/' },
+  { name: 'solutions-people-and-social-programmes', path: '/solutions/people-and-social-programmes/' },
+  { name: 'solutions-land-property-and-assets', path: '/solutions/land-property-and-assets/' },
+  { name: 'solutions-agriculture-food-and-environment', path: '/solutions/agriculture-food-and-environment/' },
+  { name: 'solutions-health-and-safety', path: '/solutions/health-and-safety/' },
+  { name: 'solutions-reference-registers', path: '/solutions/reference-registers/' },
+  { name: 'solutions-check-a-fact', path: '/solutions/check-a-fact/' },
+  { name: 'solutions-review-changes', path: '/solutions/review-changes/' },
+  { name: 'starters', path: '/starters/' },
   { name: 'blog', path: '/blog/' },
   { name: 'security', path: '/security/' },
   { name: 'pricing', path: '/pricing/' },
@@ -71,7 +89,7 @@ for (const viewport of viewports) {
   const metrics = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     clientWidth: document.documentElement.clientWidth,
-    // Links inside the closed Solutions disclosure are
+    // Links inside the closed Solutions and Products disclosures are
     // intentionally hidden, not clipped.
     clippedButtons: [...document.querySelectorAll('a, button')].filter((element) => {
       if (element.closest('details:not([open])')) return false;
@@ -102,7 +120,7 @@ for (const viewport of viewports) {
     failures.push(`${label}: text extends outside viewport`);
   }
 
-  // The Solutions disclosure must present every listed solution route at
+  // The Solutions and Products disclosures must present every listed route at
   // tappable size once opened, on every checked route and viewport.
   {
     const menus = await page.evaluate(() =>
@@ -116,7 +134,8 @@ for (const viewport of viewports) {
         return { links };
       }),
     );
-    if (menus.length !== 1 || menus[0].links.length !== 3) {
+    if (menus.length !== expectedMenuLinks.length ||
+        menus.some((menu, index) => menu.links.length !== expectedMenuLinks[index])) {
       failures.push(`${label}: nav disclosure link counts do not match expected menus`);
     } else if (menus.flatMap((menu) => menu.links).some((rect) => rect.width < 36 || rect.height < 36)) {
       failures.push(`${label}: open nav menu links are below 36px`);
@@ -164,17 +183,21 @@ for (let i = 0; i < Math.min(focusableCount, 20); i += 1) {
   }
 }
 // Closing a disclosure from one of its links must leave a usable keyboard
-// position instead of dropping focus back to the page body.
-await page.goto(`http://127.0.0.1:${port}/`);
-await page.locator('.nav-group summary').focus();
-await page.keyboard.press('Enter');
-await page.keyboard.press('Tab');
-const enteredMenu = await page.locator('.nav-group a').first().evaluate((link) => link === document.activeElement);
-await page.keyboard.press('Escape');
-const restoredMenuFocus = await page.locator('.nav-group').evaluate((menu) =>
-  !menu.open && document.activeElement === menu.querySelector('summary'));
-if (!enteredMenu || !restoredMenuFocus) {
-  failures.push('Escape from a solution link must close the menu and return focus to its summary');
+// position instead of dropping focus back to the page body. Both header menus
+// (Solutions, Products) behave the same way.
+for (const [index, name] of ['Solutions', 'Products'].entries()) {
+  await page.goto(`http://127.0.0.1:${port}/`);
+  const menu = page.locator('.nav-group').nth(index);
+  await menu.locator('summary').focus();
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Tab');
+  const enteredMenu = await menu.locator('a').first().evaluate((link) => link === document.activeElement);
+  await page.keyboard.press('Escape');
+  const restoredMenuFocus = await menu.evaluate((group) =>
+    !group.open && document.activeElement === group.querySelector('summary'));
+  if (!enteredMenu || !restoredMenuFocus) {
+    failures.push(`Escape from a ${name} menu link must close the menu and return focus to its summary`);
+  }
 }
 await page.close();
 await browser.close();

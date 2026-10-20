@@ -1,0 +1,61 @@
+---
+import Solution from '../../layouts/Solution.astro';
+import SolutionExample from '../../components/SolutionExample.astro';
+import SolutionStarters from '../../components/SolutionStarters.astro';
+import SolutionFit from '../../components/SolutionFit.astro';
+import SolutionDevelopers from '../../components/SolutionDevelopers.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import { solutionAreas } from '../../data/solutions';
+const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
+---
+<Solution
+  area={area}
+  heading="Publish the lists other registers rely on, from one maintained source."
+  description="Directories of public bodies, administrative territories, tax regimes, and trusted service providers are registers in their own right. Other registers point to them for a code, a name, or an authorization. When each team keeps its own copy, the copies drift apart."
+>
+  <SolutionExample
+    eyebrow="One example: official codes for administrative areas"
+    heading="Give every register the same list of administrative areas."
+    intro="An address register and a statistics office both need the official code and name of each administrative area. Today each keeps its own copy, updated from a spreadsheet sent by email."
+    items={[
+      { term: 'Who asks', body: 'The address register team and the statistics office, each for the areas it uses.' },
+      { term: 'What the team wants', body: 'One maintained list with each area’s code, level, parent area, and effective dates, so neither team keeps its own copy.' },
+      { term: 'What happens', body: 'The territorial authority keeps the list in its register. Registry Relay gives each service the agreed fields, and each service reads the current list instead of a file.' },
+      { term: 'What stays with the institution', body: 'The authority decides when a name or boundary changes. The boundary geometry stays in the mapping system the list refers to.' },
+    ]}
+    link={{ href: '/products/registry-relay/', label: 'See how Registry Relay shares agreed fields' }}
+  />
+  <SolutionStarters
+    area={area}
+    heading="Start from a reference list like yours."
+    intro="Each starter is a starting configuration for a common reference list or catalogue. Your team adapts the entries and rules to the list it maintains."
+  />
+  <section class="section section-muted" aria-labelledby="reference-control-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">What you keep control of</p>
+        <h2 id="reference-control-title">The list, who may change it, and when each entry applied.</h2>
+      </div>
+      <div class="product-facts">
+        <article><h3>The list and its codes</h3><p>Define each entry with its official code, its parent where there is one, and the period it applies. The geographic reference starter records an area’s code, administrative level, parent, and naming status.</p></article>
+        <article><h3>Who may change an entry</h3><p>Only the team that owns the list records a change. Readers see the entries their role allows; the public organizations starter keeps its directory for staff to maintain.</p></article>
+        <article><h3>When each entry applied</h3><p>Entries carry an effective period. A renamed territory or a withdrawn tax regime keeps its earlier entry, so a record that pointed to it still makes sense.</p></article>
+      </div>
+    </div>
+  </section>
+  <SolutionFit
+    area={area}
+    heading="Give other registers one source to refer to."
+    jobs={{
+      'base-registry': 'Stores the list and its history, with your rules for who may record an entry.',
+      'protected-registry-apis': 'Shares agreed fields of the list with the registers and services that use it.',
+    }}
+    extra={[
+      { term: 'Other registers refer to the list by code', body: 'Starters in the other register families refer to territories, organizations, and products by identifier. A maintained reference list gives those identifiers one source.' },
+    ]}
+  >
+    <p>Each product runs on its own. Registry Relay can share a list you already maintain; Base Registry Engine is for a list you build or move into a defined structure.</p>
+  </SolutionFit>
+  <SolutionDevelopers area={area} muted />
+  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+</Solution>

@@ -40,27 +40,31 @@ const browser = await chromium.launch();
 const failures = [];
 
 const products = [
-  { path: '/solutions/base-registry/', name: 'Base Registry Engine', solution: 'Base registry', tutorial: '/tutorials/first-breg/' },
-  { path: '/solutions/evidence-gateway/', name: 'Evidence Gateway', solution: 'Evidence Gateway', tutorial: '/tutorials/first-evidence-assertion/' },
-  { path: '/solutions/protected-registry-apis/', name: 'Registry Relay', solution: 'Protected registry APIs', tutorial: '/tutorials/publish-governed-sqlite-registry/' },
-  { path: '/solutions/casework/', name: 'Registry Casework', solution: 'Casework', tutorial: '/start/casework/' },
+  { path: '/products/base-registry/', name: 'Base Registry Engine', tutorial: '/tutorials/first-breg/' },
+  { path: '/products/evidence-gateway/', name: 'Evidence Gateway', tutorial: '/tutorials/first-evidence-assertion/' },
+  { path: '/products/registry-relay/', name: 'Registry Relay', tutorial: '/tutorials/publish-governed-sqlite-registry/' },
+  { path: '/products/casework/', name: 'Registry Casework', tutorial: '/start/casework/' },
 ];
-// The Solutions menu lists the flagships and Casework; Relay is reached
-// from the homepage and footer instead. Both supporting products also have a
-// homepage row below the flagship cards.
-const menuRoutes = [products[0].path, products[1].path, products[3].path];
+// The Products menu lists every product page. Both supporting products also
+// have a homepage row below the flagship cards.
+const productMenuRoutes = products.map((product) => product.path);
 const redirects = [
   ['/why/', '/'],
   ['/problem/', '/'],
   ['/ecosystem/', '/'],
   ['/how-it-fits/', '/'],
-  ['/ai/', '/use-cases/'],
+  ['/ai/', '/solutions/'],
+  ['/use-cases/', '/solutions/'],
   ['/pilot/', '/pricing/'],
   ['/pilot/#support', '/pricing/#support'],
   ['/pilot/#scope', '/pricing/#scope'],
   ['/pilot/#stewardship', '/pricing/#stewardship'],
-  ['/notary/', '/solutions/evidence-gateway/'],
-  ['/relay/', '/solutions/protected-registry-apis/'],
+  ['/notary/', '/products/evidence-gateway/'],
+  ['/relay/', '/products/registry-relay/'],
+  ['/solutions/base-registry/', '/products/base-registry/'],
+  ['/solutions/evidence-gateway/', '/products/evidence-gateway/'],
+  ['/solutions/protected-registry-apis/', '/products/registry-relay/'],
+  ['/solutions/casework/', '/products/casework/'],
 ];
 
 // Understanding the products, trying a tutorial, and finding paid help must
@@ -114,24 +118,39 @@ for (const options of [
   if (!await page.locator('.registry-example').isVisible()) fail('registry example is hidden');
   if (!await page.locator('#registry-example-caption').isVisible()) fail('example caption is missing');
 
-  await page.locator('.nav-group summary').click();
-  const menuLinks = await page.locator('.nav-group a').evaluateAll(
+  // Solutions first, then Products; opening one menu leaves the other closed.
+  const solutionsMenu = page.locator('.nav-group').nth(0);
+  const productsMenu = page.locator('.nav-group').nth(1);
+  await solutionsMenu.locator('summary').click();
+  const solutionLinks = await solutionsMenu.locator('a').evaluateAll(
     (links) => links.map((link) => new URL(link.href).pathname),
   );
-  if (menuLinks.length !== menuRoutes.length || menuRoutes.some((route) => !menuLinks.includes(route))) {
-    fail('main navigation must feature Base registry, Evidence Gateway, and Casework');
+  if (solutionLinks.length === 0 || solutionLinks.some((path) => !/^\/solutions\/[a-z-]+\/$/.test(path)) ||
+      !await solutionsMenu.locator('a').first().isVisible()) {
+    fail('the Solutions menu must list the solution area pages');
+  }
+  await productsMenu.locator('summary').click();
+  const menuLinks = await productsMenu.locator('a').evaluateAll(
+    (links) => links.map((link) => new URL(link.href).pathname),
+  );
+  if (menuLinks.length !== productMenuRoutes.length || productMenuRoutes.some((route) => !menuLinks.includes(route))) {
+    fail('the Products menu must list every product page');
+  }
+  if (options.javaScriptEnabled !== false && await solutionsMenu.evaluate((menu) => menu.open)) {
+    fail('opening the Products menu must close the Solutions menu');
   }
   const navLinks = await page.locator('.top-nav a').evaluateAll((links) => links.map((link) => {
     const { origin, pathname, hash } = new URL(link.href);
     return { origin, pathname, hash };
   }));
-  for (const href of ['/use-cases/', '/pricing/', 'https://docs.registrystack.org/', '/#developers']) {
+  for (const href of ['/starters/', '/blog/', '/pricing/', 'https://docs.registrystack.org/', '/#developers']) {
     const target = new URL(href, url);
     const index = navLinks.findIndex((link) => link.origin === target.origin &&
       link.pathname === target.pathname && link.hash === target.hash);
     if (index === -1 || !await page.locator('.top-nav a').nth(index).isVisible()) fail(`main navigation is missing ${href}`);
   }
-  await page.locator('.nav-group summary').click();
+  await productsMenu.locator('summary').click();
+  if (options.javaScriptEnabled === false) await solutionsMenu.locator('summary').click();
 
   const cardLinks = await page.locator('.home-solution-card').evaluateAll(
     (cards) => cards.map((card) => [...card.querySelectorAll('a')].map((link) => link.getAttribute('href'))),
@@ -140,7 +159,7 @@ for (const options of [
     cardLinks.filter((links) => links.length === 1 && links[0] === product.path).length !== 1)) {
     fail('the two flagship cards must lead to their product pages');
   }
-  const relayLink = page.locator('.existing-registry a[href="/solutions/protected-registry-apis/"]');
+  const relayLink = page.locator('.existing-registry a[href="/products/registry-relay/"]');
   if (!await relayLink.isVisible() || await relayLink.evaluate((link) => Boolean(link.closest('.home-solution-card')))) {
     fail('Relay must remain a separate supporting product path');
   }
@@ -158,7 +177,7 @@ for (const options of [
     await link.click();
     await page.waitForLoadState('domcontentloaded');
     if (new URL(page.url()).pathname !== product.path || !await page.locator('h1').isVisible() ||
-        !(await page.title()).includes(product.solution)) {
+        !(await page.title()).includes(product.name)) {
       fail(`${product.name} link did not open its product page`);
       continue;
     }

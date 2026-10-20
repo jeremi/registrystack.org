@@ -180,6 +180,15 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
           if (targetSite) trackJourneyClick(anchor, targetSite);
         } catch (_error) {}
       });
+      // Only one header menu stays open: opening one closes the other.
+      for (const group of document.querySelectorAll('.nav-group')) {
+        group.addEventListener('toggle', () => {
+          if (!group.open) return;
+          for (const other of document.querySelectorAll('.nav-group[open]')) {
+            if (other !== group) other.removeAttribute('open');
+          }
+        });
+      }
       document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
         for (const menu of document.querySelectorAll('.nav-group[open]')) {

@@ -6,12 +6,14 @@ Organizations own their records and define the rules for access and changes. The
 
 ## Website
 
-- [Home](https://registrystack.org/): Registry maintenance and fact-sharing examples, product choices, and next steps.
-- [Base registry](https://registrystack.org/solutions/base-registry/): Build and run the base registry other services rely on, with defined records and relationships, storage, access controls, and change history behind the organization's applications.
-- [Evidence Gateway](https://registrystack.org/solutions/evidence-gateway/): Return signed answers from an existing registry or another configured source.
-- [Registry Relay](https://registrystack.org/solutions/protected-registry-apis/): Publish selected fields through read-only APIs.
-- [Casework](https://registrystack.org/solutions/casework/): One inbox for the work that needs a person to decide, from a registry or any other source system: queues, holders, due dates, and decisions applied under the officer's own account.
-- [Use cases](https://registrystack.org/use-cases/): Illustrative registry and public-service workflows.
+- [Home](https://registrystack.org/): Registry maintenance and fact-sharing examples, the kinds of register the software serves, product choices, and next steps.
+- [Solutions](https://registrystack.org/solutions/): Organized by the register an organization keeps: licensing and professional registers; business, tax and finance; people, households and social programmes; land, property, vehicles and places; agriculture, animals, food and environment; health, safety and regulated products; public bodies, reference lists and catalogues. Two further pages cover checking a fact between services and reviewing changes that need a person.
+- [Starters](https://registrystack.org/starters/): Starting configurations for common registers, grouped by register family. A starter is a starting point to adapt, not a deployment.
+- [Starter pages](https://registrystack.org/starters/): Each starter has its own page at https://registrystack.org/starters/<id>/ listing its record types, staff actions, access profiles, included parts, and the public registers it was modelled on. Each page links the starter's zip, published with the releases of https://github.com/registrystack/breg-registry-starters, and gives its SHA-256 checksum.
+- [Base Registry Engine](https://registrystack.org/products/base-registry/): Build and run the base registry other services rely on, with defined records and relationships, storage, access controls, and change history behind the organization's applications.
+- [Evidence Gateway](https://registrystack.org/products/evidence-gateway/): Return signed answers from an existing registry or another configured source.
+- [Registry Relay](https://registrystack.org/products/registry-relay/): Publish selected fields through read-only APIs.
+- [Registry Casework](https://registrystack.org/products/casework/): One inbox for the work that needs a person to decide, from a registry or any other source system: queues, holders, due dates, and decisions applied under the officer's own account.
 - [Blog](https://registrystack.org/blog/): Field guides for registry owners and reviewers, such as defining the question before connecting a registry and reconstructing who accessed what. RSS at https://registrystack.org/rss.xml.
 - [Implementation and support](https://registrystack.org/pricing/): Implementation pilots, annual support contracts, and a written inquiry covering need, budget, and timing.
 - [Security](https://registrystack.org/security/): Access, accountability, and organizational responsibilities.

@@ -2,10 +2,12 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 // Structural invariant checks only. Marketing copy is intentionally reviewed
-// by people, not pinned in this script. These checks protect the solution-first
-// information architecture, redirects, required components, and site wiring.
+// by people, not pinned in this script. These checks protect the use-case-first
+// information architecture (solutions, then starters, then products),
+// redirects, required components, and site wiring.
 
 const failures = [];
+const warnings = [];
 
 const readSource = (relativePath) => {
   const fullPath = resolve(relativePath);
@@ -28,9 +30,38 @@ const sweptFiles = [
   ...listAstroFiles('src/components'),
 ];
 
+// Product pages live under /products/<slug>/; Relay's slug is its product name.
+const productPages = [
+  { key: 'base-registry', route: '/products/base-registry/', file: 'src/pages/products/base-registry.astro' },
+  { key: 'evidence-gateway', route: '/products/evidence-gateway/', file: 'src/pages/products/evidence-gateway.astro' },
+  { key: 'protected-registry-apis', route: '/products/registry-relay/', file: 'src/pages/products/registry-relay.astro' },
+  { key: 'casework', route: '/products/casework/', file: 'src/pages/products/casework.astro' },
+];
+
+// Solution areas come from src/data/solutions.ts. The script reads the source
+// text so it runs on any supported Node version without a TypeScript loader.
+const solutionsSource = readSource('src/data/solutions.ts');
+const solutionAreas = [...solutionsSource.matchAll(
+  /key: '([^']+)',\s*slug: '([^']+)',[\s\S]*?kind: '([^']+)'/g,
+)].map(([, key, slug, kind]) => ({ key, slug, kind }));
+if (solutionAreas.length === 0) failures.push('could not read any solution areas from src/data/solutions.ts');
+for (const area of solutionAreas) {
+  if (area.slug !== `/solutions/${area.key}/`) {
+    failures.push(`solution area ${area.key} has slug ${area.slug}, expected /solutions/${area.key}/`);
+  }
+}
+
 // 1. Superseded marketing routes exist only as redirects for inbound links.
 // Reader-facing links should point directly to the page or docs that replaced
 // them so the simplified information architecture does not slowly grow back.
+// The retired scenario page and the former product routes under /solutions/.
+const retiredIaRoutes = [
+  '/use-cases/',
+  '/solutions/base-registry/',
+  '/solutions/evidence-gateway/',
+  '/solutions/protected-registry-apis/',
+  '/solutions/casework/',
+];
 const supersededRoutes = [
   '/notary/',
   '/relay/',
@@ -40,11 +71,25 @@ const supersededRoutes = [
   '/ai/',
   '/how-it-fits/',
   '/pilot/',
+  ...retiredIaRoutes,
 ];
 for (const relativePath of sweptFiles) {
   const source = readSource(relativePath);
   for (const route of supersededRoutes) {
-    if (source.includes(`href="${route}"`) || source.includes(`href: '${route}'`)) {
+    if (source.includes(`href="${route}`) || source.includes(`href: '${route}`)) {
+      failures.push(`${relativePath} links to superseded marketing route ${route}`);
+    }
+  }
+}
+// Data files and blog posts carry routes too; they must not point at the
+// retired scenario page or the former product routes either.
+const markdownLinkFiles = readdirSync(resolve('src/content/blog'))
+  .filter((name) => name.endsWith('.md'))
+  .map((name) => `src/content/blog/${name}`);
+for (const relativePath of ['src/data/products.ts', ...markdownLinkFiles]) {
+  const source = readSource(relativePath);
+  for (const route of retiredIaRoutes) {
+    if (source.includes(`'${route}`) || source.includes(`(${route}`)) {
       failures.push(`${relativePath} links to superseded marketing route ${route}`);
     }
   }
@@ -66,13 +111,11 @@ for (const anchor of ['how-it-works', 'developers', 'start-testing']) {
 if (!homeSource.includes('home-solution-grid') || !homeSource.includes('developer-tutorial')) {
   failures.push('homepage is missing its product choices or developer tutorials');
 }
-for (const route of [
-  '/solutions/base-registry/',
-  '/solutions/evidence-gateway/',
-  '/solutions/protected-registry-apis/',
-  '/solutions/casework/',
-]) {
-  if (!productSource.includes(route)) failures.push('product data is missing ' + route);
+if (!homeSource.includes('registerFamilies') || !homeSource.includes('href="/starters/"')) {
+  failures.push('homepage is missing its register families or the link to the starters catalogue');
+}
+for (const { route } of productPages) {
+  if (!productSource.includes(`'${route}'`)) failures.push('product data is missing ' + route);
 }
 for (const route of [
   'https://docs.registrystack.org/tutorials/first-breg/',
@@ -91,11 +134,8 @@ const navigationSource = [
   productSource,
 ].join('\n');
 for (const route of [
-  '/solutions/base-registry/',
-  '/solutions/evidence-gateway/',
-  '/solutions/protected-registry-apis/',
-  '/solutions/casework/',
-  '/use-cases/',
+  ...productPages.map((page) => page.route),
+  '/starters/',
   '/blog/',
   '/security/',
   '/faq/',
@@ -110,12 +150,20 @@ for (const route of [
   }
 }
 
+// The header and footer build their solution and product entries from the
+// shared data, so every solution area and product page is reachable.
 const footerSource = readSource('src/components/SiteFooter.astro');
-if (!footerSource.includes('Base registry')) {
-  failures.push('footer solutions column is missing Base registry');
+const headerSource = readSource('src/components/SiteHeader.astro');
+for (const [label, source] of [['header', headerSource], ['footer', footerSource]]) {
+  if (!source.includes("from '../data/solutions'") || !source.includes('area.slug')) {
+    failures.push(`${label} does not build its solution entries from solutions.ts`);
+  }
+  if (!source.includes("from '../data/products'") || !source.includes('product.href') || !source.includes('product.name')) {
+    failures.push(`${label} does not build its product entries from products.ts by product name`);
+  }
+  if (!source.includes("'/starters/'")) failures.push(`${label} is missing the starters catalogue`);
 }
 
-const headerSource = readSource('src/components/SiteHeader.astro');
 for (const staleRoute of supersededRoutes) {
   if (headerSource.includes(`'${staleRoute}'`) || headerSource.includes(`"${staleRoute}"`)) {
     failures.push(`header still links to superseded route ${staleRoute}`);
@@ -123,7 +171,7 @@ for (const staleRoute of supersededRoutes) {
 }
 // Former routes redirect to the product, pricing page, home explanation, or
 // technical documentation that now owns the reader's next step.
-for (const oldPage of ['notary', 'relay', 'manifest', 'problem', 'ecosystem', 'ai', 'how-it-fits']) {
+for (const oldPage of ['notary', 'relay', 'manifest', 'problem', 'ecosystem', 'ai', 'how-it-fits', 'use-cases']) {
   if (existsSync(resolve(`src/pages/${oldPage}.astro`))) {
     failures.push(`superseded marketing page still exists: src/pages/${oldPage}.astro`);
   }
@@ -134,9 +182,14 @@ const expectedRedirects = [
   "'/problem/': '/'",
   "'/ecosystem/': '/'",
   "'/how-it-fits/': '/'",
-  "'/ai/': '/use-cases/'",
-  "'/notary/': '/solutions/evidence-gateway/'",
-  "'/relay/': '/solutions/protected-registry-apis/'",
+  "'/ai/': '/solutions/'",
+  "'/use-cases/': '/solutions/'",
+  "'/notary/': '/products/evidence-gateway/'",
+  "'/relay/': '/products/registry-relay/'",
+  "'/solutions/base-registry/': '/products/base-registry/'",
+  "'/solutions/evidence-gateway/': '/products/evidence-gateway/'",
+  "'/solutions/casework/': '/products/casework/'",
+  "'/solutions/protected-registry-apis/': '/products/registry-relay/'",
   "'/manifest/': 'https://docs.registrystack.org/products/registry-manifest/'",
 ];
 for (const redirect of expectedRedirects) {
@@ -153,20 +206,74 @@ if (!/<meta\b[^>]*http-equiv=["']refresh["']/i.test(pilotRedirect) ||
 }
 
 // Product pages explain the product before handing developers to a tutorial.
-for (const page of [
-  'src/pages/solutions/base-registry.astro',
-  'src/pages/solutions/evidence-gateway.astro',
-  'src/pages/solutions/protected-registry-apis.astro',
-  'src/pages/solutions/casework.astro',
-]) {
+// Each looks its product up by key, so the order of products.ts does not matter.
+for (const { key, file: page } of productPages) {
   const source = readSource(page);
   if (!source.includes('<Product')) failures.push(page + ' is missing the product layout');
+  if (!source.includes(`products.find((p) => p.key === '${key}')`)) {
+    failures.push(page + ` must look up its product by key '${key}'`);
+  }
   if (!source.includes('id="product-example"') || !source.includes('id="developers"') ||
       !source.includes('href={product.tutorialHref}')) {
     failures.push(page + ' is missing its example, developer section, or maintained tutorial');
   }
 }
+// The former product pages under src/pages/solutions/ moved to /products/.
+for (const { file } of productPages) {
+  const formerFile = file.replace('src/pages/products/', 'src/pages/solutions/').replace('registry-relay', 'protected-registry-apis');
+  if (existsSync(resolve(formerFile))) failures.push(`former product page still exists: ${formerFile}`);
+}
+
+// Every solution area has its own page. Until the first area page lands this
+// only warns; once src/pages/solutions/ holds any area page, a missing one fails.
+const solutionPageFiles = solutionAreas.map((area) => ({ area, file: `src/pages/solutions/${area.key}.astro` }));
+const presentAreaPages = solutionPageFiles.filter(({ file }) => existsSync(resolve(file)));
+for (const { area, file } of solutionPageFiles) {
+  if (existsSync(resolve(file))) continue;
+  const message = `solution area ${area.key} is missing its page ${file}`;
+  if (presentAreaPages.length > 0) failures.push(message);
+  else warnings.push(message);
+}
+
+// The starters catalogue: every starter belongs to exactly one register
+// family, every id a family lists is in the catalogue, every download points
+// at the site or the starters repository's GitHub releases, and the sync
+// record agrees with the catalogue.
+const startersCatalogue = JSON.parse(readSource('src/data/starters.json') || '{"starters":[]}');
+const catalogueStarters = startersCatalogue.starters ?? [];
+const catalogueIds = new Set(catalogueStarters.map((starter) => starter.id));
+const familyStarterIds = [...solutionsSource.matchAll(
+  /key: '([^']+)',[\s\S]*?starters: \[([^\]]*)\]/g,
+)].map(([, key, list]) => ({ key, ids: [...list.matchAll(/'([^']+)'/g)].map(([, id]) => id) }));
+const familiesByStarter = new Map();
+for (const { key, ids } of familyStarterIds) {
+  for (const id of ids) {
+    if (!catalogueIds.has(id)) failures.push(`solution area ${key} lists starter ${id}, which is not in src/data/starters.json`);
+    familiesByStarter.set(id, [...(familiesByStarter.get(id) ?? []), key]);
+  }
+}
+for (const starter of catalogueStarters) {
+  const families = familiesByStarter.get(starter.id) ?? [];
+  if (families.length !== 1) {
+    failures.push(`starter ${starter.id} belongs to ${families.length} register families (${families.join(', ') || 'none'}), expected exactly one`);
+  }
+  const downloadPath = starter.download?.path ?? '';
+  const releasePrefix = 'https://github.com/registrystack/breg-registry-starters/releases/download/';
+  const isSiteDownload = downloadPath === `/downloads/starters/${starter.id}-starter.zip`;
+  const isReleaseDownload = downloadPath.startsWith(releasePrefix) && downloadPath.endsWith(`/${starter.id}-starter.zip`);
+  if (!isSiteDownload && !isReleaseDownload) {
+    failures.push(`starter ${starter.id} download ${downloadPath || '(none)'} is neither /downloads/starters/${starter.id}-starter.zip nor a breg-registry-starters release asset`);
+  }
+}
+const startersUpstream = JSON.parse(readSource('src/upstream/starters.json') || '{}');
+if (startersUpstream.starterCount !== catalogueStarters.length) {
+  failures.push(`src/upstream/starters.json starterCount ${startersUpstream.starterCount} does not match the ${catalogueStarters.length} starters in src/data/starters.json`);
+}
+
 const productLayout = readSource('src/layouts/Product.astro');
+if (!productLayout.includes('product.name')) {
+  failures.push('product layout title must use the product name');
+}
 if (!productLayout.includes('href="#product-example"') || !productLayout.includes('href="#developers"')) {
   failures.push('product layout is missing its example or developer action');
 }
@@ -279,6 +386,10 @@ for (const relativePath of [
       failures.push(`${relativePath} sets font-weight ${value.trim()}, outside the brand's 400, 500, 600 and 700`);
     }
   }
+}
+
+if (warnings.length > 0) {
+  console.warn(warnings.map((warning) => `warning: ${warning}`).join('\n'));
 }
 
 if (failures.length > 0) {

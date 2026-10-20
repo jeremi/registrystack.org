@@ -1,13 +1,27 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { createServer } from 'node:http';
-import { resolve } from 'node:path';
+import { relative as relativePath, resolve } from 'node:path';
 import { chromium } from 'playwright';
 
-for (const relative of ['dist/index.html', 'dist/use-cases/index.html']) {
-  if (!existsSync(resolve(relative))) {
-    console.error(`${relative} does not exist. Run npm run build first.`);
-    process.exit(1);
-  }
+if (!existsSync(resolve('dist/index.html'))) {
+  console.error('dist/index.html does not exist. Run npm run build first.');
+  process.exit(1);
+}
+
+// The service-answer figure lives on the check-a-fact solution page, and only
+// there: one civil register answering several services.
+const figureRoute = '/solutions/check-a-fact/';
+const listHtml = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+  const fullPath = resolve(dir, entry.name);
+  if (entry.isDirectory()) return listHtml(fullPath);
+  return entry.name.endsWith('.html') ? [fullPath] : [];
+});
+const figurePages = listHtml(resolve('dist'))
+  .filter((file) => readFileSync(file, 'utf8').includes('class="service-answers'))
+  .map((file) => '/' + relativePath(resolve('dist'), file).replace(/index\.html$/, ''));
+if (figurePages.length !== 1 || figurePages[0] !== figureRoute) {
+  console.error(`expected the service-answer figure on ${figureRoute} only, found it on ${figurePages.join(', ') || 'no page'}`);
+  process.exit(1);
 }
 
 const server = createServer(async (request, response) => {
@@ -34,10 +48,10 @@ const server = createServer(async (request, response) => {
 
 await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen));
 const { port } = server.address();
-// The service-answer figure and full scenario gallery live on use-cases;
-// the homepage introduces the two flagship products.
+// The homepage introduces the two flagship products; the service-answer
+// figure lives on its own page.
 const homeUrl = `http://127.0.0.1:${port}/`;
-const url = `http://127.0.0.1:${port}/use-cases/`;
+const url = `http://127.0.0.1:${port}${figureRoute}`;
 
 const browser = await chromium.launch();
 const failures = [];
@@ -136,9 +150,6 @@ const failures = [];
     return issues;
   });
   failures.push(...structureFailures);
-  if (await page.locator('section[aria-labelledby="scenarios-title"] .scenario-card').count() === 0) {
-    failures.push('the full scenario gallery must remain on /use-cases/');
-  }
 
   await context.close();
 }
@@ -151,7 +162,7 @@ const failures = [];
 
   const homeFigureCount = await page.locator('figure.service-answers, figure.funnel').count();
   if (homeFigureCount !== 0) {
-    failures.push(`expected no service-answer figure on the homepage (it lives on /use-cases/), found ${homeFigureCount}`);
+    failures.push(`expected no service-answer figure on the homepage, found ${homeFigureCount}`);
   }
 
   const homeUseCaseCards = await page.locator('.use-case, .scenario-card').count();

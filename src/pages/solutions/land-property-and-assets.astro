@@ -1,0 +1,66 @@
+---
+import Solution from '../../layouts/Solution.astro';
+import SolutionExample from '../../components/SolutionExample.astro';
+import SolutionStarters from '../../components/SolutionStarters.astro';
+import SolutionFit from '../../components/SolutionFit.astro';
+import SolutionDevelopers from '../../components/SolutionDevelopers.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import { solutionAreas } from '../../data/solutions';
+import { startersForArea } from '../../data/starters';
+const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
+const areaStarters = startersForArea(area);
+// Starters whose every record type is recorded once and not edited afterwards.
+const createOnlyCount = areaStarters.filter((starter) =>
+  starter.recordTypes.every((recordType) => recordType.mutationMode === 'create-only')).length;
+---
+<Solution
+  area={area}
+  heading="Record what is registered, who holds it, and since when."
+  description="Cadastres, vehicle and ship registers, address registers, and planning registers record parcels, buildings, vehicles, vessels, and the rights over them. Each entry ties an asset to a holder, a keeper, or a decision for a period. Valuation, planning, tax, and transport services rely on those entries being current."
+>
+  <SolutionExample
+    eyebrow="One example: a valuation office reads parcel rights"
+    heading="Give a valuation office the holder and share of each parcel."
+    intro="A property valuation office prepares the valuation roll and needs to know who holds each parcel and in what share. The cadastre agrees to provide those fields and nothing else."
+    items={[
+      { term: 'Who asks', body: 'The valuation office, for the parcels in the roll it is preparing.' },
+      { term: 'What the team wants', body: 'For each parcel, the holder, the share, and the period of the right, read from the cadastre rather than from a spreadsheet sent by email.' },
+      { term: 'What happens', body: 'Registry Relay gives the valuation office the agreed fields. A request for any other field is refused, and each request is recorded.' },
+      { term: 'What stays with the institution', body: 'The fields the valuation office has not agreed to receive, and the cadastre’s other records, stay with the cadastre.' },
+    ]}
+    link={{ href: '/products/registry-relay/', label: 'See how Registry Relay shares agreed fields' }}
+  />
+  <SolutionStarters
+    area={area}
+    heading="Start from an asset register like yours."
+    intro="Each starter is a starting configuration for a common register of land, buildings, vehicles, or places. It records an entry the responsible authority has supplied; your team adapts the records and rules to its own law."
+  />
+  <section class="section section-muted" aria-labelledby="land-control-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">What you keep control of</p>
+        <h2 id="land-control-title">The assets, who may read a holder’s details, and what was recorded when.</h2>
+      </div>
+      <div class="product-facts">
+        <article><h3>Assets and the rights over them</h3><p>Define each asset and the right, holder, or keeper recorded against it for a period. The land parcels starter records a tenure right with its holder, share, and period; the ship register starter records ownership shares.</p></article>
+        <article><h3>Who may read a holder’s details</h3><p>Decide which records are public, which stay internal to your team, and which are restricted to named roles and purposes. Vehicle keepers, vessel owners, and parcel holders are restricted in their starters; transport stops are public.</p></article>
+        <article><h3>Entries that stand as recorded</h3><p>In {createOnlyCount} of the {areaStarters.length} starters here, every record is created once and not edited: a new valuation or a new right is a new entry. The register shows what was recorded and when.</p></article>
+      </div>
+    </div>
+  </section>
+  <SolutionFit
+    area={area}
+    heading="Keep maps and documents where they are."
+    jobs={{
+      'base-registry': 'Stores the asset register and the rights recorded against each asset, with your rules for who may record a new entry.',
+      'protected-registry-apis': 'Shares agreed fields, such as holder and share, with a valuation, tax, or planning service that needs them.',
+    }}
+    extra={[
+      { term: 'Maps and source documents stay in your systems', body: 'The starters refer to parcels, geometries, and source documents by identifier. Your mapping system and document store keep them.' },
+    ]}
+  >
+    <p>Each product runs on its own. Registry Relay can share fields from a register you already run; Base Registry Engine is for a register you build or move into a defined structure.</p>
+  </SolutionFit>
+  <SolutionDevelopers area={area} muted />
+  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+</Solution>

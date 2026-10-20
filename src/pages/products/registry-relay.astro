@@ -2,7 +2,7 @@
 import Product from '../../layouts/Product.astro';
 import ProtectedRegistryApiFlow from '../../components/ProtectedRegistryApiFlow.astro';
 import { products } from '../../data/products';
-const product = products[1];
+const product = products.find((p) => p.key === 'protected-registry-apis')!;
 ---
 <Product
   product={product}
@@ -44,7 +44,7 @@ const product = products[1];
       <dl>
         <dt>Your registry team agrees the information</dt><dd>Define the published records, field meanings, and access each service needs. Keep responsibility for corrections and updates with the source register.</dd>
         <dt>Your technical team prepares the data</dt><dd>Provide the reviewed source view and any extraction or update process it requires. Configure Relay’s interface and access rules, and connect the receiving service.</dd>
-        <dt>Choose the response your service needs</dt><dd>When a service needs a defined fact, such as adult status or a residence region, <a href="/solutions/evidence-gateway/">Evidence Gateway</a> can derive and sign that answer from a configured source.</dd>
+        <dt>Choose the response your service needs</dt><dd>When a service needs a defined fact, such as adult status or a residence region, <a href="/products/evidence-gateway/">Evidence Gateway</a> can derive and sign that answer from a configured source.</dd>
       </dl>
     </div>
   </section>
@@ -60,7 +60,7 @@ const product = products[1];
       <dl>
         <dt>Source preparation</dt><dd>Relay reads reviewed, read-only SQLite views. Spreadsheets and other databases require an organization-owned preparation step.</dd>
         <dt>Published interface</dt><dd>The configuration defines resource names, fields, and access and disclosure rules. Relay generates the API contract and returns selected data with record context. These responses are unsigned.</dd>
-        <dt>Building a register as well?</dt><dd><a href="/solutions/base-registry/">Base Registry Engine</a> stores and manages records for people, households, businesses, and other entities, with controlled changes and a history your team can inspect.</dd>
+        <dt>Building a register as well?</dt><dd><a href="/products/base-registry/">Base Registry Engine</a> stores and manages records for people, households, businesses, and other entities, with controlled changes and a history your team can inspect.</dd>
       </dl>
     </div>
   </section>

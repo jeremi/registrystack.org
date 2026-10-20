@@ -1,0 +1,109 @@
+---
+// The optional parts a starter ships with, read from the catalogue's
+// `includes` flags. "badges" lists only what is included, for the catalogue;
+// "list" names every part with whether this starter includes it.
+import type { Starter } from '../data/starters';
+
+interface Props {
+  includes: Starter['includes'];
+  variant?: 'badges' | 'list';
+}
+const { includes, variant = 'badges' } = Astro.props;
+
+const parts: { key: keyof Starter['includes']; label: string; meaning: string }[] = [
+  { key: 'staffUi', label: 'Staff screens', meaning: 'A model of the staff screens, for the App Kit.' },
+  { key: 'evidenceCompanion', label: 'Evidence Gateway companion', meaning: 'A companion project for Evidence Gateway.' },
+  { key: 'clients', label: 'Client definitions', meaning: 'Definitions of the client systems that call the registry.' },
+  { key: 'statistics', label: 'Statistics', meaning: 'Definitions of statistical datasets drawn from the records.' },
+  { key: 'modules', label: 'Reusable modules', meaning: 'Modules the project shares with other projects.' },
+];
+const included = parts.filter((part) => includes[part.key]);
+---
+{variant === 'badges' ? (
+  included.length > 0 && (
+    <ul class="starter-badges" aria-label="Also includes">
+      {included.map((part) => <li>{part.label}</li>)}
+    </ul>
+  )
+) : (
+  <dl class="starter-includes">
+    {parts.map((part) => (
+      <div class:list={['starter-include', { 'is-included': includes[part.key] }]}>
+        <dt>
+          {part.label}
+          <span class="starter-include-state">{includes[part.key] ? 'Included' : 'Not included'}</span>
+        </dt>
+        <dd>{part.meaning}</dd>
+      </div>
+    ))}
+  </dl>
+)}
+
+<style>
+  .starter-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+  }
+
+  .starter-badges li {
+    border: 1px solid var(--registry-blue-rule);
+    background: var(--registry-blue-tint);
+    color: var(--registry-blue);
+    font-family: var(--registry-mono);
+    font-size: var(--type-2xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 3px 7px;
+    text-transform: uppercase;
+  }
+
+  .starter-includes {
+    display: grid;
+    gap: 0;
+    margin: 0;
+  }
+
+  .starter-include {
+    border-bottom: 1px solid var(--registry-rule);
+    padding: 12px 0;
+  }
+
+  .starter-include:first-child {
+    border-top: 1px solid var(--registry-rule);
+  }
+
+  .starter-include dt {
+    align-items: baseline;
+    color: var(--registry-muted);
+    display: flex;
+    flex-wrap: wrap;
+    font-weight: 700;
+    gap: 6px 12px;
+    justify-content: space-between;
+  }
+
+  .starter-include.is-included dt {
+    color: var(--registry-ink);
+  }
+
+  .starter-include-state {
+    font-family: var(--registry-mono);
+    font-size: var(--type-2xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .starter-include.is-included .starter-include-state {
+    color: var(--registry-blue);
+  }
+
+  .starter-include dd {
+    color: var(--registry-body);
+    margin: 4px 0 0;
+  }
+</style>

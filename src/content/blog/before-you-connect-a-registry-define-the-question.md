@@ -234,6 +234,6 @@ That is enough to begin a credible technical design. It is also small enough
 for policy, programme, registry, security, and integration teams to review the
 same object.
 
-The next step is choosing between [Registry Relay](/solutions/protected-registry-apis/)
-and [Evidence Gateway](/solutions/evidence-gateway/) for this question, or
+The next step is choosing between [Registry Relay](/products/registry-relay/)
+and [Evidence Gateway](/products/evidence-gateway/) for this question, or
 combining both where the worksheet calls for it.

@@ -2,7 +2,7 @@
 import Product from '../../layouts/Product.astro';
 import CaseworkFlow from '../../components/CaseworkFlow.astro';
 import { products } from '../../data/products';
-const product = products[3];
+const product = products.find((p) => p.key === 'casework')!;
 ---
 <Product
   product={product}
@@ -40,7 +40,7 @@ const product = products[3];
         <p class="eyebrow">How it fits your organization</p>
         <h2 id="casework-fit-title">Run the team without opening the source system.</h2>
         <p>Casework holds the queue, the holder, and the clocks. The system that owns the work keeps eligibility, permissions, and the records themselves. Supervisors and administrators run the team from Casework rather than from database access.</p>
-        <p>Work reaches Casework in two ways. A source system connects through an adapter, which decides how its work appears in the inbox and what a decision may do there; <a href="/solutions/base-registry/">Base Registry Engine</a> ships with one, and another system needs an adapter written against the published contract. Any service can also hand in a request through the API and follow its progress; it cannot claim or decide the item.</p>
+        <p>Work reaches Casework in two ways. A source system connects through an adapter, which decides how its work appears in the inbox and what a decision may do there; <a href="/products/base-registry/">Base Registry Engine</a> ships with one, and another system needs an adapter written against the published contract. Any service can also hand in a request through the API and follow its progress; it cannot claim or decide the item.</p>
         <p>If the review a registry needs is a fixed number of approvals and nothing more, Base Registry Engine can require them on its own and hold the proposal until they are in. Casework is for review work that has to be given to a person, tracked against a due date, chased when it stalls, and answered back to whoever asked.</p>
       </div>
       <dl>

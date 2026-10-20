@@ -4,6 +4,8 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import RegistryExample from '../components/RegistryExample.astro';
 import { products } from '../data/products';
+import { registerFamilies } from '../data/solutions';
+import { starterCount } from '../data/starters';
 
 const pageTitle = 'Registry Stack | Maintain your registry. Share only what services need.';
 const pageDescription = 'Open-source software to store and manage records about people, households, organizations, and assets, and share verifiable facts with services. Explore Base Registry Engine and Evidence Gateway.';
@@ -46,7 +48,7 @@ const pageDescription = 'Open-source software to store and manage records about 
               <h4>Shaped around your information</h4>
               <p>Define the records, their relationships, and the rules they must follow. For example, connect people to households and keep their details current as circumstances change.</p>
             </div>
-            <a class="inline-cta" href="/solutions/base-registry/">Explore Base Registry Engine <span aria-hidden="true">→</span></a>
+            <a class="inline-cta" href="/products/base-registry/">Explore Base Registry Engine <span aria-hidden="true">→</span></a>
           </article>
           <article class="home-solution-card">
             <p class="eyebrow">Evidence Gateway</p>
@@ -56,18 +58,38 @@ const pageDescription = 'Open-source software to store and manage records about 
               <h4>Only the information needed</h4>
               <p>Define which questions each service may ask. For example, a licensing service can check that someone is 18 or older without receiving their date of birth.</p>
             </div>
-            <a class="inline-cta" href="/solutions/evidence-gateway/">Explore Evidence Gateway <span aria-hidden="true">→</span></a>
+            <a class="inline-cta" href="/products/evidence-gateway/">Explore Evidence Gateway <span aria-hidden="true">→</span></a>
           </article>
         </div>
         <div class="existing-registry">
           <div><h3>When a change needs a person’s decision first</h3><p>Casework gives the staff who review requests one accountable inbox: who holds each item, what is due, and who decided. Registry changes are one source of that work, and the registry keeps its own rules about who may change a record.</p></div>
-          <a class="inline-cta" href="/solutions/casework/">Explore Casework <span aria-hidden="true">→</span></a>
+          <a class="inline-cta" href="/products/casework/">Explore Casework <span aria-hidden="true">→</span></a>
         </div>
         <div class="existing-registry">
           <div><h3>When a service needs selected fields</h3><p>Registry Relay publishes selected data from an existing registry, with rules for what each service may receive.</p></div>
-          <a class="inline-cta" href="/solutions/protected-registry-apis/">Explore Relay <span aria-hidden="true">→</span></a>
+          <a class="inline-cta" href="/products/registry-relay/">Explore Relay <span aria-hidden="true">→</span></a>
         </div>
-        <p class="example-note"><a href="/use-cases/">Explore examples for public services and registry teams</a>.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="registers-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">By the register you keep</p>
+          <h2 id="registers-title">Find the kind of register you keep.</h2>
+          <p>Each area groups registers that do the same kind of work, with starting configurations your team can adapt and the products that fit.</p>
+        </div>
+        <ul class="register-grid">
+          {registerFamilies.map((area) => (
+            <li>
+              <a href={area.slug}>
+                <span class="register-name">{area.name}</span>
+                <span class="register-intent">{area.intent}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p class="example-note"><a class="inline-cta" href="/starters/">Browse the {starterCount} starters <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
@@ -160,6 +182,13 @@ const pageDescription = 'Open-source software to store and manage records about 
   .ownership-grid p, .developer-grid p { font-size: var(--type-body-sm); }
   .ownership-grid a, .developer-grid a { font-size: var(--type-base); }
   .developer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+  .register-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; list-style: none; margin: 0; padding: 0; }
+  .register-grid li { border-top: 1px solid #c9d0c5; }
+  .register-grid a { display: grid; gap: 4px; padding: 18px 0 20px; }
+  .register-grid a:hover { text-decoration: none; }
+  .register-grid a:hover .register-name { color: var(--registry-blue); }
+  .register-name { color: var(--registry-ink); font-size: var(--type-body); font-weight: 700; }
+  .register-intent { color: var(--registry-muted); font-size: var(--type-md); }
   .pilot-invitation { display: flex; gap: 32px; align-items: center; justify-content: space-between; }
   .pilot-invitation h2 { font-size: var(--type-title); }
   .pilot-invitation p:not(.eyebrow) { max-width: 660px; margin-bottom: 0; }
@@ -168,9 +197,10 @@ const pageDescription = 'Open-source software to store and manage records about 
     .hero-top { grid-template-columns: 1fr; }
     .hero-figure { max-width: 520px; }
     .ownership-grid { grid-template-columns: 1fr; gap: 24px; }
+    .register-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .pilot-invitation, .existing-registry { align-items: flex-start; flex-direction: column; }
   }
   @media (max-width: 620px) {
-    .home-solution-grid, .developer-grid { grid-template-columns: 1fr; }
+    .home-solution-grid, .developer-grid, .register-grid { grid-template-columns: 1fr; }
   }
 </style>

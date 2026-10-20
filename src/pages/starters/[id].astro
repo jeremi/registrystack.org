@@ -1,0 +1,471 @@
+---
+// One page per starter. Every fact on the page comes from the catalogue
+// entry in src/data/starters.json; the prose only explains what it means.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import StarterIncludes from '../../components/StarterIncludes.astro';
+import { products } from '../../data/products';
+import { areaForStarter, starters, startersSource, type Starter } from '../../data/starters';
+import startersUpstream from '../../upstream/starters.json';
+
+export function getStaticPaths() {
+  return starters.map((starter) => ({ params: { id: starter.id }, props: { starter } }));
+}
+
+interface Props {
+  starter: Starter;
+}
+const { starter } = Astro.props;
+
+const area = areaForStarter(starter.id);
+if (!area) throw new Error(`starter ${starter.id} is not assigned to a register family in solutions.ts`);
+const baseRegistry = products.find((p) => p.key === 'base-registry')!;
+const startersRepository = startersUpstream.source.repository;
+
+const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
+const recordTypeLabel = (id: string) => starter.recordTypes.find((type) => type.id === id)?.label ?? id;
+const actionLabel = (id: string) => starter.actions.find((action) => action.id === id)?.label ?? id;
+const sizeKb = Math.round(starter.download.bytes / 1024);
+const zipName = starter.download.path.split('/').pop();
+const firstSentence = starter.task.split(/(?<=[.!?])\s+(?=[A-Z])/)[0];
+const sources = starter.sourceUrls.map((href) => {
+  const url = new URL(href);
+  const rest = `${url.pathname}${url.search}`;
+  return { href, host: url.hostname, rest: rest === '/' ? '' : rest };
+});
+
+const pageTitle = `${starter.title} starter | Registry Stack`;
+---
+
+<Base title={pageTitle} description={firstSentence}>
+  <SiteHeader current="starters" />
+  <main class="starter-page">
+    <section class="hero" aria-labelledby="starter-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow"><a href={area.slug}>{area.name}</a></p>
+          <h1 id="starter-title">{starter.title}</h1>
+          <p class="hero-lead">{starter.task}</p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href={starter.download.path}>Download the starter (zip, {sizeKb} KB)</a>
+            <a class="button button-secondary" href="#whats-inside">What is included</a>
+          </div>
+          {starter.summary !== starter.task && <p class="hero-note">{starter.summary}</p>}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="records-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <p class="eyebrow">{plural(starter.counts.recordTypes, 'record type', 'record types')}</p>
+          <h2 id="records-title">What this starter records</h2>
+          <p>Each record type is one kind of entry in the register. Create-only records are written once and not changed; mutable records can be changed through the actions below.</p>
+        </div>
+        <ul class="starter-records">
+          {starter.recordTypes.map((type) => (
+            <li>
+              <h3>{type.label}</h3>
+              <p>{type.description}</p>
+              <p class="starter-tags">
+                <span>{type.mutationMode}</span>
+                {type.classification && <span>{type.classification}</span>}
+                <span>{plural(type.fieldCount, 'field', 'fields')}</span>
+              </p>
+              {type.references.length > 0 && (
+                <ul class="starter-links">
+                  {type.references.map((reference) => (
+                    <li><code>{reference.field}</code> links to {recordTypeLabel(reference.target)}</li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="actions-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <p class="eyebrow">{plural(starter.counts.actions, 'action', 'actions')}</p>
+          <h2 id="actions-title">What staff can do</h2>
+          <p>An action is a defined change that staff make to the register.</p>
+        </div>
+        <dl class="starter-actions">
+          {starter.actions.map((action) => (
+            <div>
+              <dt>{action.label}</dt>
+              <dd>{action.description}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="access-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <p class="eyebrow">{plural(starter.accessProfiles.length, 'access profile', 'access profiles')}</p>
+          <h2 id="access-title">Who can do what</h2>
+          <p>An access profile groups the actions one role may run and the record types it may read. Each profile requires the scopes and purposes listed with it. Your team decides who holds each profile.</p>
+        </div>
+        <div class="starter-table-wrap" role="region" aria-labelledby="access-title" tabindex="0">
+          <table class="starter-access">
+            <thead>
+              <tr>
+                <th scope="col">Profile</th>
+                <th scope="col">Actions it may run</th>
+                <th scope="col">Record types it reads</th>
+                <th scope="col">Required purposes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {starter.accessProfiles.map((profile) => (
+                <tr>
+                  <th scope="row">
+                    {profile.id}
+                    {profile.requiredScopes.length > 0 && (
+                      <span class="starter-scopes">{profile.requiredScopes.join(', ')}</span>
+                    )}
+                  </th>
+                  <td>{profile.actions.length > 0 ? profile.actions.map(actionLabel).join(', ') : 'Read only'}</td>
+                  <td>{profile.recordTypes.length > 0 ? profile.recordTypes.map(recordTypeLabel).join(', ') : 'None'}</td>
+                  <td class="starter-mono">{profile.requiredPurposes.length > 0 ? profile.requiredPurposes.join(', ') : 'None'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="whats-inside" aria-labelledby="inside-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <p class="eyebrow">In the download</p>
+          <h2 id="inside-title">What is included</h2>
+          <p>The zip is a source template. A developer generates the registry project from it with the {baseRegistry.name} command-line tools; nothing in it runs on its own.</p>
+        </div>
+        <div class="starter-inside">
+          <div>
+            <h3>Parts of this starter</h3>
+            <p class="starter-tags">
+              <span>{plural(starter.counts.recordTypes, 'record type', 'record types')}</span>
+              <span>{plural(starter.counts.actions, 'action', 'actions')}</span>
+              <span>{plural(starter.counts.values, 'value', 'values')}</span>
+            </p>
+            <StarterIncludes includes={starter.includes} variant="list" />
+          </div>
+          <div>
+            <h3>Values your team fills in</h3>
+            <p>These are the fields a team fills in for its own jurisdiction. The download ships with synthetic example values.</p>
+            <ul class="starter-mono-list">
+              {starter.valuesKeys.map((key) => <li>{key}</li>)}
+            </ul>
+            <h3>Files in the zip</h3>
+            <p>A README that says what the starter records and what it leaves to other systems, a description of the record model, the values file, the project files, and the Apache 2.0 licence, notice, and PublicSchema CC BY 4.0 licence files.</p>
+            <p>The zip is published with the releases of the <a href={`${startersRepository}/releases`} rel="noopener">starters repository on GitHub</a>. Compare its SHA-256 checksum with the one below to confirm you have the same file.</p>
+            <dl class="starter-facts">
+              <dt>File</dt>
+              <dd class="starter-mono">{zipName}</dd>
+              <dt>SHA-256</dt>
+              <dd class="starter-mono">{starter.download.sha256}</dd>
+              <dt>Exported with</dt>
+              <dd class="starter-mono">{baseRegistry.name} {startersSource.breg.version}, PublicSchema {startersSource.publicschema.version}</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="sources-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <p class="eyebrow">Sources</p>
+          <h2 id="sources-title">Modelled on</h2>
+          <p>The starter was modelled on {starter.sourceUrls.length === 1 ? 'this public register' : 'these public registers'}. Using them as a model does not mean their operators use or endorse the starter.</p>
+        </div>
+        <ul class="starter-sources">
+          {sources.map((source) => (
+            <li>
+              <a href={source.href} rel="noopener">{source.host}</a>
+              {source.rest && <span class="starter-source-path">{source.rest}</span>}
+            </li>
+          ))}
+        </ul>
+        <p class="starter-attribution">PublicSchema registry catalogue {starter.catalogueRows.length === 1 ? 'row' : 'rows'} <span class="starter-mono">{starter.catalogueRows.join(', ')}</span>. The record definitions draw on <a href={startersSource.publicschema.repository} rel="noopener">PublicSchema</a> {startersSource.publicschema.version}, published under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">Creative Commons Attribution 4.0 licence</a> (CC BY 4.0). The starter itself is published under the Apache 2.0 licence.</p>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="next-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <p class="eyebrow">Next steps</p>
+          <h2 id="next-title">Where to go next.</h2>
+        </div>
+        <ul class="starter-next">
+          <li><a class="inline-cta" href={area.slug}>See {area.name.toLowerCase()} <span aria-hidden="true">→</span></a></li>
+          <li><a class="inline-cta" href={baseRegistry.href}>Read about {baseRegistry.name} <span aria-hidden="true">→</span></a></li>
+          <li><a class="inline-cta" href={baseRegistry.tutorialHref}>{baseRegistry.tutorialLabel} <span aria-hidden="true">→</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <DocsHandoff />
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .starter-page .hero .eyebrow a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .starter-page h2 {
+    font-size: clamp(28px, 3.7vw, 42px);
+  }
+
+  .starter-page .section-inner {
+    padding-top: clamp(44px, 6vw, 68px);
+    padding-bottom: clamp(44px, 6vw, 68px);
+  }
+
+  .starter-page h3 {
+    font-size: var(--type-body);
+  }
+
+  .starter-mono,
+  .starter-scopes,
+  .starter-mono-list,
+  .starter-source-path,
+  .starter-records code {
+    font-family: var(--registry-mono);
+    overflow-wrap: anywhere;
+  }
+
+  .starter-records {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .starter-records > li {
+    background: var(--registry-white);
+    border: 1px solid var(--registry-rule);
+    padding: 22px;
+  }
+
+  .starter-records p {
+    margin-bottom: 12px;
+  }
+
+  .starter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .starter-tags span {
+    border: 1px solid var(--registry-rule);
+    color: var(--registry-ink);
+    font-family: var(--registry-mono);
+    font-size: var(--type-2xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 3px 7px;
+    text-transform: uppercase;
+  }
+
+  .starter-links {
+    border-top: 1px solid var(--registry-rule);
+    list-style: none;
+    margin: 0;
+    padding: 10px 0 0;
+  }
+
+  .starter-links li {
+    font-size: var(--type-md);
+    margin-top: 4px;
+  }
+
+  .starter-records code {
+    font-size: var(--type-sm);
+  }
+
+  .starter-actions {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+  }
+
+  .starter-actions > div {
+    background: var(--registry-white);
+    border: 1px solid var(--registry-rule);
+    padding: 22px;
+  }
+
+  .starter-actions dt {
+    color: var(--registry-ink);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .starter-actions dd {
+    margin: 0;
+  }
+
+  .starter-table-wrap {
+    border: 1px solid var(--registry-rule);
+    overflow-x: auto;
+  }
+
+  .starter-access {
+    border-collapse: collapse;
+    font-size: var(--type-md);
+    min-width: 640px;
+    width: 100%;
+  }
+
+  .starter-access th,
+  .starter-access td {
+    border-bottom: 1px solid var(--registry-rule);
+    padding: 12px 14px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .starter-access tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  .starter-access thead th {
+    background: var(--registry-paper-half);
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: var(--type-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .starter-access tbody th {
+    color: var(--registry-ink);
+    font-family: var(--registry-mono);
+    font-weight: 600;
+  }
+
+  .starter-scopes {
+    color: var(--registry-muted);
+    display: block;
+    font-size: var(--type-xs);
+    font-weight: 400;
+    margin-top: 4px;
+  }
+
+  .starter-access .starter-mono {
+    font-size: var(--type-sm);
+  }
+
+  .starter-inside {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .starter-inside h3:not(:first-child) {
+    margin-top: 28px;
+  }
+
+  .starter-inside .starter-tags {
+    margin-bottom: 16px;
+  }
+
+  .starter-mono-list {
+    border-left: 3px solid var(--registry-blue);
+    font-size: var(--type-sm);
+    list-style: none;
+    margin: 0;
+    padding: 2px 0 2px 18px;
+  }
+
+  .starter-mono-list li + li {
+    margin-top: 4px;
+  }
+
+  .starter-facts {
+    margin: 0;
+  }
+
+  .starter-facts dt {
+    color: var(--registry-muted);
+    font-family: var(--registry-mono);
+    font-size: var(--type-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    margin-top: 12px;
+    text-transform: uppercase;
+  }
+
+  .starter-facts dd {
+    font-size: var(--type-sm);
+    margin: 4px 0 0;
+  }
+
+  .starter-sources {
+    list-style: none;
+    margin: 0 0 24px;
+    padding: 0;
+  }
+
+  .starter-sources li {
+    border-bottom: 1px solid var(--registry-rule);
+    padding: 10px 0;
+  }
+
+  .starter-sources li:first-child {
+    border-top: 1px solid var(--registry-rule);
+  }
+
+  .starter-sources a {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .starter-source-path {
+    color: var(--registry-muted);
+    display: block;
+    font-size: var(--type-xs);
+    margin-top: 2px;
+  }
+
+  .starter-attribution {
+    color: var(--registry-body);
+    font-size: var(--type-md);
+    max-width: 760px;
+  }
+
+  .starter-next {
+    display: grid;
+    gap: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (max-width: 700px) {
+    .starter-records,
+    .starter-actions,
+    .starter-inside {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+</style>
