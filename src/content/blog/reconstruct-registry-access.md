@@ -11,6 +11,8 @@ featured: true
 status: published
 ---
 
+> **Note, October 2026.** Registry Relay, which this guide refers to, was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. Evidence Gateway continues, and the guidance here on agreeing questions and reviewing access still applies.
+
 “Every request is logged” sounds reassuring. It is not yet a review method.
 
 A web-server log may prove that an endpoint returned `200`. It may not explain

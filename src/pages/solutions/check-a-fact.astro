@@ -9,7 +9,6 @@ import { askQuestionHref, contactEmail } from '../../data/contact';
 import { products } from '../../data/products';
 const area = solutionAreas.find((a) => a.key === 'check-a-fact')!;
 const evidence = products.find((p) => p.key === 'evidence-gateway')!;
-const relay = products.find((p) => p.key === 'protected-registry-apis')!;
 ---
 <Solution
   area={area}
@@ -44,10 +43,9 @@ const relay = products.find((p) => p.key === 'protected-registry-apis')!;
     heading="Give a service a checked answer, or the fields it needs."
     jobs={{
       'evidence-gateway': 'Use it when the other service needs a yes or no, or a status, such as whether a person is an adult or a business is registered: it gets that answer and can check it came from your register and was not altered.',
-      'protected-registry-apis': 'Use it when the other service has to work with the values themselves, such as a business’s legal name and legal form, or whether a farmer is registered and for which farm: it gets the fields your office agreed, and no others.',
     }}
     extra={[
-      { term: 'Your register stays where it is', body: 'Both work from a register your office already runs, and neither requires Base Registry Engine. If you use both, your technical team sets up the connection to your register.' },
+      { term: 'Your register stays where it is', body: 'Evidence Gateway works from the register your office already runs, through a connection your technical team sets up: an interface your system offers or a read-only extract your team publishes. It does not require Base Registry Engine.' },
     ]}
   >
     <p>Start from what the other service has to decide, and give it the least that decision needs. A good first question is the one your office is asked for most often.</p>
@@ -57,7 +55,7 @@ const relay = products.find((p) => p.key === 'protected-registry-apis')!;
     items={[
       {
         q: 'Do we have to move our register?',
-        a: 'No. Both products read from the register your office already runs. Your staff keep recording and correcting records where they do today, and the answers reflect what the register holds.',
+        a: 'No. Evidence Gateway reads from the register your office already runs, through a connection your technical team sets up. Your staff keep recording and correcting records where they do today, and the answers reflect what the register holds, as of the interface or extract they read.',
         link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
       },
       {
@@ -75,13 +73,13 @@ const relay = products.find((p) => p.key === 'protected-registry-apis')!;
       },
       {
         q: 'Where does our technical team start?',
-        a: `With the ${evidence.name} tutorial, which answers a yes-or-no question from sample data and checks the answer, on a laptop. If a service needs the values themselves, the ${relay.name} tutorial is the next step.`,
+        a: `With the ${evidence.name} tutorial, which answers a yes-or-no question from sample data and checks the answer, on a laptop.`,
         link: { href: evidence.tutorialHref, label: evidence.tutorialLabel },
       },
       {
-        q: 'And if a service needs the values themselves?',
-        a: `The ${relay.name} tutorial returns two agreed fields from a sample register, refuses a third, and shows the record of each request.`,
-        link: { href: relay.tutorialHref, label: relay.tutorialLabel },
+        q: 'And if a service needs a value, not a yes or no?',
+        a: 'An answer can be one of a set of values your office declares, such as the region a person lives in, and nothing outside that set. A service that needs the records themselves, such as a legal name, reads the register through the access your office grants it; Registry Stack does not publish fields from a register it does not hold.',
+        link: { href: 'https://docs.registrystack.org/tutorials/return-a-governed-value/', label: 'Run the governed value tutorial' },
       },
     ]}
   />

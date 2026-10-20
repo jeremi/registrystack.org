@@ -54,7 +54,7 @@ const product = products.find((p) => p.key === 'base-registry')!;
       </div>
       <dl>
         <dt>Hold the authoritative records</dt><dd>Base Registry Engine stores the records and their history and applies your rules for who may read or change what.</dd>
-        <dt>Let other services rely on the register without copying it</dt><dd><a href="/products/evidence-gateway/">Evidence Gateway</a> answers a defined question, such as an age check, with a signed fact and no full record. <a href="/products/registry-relay/">Registry Relay</a> publishes the fields each service is allowed to receive.</dd>
+        <dt>Let other services rely on the register without copying it</dt><dd><a href="/products/evidence-gateway/">Evidence Gateway</a> answers a defined question, such as an age check, with a signed fact and no full record. A service that needs the records themselves reads them from the register through the access you grant it.</dd>
         <dt>Take back corrections and decide on them</dt><dd>A service that spots a wrong record has to report it, and someone has to review it. <a href="/products/casework/">Casework</a> gives the officers who do that one accountable inbox, and the register keeps its own rules about who may change a record.</dd>
         <dt>Answer for it afterwards</dt><dd>Every change and refused request is journaled with who asked and who decided, so a reviewer can reconstruct what happened without asking the people involved.</dd>
       </dl>
@@ -71,7 +71,7 @@ const product = products.find((p) => p.key === 'base-registry')!;
       <dl>
         <dt>Your team defines the register</dt><dd>Agree what the records mean, how they relate, and who may use them. Your technical team translates those decisions into the configuration that defines storage, validation, and access.</dd>
         <dt>Your applications serve the people using it</dt><dd>Your team or delivery partner provides the screens, sign-in, and wider service workflows. The engine handles record storage and operations behind those applications.</dd>
-        <dt>Add the other products when a duty becomes real</dt><dd>Each product runs on its own. Connect Evidence Gateway, Registry Relay, or Casework to the register when another service needs a fact, a data feed, or a person’s decision, and not before.</dd>
+        <dt>Add the other products when a duty becomes real</dt><dd>Each product runs on its own. Connect Evidence Gateway or Casework to the register when another service needs a fact or a person’s decision, and not before.</dd>
       </dl>
     </div>
   </section>

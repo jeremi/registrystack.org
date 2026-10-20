@@ -66,6 +66,14 @@ export const firstSentence = (text: string): string => text.split(/(?<=[.!?])\s+
 export const starterLead = (starter: { summary?: string; task: string }): string =>
   starter.summary?.trim() ? starter.summary : firstSentence(starter.task);
 
+// The technical task paragraph shown under "What it holds", without the
+// sentence the lead already says, so a page does not open twice with the
+// same line. Empty when the task says nothing more than the lead.
+export const starterHoldsText = (starter: { summary?: string; task: string }): string => {
+  const lead = starterLead(starter);
+  return starter.task.startsWith(lead) ? starter.task.slice(lead.length).trim() : starter.task;
+};
+
 // A public register a starter was modeled on, named by its host.
 export const sourceHost = (href: string): string => new URL(href).hostname.replace(/^www\./, '');
 

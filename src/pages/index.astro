@@ -1,8 +1,14 @@
 ---
+// Reader: someone who keeps a register, asking "could this run mine?". The
+// sections answer that reader's questions in order: what this is, what running
+// a register with it looks like, what stays under their control, how to start,
+// what the pieces are called, how a technical team tries it, how mature it is,
+// and who helps.
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import RegistryExample from '../components/RegistryExample.astro';
+import RegisterDay from '../components/RegisterDay.astro';
 import { products } from '../data/products';
 import { registerFamilies, solutionAreas } from '../data/solutions';
 import { starterCount } from '../data/starters';
@@ -19,10 +25,10 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
         <div class="hero-top">
           <div class="hero-copy">
             <p class="eyebrow">Open-source software for public registers</p>
-            <h1 id="hero-title">Maintain your register. Share only what services need.</h1>
-            <p class="hero-lead">Licensing boards, business registrars, land offices, social-protection agencies, health regulators: your office keeps a register that other services rely on. Registry Stack lets you keep those records in order, answer another service’s question without handing over the file, and put the changes that need an officer’s decision in one queue. Government first; NGOs and banks that keep authoritative registers use the same software.</p>
+            <h1 id="hero-title">Run your register. Decide the changes. Answer the services that rely on it.</h1>
+            <p class="hero-lead">Licensing boards, business registrars, land offices, social-protection agencies, health regulators: your office keeps a register that other services rely on. Registry Stack is the software to run it. Keep the records and their history, put the changes that need an officer in one queue, and answer another service’s question without handing over the file. Government first; NGOs and banks that keep authoritative registers can use the same software.</p>
             <div class="hero-actions" aria-label="Primary actions">
-              <a class="button button-primary" href="#registers">Find your register</a>
+              <a class="button button-primary" href="#how-a-register-runs">See how a register runs</a>
               <a class="button button-secondary" href={askQuestionHref()}>Ask a question</a>
             </div>
             <p class="hero-note">Your organization controls the records, the rules, and who gets access.</p>
@@ -32,12 +38,63 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
       </div>
     </section>
 
+    <section class="section" id="how-a-register-runs" aria-labelledby="run-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Running the register, day to day</p>
+          <h2 id="run-title">One request, from the day it arrives to the answer another service gets.</h2>
+          <p>Whatever your register holds, the work has the same shape. Someone asks for a change. An officer decides. The record changes and keeps its history. Another service asks a question and gets an answer it can trust. Here is that week for one licence.</p>
+        </div>
+        <RegisterDay />
+        <div class="shared-work" id="shared-work">
+          <p>Two parts of that week look the same in every register, so each has its own page.</p>
+          <ul class="register-grid register-pair">
+            {crossCutting.map((area) => (
+              <li>
+                <a href={area.slug}>
+                  <span class="register-name">{area.name}</span>
+                  <span class="register-intent">{area.intent}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="ownership-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Under your organization’s control</p>
+          <h2 id="ownership-title" class="ownership-heading"><span>Your register.</span> <span>Your rules.</span> <span>Your infrastructure.</span></h2>
+          <p>The software supports the people responsible for the records and the services that use them. The products are designed around four duties of a base registry: hold the records, let services rely on them without copying, take back corrections, and answer for every change.</p>
+        </div>
+        <div class="ownership-grid">
+          <article>
+            <h3>Your team sets the rules</h3>
+            <p>Define what your records contain, who can read or change them, and what another service may learn from them.</p>
+            <a class="inline-cta" href="/security/">Read about access and accountability <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Work with the systems you use</h3>
+            <p>Keep the systems your staff use today. The register sits behind them; other services ask it questions; the changes that need an officer go to your team’s queue. Nothing moves to Aubex, and nothing has to move at all to start.</p>
+            <a class="inline-cta" href="/faq/">Explore adoption questions <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Choose how to deliver it</h3>
+            <p>Your team, or an IT firm you contract, can run the open-source software on infrastructure you control. Paid implementation and support are available when you need them.</p>
+            <a class="inline-cta" href="/pricing/">No software licence fee; pilots and support at published prices. <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="registers" aria-labelledby="registers-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">By the register you keep</p>
-          <h2 id="registers-title">Find the kind of register you keep.</h2>
-          <p>Each area groups registers that do the same kind of work, with starting configurations your team can adapt and the products that fit.</p>
+          <p class="eyebrow">Start from a register like yours</p>
+          <h2 id="registers-title">Pick the closest starting definition and adapt it.</h2>
+          <p>You do not start from a blank register. The starters are ready-made definitions for the common kinds: who holds a licence, which companies are registered, who owns which parcel. Each sets out the records, what staff do with them, and who may do what. The areas below group them by the work the register does, with the products that fit.</p>
         </div>
         <ul class="register-grid">
           {registerFamilies.map((area) => (
@@ -54,59 +111,12 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
       </div>
     </section>
 
-    <section class="section section-muted" id="shared-work" aria-labelledby="shared-work-title">
-      <div class="section-inner">
-        <div class="section-heading">
-          <p class="eyebrow">Work every register shares</p>
-          <h2 id="shared-work-title">Check facts between services. Review the changes that need a person.</h2>
-          <p>Whatever the register holds, other services ask it questions and some changes wait for an officer’s decision.</p>
-        </div>
-        <ul class="register-grid register-pair">
-          {crossCutting.map((area) => (
-            <li>
-              <a href={area.slug}>
-                <span class="register-name">{area.name}</span>
-                <span class="register-intent">{area.intent}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="ownership-title">
-      <div class="section-inner">
-        <div class="section-heading">
-          <p class="eyebrow">Under your organization’s control</p>
-          <h2 id="ownership-title" class="ownership-heading"><span>Your register.</span> <span>Your rules.</span> <span>Your infrastructure.</span></h2>
-          <p>The software supports the people responsible for the records and the services that use them. The products follow the duties of a base registry as the Dutch basisregistratie and the Belgian authentic-source rules define them: hold the records, let services rely on them without copying, take back corrections, and answer for every change.</p>
-        </div>
-        <div class="ownership-grid">
-          <article>
-            <h3>Your team sets the rules</h3>
-            <p>Define what your records contain, who can read or change them, and what another service may learn from them.</p>
-            <a class="inline-cta" href="/security/">Read about access and accountability <span aria-hidden="true">→</span></a>
-          </article>
-          <article>
-            <h3>Work with the systems you use</h3>
-            <p>Keep the systems your staff use today. The register sits behind them; other services ask it questions; the changes that need an officer go to your team’s queue. Nothing moves to Aubex, and nothing has to move at all to start.</p>
-            <a class="inline-cta" href="/faq/">Explore adoption questions <span aria-hidden="true">→</span></a>
-          </article>
-          <article>
-            <h3>Choose how to deliver it</h3>
-            <p>Your team or delivery partner can run the open-source software on infrastructure you control. Paid implementation and support are available when you need them.</p>
-            <a class="inline-cta" href="/pricing/">No software licence fee; pilots and support at published prices. <span aria-hidden="true">→</span></a>
-          </article>
-        </div>
-      </div>
-    </section>
-
     <section class="section section-muted" id="products" aria-labelledby="products-title">
       <div class="section-inner" id="how-it-works">
         <div class="section-heading">
           <p class="eyebrow">The products</p>
-          <h2 id="products-title">Keep records current. Put them to use.</h2>
-          <p>Four products, each usable on its own. Hold the register, answer a question about it, publish selected fields, or queue the changes an officer must decide.</p>
+          <h2 id="products-title">Three products behind that week.</h2>
+          <p>Each runs on its own. Hold the register, answer a question about it, or queue the changes an officer must decide.</p>
         </div>
         <div class="home-solution-grid">
           <article class="home-solution-card">
@@ -120,12 +130,6 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
             <h3>Share a fact a service can verify.</h3>
             <p>Let approved services check information held in your register and return a signed answer, such as an age check, residence region, or registration status. Define which questions each service may ask: a licensing service can check that someone is 18 or older without receiving their date of birth.</p>
             <a class="inline-cta" href="/products/evidence-gateway/">Explore Evidence Gateway <span aria-hidden="true">→</span></a>
-          </article>
-          <article class="home-solution-card">
-            <p class="eyebrow">Registry Relay</p>
-            <h3>Give a service the fields you agreed.</h3>
-            <p>Publish selected fields from a register you already run through a read-only interface, with rules for what each service may receive and a record of every request.</p>
-            <a class="inline-cta" href="/products/registry-relay/">Explore Registry Relay <span aria-hidden="true">→</span></a>
           </article>
           <article class="home-solution-card">
             <p class="eyebrow">Registry Casework</p>
@@ -157,14 +161,13 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
       </div>
     </section>
 
-
     <section class="section section-muted" id="project-status" aria-labelledby="project-status-title">
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Open source</p>
           <h2 id="project-status-title">Where the project stands</h2>
-          <p>Source and releases are public under Apache-2.0. Releases are signed and ship a software bill of materials. The starters are free and exported from the current development release of Base Registry Engine. Implementation pilots are open. We do not publish customer names or outcomes we cannot show.</p>
-          <p>Built on open standards: OpenAPI, PostgreSQL, SD-JWT VC, FHIR and OpenCRVS as sources, PublicSchema record definitions.</p>
+          <p>Source and releases are public under Apache-2.0. Releases are signed and ship a software bill of materials. The starters are free and exported from the current development release of Base Registry Engine. The software is pre-1.0: interfaces may change before 1.0, and the documentation keeps a list of <a href="https://docs.registrystack.org/explanation/known-limitations/">known limitations</a>. Aubex is taking on implementation pilots. The site names no deployments; we name one only when its operator agrees.</p>
+          <p>Built on open standards (OpenAPI, SD-JWT VC, FHIR) and open-source components (PostgreSQL). Reads from FHIR and OpenCRVS systems as sources. Record definitions from PublicSchema.</p>
         </div>
       </div>
     </section>
@@ -186,10 +189,16 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
 <style>
   .hero-top { grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr); gap: clamp(32px, 5vw, 56px); }
   .hero-inner { padding-top: clamp(40px, 5vw, 68px); padding-bottom: clamp(44px, 6vw, 76px); }
+  /* The three-sentence headline sits one size below the token so it holds four lines beside the figure. */
+  .hero-cover h1 { font-size: clamp(2.125rem, 4vw, 3.25rem); }
   .hero-lead { font-size: clamp(18px, 1.8vw, 21px); line-height: 1.55; }
   .hero-figure { padding-right: 12px; }
-  /* Four equal cards: every row takes the height of the tallest card. */
-  .home-solution-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 24px; max-width: none; margin-top: 0; }
+  /* The two pages every register shares sit under the week they belong to. */
+  .shared-work { border-top: 1px solid var(--registry-paper-rule); margin-top: clamp(28px, 4vw, 40px); padding-top: 20px; }
+  .shared-work > p { color: var(--registry-body); font-size: var(--type-base); margin: 0 0 8px; }
+  /* Three equal cards: every row takes the height of the tallest card. */
+  .home-solution-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 24px; max-width: none; margin-top: 0; }
+  @media (max-width: 900px) { .home-solution-grid { grid-template-columns: 1fr; } }
   .home-solution-card { display: flex; flex-direction: column; gap: 18px; border-top: 3px solid var(--registry-blue); padding: 30px; }
   .home-solution-card .eyebrow { font-size: var(--type-xs); }
   .home-solution-card h3 { font-size: var(--type-2xl); line-height: 1.2; }

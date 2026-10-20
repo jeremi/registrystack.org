@@ -42,7 +42,6 @@ const failures = [];
 const products = [
   { path: '/products/base-registry/', name: 'Base Registry Engine', tutorial: '/tutorials/first-breg/' },
   { path: '/products/evidence-gateway/', name: 'Evidence Gateway', tutorial: '/tutorials/first-evidence-assertion/' },
-  { path: '/products/registry-relay/', name: 'Registry Relay', tutorial: '/tutorials/publish-governed-sqlite-registry/' },
   { path: '/products/casework/', name: 'Registry Casework', tutorial: '/start/casework/' },
 ];
 // The Products menu lists every product page, and each product has an equal
@@ -60,16 +59,17 @@ const redirects = [
   ['/pilot/#scope', '/pricing/#scope'],
   ['/pilot/#stewardship', '/pricing/#stewardship'],
   ['/notary/', '/products/evidence-gateway/'],
-  ['/relay/', '/products/registry-relay/'],
+  ['/relay/', '/products/evidence-gateway/'],
+  ['/products/registry-relay/', '/products/evidence-gateway/'],
   ['/solutions/base-registry/', '/products/base-registry/'],
   ['/solutions/evidence-gateway/', '/products/evidence-gateway/'],
-  ['/solutions/protected-registry-apis/', '/products/registry-relay/'],
+  ['/solutions/protected-registry-apis/', '/products/evidence-gateway/'],
   ['/solutions/casework/', '/products/casework/'],
 ];
 
-// Finding a register, asking a question, understanding the products, trying a
-// tutorial, and finding paid help must all work without JavaScript and with
-// reduced motion.
+// Seeing how a register runs, asking a question, understanding the products,
+// trying a tutorial, and finding paid help must all work without JavaScript
+// and with reduced motion.
 for (const options of [
   { viewport: { width: 1440, height: 1000 }, javaScriptEnabled: false },
   { viewport: { width: 390, height: 900 }, reducedMotion: 'reduce' },
@@ -90,9 +90,22 @@ for (const options of [
   };
   await page.goto(url);
 
-  await followAnchor(page.locator('.hero .hero-actions a').first(), '#registers', 'hero primary action');
-  if (await page.locator('main > section').nth(1).getAttribute('id') !== 'registers') {
-    fail('the first section after the hero must be the register families');
+  await followAnchor(page.locator('.hero .hero-actions a').first(), '#how-a-register-runs', 'hero primary action');
+  if (await page.locator('main > section').nth(1).getAttribute('id') !== 'how-a-register-runs') {
+    fail('the first section after the hero must show how a register runs');
+  }
+  // The register-day sequence keeps all four steps readable: the highlight
+  // moves, the text never changes. The pause control only exists when the
+  // script is allowed to move the highlight.
+  const daySteps = page.locator('.register-day .day-step');
+  if (await daySteps.count() !== 4 || !(await daySteps.evaluateAll((steps) => steps.every((step) => step.getBoundingClientRect().height > 0)))) {
+    fail('the register-day sequence must show four visible steps');
+  }
+  if (await page.locator('.register-day .day-step.is-active').count() !== 1) {
+    fail('exactly one register-day step is highlighted');
+  }
+  if (await page.locator('.register-day .day-pause').count() !== 0) {
+    fail('the register-day pause control must not appear without JavaScript or with reduced motion');
   }
   // The light contact action opens a prefilled question, not a scoping brief.
   const isQuestionMailto = (href) => {

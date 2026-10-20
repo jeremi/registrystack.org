@@ -43,7 +43,6 @@ const paths = [
   '/',
   '/products/base-registry/',
   '/products/evidence-gateway/',
-  '/products/registry-relay/',
   '/products/casework/',
   '/solutions/',
   '/solutions/licensing/',

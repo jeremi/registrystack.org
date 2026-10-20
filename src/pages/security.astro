@@ -23,7 +23,7 @@ const properties = [
   {
     title: 'Decide what each service receives',
     body:
-      'Evidence Gateway checks permission for a predefined question before reading the source. Registry Relay applies your rules for access to selected fields. Your organization defines those permissions and the information each service may receive.',
+      'Evidence Gateway checks permission for a predefined question before reading the source. Your organization defines those permissions and the information each service may receive.',
   },
   {
     title: 'Verify where an answer came from',
@@ -34,11 +34,6 @@ const properties = [
     title: 'Keep each decision with an officer',
     body:
       'Registry Casework records who held each item and who decided. Casework never changes a register on its own; the officer who approves a change applies it under their own account, so the register records the change against that person.',
-  },
-  {
-    title: 'Publish only the agreed fields',
-    body:
-      'Registry Relay gives other services a read-only interface over views your team prepares. It returns the fields you agreed, unsigned, and records each request and its outcome for audit.',
   },
   {
     title: 'Review activity',
@@ -77,6 +72,11 @@ const evidence = [
     description: 'How to check release assets against signed checksums and inspect the software bill of materials.',
   },
   {
+    label: 'Known limitations',
+    href: 'https://docs.registrystack.org/explanation/known-limitations/',
+    description: 'What the software does not do yet, its release status, and the platforms a release supports.',
+  },
+  {
     label: 'Source code and releases',
     href: 'https://github.com/registrystack/registry-stack',
     description: 'The public implementation and its release history for your technical team and auditors.',
@@ -96,8 +96,8 @@ const evidence = [
           <p class="hero-lead">
             Each product has its own controls. Base Registry Engine controls who may change a
             record and keeps the history; Evidence Gateway signs each answer it gives; Registry
-            Casework records who held each item and who decided; Registry Relay serves only the
-            views your team prepares. You define the permissions and operate the deployment;
+            Casework records who held each item and who decided. You define the permissions and
+            operate the deployment;
             the open-source software applies the configured rules.
           </p>
         </div>
@@ -110,7 +110,7 @@ const evidence = [
           <p class="eyebrow">What the software does</p>
           <h2 id="security-properties-title">Make each change and disclosure accountable.</h2>
           <p>
-            Base Registry Engine, Evidence Gateway, Registry Casework, and Registry Relay address
+            Base Registry Engine, Evidence Gateway, and Registry Casework address
             different responsibilities and can be used independently. Each product checks its
             own access rules.
           </p>

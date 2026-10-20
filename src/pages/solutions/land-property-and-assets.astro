@@ -21,16 +21,16 @@ const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
     items={[
       { term: 'Who asks', body: 'The valuation office, for the parcels in the roll it is preparing.' },
       { term: 'What the office wants', body: 'The valuation office reads the holder, the share, and the period of the right for each parcel from your register, rather than from a spreadsheet sent by email.' },
-      { term: 'What happens', body: 'Registry Relay gives the valuation office the details your office agreed to share. A request for anything else is refused, and every request is kept with who asked and when.' },
+      { term: 'What happens', body: 'The valuation office’s service holds a reader role on your register and reads holder and share, the details your office agreed to share. A request for anything else is refused, and every request is kept with who asked and when.' },
       { term: 'What stays with your office', body: 'Everything the valuation office has not agreed to receive, and the rest of your register, stays with your office.' },
     ]}
-    link={{ href: '/products/registry-relay/', label: 'See how Registry Relay shares agreed details' }}
+    link={{ href: '/products/base-registry/', label: 'See how Base Registry Engine serves other services' }}
   />
   <section class="section" aria-labelledby="land-change-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="land-change-title">One entry per parcel, and nobody re-types the register into a spreadsheet.</h2>
+        <h2 id="land-change-title">One entry per parcel, and the services you connect stop re-typing it into spreadsheets.</h2>
       </div>
       <div class="product-facts">
         <article><h3>Each right shows who holds it, in what share, and since when</h3><p>A parcel, building, vehicle, or vessel is entered once, and each right, holder, or keeper is recorded against it for a period. Shares in a parcel or a ship are kept as shares, so a valuation or tax office reads them as your register holds them.</p></article>
@@ -43,14 +43,13 @@ const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
     area={area}
     heading="Start from an asset register like yours."
     intro="A starter sets out what a register of this kind holds and who may change it, for one common register of land, buildings, vehicles, or places. Your team takes the closest one and adapts it to its own law."
-    featuredNote="The cadastre starter records the parcel right; sharing holder and share with a valuation office is set up in Registry Relay."
+    featuredNote="The cadastre starter records the parcel right and defines a reader role; your team gives that role to the valuation office’s service."
   />
   <SolutionFit
     area={area}
     heading="Keep maps and documents where they are."
     jobs={{
-      'base-registry': 'Holds the register of assets and the rights recorded against each one, under your rules for who may record a new entry.',
-      'protected-registry-apis': 'Gives a valuation, tax, or planning office the details you have agreed to share with it, such as holder and share.',
+      'base-registry': 'Holds the register of assets and the rights recorded against each one, under your rules for who may record a new entry and which services, such as a valuation office, may read which details.',
     }}
     extra={[
       { term: 'Your registration process keeps deciding', body: 'Transfers, surveys, and the decision to register a right stay where they are handled today. The register records an entry once your office has decided it.' },
@@ -58,19 +57,19 @@ const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
     ]}
     muted
   >
-    <p>Each product runs on its own. An office with a working register often starts by sharing details from it; an office building a register starts with the register itself.</p>
+    <p>An office building or moving a register starts with the register itself, and gives each service that needs details from it a role of its own.</p>
   </SolutionFit>
   <SolutionFaq
     items={[
       {
         q: 'Does this replace our cadastre system?',
-        a: 'No. Your mapping system keeps parcel boundaries and your document store keeps deeds and plans. Registry Relay can share details from a register you already run; Base Registry Engine is for a register you build new, or decide to move.',
+        a: 'No. Your mapping system keeps parcel boundaries and your document store keeps deeds and plans. Base Registry Engine is for the register of rights you build new, or decide to move. If that register stays in its current system, that system serves its details; Registry Stack does not publish fields from a register it does not hold.',
         link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
       },
       {
         q: 'Can a valuation office read our register without an account on our system?',
         a: 'Two cases. A member of the public or a notary looking up one parcel uses the public register your application publishes under your law. A service that needs holder details as part of its own process, such as the valuation office preparing its roll, reads the details your office has agreed to share with it, such as holder and share, and nothing else. Your office decides which services may read, and which details.',
-        link: { href: '/products/registry-relay/', label: 'How Registry Relay shares agreed details' },
+        link: { href: '/products/base-registry/', label: 'How Base Registry Engine serves other services' },
       },
       {
         q: 'Who can see who holds a parcel or a vehicle?',
@@ -84,7 +83,7 @@ const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
       },
       {
         q: 'Where does our technical team start?',
-        a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
+        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
       ...sharedFamilyFaq,

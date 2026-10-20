@@ -17,14 +17,14 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
   <SolutionExample
     eyebrow="One example: a subsidy programme checks a farm"
     heading="Tell a subsidy programme whether a farmer is registered, and for which farm."
-    intro="A subsidy programme needs to know whether a farmer is registered, and for which farm, before it can process a claim. Your office agrees to give it those two details and nothing else."
+    intro="A subsidy programme needs to know whether the farmer named on a claim is registered for the farm on the claim before it can process it. Your office agrees to answer that question and nothing else."
     items={[
       { term: 'Who asks', body: 'The subsidy programme, for the farmer named on a claim.' },
-      { term: 'What the office wants', body: 'Whether the farmer is registered, and for which farm, from the register your office keeps, and no more.' },
-      { term: 'What happens', body: 'The programme asks your register about the farmer and gets back those two details. A request for anything else is refused, and every request is kept with who asked and when.' },
-      { term: 'What stays with your office', body: 'Plot coordinates, household members, crop history, and financial records stay in your register and are never sent.' },
+      { term: 'What the office wants', body: 'A yes or no to that question, from the register your office keeps, and no more.' },
+      { term: 'What happens', body: 'The programme asks your register and gets the answer, signed, so it can check where the answer came from. A question your office has not agreed to is refused, and every request is kept with who asked and when.' },
+      { term: 'What stays with your office', body: 'Plot coordinates, household members, crop history, and financial records stay in your register and are not sent unless your office agrees to share them.' },
     ]}
-    link={{ href: '/products/registry-relay/', label: 'See how Registry Relay shares agreed details' }}
+    link={{ href: '/products/evidence-gateway/', label: 'See how Evidence Gateway answers an agreed question' }}
   />
   <section class="section" aria-labelledby="agriculture-change-title">
     <div class="section-inner">
@@ -43,7 +43,7 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
     area={area}
     heading="Start from an agriculture, food, or environment register like yours."
     intro="A starter sets out what a register of this kind holds and who may change it, for one common register of holdings, animals, establishments, or permits. Your team takes the closest one and adapts it to its own agriculture, food, or environmental law."
-    featuredNote="The farmer registry starter records the farm and the registration; the two details a programme reads are shared through Registry Relay, which the starter does not include."
+    featuredNote="The farmer registry starter records the farm and the registration; the question a programme asks is set up in Evidence Gateway, which the starter does not include."
   />
   <SolutionFit
     area={area}
@@ -51,20 +51,19 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
     jobs={{
       'base-registry': 'Holds the register of farms, animals, establishments, or permits, and every later change of status, under your rules for who may record what.',
       'evidence-gateway': 'Answers a yes-or-no question, such as whether a farmer is registered, without sending plot or household details.',
-      'protected-registry-apis': 'Gives a programme the few details it has agreed with your office, such as registered status and the farm it is registered for, when a yes or no is not enough.',
     }}
     extra={[
       { term: 'Your office keeps deciding', body: 'Inspections, assessments, and the decision to register a farm or grant a permit stay in your own process. The register records the result; it does not decide who qualifies for a subsidy or who owns the land.' },
     ]}
     muted
   >
-    <p>Each product runs on its own. Evidence Gateway and Registry Relay can answer from a register you already run, so an office can start there and use the Base Registry Engine when it builds or moves its register.</p>
+    <p>Each product runs on its own. Evidence Gateway can answer from the register you run today, through a connection your technical team sets up, so an office can start there and use the Base Registry Engine when it builds or moves its register.</p>
   </SolutionFit>
   <SolutionFaq
     items={[
       {
         q: 'Does this replace our farm register or animal identification system?',
-        a: 'Not necessarily. Evidence Gateway and Registry Relay can answer from the register you run today. The Base Registry Engine is for a register you build or move off spreadsheets.',
+        a: 'Not necessarily. Evidence Gateway can answer from the register you run today, through a connection your technical team sets up. The Base Registry Engine is for a register you build or move off spreadsheets.',
         link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
       },
       {
@@ -84,7 +83,7 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
       },
       {
         q: 'Where does our technical team start?',
-        a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
+        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
       ...sharedFamilyFaq,

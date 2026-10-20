@@ -12,7 +12,7 @@ import StarterRecordType from '../../components/StarterRecordType.astro';
 import StarterTechnical from '../../components/StarterTechnical.astro';
 import { products } from '../../data/products';
 import { contactEmail } from '../../data/contact';
-import { areaForStarter, featuredStarterForArea, starterLead, starterRequestHref, starters, startersSource, type Starter } from '../../data/starters';
+import { areaForStarter, featuredStarterForArea, starterHoldsText, starterLead, starterRequestHref, starters, startersSource, type Starter } from '../../data/starters';
 import { sourceHost, words } from '../../data/starter-words';
 
 export function getStaticPaths() {
@@ -31,7 +31,6 @@ const baseRegistry = products.find((p) => p.key === 'base-registry')!;
 
 // A starter is sent on request, free of charge, until the catalogue is
 // published for download.
-const requestSubject = `Starter request: ${starter.title}`;
 const requestHref = starterRequestHref(starter.title);
 
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
@@ -41,6 +40,7 @@ const actionLabel = (id: string) => starter.actions.find((action) => action.id =
 const sizeKb = Math.round(starter.download.bytes / 1024);
 const zipName = starter.download.path.split('/').pop();
 const lead = starterLead(starter);
+const holds = starterHoldsText(starter);
 const requiredFields = starter.recordTypes.some((type) => type.fields.some((field) => field.required));
 const sources = starter.sourceUrls.map((href) => {
   const url = new URL(href);
@@ -63,15 +63,10 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
           </p>
           <h1 id="starter-title">{starter.title}</h1>
           <p class="hero-lead">{lead}</p>
-          <p class="hero-note starter-hero-terms">Free of charge, sent by email on request. A starting point to adapt; it does not show the register is in use anywhere.</p>
+          <p class="hero-note starter-hero-terms">Free of charge, sent by email on request.</p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href={requestHref} data-journey="starter-request">Request the starter</a>
             <a class="button button-secondary" href="#whats-inside">What you receive</a>
-          </div>
-          <p class="hero-note">Anyone from the office can request it; your technical team is who opens it.</p>
-          <div class="starter-after-request">
-            <h2 class="hero-note">After you send the request</h2>
-            <p class="hero-note">Someone on the Aubex team replies from {contactEmail} with the zip attached, its SHA-256 checksum, and a short note on what this starter leaves out for a register like yours. We confirm when to expect it. If another starter fits better, the reply says which. Nobody calls unless you ask, and we add you to no mailing list. If the button does not open your email app, write to <a href={requestHref} data-journey="starter-request">{contactEmail}</a> with the subject “{requestSubject}”.</p>
           </div>
         </div>
       </div>
@@ -81,9 +76,9 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
       <div class="section-inner">
         <div class="section-heading compact">
           <h2 id="records-title">What it holds: <span class="starter-count">{plural(starter.counts.recordTypes, 'kind of record', 'kinds of record')}</span></h2>
-          <p>{starter.task}</p>
+          {holds && <p>{holds}</p>}
           <p>Each box is one kind of record the register keeps, with the fields an entry has. Some records are added once and never changed; later events, such as a renewal or a correction, are added as records of their own.</p>
-          <p class="starter-legend">Each kind of record carries a sensitivity label: Public; Staff only, for records kept inside the office; Restricted, for the most sensitive. “Who can do what” lists the kinds of record each role can see.</p>
+          <p class="starter-legend">Each kind of record carries a sensitivity label: Public; Staff only, for records kept inside the office; Restricted, for the most sensitive. A field carries its own label, shown in the technical details, which can differ from the record’s. “Who can do what” lists the kinds of record each role can see.</p>
         </div>
         <div class="starter-records">
           {starter.recordTypes.map((type) => <StarterRecordType type={type} recordTypeLabel={recordTypeLabel} />)}
@@ -95,11 +90,11 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     <section class="section section-muted" aria-labelledby="actions-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <h2 id="actions-title">What staff can do: <span class="starter-count">{starter.actions.length > 0 ? plural(starter.counts.actions, 'action', 'actions') : 'look-up only'}</span></h2>
+          <h2 id="actions-title">What staff can do: <span class="starter-count">{starter.actions.length > 0 ? plural(starter.counts.actions, 'action', 'actions') : 'none defined yet'}</span></h2>
           {starter.actions.length > 0 ? (
             <p>Each action is one change staff make to the register. The register keeps who made it and when.</p>
           ) : (
-            <p>This starter defines no actions: its roles look records up. Your team adds the changes staff make to the register.</p>
+            <p>This starter defines no actions yet. Your team adds the changes staff make, such as recording an entry and correcting it, and gives each one to a role below.</p>
           )}
         </div>
         {starter.actions.length > 0 && (
@@ -119,7 +114,7 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
       <div class="section-inner">
         <div class="section-heading compact">
           <h2 id="access-title">Who can do what: <span class="starter-count">{plural(starter.accessProfiles.length, 'role', 'roles')}</span></h2>
-          <p>The starter sets out roles: what each may record and which records it may see. Your team decides which people and systems hold each role.</p>
+          <p>The starter sets out roles: what each may record and which records it may see. Your team decides which people and systems hold each role; one person can hold several, and a role named for a system, such as an evidence source, is held by that system.</p>
         </div>
         <div class="starter-roles">
           {starter.accessProfiles.map((profile) => (
@@ -127,7 +122,7 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
               <h3>{words(profile.id)}</h3>
               <dl>
                 <dt>Can record</dt>
-                <dd>{profile.actions.length > 0 ? list(profile.actions.map(actionLabel)) : 'Nothing. This role only looks things up.'}</dd>
+                <dd>{profile.actions.length > 0 ? list(profile.actions.map(actionLabel)) : starter.actions.length > 0 ? 'Nothing. This role only looks things up.' : 'No actions are defined yet. Its scopes are in the technical details.'}</dd>
                 <dt>Can see</dt>
                 <dd>{profile.recordTypes.length > 0 ? list(profile.recordTypes.map(recordTypeLabel)) : 'No records'}</dd>
               </dl>
@@ -169,7 +164,8 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
         <div class="section-heading compact">
           <p class="eyebrow">Free of charge</p>
           <h2 id="inside-title">What you receive</h2>
-          <p>One zip file with the configuration above, sent by email when you request it. A developer turns it into a registry project with the {baseRegistry.name} command-line tools; nothing in it runs on its own.</p>
+          <p>One zip file with the configuration above, sent by email when you request it. A developer turns it into a registry project with the {baseRegistry.name} command-line tools; nothing in it runs on its own. It is a starting point to adapt, not a sign that the register is in use anywhere.</p>
+          <p>We reply by email with the zip. If another starter fits better, the reply says which.</p>
         </div>
         <div class="starter-inside">
           <div>
@@ -184,6 +180,7 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
             <h3>Not exactly your register?</h3>
             <p>No starter matches a register as it is kept. If yours needs a field, a kind of record or a role this one lacks, your team adds it after generating the project. Say what is missing when you request the starter; it is how the catalogue gets better.</p>
             <p class="starter-request"><a class="button button-primary" href={requestHref} data-journey="starter-request">Request the starter</a></p>
+            <p class="starter-legend">Sent by email because the starters repository is not public yet. Requesting one commits you to nothing.</p>
             <div class="starter-inside-technical">
               <StarterTechnical
                 label="file, checksum, versions and values"
@@ -222,7 +219,7 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
       primaryLabel="Request the starter"
       primaryHref={requestHref}
       emphasis="docs"
-      note={`Or write to ${contactEmail} with the subject “${requestSubject}”.`}
+      note={`Or email ${contactEmail} with the starter’s name, your organization and the register you keep.`}
     />
   </main>
   <SiteFooter />
@@ -264,24 +261,6 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
 
   .starter-hero-terms {
     margin: -12px 0 24px;
-  }
-
-  .starter-after-request {
-    border-top: 1px solid var(--registry-rule);
-    margin-top: 20px;
-    max-width: 760px;
-    padding-top: 16px;
-  }
-
-  .starter-page .starter-after-request h2 {
-    color: var(--registry-ink);
-    font-size: var(--type-base);
-    font-weight: 700;
-    margin: 0;
-  }
-
-  .starter-after-request p {
-    margin-top: 6px;
   }
 
   .starter-page .section-inner {

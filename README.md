@@ -49,7 +49,9 @@ secondary audience.
   their British spelling ("licence fee"); everything else is American
   spelling. Within that layer,
   Base Registry Engine and Evidence Gateway remain the flagship products, with
-  Registry Relay in a supporting role and its own product page. Use the full **Base Registry Engine** name in public copy; its abbreviation
+  Registry Casework in a supporting role. Registry Relay was retired upstream on
+  2026-10-03 (https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/);
+  the site does not market it, and the content check enforces that. Use the full **Base Registry Engine** name in public copy; its abbreviation
   belongs in technical documentation and command names.
 - Describe the products as independent choices. The organization owns its
   records; connecting components requires explicit configuration.
@@ -145,12 +147,11 @@ mailto on the site is built with `src/data/contact.ts` (`contactEmail`,
 
 ## Pages
 
-- `/`: the register families first, the work every register shares, what stays under the organization's control, the four products as equal cards, the developer paths, where the project stands, and the closing band.
+- `/`: how a register runs (one licence over a week, with the two pages every register shares), what stays under the organization's control, the register families and the starters, the three products as equal cards, the developer paths, where the project stands, and the closing band.
 - `/solutions/` and `/solutions/<area>/`: one page per solution area in `src/data/solutions.ts`.
 - `/starters/` and `/starters/<id>/`: the starters catalogue, one page per starter.
 - `/products/base-registry/`: build and maintain a registry.
 - `/products/evidence-gateway/`: return a signed answer to a predefined question.
-- `/products/registry-relay/`: publish selected existing data with Relay.
 - `/products/casework/`: coordinate the human decisions behind a registry with Casework.
 - `/blog/`: field guides for registry owners and reviewers, published from `src/content/blog/` with an RSS feed at `/rss.xml`.
 - `/pricing/`: public prices for implementation pilots and annual support contracts, who does the work, and the written brief (budget and timing optional).

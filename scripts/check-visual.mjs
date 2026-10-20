@@ -58,7 +58,6 @@ const routes = [
   { name: 'home', path: '/' },
   { name: 'base-registry', path: '/products/base-registry/' },
   { name: 'evidence-gateway', path: '/products/evidence-gateway/' },
-  { name: 'registry-relay', path: '/products/registry-relay/' },
   { name: 'casework', path: '/products/casework/' },
   { name: 'solutions', path: '/solutions/' },
   { name: 'solutions-licensing', path: '/solutions/licensing/' },
@@ -143,7 +142,7 @@ for (const viewport of viewports) {
     }
   }
 
-  // On desktop the four homepage product cards should read as a balanced row.
+  // On desktop the three homepage product cards should read as a balanced row.
   if (route.path === '/' && viewport.name === 'desktop') {
     const align = await page.evaluate(() => {
       const cards = [...document.querySelectorAll('.home-solution-card')];
@@ -151,8 +150,8 @@ for (const viewport of viewports) {
       return { count: cards.length, cardHeights };
     });
 
-    if (align.count !== 4) {
-      failures.push(`desktop: expected 4 homepage product cards, found ${align.count}`);
+    if (align.count !== 3) {
+      failures.push(`desktop: expected 3 homepage product cards, found ${align.count}`);
     } else {
       const heightSpread = Math.max(...align.cardHeights) - Math.min(...align.cardHeights);
       if (heightSpread > 2) {

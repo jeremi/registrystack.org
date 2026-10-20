@@ -18,11 +18,14 @@ export default defineConfig({
     '/use-cases/': '/solutions/',
     '/how-it-fits/': '/',
     '/notary/': '/products/evidence-gateway/',
-    '/relay/': '/products/registry-relay/',
+    '/relay/': '/products/evidence-gateway/',
+    // Registry Relay was retired upstream on 2026-10-03; Evidence Gateway
+    // carries the retirement note.
+    '/products/registry-relay/': '/products/evidence-gateway/',
     '/solutions/base-registry/': '/products/base-registry/',
     '/solutions/evidence-gateway/': '/products/evidence-gateway/',
     '/solutions/casework/': '/products/casework/',
-    '/solutions/protected-registry-apis/': '/products/registry-relay/',
+    '/solutions/protected-registry-apis/': '/products/evidence-gateway/',
     '/manifest/': 'https://docs.registrystack.org/products/registry-manifest/',
   },
   // The compatibility page redirects visitors and should not be indexed.

@@ -34,7 +34,7 @@ after registry access?"
 - [ ] The source binding and freshness expectation are known.
 - [ ] The approved filters and projections can be inspected.
 - [ ] Match, no match, ambiguity, denial, and source failure remain distinct.
-- [ ] Relay and Evidence Gateway records can be correlated without joining on a raw subject identifier.
+- [ ] Evidence Gateway records and the source consultations they relied on can be correlated without joining on a raw subject identifier.
 
 ## 5. Disclosure
 
@@ -52,7 +52,7 @@ after registry access?"
 
 ## 7. Audit continuity and operation
 
-- [ ] Relay and Evidence Gateway use separate approved audit keys and chains.
+- [ ] Evidence Gateway uses approved audit keys and chains.
 - [ ] Retained chains verify using the deployment procedure.
 - [ ] The off-host shipping or anchoring posture matches the stated threat model.
 - [ ] Retention, access control, backup, and recovery owners are named.

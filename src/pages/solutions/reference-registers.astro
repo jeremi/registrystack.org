@@ -24,7 +24,7 @@ const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
       { term: 'What happens', body: 'Your office keeps the list in its register. Each service gets the details it has agreed with you and reads the current list instead of waiting for the next spreadsheet.' },
       { term: 'What stays with your office', body: 'Your office decides when a name or boundary changes. The boundary maps stay in the mapping system the list refers to.' },
     ]}
-    link={{ href: '/products/registry-relay/', label: 'See how Registry Relay shares agreed details' }}
+    link={{ href: '/products/base-registry/', label: 'See how Base Registry Engine serves other services' }}
   />
   <section class="section" aria-labelledby="reference-change-title">
     <div class="section-inner">
@@ -48,8 +48,7 @@ const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
     area={area}
     heading="Give other registers one source to refer to."
     jobs={{
-      'base-registry': 'Holds the list and the history of every entry, under your rules for who may record a change.',
-      'protected-registry-apis': 'Gives each register and service that uses the list the details it has agreed with your office, always current.',
+      'base-registry': 'Holds the list and the history of every entry, under your rules for who may record a change, and serves the current list to the registers and services your office lets read it.',
     }}
     extra={[
       { term: 'Other registers refer to the list by code', body: 'Registers of businesses, land, licences, and people refer to territories, public bodies, and products by code. A maintained list gives those codes one source.' },
@@ -57,7 +56,7 @@ const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
     ]}
     muted
   >
-    <p>Each product runs on its own. An office that already keeps its list in a database can start by sharing it through Registry Relay, and move the list into the Base Registry Engine later.</p>
+    <p>An office that already keeps its list in a database or a spreadsheet moves it into the Base Registry Engine, a small migration for a code list, and the registers and services that use it read it from there.</p>
   </SolutionFit>
   <SolutionFaq
     items={[
@@ -82,7 +81,7 @@ const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
       },
       {
         q: 'Where does our technical team start?',
-        a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
+        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
       ...sharedFamilyFaq,

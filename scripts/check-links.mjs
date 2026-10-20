@@ -103,7 +103,7 @@ const requiredExternal = [
   "https://docs.registrystack.org/",
   "https://github.com/registrystack/registry-stack",
   "https://github.com/registrystack/registry-stack/security/advisories/new",
-  "https://docs.registrystack.org/products/registry-relay/",
+  "https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/",
   "https://docs.registrystack.org/products/registry-manifest/",
 ];
 

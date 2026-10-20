@@ -50,7 +50,6 @@ const area = solutionAreas.find((a) => a.key === 'business-and-tax')!;
     jobs={{
       'base-registry': 'Holds the register of businesses, taxpayers, or filings, under your rules for who may record and look up each one.',
       'evidence-gateway': 'Answers a procurement team’s or bank’s question about a business, such as whether it is actively registered, and nothing more.',
-      'protected-registry-apis': 'Gives a service that needs more than a yes or no the details you have agreed to share, such as legal name and legal form.',
     }}
     extra={[
       { term: 'Your registration process keeps deciding', body: 'Applications, fees, and the decision to register a business or a taxpayer stay in the systems that handle them today. The register records a registration once your office has decided it.' },
@@ -88,7 +87,7 @@ const area = solutionAreas.find((a) => a.key === 'business-and-tax')!;
       },
       {
         q: 'Where does our technical team start?',
-        a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
+        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
       ...sharedFamilyFaq,

@@ -30,11 +30,10 @@ const sweptFiles = [
   ...listAstroFiles('src/components'),
 ];
 
-// Product pages live under /products/<slug>/; Relay's slug is its product name.
+// Product pages live under /products/<slug>/.
 const productPages = [
   { key: 'base-registry', route: '/products/base-registry/', file: 'src/pages/products/base-registry.astro' },
   { key: 'evidence-gateway', route: '/products/evidence-gateway/', file: 'src/pages/products/evidence-gateway.astro' },
-  { key: 'protected-registry-apis', route: '/products/registry-relay/', file: 'src/pages/products/registry-relay.astro' },
   { key: 'casework', route: '/products/casework/', file: 'src/pages/products/casework.astro' },
 ];
 
@@ -65,6 +64,7 @@ const retiredIaRoutes = [
 const supersededRoutes = [
   '/notary/',
   '/relay/',
+  '/products/registry-relay/',
   '/manifest/',
   '/problem/',
   '/ecosystem/',
@@ -95,23 +95,27 @@ for (const relativePath of ['src/data/products.ts', ...markdownLinkFiles]) {
   }
 }
 
-// 2. Homepage orientation: the register a reader keeps comes first, then the
-// work every register shares, control, the products, and the developer paths.
+// 2. Homepage orientation: how a register runs comes first (with the work
+// every register shares inside it), then control, the register a reader keeps,
+// the products, and the developer paths.
 const homeSource = readSource('src/pages/index.astro');
 const productSource = readSource('src/data/products.ts');
 const heroMatch = homeSource.match(/<section class="hero[^"]*"[\s\S]*?<\/section>/);
 if (!homeSource.includes('<RegistryExample')) {
   failures.push('homepage is missing its explanatory registry example');
 }
-if (!heroMatch || !heroMatch[0].includes('href="#registers"') || !heroMatch[0].includes('href={askQuestionHref()}')) {
-  failures.push('homepage hero is missing its "Find your register" and "Ask a question" actions');
+if (!homeSource.includes('<RegisterDay')) {
+  failures.push('homepage is missing the register-day sequence that shows how a register runs');
+}
+if (!heroMatch || !heroMatch[0].includes('href="#how-a-register-runs"') || !heroMatch[0].includes('href={askQuestionHref()}')) {
+  failures.push('homepage hero is missing its "See how a register runs" and "Ask a question" actions');
 }
 // `how-it-works` and `start-testing` are kept for inbound links to the
 // former product and developer anchors.
-for (const anchor of ['registers', 'shared-work', 'products', 'how-it-works', 'developers', 'start-testing', 'project-status']) {
+for (const anchor of ['how-a-register-runs', 'registers', 'shared-work', 'products', 'how-it-works', 'developers', 'start-testing', 'project-status']) {
   if (!homeSource.includes(`id="${anchor}"`)) failures.push(`homepage is missing the ${anchor} destination`);
 }
-const homeSectionOrder = ['registers', 'shared-work', 'ownership-title', 'products', 'developers', 'project-status', 'pilot-title'];
+const homeSectionOrder = ['how-a-register-runs', 'shared-work', 'ownership-title', 'registers', 'products', 'developers', 'project-status', 'pilot-title'];
 const homeSectionIndexes = homeSectionOrder.map((id) => homeSource.indexOf(`id="${id}"`));
 if (homeSectionIndexes.some((index, position) => index < 0 || (position > 0 && index < homeSectionIndexes[position - 1]))) {
   failures.push(`homepage sections must run in this order: ${homeSectionOrder.join(', ')}`);
@@ -145,7 +149,6 @@ for (const { route } of productPages) {
 for (const route of [
   'https://docs.registrystack.org/tutorials/first-breg/',
   'https://docs.registrystack.org/tutorials/first-evidence-assertion/',
-  'https://docs.registrystack.org/tutorials/publish-governed-sqlite-registry/',
   'https://docs.registrystack.org/start/casework/',
 ]) {
   if (!productSource.includes(route)) failures.push('product data is missing a current tutorial: ' + route);
@@ -225,11 +228,12 @@ const expectedRedirects = [
   "'/ai/': '/solutions/'",
   "'/use-cases/': '/solutions/'",
   "'/notary/': '/products/evidence-gateway/'",
-  "'/relay/': '/products/registry-relay/'",
+  "'/relay/': '/products/evidence-gateway/'",
+  "'/products/registry-relay/': '/products/evidence-gateway/'",
   "'/solutions/base-registry/': '/products/base-registry/'",
   "'/solutions/evidence-gateway/': '/products/evidence-gateway/'",
   "'/solutions/casework/': '/products/casework/'",
-  "'/solutions/protected-registry-apis/': '/products/registry-relay/'",
+  "'/solutions/protected-registry-apis/': '/products/evidence-gateway/'",
   "'/manifest/': 'https://docs.registrystack.org/products/registry-manifest/'",
 ];
 for (const redirect of expectedRedirects) {
@@ -260,8 +264,26 @@ for (const { key, file: page } of productPages) {
 }
 // The former product pages under src/pages/solutions/ moved to /products/.
 for (const { file } of productPages) {
-  const formerFile = file.replace('src/pages/products/', 'src/pages/solutions/').replace('registry-relay', 'protected-registry-apis');
+  const formerFile = file.replace('src/pages/products/', 'src/pages/solutions/');
   if (existsSync(resolve(formerFile))) failures.push(`former product page still exists: ${formerFile}`);
+}
+
+// Registry Relay was retired upstream on 2026-10-03 and the site no longer
+// markets it. Pages, components and data must not mention it, and its former
+// routes redirect to Evidence Gateway. A blog post that discusses it carries
+// a dated note linking the retirement decision.
+const relayDecision = 'https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/';
+const listFiles = (relativeDir, suffix) =>
+  readdirSync(resolve(relativeDir), { withFileTypes: true }).flatMap((entry) => {
+    const relativePath = `${relativeDir}/${entry.name}`;
+    if (entry.isDirectory()) return listFiles(relativePath, suffix);
+    return entry.isFile() && entry.name.endsWith(suffix) ? [relativePath] : [];
+  });
+for (const file of [...sweptFiles, ...listFiles('src/data', '.ts'), ...listFiles('src/content/blog', '.md'), 'public/llms.txt', 'README.md']) {
+  const source = readSource(file);
+  if (!/\bRelay\b|registry-relay|protected-registry-apis/.test(source)) continue;
+  if (!source.includes(relayDecision)) failures.push(`${file} mentions Registry Relay without linking its retirement decision`);
+  if (/\/products\/registry-relay\/|publish-governed-sqlite-registry/.test(source)) failures.push(`${file} links a retired Registry Relay page`);
 }
 
 // Every solution area has its own page. Until the first area page lands this
@@ -303,12 +325,20 @@ const startersCatalogue = JSON.parse(readSource('src/data/starters.json') || '{"
 const catalogueStarters = startersCatalogue.starters ?? [];
 const catalogueIds = new Set(catalogueStarters.map((starter) => starter.id));
 const familyStarterIds = [...solutionsSource.matchAll(
-  /key: '([^']+)',[\s\S]*?starters: \[([^\]]*)\],(?:\s*featuredStarter: '([^']+)',)?/g,
-)].map(([, key, list, featured]) => ({ key, ids: [...list.matchAll(/'([^']+)'/g)].map(([, id]) => id), featured }));
+  /key: '([^']+)',[\s\S]*?starters: \[([^\]]*)\],(?:\s*featuredStarter: '([^']+)',)?(?:\s*openFirst: \[([^\]]*)\],)?/g,
+)].map(([, key, list, featured, openFirst]) => ({
+  key,
+  ids: [...list.matchAll(/'([^']+)'/g)].map(([, id]) => id),
+  featured,
+  openFirst: [...(openFirst ?? '').matchAll(/'([^']+)'/g)].map(([, id]) => id),
+}));
 const familiesByStarter = new Map();
-for (const { key, ids, featured } of familyStarterIds) {
-  // A family that names a starter to open first names one from its own list.
+for (const { key, ids, featured, openFirst } of familyStarterIds) {
+  // A family that names starters to open first names them from its own list.
   if (featured && !ids.includes(featured)) failures.push(`solution area ${key} features starter ${featured}, which is not in its starters list`);
+  for (const id of openFirst) {
+    if (!ids.includes(id)) failures.push(`solution area ${key} opens first with starter ${id}, which is not in its starters list`);
+  }
   for (const id of ids) {
     if (!catalogueIds.has(id)) failures.push(`solution area ${key} lists starter ${id}, which is not in src/data/starters.json`);
     familiesByStarter.set(id, [...(familiesByStarter.get(id) ?? []), key]);

@@ -18,7 +18,7 @@ const groups = [
     "items": [
       {
         "q": "What does Registry Stack help us do?",
-        "a": "Base Registry Engine holds the register: records about people, households, organizations, assets, and more, which your applications create, find, and update under your rules. Evidence Gateway lets approved services receive a signed answer from a register your organization controls, without receiving its full records. Registry Casework puts the changes that need an officer's decision in one queue. Registry Relay publishes selected fields from an existing register to approved services.",
+        "a": "Base Registry Engine holds the register: records about people, households, organizations, assets, and more, which your applications create, find, and update under your rules. Evidence Gateway lets approved services receive a signed answer from a register your organization controls, without receiving its full records. Registry Casework puts the changes that need an officer's decision in one queue.",
         "link": {
           "label": "Explore the product choices",
           "href": "/solutions/#products"
@@ -26,7 +26,7 @@ const groups = [
       },
       {
         "q": "Which products do we need?",
-        "a": "Usually one to start. Base Registry Engine holds a register. Evidence Gateway answers a defined question about a register you already have. Registry Casework queues the changes an officer must decide. Registry Relay publishes selected fields to approved services. Each runs on its own; the solution page for your register says which ones most offices of that kind start with.",
+        "a": "Usually one to start. Base Registry Engine holds a register. Evidence Gateway answers a defined question about a register you already have. Registry Casework queues the changes an officer must decide. Each runs on its own; the solution page for your register says which ones most offices of that kind start with.",
         "link": {
           "label": "Find your register",
           "href": "/solutions/"
@@ -50,7 +50,7 @@ const groups = [
       },
       {
         "q": "Can we keep our existing register?",
-        "a": "Yes. Evidence Gateway can use an existing source to answer configured questions, such as whether a supplier is actively registered. When a service needs selected fields instead, Registry Relay can provide access to data your team prepares from that source.",
+        "a": "Yes, with a connection your technical team sets up. Evidence Gateway reads your register through an interface your system offers or a read-only extract your team publishes, and answers the questions you have configured, such as whether a supplier is actively registered. A service that needs the records themselves reads the register through the access your office grants it; Registry Stack does not publish fields from a register it does not hold.",
         "link": {
           "label": "Explore Evidence Gateway",
           "href": "/products/evidence-gateway/"
@@ -58,10 +58,10 @@ const groups = [
       },
       {
         "q": "What is Registry Stack not?",
-        "a": "It is not a central data store, a data exchange platform, or a replacement for the applications your staff use. It does not copy your registries into one place, and it does not decide eligibility for you. Each product does one job beside the systems you already run: hold records, answer a defined question, publish selected fields, or coordinate the officers who review changes.",
+        "a": "It is not a central data store, a data exchange platform, or a replacement for the applications your staff use. It does not copy your registries into one place, and it does not decide eligibility for you. Each product does one job beside the systems you already run: hold records, answer a defined question, publish selected fields, or coordinate the officers who review changes. The documentation keeps a list of what the software does not do yet.",
         "link": {
-          "label": "Read how it sits beside existing systems",
-          "href": "https://docs.registrystack.org/explanation/integration-patterns/"
+          "label": "Read the known limitations",
+          "href": "https://docs.registrystack.org/explanation/known-limitations/"
         }
       }
     ]
@@ -87,10 +87,10 @@ const groups = [
       },
       {
         "q": "Can we start from a spreadsheet or legacy database?",
-        "a": "Yes, with preparation by your technical team. To share selected information with Registry Relay, your team prepares and maintains a reviewed extract. To move records into Base Registry Engine, your team defines the record structure and plans the migration.",
+        "a": "Yes, with preparation by your technical team. To let services check a fact from it, your team publishes a read-only extract that Evidence Gateway reads and refreshes it as often as you agree. To move records into Base Registry Engine, your team defines the record structure and plans the migration.",
         "link": {
-          "label": "Explore Registry Relay",
-          "href": "/products/registry-relay/"
+          "label": "Explore Evidence Gateway",
+          "href": "/products/evidence-gateway/"
         }
       },
       {
@@ -108,7 +108,7 @@ const groups = [
     "items": [
       {
         "q": "What is a starter?",
-        "a": "A starting configuration for one common kind of register: the kinds of record it holds, the fields, and who may change what. Your team generates a project from it and adds what your register needs. A starter is a starting point, not a running registry, and does not show that the register is in use anywhere.",
+        "a": "A ready-made definition of one common kind of register: the records it keeps, what staff do with them, and who may do what. Your team generates a project from it and adapts it to your law. It is a starting point, not a running registry, and does not show that the register is in use anywhere.",
         "link": {
           "label": "Browse the starters",
           "href": "/starters/"
@@ -116,7 +116,7 @@ const groups = [
       },
       {
         "q": "How do we get a starter?",
-        "a": "From the starter's page, by email. Someone on the Aubex team replies from contact@registrystack.org with the zip attached and its SHA-256 checksum, and says when to expect it. Nobody calls unless you ask, and we add you to no mailing list.",
+        "a": "From the starter's page, by email: the button opens a message to contact@registrystack.org that names the starter. We reply with the zip, and if another starter fits better, the reply says which.",
         "link": {
           "label": "Choose a starter",
           "href": "/starters/"
@@ -144,8 +144,24 @@ const groups = [
         }
       },
       {
+        "q": "What does using the free software commit us to?",
+        "a": "Keeping the licence and notice files with the software, and crediting PublicSchema where its record definitions are used. Nothing else: no fee, no obligation to buy services, and no data sent to Aubex. A starter request is an email, and we use it only to reply.",
+        "link": {
+          "label": "Read the privacy policy",
+          "href": "/privacy/"
+        }
+      },
+      {
+        "q": "How mature is the software?",
+        "a": "Pre-1.0, built for self-hosted institutional pilots. Interfaces may change before 1.0, so your team keeps clients and deployments on compatible releases. Releases are numbered, signed and ship a software bill of materials, and the documentation keeps a list of known limitations. There is no hosted service.",
+        "link": {
+          "label": "Read the known limitations",
+          "href": "https://docs.registrystack.org/explanation/known-limitations/"
+        }
+      },
+      {
         "q": "What can our developers try?",
-        "a": "The Base Registry Engine tutorial creates and updates a sample business record. The Evidence Gateway tutorial checks a synthetic person's adult status and verifies the signed answer. The Registry Relay tutorial publishes a sample business register with two permitted fields. Each tutorial explains its prerequisites and steps.",
+        "a": "The Base Registry Engine tutorial creates and updates a sample business record. The Evidence Gateway tutorial checks a synthetic person's adult status and verifies the signed answer. Each tutorial explains its prerequisites and steps.",
         "link": {
           "label": "Choose an introductory tutorial",
           "href": "/#developers"
@@ -161,7 +177,7 @@ const groups = [
       },
       {
         "q": "Are the examples real?",
-        "a": "No. Every record, name and organization in the illustrations is fictional and labeled as such. We do not publish customer names or outcomes we cannot show.",
+        "a": "No. Every record, name and organization in the illustrations is fictional and labeled as such. The site names no deployments; we name one only when its operator agrees.",
         "link": {
           "label": "See where the project stands",
           "href": "/#project-status"

@@ -48,7 +48,7 @@ const server = createServer(async (request, response) => {
 
 await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen));
 const { port } = server.address();
-// The homepage introduces the four products; the service-answer
+// The homepage introduces the three products; the service-answer
 // figure lives on its own page.
 const homeUrl = `http://127.0.0.1:${port}/`;
 const url = `http://127.0.0.1:${port}${figureRoute}`;
@@ -154,7 +154,7 @@ const failures = [];
   await context.close();
 }
 
-// The homepage routes readers through its four product cards.
+// The homepage routes readers through its three product cards.
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
   const page = await context.newPage();
@@ -171,8 +171,8 @@ const failures = [];
   }
 
   const solutionCards = await page.locator('.home-solution-card').count();
-  if (solutionCards !== 4) {
-    failures.push(`expected 4 homepage product cards, found ${solutionCards}`);
+  if (solutionCards !== 3) {
+    failures.push(`expected 3 homepage product cards, found ${solutionCards}`);
   }
 
   await context.close();

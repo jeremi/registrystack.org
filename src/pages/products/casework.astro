@@ -14,7 +14,7 @@ const product = products.find((p) => p.key === 'casework')!;
       <div class="section-heading">
         <p class="eyebrow">One example: a licence scope correction in a register</p>
         <h2 id="casework-example-title">Correct a licence with one officer accountable from request to decision.</h2>
-        <p>A professional register receives a request to correct the scope of a licence. The office that keeps the register wants corrections reviewed by an officer before they take effect, a first response within 48 hours, and a clear record of who decided.</p>
+        <p>A professional register receives a request to correct the scope of a licence. The office that keeps the register wants corrections reviewed by an officer before they take effect, a first response within its own target of 48 hours, and a clear record of who decided.</p>
       </div>
       <CaseworkFlow />
       <p class="product-note">Casework never changes the register on its own. The officer who approves the correction applies it under their own account, so the register records the change against the person who made it, with the permissions that person already has. The same holds for any other system that owns the work.</p>
@@ -39,9 +39,9 @@ const product = products.find((p) => p.key === 'casework')!;
       <div class="section-heading compact">
         <p class="eyebrow">How it fits your organization</p>
         <h2 id="casework-fit-title">Run the team without opening the source system.</h2>
-        <p>Casework holds the queue, the holder, and the clocks. The system that owns the work keeps eligibility, permissions, and the records themselves. Supervisors and administrators run the team from Casework rather than from database access.</p>
+        <p>Casework holds the queue, the holder, and the clocks, and offers them through an API; the screens your officers use come from your own application or an existing staff tool. The system that owns the work keeps eligibility, permissions, and the records themselves. Supervisors and administrators run the team from Casework rather than from database access.</p>
         <p>Work reaches Casework in two ways. A source system connects through an adapter, which decides how its work appears in the inbox and what a decision may do there; <a href="/products/base-registry/">Base Registry Engine</a> ships with one, and another system needs an adapter written against the published contract. Any service can also hand in a request through the API and follow its progress; it cannot claim or decide the item.</p>
-        <p>If the review a register needs is a fixed number of approvals and nothing more, Base Registry Engine can require them on its own and hold the proposal until they are in. Casework is for review work that has to be given to a person, tracked against a due date, chased when it stalls, and answered back to whoever asked.</p>
+        <p>If the review a register needs is a fixed number of approvals and nothing more, Base Registry Engine can require them on its own and hold the proposal until they are in. Casework is for review work that has to be given to a person, tracked against a due date, chased when it stalls, and shown to whoever asked once it is decided.</p>
       </div>
       <dl>
         <dt>Your team agrees the queues and targets</dt><dd>Decide which requests need a person to look first, which queue receives each kind of work, the response target for each queue, and the working-day calendar that reminders and escalation steps follow.</dd>

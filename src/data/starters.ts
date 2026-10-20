@@ -3,11 +3,11 @@
 // repository; edit the starters there, not here. src/upstream/starters.json
 // records which revision the data came from.
 import catalogue from './starters.json';
-import { solutionAreaForStarter, type SolutionArea } from './solutions';
+import { solutionAreaForStarter, starterOrderForArea, type SolutionArea } from './solutions';
 
 // The plain one-line lead shown on cards, starter pages and family lists,
 // and the email that requests a starter.
-export { starterLead, starterRequestHref } from './starter-words';
+export { starterHoldsText, starterLead, starterRequestHref } from './starter-words';
 
 export interface StarterField {
   id: string;
@@ -77,11 +77,11 @@ export const starterCount = starters.length;
 
 export const starterById = (id: string): Starter | undefined => starters.find((starter) => starter.id === id);
 
-// Starters in the order the solution area lists them, with the family's
-// featured starter first, so the family page and the catalogue agree.
+// Starters in the order the solution area lists them, the featured starter
+// and the ones to open first ahead of the rest, so the family page and the
+// catalogue agree.
 export const startersForArea = (area: SolutionArea): Starter[] =>
-  [...area.starters]
-    .sort((a, b) => Number(b === area.featuredStarter) - Number(a === area.featuredStarter))
+  starterOrderForArea(area)
     .flatMap((id) => {
       const starter = starterById(id);
       return starter ? [starter] : [];

@@ -1,6 +1,6 @@
 ---
 // The starters a register family groups, its featured starter first, then
-// the order solutions.ts lists them. Titles and one-line leads come from the
+// the ones to open first, then the order solutions.ts lists them. Titles and one-line leads come from the
 // starters catalogue data.
 import type { SolutionArea } from '../data/solutions';
 import { startersForArea, starterCount, starterLead } from '../data/starters';
@@ -16,6 +16,7 @@ interface Props {
 
 const { area, heading, intro, featuredNote } = Astro.props;
 const areaStarters = startersForArea(area);
+const isOpenFirst = (id: string): boolean => area.openFirst?.includes(id) ?? false;
 ---
 <section id="starters" class="section" aria-labelledby="solution-starters-title">
   <div class="section-inner">
@@ -26,10 +27,11 @@ const areaStarters = startersForArea(area);
     </div>
     <ul class="solution-starter-list">
       {areaStarters.map((starter) => (
-        <li class:list={{ 'is-featured': starter.id === area.featuredStarter }}>
+        <li class:list={{ 'is-featured': starter.id === area.featuredStarter || isOpenFirst(starter.id) }}>
           <h3>
             <a href={`/starters/${starter.id}/`}>{starter.title}</a>
             {starter.id === area.featuredStarter && <span class="solution-starter-featured">Start here</span>}
+            {isOpenFirst(starter.id) && <span class="solution-starter-featured">Open first</span>}
           </h3>
           <p>{starterLead(starter)}</p>
           {featuredNote && starter.id === area.featuredStarter && <p class="solution-starter-note">{featuredNote}</p>}

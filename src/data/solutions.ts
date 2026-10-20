@@ -11,7 +11,10 @@
 // a register family names one, is the starter it suggests first: the one its
 // page's example is about, and the one the starters work concentrates on. It
 // must be one of the family's `starters`; the content check enforces that. A
-// family without one lists its starters in catalogue order and highlights none.
+// family with no single starter to open first can name several in
+// `openFirst`, listed before the rest and labeled; the content check enforces
+// that each is one of the family's `starters`. A family naming neither lists
+// its starters in the order given and highlights none.
 export interface SolutionArea {
   key: string;
   slug: string;
@@ -21,6 +24,7 @@ export interface SolutionArea {
   kind: 'register-family' | 'cross-cutting';
   starters: readonly string[];
   featuredStarter?: string;
+  openFirst?: readonly string[];
   // The offices the family is for, shown on its card ("For licensing boards, ...").
   audience?: string;
   // The search snippet for the family page, under 155 characters.
@@ -81,7 +85,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     featuredStarter: 'business-register',
     audience: 'For company registrars, tax administrations, customs and financial supervisors.',
     description: 'Keep the register of businesses, taxpayers, suppliers and filings, let other services check an entry, and review changes in one queue. Open source.',
-    products: ['base-registry', 'evidence-gateway', 'protected-registry-apis'],
+    products: ['base-registry', 'evidence-gateway'],
   },
   {
     key: 'people-and-social-programmes',
@@ -105,6 +109,7 @@ export const solutionAreas: readonly SolutionArea[] = [
       'social-registry',
       'voter-registration',
     ],
+    openFirst: ['population-register', 'social-registry'],
     audience: 'For population registries, social protection ministries and civil registration offices.',
     description: 'Maintain records about people and let programmes check a fact without receiving the file. Open-source register software.',
     products: ['base-registry', 'evidence-gateway', 'casework'],
@@ -136,7 +141,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     featuredStarter: 'land-parcels',
     audience: 'For cadastres, land registries, vehicle and vessel registries.',
     description: 'Register parcels, buildings, vehicles, vessels and the rights over them, and let services check an entry without receiving the file. Open source.',
-    products: ['base-registry', 'protected-registry-apis'],
+    products: ['base-registry'],
   },
   {
     key: 'agriculture-food-and-environment',
@@ -166,7 +171,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     featuredStarter: 'farmer-registry',
     audience: 'For agriculture ministries, veterinary and food safety authorities and environment agencies.',
     description: 'Register farms, animals, food businesses, permits and natural resources, and let services check a fact without seeing the record. Open source.',
-    products: ['base-registry', 'evidence-gateway', 'protected-registry-apis'],
+    products: ['base-registry', 'evidence-gateway'],
   },
   {
     key: 'health-and-safety',
@@ -208,7 +213,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     featuredStarter: 'geographic-reference',
     audience: 'For statistics offices, national mapping and gazetteer authorities, and any office that keeps a code list.',
     description: 'Publish the code lists, place names and public body directories that other registers rely on, from one register your office controls. Open source.',
-    products: ['base-registry', 'protected-registry-apis'],
+    products: ['base-registry'],
   },
   {
     key: 'check-a-fact',
@@ -219,7 +224,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     kind: 'cross-cutting',
     starters: [],
     description: 'Let another service check a fact in your register, such as an age or a licence status, and get a signed answer without the record. Open source.',
-    products: ['evidence-gateway', 'protected-registry-apis'],
+    products: ['evidence-gateway'],
   },
   {
     key: 'review-changes',
@@ -238,28 +243,45 @@ export const solutionAreas: readonly SolutionArea[] = [
 // closing band. The answers stay true for any register a family groups.
 export const sharedFamilyFaq: readonly { q: string; a: string; link?: { href: string; label: string } }[] = [
   {
+    q: 'What do we receive, and what do we build?',
+    a: 'You receive the software, the starter closest to your register, and the documentation. The software holds the records and their rules, answers the services you connect, and keeps the history. Your team provides the screens staff use, any search page for the public, sign-in for staff and services, and the hosting. A starter’s page says whether it includes a model of staff screens.',
+    link: { href: '/starters/', label: 'See what a starter includes' },
+  },
+  {
     q: 'What does it cost?',
-    a: 'There is no software licence fee; Registry Stack is Apache-2.0 open source. Your costs are your own hosting and the people who implement and operate it. If you want help, Aubex offers implementation pilots and annual support contracts at published prices, with scope and fee agreed before work starts.',
+    a: 'There is no software licence fee; Registry Stack is Apache-2.0 open source. Your costs are hosting and people: someone in the office who decides the rules and roles, a developer who adapts the starter and builds or connects the screens, and an operator who runs the server and the database, keeps backups and holds the signing keys. If you want help, Aubex offers implementation pilots and annual support contracts at published prices, with scope and fee agreed before work starts.',
     link: { href: '/pricing/', label: 'See the published prices' },
   },
   {
     q: 'Where does it run, and who runs it?',
-    a: 'On infrastructure your organization or its delivery partner controls. Your operator hosts the database, manages access and keeps the audit records; the software does not send your records or logs to Aubex.',
+    a: 'On infrastructure your organization controls, or an IT firm you contract. Your operator hosts the database, manages access and keeps the audit records; the software does not send your records or logs to Aubex.',
     link: { href: '/security/', label: 'Who is responsible for what' },
   },
   {
     q: 'What do our staff use day to day?',
-    a: 'Registry Stack holds the register and its rules. The screens your staff use come from your own application, from the App Kit where a starter includes a model of staff screens, or from a delivery partner. The starter’s page says whether staff screens are included.',
+    a: 'Registry Stack holds the register and its rules. The screens your staff use come from your own application or from an IT firm you contract. Where a starter includes a model of staff screens for the App Kit, its page says so.',
   },
   {
     q: 'What happens to our records if we stop?',
-    a: 'They stay in your PostgreSQL database, in a documented structure, with their history. Nothing is locked to a vendor account.',
+    a: 'If you let services check facts from a register you already run, your records never left it. If you keep the register in Base Registry Engine, they stay in your PostgreSQL database, in a documented structure, with their history. The source code is public under Apache-2.0, so your team or another firm can keep running and changing it without Aubex, and a starter you have received is yours to keep under the same licence. Nothing is locked to a vendor account.',
   },
   {
     q: 'What does a first step look like?',
-    a: 'Your technical team runs the registry tutorial on a laptop, requests the starter closest to your register, and agrees with one other service the first question it will ask. A pilot engagement scopes the rest.',
+    a: 'If you keep your register where it is, your technical team runs the Evidence Gateway tutorial and agrees with one other service the first question it will ask. If you are building or moving a register, your team runs the registry tutorial on a laptop and requests the starter closest to your register. A pilot engagement scopes the rest.',
   },
 ];
+
+// The ids of a family's starters in the order its pages list them: the
+// featured starter first, then the ones to open first, then the rest as
+// `starters` gives them.
+export const starterOrderForArea = (area: Pick<SolutionArea, 'starters' | 'featuredStarter' | 'openFirst'>): string[] => {
+  const rank = (id: string): number => {
+    if (id === area.featuredStarter) return 0;
+    const first = area.openFirst?.indexOf(id) ?? -1;
+    return first >= 0 ? first + 1 : Number.MAX_SAFE_INTEGER;
+  };
+  return [...area.starters].sort((a, b) => rank(a) - rank(b));
+};
 
 export const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
 

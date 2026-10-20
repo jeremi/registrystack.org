@@ -9,11 +9,11 @@ interface Props {
 const { includes } = Astro.props;
 
 const parts: { key: keyof Starter['includes']; label: string; meaning: string }[] = [
-  { key: 'staffUi', label: 'Staff screens', meaning: 'A model of the staff screens, for the App Kit.' },
-  { key: 'evidenceCompanion', label: 'Evidence Gateway companion', meaning: 'A companion project for Evidence Gateway.' },
-  { key: 'clients', label: 'Client definitions', meaning: 'Definitions of the client systems that call the registry.' },
-  { key: 'statistics', label: 'Statistics', meaning: 'Definitions of statistical datasets drawn from the records.' },
-  { key: 'modules', label: 'Reusable modules', meaning: 'Modules the project shares with other projects.' },
+  { key: 'staffUi', label: 'Staff screens', meaning: 'A description of the screens staff use, which the App Kit turns into a working staff application.' },
+  { key: 'evidenceCompanion', label: 'Evidence Gateway companion', meaning: 'A ready-made set of questions other services can ask about these records through Evidence Gateway.' },
+  { key: 'clients', label: 'Client definitions', meaning: 'Descriptions of the systems that will call the register, and what each may do.' },
+  { key: 'statistics', label: 'Statistics', meaning: 'Counts and summaries the register can publish without exposing individual records.' },
+  { key: 'modules', label: 'Reusable modules', meaning: 'Parts of the definition shared with other registers, such as a common address format.' },
 ];
 ---
 <p class="starter-includes-head"><span>Part</span><span>In this starter</span></p>

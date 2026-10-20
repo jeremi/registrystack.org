@@ -17,15 +17,6 @@ export const products = [
     firstResult: 'Create and update a sample business record, then try a request that should be refused.',
   },
   {
-    key: 'protected-registry-apis', name: 'Registry Relay', solution: 'Protected registry APIs', shortName: 'Relay', featured: false, menu: false,
-    intent: 'Share selected data',
-    description: 'Publish selected fields from an existing register to approved services through a controlled, read-only interface. Open-source software.',
-    href: '/products/registry-relay/',
-    tutorialHref: 'https://docs.registrystack.org/tutorials/publish-governed-sqlite-registry/',
-    tutorialLabel: 'Run the Relay tutorial',
-    firstResult: 'Read two permitted fields, try a forbidden field, and inspect the audit record.',
-  },
-  {
     key: 'evidence-gateway', name: 'Evidence Gateway', solution: 'Evidence Gateway', shortName: 'Evidence', featured: true, menu: true,
     intent: 'Let services check a fact',
     description: 'Give approved services a signed answer to a defined question from your register, without handing over the record. Open-source software.',

@@ -35,7 +35,7 @@ const casework = products.find((p) => p.key === 'casework')!;
       </div>
       <div class="product-facts">
         <article><h3>Routine updates go through; the rest wait for an officer</h3><p>Your office decides which changes need a person, such as a licence scope, a parcel holder or a household member. Routine updates are recorded directly. The rest go to the queue for that kind of request, with that queue’s response target.</p></article>
-        <article><h3>You can see who holds what, and what is overdue</h3><p>Each item has one officer and a due date. A supervisor sees which items have stalled and can chase them, and whoever asked gets an answer back when the officer decides.</p></article>
+        <article><h3>You can see who holds what, and what is overdue</h3><p>Each item has one officer and a due date. A supervisor sees which items have stalled and can chase them, and whoever asked can see the decision as soon as it is recorded; Casework itself sends no messages.</p></article>
         <article><h3>The officer who decides is the officer on the record</h3><p>An officer applies an approved change under their own name, and only if the register already lets them make it. Each request keeps who held it, who decided and when, so anyone reviewing it later can follow it without asking the people involved.</p></article>
       </div>
       <div id="what-your-office-calls-it" class="product-note">
@@ -49,15 +49,16 @@ const casework = products.find((p) => p.key === 'casework')!;
     heading="Approvals in the register, or a queue for your officers."
     muted
     jobs={{
-      casework: 'Gives each request to an officer, tracks it against a due date, lets a supervisor chase it when it stalls, and answers back to whoever asked.',
+      casework: 'Gives each request to an officer, tracks it against a due date, lets a supervisor chase it when it stalls, and lets whoever asked see the decision.',
       'base-registry': 'Holds a proposed change until the required number of officers have approved it, when that is all the review needs.',
     }}
     extra={[
       { term: 'Your officers keep deciding', body: 'The decision on each request stays with your officers and your rules. The queue tracks the work; it does not decide.' },
+      { term: 'Screens for your officers', body: 'Casework supplies the queue and its rules. The screens your officers use come from your own application or an existing staff tool.' },
       { term: 'Requests from other systems', body: 'Casework works with Base Registry Engine as it comes. Another register system needs a connection your technical team builds, and any service can hand in a request and follow its progress.' },
     ]}
   >
-    <p>If a fixed number of approvals is enough, the register can require them on its own. Choose Casework when the work has to go to a named officer, be tracked against a due date, chased, and answered.</p>
+    <p>If a fixed number of approvals is enough, the register can require them on its own. Choose Casework when the work has to go to a named officer, be tracked against a due date, chased, and its decision shown to whoever asked.</p>
   </SolutionFit>
   <SolutionFaq
     items={[
@@ -72,7 +73,7 @@ const casework = products.find((p) => p.key === 'casework')!;
       },
       {
         q: 'Can other services send requests into the queue?',
-        a: 'Yes. A service hands in a request, can follow its progress, and gets the answer when an officer decides. Base Registry Engine connects to Casework as it comes; another system needs an adapter written against Casework’s published contract.',
+        a: 'Yes. A service hands in a request, can follow its progress, and sees the decision when an officer records it. Base Registry Engine connects to Casework as it comes; another system needs an adapter written against Casework’s published contract.',
         link: { href: casework.tutorialHref, label: casework.tutorialLabel },
       },
       {

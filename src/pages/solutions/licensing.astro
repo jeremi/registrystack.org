@@ -33,7 +33,7 @@ const area = solutionAreas.find((a) => a.key === 'licensing')!;
         <h2 id="licensing-change-title">Fewer calls about the file, and a register that explains itself.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Other services stop asking for the file</h3><p>An employer or inspector asks whether a licence is active for a category and gets that answer, with your register’s name on it. They do not see the holder’s address, the complaint history, or anything else in the file.</p></article>
+        <article><h3>Services you connect stop asking for the file</h3><p>An employer or inspector asks whether a licence is active for a category and gets that answer, with your register’s name on it. They do not see the holder’s address, the complaint history, or anything else in the file.</p></article>
         <article><h3>A suspension never overwrites the licence it suspends</h3><p>Each renewal, suspension, or revocation is added as its own entry, with who recorded it and when. When a suspension is later lifted, the register shows both decisions in order, so nobody reconstructs the history from emails.</p></article>
         <article><h3>Every correction has one owner and a due date</h3><p>Correction requests and disputes go into one queue. One officer holds each item, the response clock is visible to the whole team, and the register does not change until that officer says so.</p></article>
       </div>
@@ -72,6 +72,10 @@ const area = solutionAreas.find((a) => a.key === 'licensing')!;
         link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
       },
       {
+        q: 'Does this give us a public search page?',
+        a: 'Not on its own. The register serves its data under your rules, and other services check a licence through it. A search page for the public comes from your application or the people who build it.',
+      },
+      {
         q: 'Who can see a licence record?',
         a: 'Your office decides, role by role: who may record a licence, who may record a suspension, who may look one up, and for what reason. Every look-up and every change is kept with who did it and when.',
         link: { href: '/security/', label: 'Who is responsible for what' },
@@ -83,7 +87,7 @@ const area = solutionAreas.find((a) => a.key === 'licensing')!;
       },
       {
         q: 'Where does our technical team start?',
-        a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
+        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
       ...sharedFamilyFaq,

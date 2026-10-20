@@ -11,6 +11,8 @@ featured: true
 status: published
 ---
 
+> **Note, October 2026.** Registry Relay, which this guide refers to, was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. Evidence Gateway continues, and the guidance here on agreeing questions and reviewing access still applies.
+
 A service team asks a civil registry for access. The first response is often a
 list of fields: name, date of birth, address, family status, and perhaps a copy
 of the full record.
@@ -234,6 +236,7 @@ That is enough to begin a credible technical design. It is also small enough
 for policy, programme, registry, security, and integration teams to review the
 same object.
 
-The next step is choosing between [Registry Relay](/products/registry-relay/)
-and [Evidence Gateway](/products/evidence-gateway/) for this question, or
-combining both where the worksheet calls for it.
+The next step is setting the question up in
+[Evidence Gateway](/products/evidence-gateway/), or, where the worksheet calls
+for a protected read of the records, granting that read on the register that
+holds them.

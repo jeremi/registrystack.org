@@ -11,6 +11,8 @@ featured: true
 status: published
 ---
 
+> **Note, October 2026.** Registry Relay, which this guide refers to, was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. Evidence Gateway continues, and the guidance here on agreeing questions and reviewing access still applies.
+
 Most registry integrations start with the wrong question. "Which API do we
 need?" assumes the answer is an API. Two questions come first: who maintains the
 records, and what does the service actually need from them?
@@ -104,8 +106,8 @@ neither an error to retry nor a refusal to act on.
 
 **Nobody maintains the records:** Base Registry Engine. **The service needs an
 answer:** Evidence Gateway. **The service needs records:** publish them
-deliberately, field by field. Registry Relay, Casework, Manifest and Discovery
-have their own pages.
+deliberately, field by field, from a register you hold. Registry Casework has
+its own page.
 
 Check against the [Base Registry Engine](/products/base-registry/) and
 [Evidence Gateway](/products/evidence-gateway/) pages and the
