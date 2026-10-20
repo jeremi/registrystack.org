@@ -3,11 +3,11 @@
   "source": {
     "repository": "https://github.com/registrystack/breg-registry-starters",
     "release": "catalogue-2026-10-20",
-    "revision": "cee99d7579f76ff16f2660b92ba93e031ca5129c",
-    "dirty": true
+    "revision": "84dbe9782ee390803ac3e28036e5e91e75cab238",
+    "dirty": false
   },
   "exportCommand": "registry-starters export-catalogue",
-  "catalogueSha256": "0fe195a10940eb5d031787c0078682596158bf96e8802f7ada106c770aeda2e0",
+  "catalogueSha256": "916ea281a00cfc8a1e97ad86a2a9ac78e6dbdf92e4486cbbde854d9ce3abf754",
   "starterCount": 84,
   "syncedAt": "2026-10-20"
 }

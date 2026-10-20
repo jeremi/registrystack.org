@@ -21,6 +21,10 @@ export interface SolutionArea {
   kind: 'register-family' | 'cross-cutting';
   starters: readonly string[];
   featuredStarter?: string;
+  // The offices the family is for, shown on its card ("For licensing boards, ...").
+  audience?: string;
+  // The search snippet for the family page, under 155 characters.
+  description?: string;
   products: readonly string[];
 }
 
@@ -43,6 +47,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'road-transport-licensing',
     ],
     featuredStarter: 'professional-licensing',
+    audience: 'For licensing boards, professional councils and local licensing teams.',
+    description: 'One register of the licences your office issues. Other services check a licence without seeing the file, and corrections wait in one queue. Open source.',
     products: ['base-registry', 'evidence-gateway', 'casework'],
   },
   {
@@ -73,6 +79,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'trade-authorizations',
     ],
     featuredStarter: 'business-register',
+    audience: 'For company registrars, tax administrations, customs and financial supervisors.',
+    description: 'Keep the register of businesses, taxpayers, suppliers and filings, let other services check an entry, and review changes in one queue. Open source.',
     products: ['base-registry', 'evidence-gateway', 'protected-registry-apis'],
   },
   {
@@ -97,6 +105,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'social-registry',
       'voter-registration',
     ],
+    audience: 'For population registries, social protection ministries and civil registration offices.',
+    description: 'Maintain records about people and let programmes check a fact without receiving the file. Open-source register software.',
     products: ['base-registry', 'evidence-gateway', 'casework'],
   },
   {
@@ -124,6 +134,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'vehicle-titles',
     ],
     featuredStarter: 'land-parcels',
+    audience: 'For cadastres, land registries, vehicle and vessel registries.',
+    description: 'Register parcels, buildings, vehicles, vessels and the rights over them, and let services check an entry without receiving the file. Open source.',
     products: ['base-registry', 'protected-registry-apis'],
   },
   {
@@ -152,6 +164,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'water-bodies-and-monitoring-sites',
     ],
     featuredStarter: 'farmer-registry',
+    audience: 'For agriculture ministries, veterinary and food safety authorities and environment agencies.',
+    description: 'Register farms, animals, food businesses, permits and natural resources, and let services check a fact without seeing the record. Open source.',
     products: ['base-registry', 'evidence-gateway', 'protected-registry-apis'],
   },
   {
@@ -172,6 +186,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'radiation-protection',
     ],
     featuredStarter: 'health-facilities',
+    audience: 'For health facility registrars, medicines and device regulators and radiation protection authorities.',
+    description: 'Register facilities, trials, devices, operators and hazards, and let inspectors and services check an entry without seeing the file. Open source.',
     products: ['base-registry', 'evidence-gateway'],
   },
   {
@@ -190,6 +206,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'trusted-lists',
     ],
     featuredStarter: 'geographic-reference',
+    audience: 'For statistics offices, national mapping and gazetteer authorities, and any office that keeps a code list.',
+    description: 'Publish the code lists, place names and public body directories that other registers rely on, from one register your office controls. Open source.',
     products: ['base-registry', 'protected-registry-apis'],
   },
   {
@@ -200,6 +218,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     intent: 'Answer a defined question from a register without handing over the record',
     kind: 'cross-cutting',
     starters: [],
+    description: 'Let another service check a fact in your register, such as an age or a licence status, and get a signed answer without the record. Open source.',
     products: ['evidence-gateway', 'protected-registry-apis'],
   },
   {
@@ -210,9 +229,37 @@ export const solutionAreas: readonly SolutionArea[] = [
     intent: 'Give the officers who decide one accountable inbox',
     kind: 'cross-cutting',
     starters: [],
+    description: 'Put each register change that needs a decision in front of the officer who decides, with a queue, a due date and a record of who decided.',
     products: ['casework', 'base-registry'],
   },
 ] as const;
+
+// Questions every register family page asks after its own, before the
+// closing band. The answers stay true for any register a family groups.
+export const sharedFamilyFaq: readonly { q: string; a: string; link?: { href: string; label: string } }[] = [
+  {
+    q: 'What does it cost?',
+    a: 'There is no software licence fee; Registry Stack is Apache-2.0 open source. Your costs are your own hosting and the people who implement and operate it. If you want help, Aubex offers implementation pilots and annual support contracts at published prices, with scope and fee agreed before work starts.',
+    link: { href: '/pricing/', label: 'See the published prices' },
+  },
+  {
+    q: 'Where does it run, and who runs it?',
+    a: 'On infrastructure your organization or its delivery partner controls. Your operator hosts the database, manages access and keeps the audit records; the software does not send your records or logs to Aubex.',
+    link: { href: '/security/', label: 'Who is responsible for what' },
+  },
+  {
+    q: 'What do our staff use day to day?',
+    a: 'Registry Stack holds the register and its rules. The screens your staff use come from your own application, from the App Kit where a starter includes a model of staff screens, or from a delivery partner. The starter’s page says whether staff screens are included.',
+  },
+  {
+    q: 'What happens to our records if we stop?',
+    a: 'They stay in your PostgreSQL database, in a documented structure, with their history. Nothing is locked to a vendor account.',
+  },
+  {
+    q: 'What does a first step look like?',
+    a: 'Your technical team runs the registry tutorial on a laptop, requests the starter closest to your register, and agrees with one other service the first question it will ask. A pilot engagement scopes the rest.',
+  },
+];
 
 export const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
 

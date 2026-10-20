@@ -79,8 +79,8 @@ const html = `<!doctype html>
       <span class="wordmark">Registry Stack</span>
     </div>
     <div>
-      <p class="kicker">Open-source software for registries</p>
-      <h1>Maintain your registry.<br>Share only what services need.</h1>
+      <p class="kicker">Open-source software for public registers</p>
+      <h1>Maintain your register.<br>Share only what services need.</h1>
     </div>
     <div class="foot">
       <span class="url">registrystack.org</span>

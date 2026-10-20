@@ -5,13 +5,14 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
-import { solutionAreas } from '../../data/solutions';
+import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
+import { askQuestionHref, contactEmail } from '../../data/contact';
 const area = solutionAreas.find((a) => a.key === 'health-and-safety')!;
 ---
 <Solution
   area={area}
   heading="Know which facilities, products, and operators are authorized."
-  description="Insurers, procurement teams, and inspectors ask your office whether a clinic, a device maker, or the holder of a radiation source is authorized, and each answer means an officer finds the file and replies by hand. Registry Stack gives your office one register of the authorizations it has issued, and lets those services check one without seeing the rest of the file."
+  description="Your facility list, the insurer’s list and the health information system’s list disagree on how many clinics there are and what each is called, and every authorization check lands on an officer’s desk. Registry Stack gives your office one register of the authorizations it has issued, and lets other services check one without seeing the rest of the file."
 >
   <SolutionExample
     eyebrow="One example: an insurer checks a facility"
@@ -19,7 +20,7 @@ const area = solutionAreas.find((a) => a.key === 'health-and-safety')!;
     intro="A health insurance fund needs to know whether a clinic holds a current operating authorization before it signs a contract with it. Your facility register holds that authorization."
     items={[
       { term: 'Who asks', body: 'The insurance fund, for the clinic it is about to contract.' },
-      { term: 'What the authority wants', body: 'The fund learns whether the clinic’s operating authorization is current, and nothing more, with an answer it can check came from your register.' },
+      { term: 'What the office wants', body: 'The fund learns whether the clinic’s operating authorization is current, and nothing more, with an answer it can check came from your register.' },
       { term: 'What happens', body: 'The fund asks the question. Your office has agreed that the fund may ask it, so the answer is read from your facility register and sent back. The fund decides what the answer means for the contract.' },
       { term: 'What stays with your office', body: 'The rest of the facility file, including its owners and any inspection history, stays in your register.' },
     ]}
@@ -29,12 +30,12 @@ const area = solutionAreas.find((a) => a.key === 'health-and-safety')!;
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="health-change-title">Fewer calls to confirm an authorization, and notices the public can follow.</h2>
+        <h2 id="health-change-title">Fewer calls to confirm an authorization, and notices the public can read.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Every authorization is tied to what it covers</h3><p>Each operator, facility, or product is recorded once, with the authorization your office issued for it. A pharmaceutical wholesaler’s licence is linked to the company and to the site it covers, so an inspector visiting one site sees the right authorization.</p></article>
-        <article><h3>Public notices stay public, and private entries stay closed</h3><p>Some entries are meant for everyone, such as a medicine shortage notice a pharmacist or patient can read. A person’s organ donation instruction is never shown; a hospital that is already entitled to ask gets only the answer it needs.</p></article>
-        <article><h3>A shortage notice shows when it started and when it ended</h3><p>A medicine shortage is recorded, then closed or withdrawn, each step added on its own. The earlier steps stay in the history, so anyone reading the notice can see when the shortage was recognized and when it ended.</p></article>
+        <article><h3>Every facility has one entry and one code</h3><p>Each provider, each facility it operates and the authorization each facility holds are recorded once, so the insurer, the inspectorate and the health information system read the same list and the same code.</p></article>
+        <article><h3>An authorization keeps its history</h3><p>When a facility’s authorization is renewed, suspended or withdrawn, the decision is added beside the earlier one, with who recorded it and when, so the register shows what was valid on the day of an inspection.</p></article>
+        <article><h3>Public notices stay public, and private entries stay closed</h3><p>Some entries are meant for everyone, such as a medicine shortage notice a pharmacist or patient can read. A person’s organ donation instruction is never shown; a hospital already entitled to ask gets only the answer it needs.</p></article>
       </div>
     </div>
   </section>
@@ -62,6 +63,10 @@ const area = solutionAreas.find((a) => a.key === 'health-and-safety')!;
       {
         q: 'Does this hold patient or clinical data?',
         a: 'No. It holds registers of facilities, trials, devices, operators, and radiation sources. Where an entry needs to point to a medicine, such as a shortage notice, it refers to the medicine’s entry in the existing medicines catalogue instead of copying it.',
+      },
+      {
+        q: 'Does this replace our system?',
+        a: 'It depends on what holds your register today. If an authorization system takes applications, collects fees and issues the authorization, that system stays and records the result in the register. If your register is a spreadsheet, or lives inside an application you are retiring, Base Registry Engine can be the register, with your team planning the migration of the existing entries.',
         link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
       },
       {
@@ -76,7 +81,7 @@ const area = solutionAreas.find((a) => a.key === 'health-and-safety')!;
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
+        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
         link: { href: '/starters/#health-and-safety', label: 'Browse the health and safety starters' },
       },
       {
@@ -84,7 +89,16 @@ const area = solutionAreas.find((a) => a.key === 'health-and-safety')!;
         a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
+      ...sharedFamilyFaq,
     ]}
   />
-  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+  <DocsHandoff
+    eyebrow="Work with us"
+    heading="Talk it through with the people who build it."
+    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    primaryLabel="Ask a question"
+    primaryHref={askQuestionHref(area.name)}
+    emphasis="docs"
+    note={`Or write to ${contactEmail}.`}
+  />
 </Solution>

@@ -5,13 +5,14 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
-import { solutionAreas } from '../../data/solutions';
+import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
+import { askQuestionHref, contactEmail } from '../../data/contact';
 const area = solutionAreas.find((a) => a.key === 'licensing')!;
 ---
 <Solution
   area={area}
   heading="Know who holds each licence, on what terms, and what changed."
-  description="Employers, inspectors, and other services ask your licensing office whether a licence is valid, and every correction waits for someone to find the file. Registry Stack gives your office one register of the licences it has issued, lets other services check a licence without seeing the file, and puts the changes an officer has to decide in one queue."
+  description="Employers, inspectors and other services ask your licensing office whether a licence is valid, and every correction waits for someone to find the file. Registry Stack gives your office one register of the licences it has issued. Other services check a licence without seeing the file. Each change an officer has to decide waits in one queue."
 >
   <SolutionExample
     eyebrow="One example: a licence scope correction"
@@ -23,7 +24,7 @@ const area = solutionAreas.find((a) => a.key === 'licensing')!;
       { term: 'What happens', body: 'The request lands in the licensing team’s queue. An officer takes it, asks the holder for a missing document if needed, and approves it. The officer then applies the correction in the register under their own name.' },
       { term: 'What stays with your office', body: 'The licence, its terms, and its history stay in your register, which keeps the earlier scope and shows who changed it.' },
     ]}
-    link={{ href: '/products/casework/#product-example', label: 'See the correction step by step' }}
+    link={{ href: '/solutions/review-changes/#what-your-office-calls-it', label: 'See how the review queue works for any register' }}
   />
   <section class="section" aria-labelledby="licensing-change-title">
     <div class="section-inner">
@@ -62,12 +63,12 @@ const area = solutionAreas.find((a) => a.key === 'licensing')!;
     items={[
       {
         q: 'Does this replace our licensing system?',
-        a: 'No. It holds the register of licences your office has issued and serves questions about them. The system that takes applications, collects fees, and issues the licence stays where it is and records the result in the register.',
+        a: 'It depends on what holds your register today. If an application system takes applications, collects fees and issues the licence, that system stays and records the result in the register. If your register is a spreadsheet, or lives inside an application you are retiring, Base Registry Engine can be the register, with your team planning the migration of the existing entries.',
         link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
       },
       {
         q: 'Can an employer check a licence without an account on our system?',
-        a: 'The employer’s service asks your register a question you have agreed to answer, such as whether a licence is active for a category, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
+        a: 'Two cases. A member of the public or an employer looking up one licence uses the public register your application publishes under your law. A service that needs to check licences as part of its own process asks your register a question you have agreed to answer, such as whether a licence is active for a category, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
         link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
       },
       {
@@ -77,15 +78,24 @@ const area = solutionAreas.find((a) => a.key === 'licensing')!;
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
-        link: { href: '/starters/', label: 'Browse the starters' },
+        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
+        link: { href: '/starters/#licensing', label: 'Browse the licensing starters' },
       },
       {
         q: 'Where does our technical team start?',
         a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
+      ...sharedFamilyFaq,
     ]}
   />
-  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+  <DocsHandoff
+    eyebrow="Work with us"
+    heading="Talk it through with the people who build it."
+    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    primaryLabel="Ask a question"
+    primaryHref={askQuestionHref(area.name)}
+    emphasis="docs"
+    note={`Or write to ${contactEmail}.`}
+  />
 </Solution>

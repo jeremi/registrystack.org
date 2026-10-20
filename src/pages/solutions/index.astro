@@ -43,6 +43,7 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
             <li>
               <a href={area.slug}>
                 <span class="solution-area-name">{area.name}</span>
+                {area.audience && <span class="solution-area-audience">{area.audience}</span>}
                 <span class="solution-area-intent">{area.intent}</span>
                 <span class="solution-area-count">{startersForArea(area).length} starters</span>
               </a>
@@ -72,7 +73,7 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       </div>
     </section>
 
-    <section class="section" aria-labelledby="products-title">
+    <section class="section" id="products" aria-labelledby="products-title">
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Products</p>
@@ -92,7 +93,7 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       </div>
     </section>
 
-    <DocsHandoff />
+    <DocsHandoff primaryLabel="Browse the starters" primaryHref="/starters/" />
   </main>
   <SiteFooter />
 </Base>
@@ -106,6 +107,7 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
   .solution-area-grid a:hover { text-decoration: none; }
   .solution-area-grid a:hover .solution-area-name { color: var(--registry-blue); }
   .solution-area-name { color: var(--registry-ink); font-size: var(--type-body); font-weight: 700; }
+  .solution-area-audience { color: var(--registry-body); font-size: var(--type-md); }
   .solution-area-intent { color: var(--registry-muted); font-size: var(--type-md); }
   .solution-area-count { color: var(--registry-blue); font-family: var(--registry-mono); font-size: var(--type-xs); margin-top: 6px; }
   @media (max-width: 900px) {

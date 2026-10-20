@@ -154,6 +154,19 @@ dd a {
   color: var(--registry-white);
 }
 
+/* The light contact action: outlined, so "For developers" stays the one
+   filled button in the header. */
+.top-nav .nav-outline {
+  border: 1px solid var(--registry-blue);
+  color: var(--registry-blue);
+  padding: 0 13px;
+}
+
+.top-nav .nav-outline:hover {
+  background: var(--registry-active);
+  color: var(--registry-ink);
+}
+
 /* Solutions and Products each fold into a disclosure. Plain <details> keeps
    the menus usable without JavaScript. */
 .nav-group {
@@ -229,6 +242,16 @@ dd a {
   border: 0;
   border-top: 1px solid var(--registry-rule);
   margin: 6px 12px;
+}
+
+/* A sub-label over a group of menu entries, such as the cross-cutting work. */
+.nav-group-label {
+  color: var(--registry-blue);
+  font-family: var(--registry-mono);
+  font-size: var(--type-2xs);
+  letter-spacing: 0.08em;
+  margin: 4px 12px 2px;
+  text-transform: uppercase;
 }
 
 .nav-group-panel a[aria-current='page'] .nav-entry-name {
@@ -1472,6 +1495,18 @@ code {
   color: rgba(255, 255, 255, 0.86);
   display: flex;
   min-height: 36px;
+}
+
+/* A sub-label inside a column, and the plain address, which may need to
+   break inside a narrow column. */
+.footer-col-label {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: var(--type-xs);
+  margin-top: 10px;
+}
+
+.footer-col a[href^='mailto:'] {
+  overflow-wrap: anywhere;
 }
 
 .footer-col a:hover {

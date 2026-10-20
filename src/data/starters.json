@@ -18,7 +18,7 @@
     {
       "id": "animal-health-status",
       "title": "Animal-health status register",
-      "task": "This starter records a dated compliance assessment and the related externally issued health certification for an animal, animal group, or agricultural facility. It stores the certification's recorded status and validity dates as separate facts. The record-health-certification-status Action records a later source assertion on the same certification while BReg history retains the earlier values. It changes only the recorded status, source-effective date and opaque source reference; the certified subject, authority, scheme, scope, assessment and validity period remain unchanged.",
+      "task": "This starter records a dated compliance assessment and the related externally issued health certification for an animal, animal group, or agricultural facility. It stores the certification's recorded status and validity dates as separate facts. The record-health-certification-status Action records a later source assertion on the same certification while the Base Registry Engine history retains the earlier values. It changes only the recorded status, source-effective date and opaque source reference; the certified subject, authority, scheme, scope, assessment and validity period remain unchanged.",
       "summary": "Dated animal-health assessments and externally issued certifications.",
       "catalogueRows": [
         "R118"
@@ -249,14 +249,14 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/animal-health-status-starter.zip",
-        "sha256": "bea9af65cfa9b63eb829fd7dc9acc494c5eaf2b5e240d10cb5cdab857c19ef5c",
-        "bytes": 49823
+        "sha256": "575b6d6a152694a7bc91b628de05cd56fc9b6b570073c898d70030b3b9a9409f",
+        "bytes": 49843
       }
     },
     {
       "id": "companion-animals",
       "title": "Companion animals and keepers",
-      "task": "This starter supports a small administrative task: record a contact-responsible person, register a companion animal with one 15-digit microchip assignment and first keeper-responsibility period, then record a later keeper handoff without losing the earlier period. The registrar supplies those facts from its external registration or handoff process. BReg records them atomically; it does not decide whether the person is an owner, verify identity or contact details, inspect an implanted chip, or establish the legal effect of a handoff.",
+      "task": "This starter supports a small administrative task: record a contact-responsible person, register a companion animal with one 15-digit microchip assignment and first keeper-responsibility period, then record a later keeper handoff without losing the earlier period. The registrar supplies those facts from its external registration or handoff process. The Base Registry Engine records them together, in one step; it does not decide whether the person is an owner, verify identity or contact details, inspect an implanted chip, or establish the legal effect of a handoff.",
       "summary": "Companion animals, recorded microchips and keeper-responsibility periods.",
       "catalogueRows": [
         "R119"
@@ -584,8 +584,8 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/companion-animals-starter.zip",
-        "sha256": "ea281d617fe61beb3849b2d5f86401ce26ad3378c0a9aca0b73ec2dfba596635",
-        "bytes": 114398
+        "sha256": "bae107e2b02a6b817f1813d63beb92173e39893fb366921e677228be1ca0dbe8",
+        "bytes": 114429
       }
     },
     {
@@ -2217,7 +2217,7 @@
     },
     {
       "id": "animal-breeding-organisations",
-      "title": "Approved animal-breeding organisations",
+      "title": "Approved animal-breeding organizations",
       "task": "Record a breeding organization and an externally approved breeding programme scope.",
       "summary": "Record a breeding organization and an externally approved breeding programme scope.",
       "catalogueRows": [
@@ -2420,7 +2420,7 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/animal-breeding-organisations-starter.zip",
-        "sha256": "87ba9af5ee2ebe1aa3c446a47e346c35e9c8a76120418eb43a66e2da35808583",
+        "sha256": "67ea7f95fb3bcb84fa6fe7bee869e8d283360b6a36a21c89e79aba8e3a9479dc",
         "bytes": 49292
       }
     },
@@ -6565,7 +6565,7 @@
       "id": "professional-licensing",
       "title": "Professional licensing",
       "task": "Record a professional licence, its initial and renewed terms, suspensions, decisions lifting individual suspensions, and revocation. The supplied example is a nursing council.",
-      "summary": "A staff register of already-approved professional licence decisions.",
+      "summary": "A register of professional licences, their terms, suspensions and revocations, as already decided by the licensing authority.",
       "catalogueRows": [
         "R064",
         "R065",
@@ -7097,15 +7097,15 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/professional-licensing-starter.zip",
-        "sha256": "9fc730845e7962d75cdf9f82a23b221fa4cf0e8edc28639d1a3d4970c8f2019a",
-        "bytes": 332623
+        "sha256": "a2ad4dd4814e5628b4ad34fa073367c7e428e67712f09e754575abbe46d97b63",
+        "bytes": 332680
       }
     },
     {
       "id": "land-parcels",
       "title": "Cadastre and land rights",
       "task": "Record a typed tenure assertion for an externally identified cadastral parcel, holder, share, source status, and period.",
-      "summary": "Record a typed tenure assertion for an externally identified cadastral parcel, holder, share, source status, and period.",
+      "summary": "A register of who holds which rights over a parcel, with the share, the recorded status and the period.",
       "catalogueRows": [
         "R093",
         "R094",
@@ -7245,15 +7245,15 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/land-parcels-starter.zip",
-        "sha256": "0c46eee1de827391993dfd6793360c135cd0aa543a2f2323ba05a00eddfe3809",
-        "bytes": 34055
+        "sha256": "8ae403a000eed14976426d1b75ccf4388c899370558de089d669c3fe3886ddf8",
+        "bytes": 34032
       }
     },
     {
       "id": "farmer-registry",
       "title": "Farmer registry and agricultural holdings",
-      "task": "Record a named agricultural holding and a separate formal registration recognizing an externally identified person, organization, or group as a farmer for a stated administrative purpose. The registrar supplies the accepted facts from an external process. BReg records them; it does not decide who qualifies, verify the holder URI or source reference, establish land ownership, or infer programme eligibility.",
-      "summary": "Record a farm and a farmer registration linking an externally identified holder to one farm.",
+      "task": "Record a named agricultural holding and a separate formal registration recognizing an externally identified person, organization, or group as a farmer for a stated administrative purpose. The registrar supplies the accepted facts from an external process. The Base Registry Engine records them; it does not decide who qualifies, verify the holder URI or source reference, establish land ownership, or infer programme eligibility.",
+      "summary": "A register of farms and of the persons, organizations or groups registered as the farmer of each, for a stated purpose.",
       "catalogueRows": [
         "R113",
         "R114",
@@ -7439,8 +7439,8 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/farmer-registry-starter.zip",
-        "sha256": "b96c141f39a0c1db84706d20eda22c6b4967130f674328fe5e2e8b8dcefaf617",
-        "bytes": 55380
+        "sha256": "02e9ae8a27762b0d069124454db79b0195a52d04ebe68cf5dc3fbcbb03e1d277",
+        "bytes": 55421
       }
     },
     {
@@ -8304,7 +8304,7 @@
     },
     {
       "id": "customs-trader-authorisations",
-      "title": "Customs and excise trader authorisations and decisions",
+      "title": "Customs and excise trader authorizations and decisions",
       "task": "Record a trader organization and one externally issued customs activity authorization.",
       "summary": "Record a trader organization and one externally issued customs activity authorization.",
       "catalogueRows": [
@@ -8518,7 +8518,7 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/customs-trader-authorisations-starter.zip",
-        "sha256": "6f36d16682ab33cec9f7cf77c2d947f4ad48f5292c416bbe89df9dd51220fabb",
+        "sha256": "4ddff79bc74291a0b81fa8740ee2c87d49994f5338e3cf361e418383cd04abb5",
         "bytes": 49319
       }
     },
@@ -8860,8 +8860,8 @@
     {
       "id": "population-register",
       "title": "Population, citizenship and identity-linkage register",
-      "task": "This starter atomically records a person, one already-decided citizenship recognition, and one opaque sector identifier assignment. Staff can retrieve known records within one verified jurisdiction. It does not decide citizenship, prove nationality, register residence, link identities across authorities, or verify that a supplied identifier was cryptographically derived.",
-      "summary": "A restricted register of people, recorded citizenship recognition, and sector identifiers.",
+      "task": "This starter records a person, one already-decided citizenship recognition, and one opaque sector identifier assignment together, in one step. Staff can retrieve known records within one verified jurisdiction. It does not decide citizenship, prove nationality, register residence, link identities across authorities, or verify that a supplied identifier was cryptographically derived.",
+      "summary": "A register of people, the citizenship each has been recognized as holding, and the identifiers other sectors use for them.",
       "catalogueRows": [
         "R001",
         "R002",
@@ -9108,8 +9108,8 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/population-register-starter.zip",
-        "sha256": "3f69fb20e9aa0a74dfa627f89f5ff4d1a48c7e37dfac43d83debae5759294260",
-        "bytes": 49867
+        "sha256": "3963c197b6251451598c70f310c67a32d2ad60b8d758695cccea582024e1be4d",
+        "bytes": 49910
       }
     },
     {
@@ -10440,7 +10440,7 @@
     },
     {
       "id": "trade-authorizations",
-      "title": "Business activity and trade authorisations",
+      "title": "Business activity and trade authorizations",
       "task": "Record an externally issued business activity authorization held by an organization.",
       "summary": "Record an externally issued business activity authorization held by an organization.",
       "catalogueRows": [
@@ -10631,7 +10631,7 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/trade-authorizations-starter.zip",
-        "sha256": "daa6da6d895e5484a5116a819879b0fafe7e009d5a656370aee41b6156fa7849",
+        "sha256": "a02823d07f3506146d410dfe6a9dcb8d409ae7566a26eae02a9291d4932d601b",
         "bytes": 45627
       }
     },
@@ -10805,7 +10805,7 @@
       "id": "health-facilities",
       "title": "Health facilities and care provider registration",
       "task": "Record a health-provider organization, a facility and the externally issued operating authorization.",
-      "summary": "Record a health-provider organization, a facility and the externally issued operating authorization.",
+      "summary": "A register of health providers, the facilities each operates, and the operating authorization each facility has been issued.",
       "catalogueRows": [
         "R073",
         "R074",
@@ -11089,8 +11089,8 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/health-facilities-starter.zip",
-        "sha256": "078ea01dc63325232abe986fc9682de86afd6f5c01c40c8e5d9a34975ba04dd3",
-        "bytes": 101147
+        "sha256": "7f02db4342b5d16d65fe31b5c6959c7acf0659a94ed4e8a4060a6127dea439d1",
+        "bytes": 101165
       }
     },
     {
@@ -13780,7 +13780,7 @@
       "id": "geographic-reference",
       "title": "Administrative territories and official place names",
       "task": "Record a named geographic or administrative area with official code, administrative level, parent and geometry references, naming status, and effective period.",
-      "summary": "Record a named geographic or administrative area with official code, administrative level, parent and geometry references, naming status, and effective period.",
+      "summary": "The official list of administrative areas: each area's code, name, level, parent and the dates it applies.",
       "catalogueRows": [
         "R269",
         "R270"
@@ -13922,8 +13922,8 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/geographic-reference-starter.zip",
-        "sha256": "c770d6a66c7f573f5fdd830033be3809e1bf2ee40928d63a9c02d0e2cae5aef3",
-        "bytes": 34440
+        "sha256": "9f32b0caf8010a9ddf704c1e9ea3f84a17e0d2c6b04adb6790f3a3f15c2f3e52",
+        "bytes": 34384
       }
     },
     {
@@ -14502,9 +14502,9 @@
     },
     {
       "id": "social-registry",
-      "title": "Social registry and programme enrolment",
+      "title": "Social registry and programme enrollment",
       "task": "This starter records a confirmed social-protection programme enrollment after the responsible authority has made the eligibility and enrollment decisions. It does not assess eligibility, calculate benefits, or disclose household profiles. Beneficiary and decision URIs remain external references.",
-      "summary": "Records a confirmed social-protection programme enrollment after the responsible authority has made the eligibility and enrollment decisions.",
+      "summary": "A register of confirmed programme enrollments, recorded after the responsible authority has decided eligibility.",
       "catalogueRows": [
         "R046",
         "R047",
@@ -14639,15 +14639,15 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/social-registry-starter.zip",
-        "sha256": "047ffc92c0a505b691f787313825d6aa36cc4d4fe20dd6051d61ec24d5ef1073",
-        "bytes": 34017
+        "sha256": "f641a952e1a9c5cee11fd2ce07071aa211aa39202b5d3a706c070bb993956283",
+        "bytes": 33988
       }
     },
     {
       "id": "business-register",
       "title": "Business, association and foundation register",
       "task": "Record an organization and an externally decided incorporation or registration.",
-      "summary": "Record an organization and an externally decided incorporation or registration.",
+      "summary": "A register of companies, associations and foundations, and the incorporation or registration decision recorded for each.",
       "catalogueRows": [
         "R026",
         "R027",
@@ -14842,8 +14842,8 @@
       ],
       "download": {
         "path": "https://github.com/registrystack/breg-registry-starters/releases/download/catalogue-2026-10-20/business-register-starter.zip",
-        "sha256": "3250f8d93345bf40e0a7cb25f6be503406ed9ba47cd3cd9c2504f61c0bea55ac",
-        "bytes": 46323
+        "sha256": "1b930958f0434a7bed46ff701494926f8fe902018c3b11ee166489f6200d325f",
+        "bytes": 46358
       }
     },
     {
@@ -15819,7 +15819,7 @@
     },
     {
       "id": "food-feed-authorisations",
-      "title": "Food and feed product and process authorisations",
+      "title": "Food and feed product and process authorizations",
       "task": "Record a typed authorization for a food/feed substance, product, claim, GMO event, or recycling process with holder, use, conditions, source status, and validity.",
       "summary": "Record a typed authorization for a food/feed substance, product, claim, GMO event, or recycling process with holder, use, conditions, source status, and validity.",
       "catalogueRows": [

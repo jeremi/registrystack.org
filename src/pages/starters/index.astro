@@ -8,10 +8,13 @@ import DocsHandoff from '../../components/DocsHandoff.astro';
 import StarterCard from '../../components/StarterCard.astro';
 import { registerFamilies } from '../../data/solutions';
 import { products } from '../../data/products';
-import { featuredStarterForArea, starterCount, startersForArea, startersSource } from '../../data/starters';
+import { contactEmail } from '../../data/contact';
+import { featuredStarterForArea, starterCount, starterRequestHref, startersForArea, startersSource } from '../../data/starters';
 
 const baseRegistry = products.find((p) => p.key === 'base-registry')!;
 const groups = registerFamilies.map((area) => ({ area, starters: startersForArea(area) }));
+const requestHref = starterRequestHref('');
+const familyCount = groups.filter(({ starters }) => starters.length > 0).length;
 const featured = registerFamilies.flatMap((area) => {
   const starter = featuredStarterForArea(area);
   return starter ? [{ area, starter }] : [];
@@ -30,7 +33,15 @@ const pageDescription = 'Starting configurations for common registers, grouped b
           <p class="eyebrow">Starters</p>
           <h1 id="starters-title">Start from a register like yours.</h1>
           <p class="hero-lead">A starter is a starting configuration for a common register. It sets out the records the register keeps, the actions staff take on them, and who may do what. Your team requests it, free of charge, fills in the details of its own jurisdiction, and adapts the rest. A starter is a starting point, not a running registry, and does not show that the register is in use anywhere.</p>
-          <p class="hero-note">{starterCount} starters in {groups.length} register families. <a href="#start-here">Where to start</a>, or <a href="#whats-in-a-starter">what you receive</a>.</p>
+          <p class="hero-note">{starterCount} starters in {familyCount} families, each a seed your team extends.</p>
+          <nav class="starter-contents-nav hero-note" aria-label="On this page">
+            <p>On this page:</p>
+            <ul>
+              <li><a href="#start-here">Start here</a></li>
+              {groups.map(({ area, starters }) => <li><a href={`#${area.key}`}>{area.name}</a> ({starters.length})</li>)}
+              <li><a href="#whats-in-a-starter">What you receive</a></li>
+            </ul>
+          </nav>
         </div>
       </div>
     </section>
@@ -40,49 +51,80 @@ const pageDescription = 'Starting configurations for common registers, grouped b
         <div class="section-heading compact">
           <p class="eyebrow">Start here</p>
           <h2 id="start-here-title">The starters to open first.</h2>
-          <p>Each is the register every office of its kind keeps, and the one its family page walks through. These are the starters we work on most. The rest of the catalogue are starting points for the registers around them, and some families have no single starter to open first.</p>
+          <p>Each is the register most offices of this kind keep, and the one its family page walks through. These are the starters we work on most. The rest of the catalogue are starting points for the registers around them, and some families have no single starter to open first.</p>
         </div>
         <div class="starter-grid">
           {featured.map(({ area, starter }) => <StarterCard starter={starter} featured eyebrow={area.name} />)}
         </div>
+        <p class="starter-cards-legend">Each card names the starter and what it records. Some starters also come with parts the starter page lists: staff screens, an Evidence Gateway companion, client definitions, statistics, reusable modules.</p>
       </div>
     </section>
 
-    {groups.map(({ area, starters }, index) => (
+    {groups.map(({ area, starters }, index) => {
+      const featuredStarter = featuredStarterForArea(area);
+      const rest = starters.filter((starter) => starter.id !== featuredStarter?.id);
+      return (
       <section class:list={['section', 'starter-family', { 'section-muted': index % 2 === 1 }]} id={area.key} aria-labelledby={`${area.key}-title`}>
         <div class="section-inner">
           <div class="section-heading compact">
             <p class="eyebrow">{starters.length === 1 ? '1 starter' : `${starters.length} starters`}</p>
             <h2 id={`${area.key}-title`}><a href={area.slug}>{area.name}</a></h2>
             <p>{area.intent}.</p>
+            {featuredStarter && <p class="starter-open-first">Open first: <a href="#start-here">{featuredStarter.title}</a> (in Start here above)</p>}
           </div>
-          <div class="starter-grid">
-            {starters.map((starter) => <StarterCard starter={starter} featured={starter.id === area.featuredStarter} />)}
-          </div>
+          {rest.length > 0 && (
+            <div class="starter-grid">
+              {rest.map((starter) => <StarterCard starter={starter} />)}
+            </div>
+          )}
         </div>
       </section>
-    ))}
+      );
+    })}
 
     <section class="section" id="whats-in-a-starter" aria-labelledby="starter-contents-title">
       <div class="section-inner starter-contents">
         <div class="section-heading compact">
           <p class="eyebrow">What you receive</p>
           <h2 id="starter-contents-title">A starting point your team generates and adapts.</h2>
+          <p>Someone on the Aubex team replies from {contactEmail} with the zip attached, its SHA-256 checksum, and a short note on what the starter leaves out for a register like yours. We confirm when to expect it. If another starter fits better, the reply says which. Nobody calls unless you ask, and we add you to no mailing list. If the button on a starter page does not open your email app, write to <a href={requestHref}>{contactEmail}</a> with the subject “Starter request: &lt;starter title&gt;”.</p>
           <p>Each starter is free. Request it from its page, with a word on the register you keep, and we send it by email as one zip file. The zip holds the configuration a developer turns into a registry project on their own machine. Nothing in it runs until your team generates the project and deploys it.</p>
+          <p>Most starters are small on purpose: each holds the one decision the register exists to record, and your team adds the rest.</p>
           <p>No starter matches a register exactly as it is kept. Take the closest one, add the fields, kinds of record and roles yours needs, and tell us what was missing when you ask for it.</p>
         </div>
         <dl>
           <dt>In the zip</dt>
           <dd>A README that says what the starter records and what it leaves to other systems, a description of the record model, a values file with the details your team fills in, the project files, and the licence and notice files.</dd>
           <dt>To generate a project</dt>
-          <dd>A developer generates the project with the {baseRegistry.name} command-line tools, the toolchain the {baseRegistry.name} tutorial sets up. The starters were exported against version {startersSource.breg.version}. <a href={baseRegistry.tutorialHref}>{baseRegistry.tutorialLabel}</a> to install the tools and create a first registry.</dd>
+          <dd>A developer generates the project with the {baseRegistry.name} command-line tools, the toolchain the {baseRegistry.name} tutorial sets up. <a href={baseRegistry.tutorialHref}>{baseRegistry.tutorialLabel}</a> to install the tools and create a first registry.</dd>
           <dt>Licences</dt>
           <dd>The starters are open source under the Apache 2.0 licence. The record definitions draw on <a href={startersSource.publicschema.repository}>PublicSchema</a> {startersSource.publicschema.version}, published under the Creative Commons Attribution 4.0 licence (CC BY 4.0). Each zip carries both licences.</dd>
         </dl>
       </div>
+      <div class="section-inner starter-version">
+        <details>
+          <summary>Technical details (version the starters were built against)</summary>
+          <p>Each starter is exported from the current development release of {baseRegistry.name} ({startersSource.breg.version}) and states the version in its README, so your team knows what it was built against.</p>
+        </details>
+      </div>
     </section>
 
-    <DocsHandoff />
+    <section class="section section-muted" aria-labelledby="project-status-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <h2 id="project-status-title">Where the project stands</h2>
+          <p>Source and releases are public under Apache-2.0. Releases are signed and ship a software bill of materials. The starters are free and exported from the current development release of {baseRegistry.name}; each zip states the version it was built against. Implementation pilots are open. We do not publish customer names or outcomes we cannot show.</p>
+        </div>
+      </div>
+    </section>
+
+    <DocsHandoff
+      heading="Pick a starter to begin."
+      body="Open the one closest to the register you keep and request it from its page."
+      primaryLabel="Start here starters"
+      primaryHref="#start-here"
+      emphasis="docs"
+    />
   </main>
   <SiteFooter />
 </Base>
@@ -94,6 +136,51 @@ const pageDescription = 'Starting configurations for common registers, grouped b
 
   .starter-family h2 a:hover {
     color: var(--registry-blue);
+  }
+
+  .starter-contents-nav p {
+    margin: 0 0 4px;
+  }
+
+  .starter-contents-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .starter-cards-legend {
+    border-top: 1px solid var(--registry-rule);
+    color: var(--registry-muted);
+    font-size: var(--type-sm);
+    margin: 32px 0 0;
+    padding-top: 14px;
+  }
+
+  .starter-open-first a {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .starter-version {
+    padding-top: 0;
+  }
+
+  .starter-version summary {
+    color: var(--registry-muted);
+    cursor: pointer;
+    font-family: var(--registry-mono);
+    font-size: var(--type-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .starter-version p {
+    margin: 10px 0 0;
+    max-width: 760px;
   }
 
   .starter-grid {

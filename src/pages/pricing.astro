@@ -2,25 +2,32 @@
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { askQuestionHref, contactEmail, mailtoHref } from '../data/contact';
 
+// The written brief. The email opens with the same four lines; the last two
+// are optional so a reader without a budget or date can still send it.
 const brief = [
-  { title: 'Organization and your role', body: 'Who you represent and your responsibility for the registry or service.', fields: ['Organization', 'Your role'] },
-  { title: 'Help needed and intended result', body: 'Whether you need pilot delivery or annual support, and what you want to achieve.', fields: ['Help needed (pilot delivery or annual support)', 'Registry or service need', 'Intended result'] },
-  { title: 'Available budget and currency', body: 'The budget available for this work and the currency it is in.', fields: ['Available budget', 'Currency'] },
-  { title: 'Funding and timing', body: 'Whether funding is secured or pending, and your intended start date or procurement timing.', fields: ['Funding status', 'Intended start date or procurement timing'] },
+  { title: 'Your organization and role.', field: 'Your organization and role' },
+  { title: 'The register and the help you need, and what you want to be true at the end.', field: 'The register and the help you need, and what you want to be true at the end' },
+  { title: 'Timing: when you want to start and any funding deadline (optional).', field: 'Timing: when you want to start and any funding deadline (optional)' },
+  { title: 'Budget range and currency, if you can share it (optional).', field: 'Budget range and currency, if you can share it (optional)' },
 ];
-const emailBody = brief.map((item) => item.fields.map((field) => `${field}: `).join('\n')).join('\n\n');
-const contactHref = `mailto:contact@registrystack.org?subject=${encodeURIComponent('Registry Stack implementation or support inquiry')}&body=${encodeURIComponent(emailBody)}`;
+const contactHref = mailtoHref('Registry Stack implementation or support inquiry', brief.map((item) => `${item.field}: `));
+const nextSteps = [
+  'We reply by email and say when to expect a full answer.',
+  'A short call to understand the register and the services that ask it questions.',
+  'A written scope and fixed fee you can take to procurement.',
+];
 ---
 
-<Base title="Implementation and support | Registry Stack" description="Get hands-on help with an implementation pilot, choose annual support for your own team, or use Registry Stack independently.">
+<Base title="Pricing | Registry Stack" description="Published prices for implementation pilots and annual support, a light way to ask a question, and how to buy. The software has no licence fee.">
   <SiteHeader current="pricing" />
   <main>
     <section class="hero hero-cover" aria-labelledby="pricing-title">
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Pricing</p>
-          <h1 id="pricing-title">Implementation and support.</h1>
+          <h1 id="pricing-title">Pricing for implementation and support.</h1>
           <p class="hero-lead">Get hands-on help delivering a pilot, or build with your own team and add ongoing support.</p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href="#scope">Explore paid options</a>
@@ -34,8 +41,8 @@ const contactHref = `mailto:contact@registrystack.org?subject=${encodeURICompone
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Two ways we can help</p>
-          <h2 id="options-title">Choose the help your team needs.</h2>
-          <p>We agree the scope, responsibilities, and final fee before work begins.</p>
+          <h2 id="options-title">Public prices</h2>
+          <p>Prices are published so your procurement team can plan before a conversation. We agree the scope, responsibilities, and final fee before work begins.</p>
         </div>
         <div class="service-options">
           <article id="pilot" aria-labelledby="implementation-title">
@@ -43,14 +50,16 @@ const contactHref = `mailto:contact@registrystack.org?subject=${encodeURICompone
             <h3 id="implementation-title">Implementation pilot</h3>
             <p class="starting-fee"><span>From</span> <strong>US$20,000</strong></p>
             <p class="fee-basis">Per scoped pilot engagement</p>
-            <p>Work with us to deliver a defined pilot. Scope may include registry design, source integration, implementation, and handover.</p>
+            <p>Work with us to deliver a defined pilot. Scope may include register design, source integration, implementation, and handover.</p>
+            <h4>What a pilot covers</h4>
+            <p>A written scope agreed with you before work starts. Typical contents: the register definition for one register, adapted from the nearest starter; one other service connected to check a fact or read agreed fields; the review queue if changes need an officer; handover documentation; a fixed fee.</p>
           </article>
           <article id="support" aria-labelledby="support-title">
             <p class="option-label">Your team leads</p>
             <h3 id="support-title">Annual support</h3>
             <p class="starting-fee"><span>From</span> <strong>US$7,500</strong> <span>/ year</span></p>
             <p class="fee-basis">For teams implementing and operating Registry Stack</p>
-            <p>Your team builds and runs the solution. We provide ongoing technical support, with coverage and response expectations agreed in the contract.</p>
+            <p>Your team builds and runs the solution. We provide ongoing technical support: a named contact, security advisories for the versions you run, upgrade guidance, and response targets written into the contract. Your team keeps running the software; we answer when it asks.</p>
           </article>
         </div>
         <p class="options-next"><a class="inline-cta" href="#inquiry">Discuss your needs <span aria-hidden="true">→</span></a></p>
@@ -61,36 +70,58 @@ const contactHref = `mailto:contact@registrystack.org?subject=${encodeURICompone
       <div class="section-inner split">
         <div class="section-heading compact">
           <p class="eyebrow">Discuss your needs</p>
-          <h2 id="inquiry-title">Start with a short written brief.</h2>
-          <p>Tell us about your organization, the help you need, and your budget and timing. This helps us assess the right scope for a pilot or support contract.</p>
-          <p>You can describe the problem in your own terms. No prior installation is needed.</p>
+          <h2 id="inquiry-title">Ask a question.</h2>
+          <p>Say who you are and what you keep. No budget needed.</p>
+          <a class="button button-secondary" href={askQuestionHref()} data-journey="ask-question">Ask a question</a>
+          <p class="email-note">Or write to {contactEmail}.</p>
         </div>
         <div class="pilot-brief" aria-labelledby="brief-title">
-          <h3 id="brief-title">Include these four things.</h3>
+          <h3 id="brief-title">Request a scoped proposal.</h3>
+          <p>When you are ready for a scope and fee, send a short written brief with these four things.</p>
           <ol>
-            {brief.map((item) => <li><strong>{item.title}</strong><p>{item.body}</p></li>)}
+            {brief.map((item) => <li>{item.title}</li>)}
           </ol>
+          <p>The last two help us scope; leave them blank if you are not there yet.</p>
           <div class="inquiry-action">
             <p>Implementation pilots and support contracts are paid services. We confirm the scope and fee with you before starting.</p>
             <a class="button button-primary" href={contactHref} data-journey="implementation-support-inquiry">Send an inquiry</a>
-            <p class="email-note">Opens your email app with these fields ready to complete, addressed to contact@registrystack.org.</p>
+            <p class="email-note">Opens your email app with these fields ready to complete, addressed to {contactEmail}.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="self-service" aria-labelledby="self-service-title">
+    <section class="section" id="next-steps" aria-labelledby="next-steps-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">After you write</p>
+          <h2 id="next-steps-title">What happens next</h2>
+          <ol class="next-steps">
+            {nextSteps.map((step) => <li>{step}</li>)}
+          </ol>
+        </div>
+        <div class="how-to-buy" aria-labelledby="how-to-buy-title">
+          <h3 id="how-to-buy-title">How to buy</h3>
+          <p>The contracting entity is Aubex Consulting LLC, San Francisco, United States.</p>
+          <p>There is never a software licence fee. The fee for a pilot or a support contract is fixed and agreed in writing before work starts.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="self-service" aria-labelledby="self-service-title">
       <div class="section-inner split">
         <div class="section-heading compact">
           <p class="eyebrow">Open-source self-service</p>
           <h2 id="self-service-title">Use Registry Stack with your own team.</h2>
-          <p>The software is open source, with no software license fee. Your team can evaluate, implement, and operate it using the documentation and source code.</p>
+          <p>The software is open source, with no software licence fee. Your team can evaluate, implement, and operate it using the documentation and source code.</p>
           <a class="button button-secondary" href="/#developers">Explore developer tutorials</a>
         </div>
         <div class="stewardship" id="stewardship">
-          <p class="eyebrow">The team behind Registry Stack</p>
-          <h3>Help from the core team.</h3>
-          <p>Registry Stack is built and supported by Aubex. Implementation and private support are available through a paid engagement.</p>
+          <section id="team" aria-labelledby="team-title">
+            <p class="eyebrow">The team behind Registry Stack</p>
+            <h2 id="team-title">Who does the work</h2>
+            <p>Registry Stack is built and supported by Aubex. Implementation and private support are available through a paid engagement.</p>
+          </section>
         </div>
       </div>
     </section>
@@ -114,12 +145,18 @@ const contactHref = `mailto:contact@registrystack.org?subject=${encodeURICompone
   .pilot-brief ol { line-height: 1.6; margin: 24px 0; padding-left: 22px; }
   .pilot-brief li { margin-bottom: 18px; padding-left: 4px; }
   .pilot-brief li::marker { color: var(--registry-stamp); font-family: var(--registry-mono); }
-  .pilot-brief li p { margin: 4px 0 0; }
   .inquiry-action { border-top: 1px solid var(--registry-rule); padding-top: 22px; }
   .inquiry-action > p:first-child { font-size: var(--type-md); line-height: 1.6; }
   .email-note { font-size: var(--type-base); margin: 16px 0 0; overflow-wrap: anywhere; }
   .stewardship { border-top: 2px solid var(--registry-blue); padding-top: 22px; }
-  .stewardship h3 { font-size: var(--type-2xl); }
+  .stewardship h2 { font-size: var(--type-2xl); }
+  .service-options h4 { font-size: var(--type-body); margin: 22px 0 6px; }
+  .pilot-brief > p { font-size: var(--type-md); line-height: 1.6; }
+  .next-steps { line-height: 1.6; margin: 20px 0 0; padding-left: 22px; }
+  .next-steps li { margin-bottom: 12px; padding-left: 4px; }
+  .next-steps li::marker { color: var(--registry-stamp); font-family: var(--registry-mono); }
+  .how-to-buy { border-top: 2px solid var(--registry-blue); padding-top: 22px; }
+  .how-to-buy h3 { font-size: var(--type-2xl); }
   @media (max-width: 700px) {
     .service-options { grid-template-columns: 1fr; }
     .fee-basis { min-height: 0; }

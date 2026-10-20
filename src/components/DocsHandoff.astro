@@ -7,6 +7,8 @@ interface Props {
   primaryHref?: string;
   body?: string;
   emphasis?: 'docs' | 'pilot';
+  // A line under the buttons, such as the plain address behind a mailto button.
+  note?: string;
 }
 
 const {
@@ -16,6 +18,7 @@ const {
   primaryHref = '/#developers',
   body = 'Evaluate the open-source software with your team, or get paid implementation help and ongoing support.',
   emphasis = 'docs',
+  note,
 } = Astro.props;
 ---
 
@@ -37,5 +40,10 @@ const {
         </>
       )}
     </div>
+    {note && <p class="final-cta-note">{note}</p>}
   </div>
 </section>
+
+<style>
+  .final-cta-note { font-size: var(--type-sm); margin-top: 12px; opacity: 0.85; }
+</style>

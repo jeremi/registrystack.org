@@ -13,7 +13,12 @@ make sector-specific assumptions explicit. Possible applications do not imply
 existing deployments, compliance, or demonstrated readiness for every sector.
 A starter is a starting configuration, never a deployment or readiness claim.
 Starter pages state what each starter includes from the catalogue data rather
-than from prose.
+than from prose. The one-line description shown for a starter (cards, family
+lists, the starter hero and its meta description) is the catalogue `summary`,
+a plain sentence maintained upstream in each starter's `display.description`;
+the technical `task` paragraph belongs under "What it holds". Each starter page
+lists the public registers it was modeled on, with a caption that modelling
+does not imply use or endorsement by their operators.
 
 Write primarily for people responsible for an organization's registries and
 services: decision makers, programme and service owners, data stewards, and
@@ -37,7 +42,12 @@ secondary audience.
   what changes for that office, and keeps implementation vocabulary (record
   types, access profiles, signed answers, APIs, starters as zips) for its FAQ,
   the starter pages and the product pages. `scripts/check-content.mjs`
-  enforces the vocabulary rule. Within that layer,
+  enforces the vocabulary rule. Terminology: "register" is the thing an
+  office keeps; "registry" appears only in product names and the defined term
+  "base registry". Solution and starter pages address "your office"; other
+  pages address "your organization". The nouns "licence" and "programme" keep
+  their British spelling ("licence fee"); everything else is American
+  spelling. Within that layer,
   Base Registry Engine and Evidence Gateway remain the flagship products, with
   Registry Relay in a supporting role and its own product page. Use the full **Base Registry Engine** name in public copy; its abbreviation
   belongs in technical documentation and command names.
@@ -59,8 +69,13 @@ secondary audience.
   contracts start at **US$7,500 per year**. Final scope and fees are agreed with
   the customer. Present the two prices on the pricing page before the inquiry
   action; other pages should link there without repeating the amounts.
-  Ask for the help needed, budget, and timing before substantive scoping.
-  Self-service use has no software license fee and does not include a delivery
+  The written brief asks for the help needed; budget and timing are optional
+  fields that help scoping. The light path is an "Ask a question" email
+  (`askQuestionHref` in `src/data/contact.ts`) in the header, the footer and
+  the closing bands, with the address printed in text next to every mailto
+  button, because many government desktops have no mail client. The site never
+  states a reply time, a customer name or an outcome it cannot show.
+  Self-service use has no software licence fee and does not include a delivery
   team or private support.
 
 Review the page from its reader's perspective: can a programme or service
@@ -100,22 +115,37 @@ it asks for a request by email (`contact@registrystack.org`, journey
 tag, the starters revision and the catalogue digest the site was built from.
 A register family may name a `featuredStarter`, the starter its page's example
 is about and the one shown first with a "Start here" tag; the content check
-requires it to be in the family's list. A family without one highlights none. A starter page shows the catalogue's identifiers in
+requires it to be in the family's list. A family without one highlights none.
+Each area also carries an `audience` line ("For licensing boards, ...") shown
+on its card and a `description` under 155 characters used as its page's meta
+description. Catalogue cards show a starter's title and summary only (`starterLead` in
+`src/data/starter-words.ts`: the summary, else the task's first sentence);
+counts of record types, actions and roles belong on the starter page, in its
+section headings. Every starter request email is built by
+`starterRequestHref(title)` in the same file, so subject and body fields match
+from page to page. Every register family page ends its FAQ with
+`sharedFamilyFaq` from `src/data/solutions.ts` (cost, hosting, staff screens,
+exit, first step) and closes with the "Ask a question" band;
+`SolutionStarters` takes an optional `featuredNote` saying what the featured
+starter covers of the page's example. A starter page shows the catalogue's identifiers in
 words (`src/data/starter-words.ts`, covered by `npm test`), with the
 identifiers themselves in "Technical details" disclosures.
 Product names, summaries, and tutorial destinations
 live in `src/data/products.ts`. Product pages live under `/products/` and share
 `src/layouts/Product.astro`.
-The main page uses a static, labeled example that works without JavaScript.
+The main page opens on the register families and uses a static, labeled
+example that works without JavaScript.
 Data illustrations use shared record and signed-answer components. Keep each
 entity's fields inside its own labelled record; show relationships between
 records explicitly and distinguish stored information from returned answers.
 Its developer section links to maintained local tutorials; the separate pricing
-page explains paid delivery before opening a structured email inquiry.
+page explains paid delivery before opening a structured email inquiry. Every
+mailto on the site is built with `src/data/contact.ts` (`contactEmail`,
+`mailtoHref`, `askQuestionHref`), covered by `npm test`.
 
 ## Pages
 
-- `/`: organizational needs, examples, product choices, register families, and evaluation paths.
+- `/`: the register families first, the work every register shares, what stays under the organization's control, the four products as equal cards, the developer paths, where the project stands, and the closing band.
 - `/solutions/` and `/solutions/<area>/`: one page per solution area in `src/data/solutions.ts`.
 - `/starters/` and `/starters/<id>/`: the starters catalogue, one page per starter.
 - `/products/base-registry/`: build and maintain a registry.
@@ -123,7 +153,7 @@ page explains paid delivery before opening a structured email inquiry.
 - `/products/registry-relay/`: publish selected existing data with Relay.
 - `/products/casework/`: coordinate the human decisions behind a registry with Casework.
 - `/blog/`: field guides for registry owners and reviewers, published from `src/content/blog/` with an RSS feed at `/rss.xml`.
-- `/pricing/`: implementation pilots, annual support contracts, and a budget-qualified inquiry.
+- `/pricing/`: public prices for implementation pilots and annual support contracts, who does the work, and the written brief (budget and timing optional).
 - `/security/` and `/faq/`: boundaries, responsibilities, and adoption questions.
 
 Former product and editorial routes retain redirects in `astro.config.mjs`,
@@ -149,7 +179,9 @@ implementation and support email action. Clicks are not proof of tutorial comple
 qualified inquiry.
 
 When the homepage headline or branding changes, update
-`scripts/build-og.mjs` and run `npm run build:og` before the final build.
+`scripts/build-og.mjs` and run `npm run build:og` before the final build; the
+script renders with the static `@fontsource/public-sans` files, declared as a
+dev dependency.
 Commit the generated social image with its source.
 
 ## GitHub Pages

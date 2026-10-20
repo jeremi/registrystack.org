@@ -14,7 +14,7 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
       <div class="section-heading">
         <p class="eyebrow">One example: a supplier registration check</p>
         <h2 id="evidence-example-title">Does this supplier have an active business registration?</h2>
-        <p>A government procurement service needs the answer before processing a supplier’s application. The business registry can provide that status while keeping addresses, filing history, and other details out of the response.</p>
+        <p>A government procurement service needs the answer before processing a supplier’s application. The business register can provide that status while keeping addresses, filing history, and other details out of the response.</p>
       </div>
       <EvidenceGatewayFlow />
       <p class="product-note">The digital signature acts as a seal: the service can check that the expected issuer produced the answer and that it has not been altered. The procurement service remains responsible for deciding what that answer means for the application.</p>
@@ -25,7 +25,7 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
       <div class="section-heading">
         <p class="eyebrow">An answer both teams understand</p>
         <h2 id="evidence-define-title">Agree the question, the source, and who may ask.</h2>
-        <p>An answer can confirm adult status, report registration status, or return a residence region. The registry team and receiving services agree what each answer means. Evidence Gateway applies those definitions and the organization’s access rules to each request.</p>
+        <p>An answer can confirm adult status, report registration status, or return a residence region. The office that keeps the register and the receiving services agree what each answer means. Evidence Gateway applies those definitions and the organization’s access rules to each request.</p>
       </div>
       <div class="product-facts">
         <article><h3>Define the answer and its source</h3><p>Choose the source information and how to derive the permitted answer. Return only the defined facts, such as a residence region without the street address, or adult status without a date of birth.</p></article>
@@ -43,7 +43,7 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
         <p>Using Evidence Gateway does not require <a href="/products/base-registry/">Base Registry Engine</a>. If you choose both, your technical team configures the connection between them.</p>
       </div>
       <dl>
-        <dt>Your registry team defines the answers</dt><dd>Agree what each fact means, its permitted uses, and the source responsible for the underlying information. The same source can support different defined answers for different services.</dd>
+        <dt>Your office defines the answers</dt><dd>Agree what each fact means, its permitted uses, and the source responsible for the underlying information. The same source can support different defined answers for different services.</dd>
         <dt>Your technical team connects the source</dt><dd>Configure how Evidence Gateway reads the necessary information, checks requests, and signs answers. Your team operates the service and manages its access rules.</dd>
         <dt>The receiving service makes its decision</dt><dd>Its team verifies the answer and decides how to use it alongside its own rules and other information. Your organization remains responsible for the decisions its services make.</dd>
         <dt>Answers a person can carry, from systems you already run</dt><dd>An answer can also be issued as a credential a person keeps in a digital wallet and presents to other services. Health information systems and civil registration systems can serve as sources. Tutorials show <a href="https://docs.registrystack.org/tutorials/issue-fhir-evidence-as-vcs/">a credential from a health record</a> and <a href="https://docs.registrystack.org/tutorials/issue-a-birth-certificate-vc-from-opencrvs/">a birth certificate credential from OpenCRVS</a>.</dd>

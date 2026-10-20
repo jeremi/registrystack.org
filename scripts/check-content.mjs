@@ -95,24 +95,49 @@ for (const relativePath of ['src/data/products.ts', ...markdownLinkFiles]) {
   }
 }
 
-// 2. Homepage orientation and the two flagship evaluation paths.
+// 2. Homepage orientation: the register a reader keeps comes first, then the
+// work every register shares, control, the products, and the developer paths.
 const homeSource = readSource('src/pages/index.astro');
 const productSource = readSource('src/data/products.ts');
 const heroMatch = homeSource.match(/<section class="hero[^"]*"[\s\S]*?<\/section>/);
 if (!homeSource.includes('<RegistryExample')) {
   failures.push('homepage is missing its explanatory registry example');
 }
-if (!heroMatch || !heroMatch[0].includes('href="#how-it-works"') || !heroMatch[0].includes('href="#developers"')) {
-  failures.push('homepage hero is missing its explanation and developer actions');
+if (!heroMatch || !heroMatch[0].includes('href="#registers"') || !heroMatch[0].includes('href={askQuestionHref()}')) {
+  failures.push('homepage hero is missing its "Find your register" and "Ask a question" actions');
 }
-for (const anchor of ['how-it-works', 'developers', 'start-testing']) {
+// `how-it-works` and `start-testing` are kept for inbound links to the
+// former product and developer anchors.
+for (const anchor of ['registers', 'shared-work', 'products', 'how-it-works', 'developers', 'start-testing', 'project-status']) {
   if (!homeSource.includes(`id="${anchor}"`)) failures.push(`homepage is missing the ${anchor} destination`);
+}
+const homeSectionOrder = ['registers', 'shared-work', 'ownership-title', 'products', 'developers', 'project-status', 'pilot-title'];
+const homeSectionIndexes = homeSectionOrder.map((id) => homeSource.indexOf(`id="${id}"`));
+if (homeSectionIndexes.some((index, position) => index < 0 || (position > 0 && index < homeSectionIndexes[position - 1]))) {
+  failures.push(`homepage sections must run in this order: ${homeSectionOrder.join(', ')}`);
 }
 if (!homeSource.includes('home-solution-grid') || !homeSource.includes('developer-tutorial')) {
   failures.push('homepage is missing its product choices or developer tutorials');
 }
-if (!homeSource.includes('registerFamilies') || !homeSource.includes('href="/starters/"')) {
-  failures.push('homepage is missing its register families or the link to the starters catalogue');
+// The four products are equal cards on the homepage, each with its own page.
+const homeProductCards = homeSource.match(/class="home-solution-card"/g) ?? [];
+if (homeProductCards.length !== productPages.length ||
+    productPages.some(({ route }) => !homeSource.includes(`href="${route}"`))) {
+  failures.push(`homepage must show ${productPages.length} product cards, one for each product page`);
+}
+if (!homeSource.includes('registerFamilies') || !homeSource.includes('href="/starters/"') || !homeSource.includes('area.audience')) {
+  failures.push('homepage is missing its register families, their audience lines, or the link to the starters catalogue');
+}
+if (/US\$/.test(homeSource)) failures.push('homepage repeats a price; prices belong on the pricing page');
+// The homepage headline, the default page title, and the social image agree.
+const homeHeadline = homeSource.match(/<h1 id="hero-title">([^<]+)<\/h1>/)?.[1]?.trim() ?? '';
+const ogHeadline = (readSource('scripts/build-og.mjs').match(/<h1>([\s\S]*?)<\/h1>/)?.[1] ?? '')
+  .replace(/<br\s*\/?>/g, ' ').replace(/\s+/g, ' ').trim();
+if (!homeHeadline || homeHeadline !== ogHeadline) {
+  failures.push(`homepage H1 "${homeHeadline}" and scripts/build-og.mjs headline "${ogHeadline}" differ (update the script and run npm run build:og)`);
+}
+if (!readSource('src/layouts/Base.astro').includes(`'Registry Stack | ${homeHeadline.replace(/\.$/, '')}'`)) {
+  failures.push('the default page title in Base.astro does not match the homepage H1');
 }
 for (const { route } of productPages) {
   if (!productSource.includes(`'${route}'`)) failures.push('product data is missing ' + route);
@@ -162,7 +187,22 @@ for (const [label, source] of [['header', headerSource], ['footer', footerSource
     failures.push(`${label} does not build its product entries from products.ts by product name`);
   }
   if (!source.includes("'/starters/'")) failures.push(`${label} is missing the starters catalogue`);
+  // A reader without a technical question can reach a person from every page.
+  if (!source.includes("from '../data/contact'") || !/askQuestionHref\(|mailto:\$\{contactEmail\}|mailto:contact@registrystack\.org/.test(source)) {
+    failures.push(`${label} is missing the "Ask a question" email link`);
+  }
+  if (!source.includes('Work every register shares')) {
+    failures.push(`${label} does not group the cross-cutting solution areas under "Work every register shares"`);
+  }
 }
+if (!headerSource.includes('href="/solutions/"') || !headerSource.includes('All solutions')) {
+  failures.push('the Solutions menu does not open with "All solutions"');
+}
+// The footer prints the address itself, not only a button that opens it.
+if (!/label: contactEmail\b|>contact@registrystack\.org</.test(footerSource)) {
+  failures.push('footer does not print the contact address in text');
+}
+if (!footerSource.includes("'/pricing/#team'")) failures.push('footer is missing the About link to /pricing/#team');
 
 for (const staleRoute of supersededRoutes) {
   if (headerSource.includes(`'${staleRoute}'`) || headerSource.includes(`"${staleRoute}"`)) {
@@ -353,8 +393,45 @@ for (const relativePath of [
 }
 
 const pricingSource = readSource('src/pages/pricing.astro');
-if (!pricingSource.includes('US$20,000') || !pricingSource.includes('US$7,500') || !pricingSource.includes('mailto:')) {
+if (!pricingSource.includes('US$20,000') || !pricingSource.includes('US$7,500') ||
+    !pricingSource.includes('data-journey="implementation-support-inquiry"') || !pricingSource.includes('href={contactHref}')) {
   failures.push('pricing page is missing a pilot/support starting price or inquiry action');
+}
+// The light tier asks for nothing but a question; the brief marks budget and
+// timing optional so a reader without them can still write.
+if (!pricingSource.includes('href={askQuestionHref()}')) failures.push('pricing page is missing the "Ask a question" action');
+if (!/Budget[^'\n]*\(optional\)/.test(pricingSource) || !/Timing[^'\n]*\(optional\)/.test(pricingSource)) {
+  failures.push('pricing brief must mark budget and timing as optional');
+}
+if (!pricingSource.includes('id="team"') || !pricingSource.includes('id="stewardship"')) {
+  failures.push('pricing page is missing the team block (#team) or the #stewardship anchor the pilot redirect keeps');
+}
+// The two prices appear on the pricing page only; other pages link to it.
+for (const relativePath of sweptFiles) {
+  if (relativePath === 'src/pages/pricing.astro') continue;
+  if (/US\$\d/.test(readSource(relativePath))) failures.push(`${relativePath} repeats a price; link to /pricing/ instead`);
+}
+
+// The FAQ routes product, solution, starter, and team questions to the pages
+// that answer them, and closes on the light "Ask a question" action.
+const faqSource = readSource('src/pages/faq.astro');
+for (const route of ['/solutions/', '/solutions/#products', '/starters/', '/pricing/#team']) {
+  if (!faqSource.includes(`"href": "${route}"`)) failures.push(`FAQ is missing its link to ${route}`);
+}
+if (!/<DocsHandoff[\s\S]*?primaryHref=\{askQuestionHref\(\)\}[\s\S]*?\/>/.test(faqSource)) {
+  failures.push('FAQ closing band must offer "Ask a question"');
+}
+
+// Every product has a search snippet short enough to show in full.
+const productDescriptions = [...productSource.matchAll(/\bdescription: '([^']*)'/g)].map(([, text]) => text);
+if (productDescriptions.length !== productPages.length) {
+  failures.push(`products.ts has ${productDescriptions.length} descriptions for ${productPages.length} products`);
+}
+for (const text of productDescriptions) {
+  if (text.length === 0 || text.length >= 155) failures.push(`product description must be 1 to 154 characters (${text.length}): ${text}`);
+}
+if (!productLayout.includes('description={product.description}')) {
+  failures.push('product layout does not use the product description as the page description');
 }
 if (!pricingSource.includes('/#developers')) {
   failures.push('pricing page is missing the self-service developer path');

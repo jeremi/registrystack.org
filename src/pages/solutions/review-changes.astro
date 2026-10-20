@@ -5,6 +5,7 @@ import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas } from '../../data/solutions';
+import { askQuestionHref, contactEmail } from '../../data/contact';
 import { products } from '../../data/products';
 const area = solutionAreas.find((a) => a.key === 'review-changes')!;
 const casework = products.find((p) => p.key === 'casework')!;
@@ -36,6 +37,10 @@ const casework = products.find((p) => p.key === 'casework')!;
         <article><h3>Routine updates go through; the rest wait for an officer</h3><p>Your office decides which changes need a person, such as a licence scope, a parcel holder or a household member. Routine updates are recorded directly. The rest go to the queue for that kind of request, with that queue’s response target.</p></article>
         <article><h3>You can see who holds what, and what is overdue</h3><p>Each item has one officer and a due date. A supervisor sees which items have stalled and can chase them, and whoever asked gets an answer back when the officer decides.</p></article>
         <article><h3>The officer who decides is the officer on the record</h3><p>An officer applies an approved change under their own name, and only if the register already lets them make it. Each request keeps who held it, who decided and when, so anyone reviewing it later can follow it without asking the people involved.</p></article>
+      </div>
+      <div id="what-your-office-calls-it" class="product-note">
+        <h3>What your office calls it</h3>
+        <p>Corrections and objections in a land register. Grievance redress in a social programme. Fitness-to-practise and disciplinary cases in a professional register. Appeals against a refused registration. Each is a request that needs a named officer, a due date and a record of who decided.</p>
       </div>
     </div>
   </section>
@@ -77,5 +82,13 @@ const casework = products.find((p) => p.key === 'casework')!;
       },
     ]}
   />
-  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team sets up review for its register." emphasis="pilot" />
+  <DocsHandoff
+    eyebrow="Work with us"
+    heading="Talk it through with the people who build it."
+    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    primaryLabel="Ask a question"
+    primaryHref={askQuestionHref(area.name)}
+    emphasis="docs"
+    note={`Or write to ${contactEmail}.`}
+  />
 </Solution>

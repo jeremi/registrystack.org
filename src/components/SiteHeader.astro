@@ -4,6 +4,7 @@
 // in the docs.
 import { products } from '../data/products';
 import { solutionAreas } from '../data/solutions';
+import { askQuestionHref } from '../data/contact';
 const { current } = Astro.props;
 const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
@@ -29,6 +30,11 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
     <details class="nav-group">
       <summary aria-current={onSolutionPage ? 'page' : undefined}>Solutions</summary>
       <div class="nav-group-panel">
+        <a href="/solutions/" aria-current={current === 'solutions' ? 'page' : undefined}>
+          <span class="nav-entry-name">All solutions</span>
+          <span class="nav-entry-blurb">Start from the register you keep</span>
+        </a>
+        <hr class="nav-group-rule" />
         {registerFamilies.map((area) => (
           <a href={area.slug} aria-current={current === area.key ? 'page' : undefined}>
             <span class="nav-entry-name">{area.name}</span>
@@ -36,6 +42,7 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
           </a>
         ))}
         <hr class="nav-group-rule" />
+        <p class="nav-group-label">Work every register shares</p>
         {crossCutting.map((area) => (
           <a href={area.slug} aria-current={current === area.key ? 'page' : undefined}>
             <span class="nav-entry-name">{area.name}</span>
@@ -59,6 +66,7 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
     ))}
     <a href="https://docs.registrystack.org/">Docs</a>
+    <a class="nav-outline" href={askQuestionHref()}>Ask a question</a>
     <a class="nav-emphasis" href="/#developers">For developers</a>
   </nav>
 </header>

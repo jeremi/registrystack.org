@@ -15,16 +15,16 @@ interface Props {
 }
 
 const {
-  title = 'Registry Stack | Maintain your registry. Share only what services need',
+  title = 'Registry Stack | Maintain your register. Share only what services need',
   description =
-    'Open-source software to store and manage records about people, households, organizations, and assets, and share verifiable facts with services. Explore Base Registry Engine and Evidence Gateway.',
+    'Open-source software for the registers your organization keeps: hold the records, let services check a fact, and queue the changes a person must decide.',
   noindex = false,
   type = 'website',
   publishedAt,
   updatedAt,
   author = 'Registry Stack',
   ogImagePath = '/og-image.png',
-  ogImageAlt = 'Registry Stack: Maintain your registry. Share only what services need.',
+  ogImageAlt = 'Registry Stack: Maintain your register. Share only what services need.',
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, 'https://registrystack.org').toString();
 const ogImageUrl = new URL(ogImagePath, 'https://registrystack.org').toString();

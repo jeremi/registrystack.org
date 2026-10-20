@@ -45,8 +45,8 @@ const products = [
   { path: '/products/registry-relay/', name: 'Registry Relay', tutorial: '/tutorials/publish-governed-sqlite-registry/' },
   { path: '/products/casework/', name: 'Registry Casework', tutorial: '/start/casework/' },
 ];
-// The Products menu lists every product page. Both supporting products also
-// have a homepage row below the flagship cards.
+// The Products menu lists every product page, and each product has an equal
+// card on the homepage.
 const productMenuRoutes = products.map((product) => product.path);
 const redirects = [
   ['/why/', '/'],
@@ -67,8 +67,9 @@ const redirects = [
   ['/solutions/casework/', '/products/casework/'],
 ];
 
-// Understanding the products, trying a tutorial, and finding paid help must
-// all work without JavaScript and with reduced motion.
+// Finding a register, asking a question, understanding the products, trying a
+// tutorial, and finding paid help must all work without JavaScript and with
+// reduced motion.
 for (const options of [
   { viewport: { width: 1440, height: 1000 }, javaScriptEnabled: false },
   { viewport: { width: 390, height: 900 }, reducedMotion: 'reduce' },
@@ -89,14 +90,35 @@ for (const options of [
   };
   await page.goto(url);
 
-  await followAnchor(page.locator('.hero .hero-actions a').first(), '#how-it-works', 'hero primary action');
-  if (await page.locator('main > section').nth(1).getAttribute('id') !== 'how-it-works') {
-    fail('the first section after the hero must explain how the products work');
+  await followAnchor(page.locator('.hero .hero-actions a').first(), '#registers', 'hero primary action');
+  if (await page.locator('main > section').nth(1).getAttribute('id') !== 'registers') {
+    fail('the first section after the hero must be the register families');
   }
-  // These are alternative journeys. Start the second from the hero instead
-  // of clicking back into it while the first anchor is still smoothly scrolling.
+  // The light contact action opens a prefilled question, not a scoping brief.
+  const isQuestionMailto = (href) => {
+    if (!href?.startsWith('mailto:contact@registrystack.org?')) return false;
+    const params = new URL(href).searchParams;
+    return /^Question about /.test(params.get('subject') ?? '') && !/budget/i.test(params.get('body') ?? '');
+  };
+  const heroQuestion = page.locator('.hero .hero-actions a').nth(1);
+  if (!isQuestionMailto(await heroQuestion.getAttribute('href')) || !await heroQuestion.isVisible()) {
+    fail('hero secondary action must be a visible "Ask a question" email');
+  }
+  const navQuestion = page.locator('.top-nav > a[href^="mailto:"]');
+  if (await navQuestion.count() !== 1 || !isQuestionMailto(await navQuestion.getAttribute('href')) || !await navQuestion.isVisible()) {
+    fail('main navigation must offer one visible "Ask a question" email');
+  }
+  // These are alternative journeys. Start the developer path from a fresh
+  // page instead of clicking while the first anchor is still smoothly scrolling.
   await page.goto(url);
-  await followAnchor(page.locator('.hero .hero-actions a').nth(1), '#developers', 'hero secondary action');
+  const developersLink = page.locator('.top-nav a[href="/#developers"]');
+  if (await developersLink.count() !== 1) {
+    fail('main navigation must lead to /#developers');
+  } else {
+    await developersLink.click();
+    await page.waitForURL((current) => current.hash === '#developers');
+    if (!await page.locator('#developers').isVisible()) fail('the developer navigation link did not reach a visible #developers');
+  }
 
   const tutorialLinks = await page.locator('#developers a.developer-tutorial').evaluateAll(
     (links) => links.map((link) => {
@@ -125,9 +147,10 @@ for (const options of [
   const solutionLinks = await solutionsMenu.locator('a').evaluateAll(
     (links) => links.map((link) => new URL(link.href).pathname),
   );
-  if (solutionLinks.length === 0 || solutionLinks.some((path) => !/^\/solutions\/[a-z-]+\/$/.test(path)) ||
+  if (solutionLinks[0] !== '/solutions/' || solutionLinks.length < 2 ||
+      solutionLinks.slice(1).some((path) => !/^\/solutions\/[a-z-]+\/$/.test(path)) ||
       !await solutionsMenu.locator('a').first().isVisible()) {
-    fail('the Solutions menu must list the solution area pages');
+    fail('the Solutions menu must open with all solutions, then list the solution area pages');
   }
   await productsMenu.locator('summary').click();
   const menuLinks = await productsMenu.locator('a').evaluateAll(
@@ -155,21 +178,16 @@ for (const options of [
   const cardLinks = await page.locator('.home-solution-card').evaluateAll(
     (cards) => cards.map((card) => [...card.querySelectorAll('a')].map((link) => link.getAttribute('href'))),
   );
-  if (cardLinks.length !== 2 || products.slice(0, 2).some((product) =>
+  if (cardLinks.length !== products.length || products.some((product) =>
     cardLinks.filter((links) => links.length === 1 && links[0] === product.path).length !== 1)) {
-    fail('the two flagship cards must lead to their product pages');
-  }
-  const relayLink = page.locator('.existing-registry a[href="/products/registry-relay/"]');
-  if (!await relayLink.isVisible() || await relayLink.evaluate((link) => Boolean(link.closest('.home-solution-card')))) {
-    fail('Relay must remain a separate supporting product path');
+    fail('each product card must lead to its own product page');
   }
 
   // Follow the actual product links, then verify both next steps on the page
   // they open. Merely checking hrefs would miss a stale or broken destination.
-  for (const [index, product] of products.entries()) {
+  for (const product of products) {
     await page.goto(url);
-    const selector = index < 2 ? '.home-solution-card' : '.existing-registry';
-    const link = page.locator(`${selector} a[href="${product.path}"]`).first();
+    const link = page.locator(`.home-solution-card a[href="${product.path}"]`).first();
     if (!await link.isVisible()) {
       fail(`homepage is missing its ${product.name} product link`);
       continue;
@@ -199,18 +217,29 @@ for (const options of [
   }
 
   await page.goto(`${url}pricing/`);
-  const inquiryLinks = page.locator('main a[href^="mailto:"]');
-  if (!await inquiryLinks.count()) fail('pricing page is missing its inquiry action');
-  for (const inquiry of await inquiryLinks.all()) {
-    const href = new URL(await inquiry.getAttribute('href'));
-    const body = href.searchParams.get('body') ?? '';
+  // The light question comes before the brief and asks for no budget; the
+  // brief asks for the register and help needed, with budget and timing optional.
+  const questionLinks = page.locator('main a[data-journey="ask-question"]');
+  if (await questionLinks.count() !== 1 || !isQuestionMailto(await questionLinks.getAttribute('href')) ||
+      !await questionLinks.isVisible()) {
+    fail('pricing page is missing its "Ask a question" action');
+  }
+  const briefLinks = page.locator('main a[data-journey="implementation-support-inquiry"]');
+  if (await briefLinks.count() !== 1) fail('pricing page is missing its inquiry action');
+  for (const inquiry of await briefLinks.all()) {
+    const body = new URL(await inquiry.getAttribute('href')).searchParams.get('body') ?? '';
     for (const [name, field] of [
-      ['use case', /use\s+case|(?:registry|service)\s+need/i],
-      ['budget', /budget/i],
-      ['timing', /timing/i],
+      ['organization', /organization/i],
+      ['register and help needed', /register and the help you need/i],
+      ['optional timing', /^timing[^\n]*\(optional\)/im],
+      ['optional budget', /^budget[^\n]*\(optional\)/im],
     ]) {
       if (!field.test(body)) fail(`pricing inquiry is missing its ${name} field`);
     }
+  }
+  if (!await page.locator('#team').isVisible()) fail('pricing page is missing its visible #team block');
+  const inquiryLinks = page.locator('main a[href^="mailto:"]');
+  for (const inquiry of await inquiryLinks.all()) {
     for (const price of ['US$20,000', 'US$7,500']) {
       const priceBeforeInquiry = await inquiry.evaluate((link, expectedPrice) => {
         const walker = document.createTreeWalker(document.querySelector('main'), NodeFilter.SHOW_TEXT);

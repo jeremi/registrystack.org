@@ -5,6 +5,10 @@
 import catalogue from './starters.json';
 import { solutionAreaForStarter, type SolutionArea } from './solutions';
 
+// The plain one-line lead shown on cards, starter pages and family lists,
+// and the email that requests a starter.
+export { starterLead, starterRequestHref } from './starter-words';
+
 export interface StarterField {
   id: string;
   type: string;

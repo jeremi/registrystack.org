@@ -1,14 +1,15 @@
 ---
 // A closed "Technical details" disclosure, the place on a starter page for
 // identifiers, codes and checksums. Each item is a term and its value, shown
-// in monospace.
+// in monospace. `label` names what is inside, after "Technical details".
 interface Props {
   items: { term: string; value: string }[];
+  label?: string;
 }
-const { items } = Astro.props;
+const { items, label } = Astro.props;
 ---
 <details class="starter-technical">
-  <summary>Technical details</summary>
+  <summary>Technical details{label && ` (${label})`}</summary>
   <dl>
     {items.map((item) => (
       <div>

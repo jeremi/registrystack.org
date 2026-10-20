@@ -13,11 +13,12 @@ if (!existsSync(htmlPath)) {
 
 mkdirSync(outputDir, { recursive: true });
 
-// The header has two menus: Solutions lists every solution area, Products
-// every product. Count both from the data files the header is built from.
+// The header has two menus: Solutions opens with an "All solutions" link and
+// then lists every solution area, Products lists every product. Count both
+// from the data files the header is built from.
 const countMatches = (relativePath, pattern) => (readFileSync(resolve(relativePath), 'utf8').match(pattern) ?? []).length;
 const expectedMenuLinks = [
-  countMatches('src/data/solutions.ts', /slug: '\/solutions\//g),
+  1 + countMatches('src/data/solutions.ts', /slug: '\/solutions\//g),
   countMatches('src/data/products.ts', /href: '\/products\//g),
 ];
 
@@ -142,8 +143,7 @@ for (const viewport of viewports) {
     }
   }
 
-  // On desktop the homepage product cards are the main routing decision and
-  // should read as a balanced pair.
+  // On desktop the four homepage product cards should read as a balanced row.
   if (route.path === '/' && viewport.name === 'desktop') {
     const align = await page.evaluate(() => {
       const cards = [...document.querySelectorAll('.home-solution-card')];
@@ -151,12 +151,12 @@ for (const viewport of viewports) {
       return { count: cards.length, cardHeights };
     });
 
-    if (align.count !== 2) {
-      failures.push(`desktop: expected 2 homepage solution cards, found ${align.count}`);
+    if (align.count !== 4) {
+      failures.push(`desktop: expected 4 homepage product cards, found ${align.count}`);
     } else {
       const heightSpread = Math.max(...align.cardHeights) - Math.min(...align.cardHeights);
       if (heightSpread > 2) {
-        failures.push(`desktop: homepage solution cards have unequal heights (spread ${heightSpread}px)`);
+        failures.push(`desktop: homepage product cards have unequal heights (spread ${heightSpread}px)`);
       }
     }
   }

@@ -11,8 +11,9 @@ import StarterIncludes from '../../components/StarterIncludes.astro';
 import StarterRecordType from '../../components/StarterRecordType.astro';
 import StarterTechnical from '../../components/StarterTechnical.astro';
 import { products } from '../../data/products';
-import { areaForStarter, featuredStarterForArea, starters, startersSource, type Starter } from '../../data/starters';
-import { words } from '../../data/starter-words';
+import { contactEmail } from '../../data/contact';
+import { areaForStarter, featuredStarterForArea, starterLead, starterRequestHref, starters, startersSource, type Starter } from '../../data/starters';
+import { sourceHost, words } from '../../data/starter-words';
 
 export function getStaticPaths() {
   return starters.map((starter) => ({ params: { id: starter.id }, props: { starter } }));
@@ -29,12 +30,9 @@ const featured = featuredStarterForArea(area)?.id === starter.id;
 const baseRegistry = products.find((p) => p.key === 'base-registry')!;
 
 // A starter is sent on request, free of charge, until the catalogue is
-// published for download. The request asks for the register the office
-// keeps, which is also how we learn what a starter lacks.
-const requestFields = ['Organization', 'Your role', 'The register you keep', 'What this starter should cover that it does not'];
-const requestHref = `mailto:contact@registrystack.org?subject=${encodeURIComponent(`Starter request: ${starter.title}`)}&body=${encodeURIComponent(
-  [`Starter: ${starter.id}`, '', ...requestFields.map((field) => `${field}: `)].join('\n'),
-)}`;
+// published for download.
+const requestSubject = `Starter request: ${starter.title}`;
+const requestHref = starterRequestHref(starter.title);
 
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
 const list = (items: string[]) => items.join(', ');
@@ -42,13 +40,18 @@ const recordTypeLabel = (id: string) => starter.recordTypes.find((type) => type.
 const actionLabel = (id: string) => starter.actions.find((action) => action.id === id)?.label ?? id;
 const sizeKb = Math.round(starter.download.bytes / 1024);
 const zipName = starter.download.path.split('/').pop();
-const firstSentence = starter.task.split(/(?<=[.!?])\s+(?=[A-Z])/)[0];
+const lead = starterLead(starter);
 const requiredFields = starter.recordTypes.some((type) => type.fields.some((field) => field.required));
+const sources = starter.sourceUrls.map((href) => {
+  const url = new URL(href);
+  const rest = `${url.pathname}${url.search}`;
+  return { href, host: sourceHost(href), rest: rest === '/' ? '' : rest };
+});
 
 const pageTitle = `${starter.title} starter | Registry Stack`;
 ---
 
-<Base title={pageTitle} description={firstSentence}>
+<Base title={pageTitle} description={lead}>
   <SiteHeader current="starters" />
   <main class="starter-page">
     <section class="hero" aria-labelledby="starter-title">
@@ -59,13 +62,17 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
             {featured && <span class="starter-featured">Start here</span>}
           </p>
           <h1 id="starter-title">{starter.title}</h1>
-          <p class="hero-lead">{starter.task}</p>
+          <p class="hero-lead">{lead}</p>
+          <p class="hero-note starter-hero-terms">Free of charge, sent by email on request. A starting point to adapt; it does not show the register is in use anywhere.</p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href={requestHref} data-journey="starter-request">Request the starter</a>
             <a class="button button-secondary" href="#whats-inside">What you receive</a>
           </div>
-          <p class="hero-note">Free of charge, sent by email on request. A starter is a starting point: your team adds what its register needs, and the request is where you tell us what is missing.</p>
-          {starter.summary !== starter.task && <p class="hero-note">{starter.summary}</p>}
+          <p class="hero-note">Anyone from the office can request it; your technical team is who opens it.</p>
+          <div class="starter-after-request">
+            <h2 class="hero-note">After you send the request</h2>
+            <p class="hero-note">Someone on the Aubex team replies from {contactEmail} with the zip attached, its SHA-256 checksum, and a short note on what this starter leaves out for a register like yours. We confirm when to expect it. If another starter fits better, the reply says which. Nobody calls unless you ask, and we add you to no mailing list. If the button does not open your email app, write to <a href={requestHref} data-journey="starter-request">{contactEmail}</a> with the subject “{requestSubject}”.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -73,9 +80,10 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     <section class="section" aria-labelledby="records-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <p class="eyebrow">{plural(starter.counts.recordTypes, 'kind of record', 'kinds of record')}</p>
-          <h2 id="records-title">What it holds</h2>
+          <h2 id="records-title">What it holds: <span class="starter-count">{plural(starter.counts.recordTypes, 'kind of record', 'kinds of record')}</span></h2>
+          <p>{starter.task}</p>
           <p>Each box is one kind of record the register keeps, with the fields an entry has. Some records are added once and never changed; later events, such as a renewal or a correction, are added as records of their own.</p>
+          <p class="starter-legend">Each kind of record carries a sensitivity label: Public; Staff only, for records kept inside the office; Restricted, for the most sensitive. “Who can do what” lists the kinds of record each role can see.</p>
         </div>
         <div class="starter-records">
           {starter.recordTypes.map((type) => <StarterRecordType type={type} recordTypeLabel={recordTypeLabel} />)}
@@ -87,26 +95,30 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     <section class="section section-muted" aria-labelledby="actions-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <p class="eyebrow">{plural(starter.counts.actions, 'action', 'actions')}</p>
-          <h2 id="actions-title">What staff can do</h2>
-          <p>Each action is one change staff make to the register. The register keeps who made it and when.</p>
+          <h2 id="actions-title">What staff can do: <span class="starter-count">{starter.actions.length > 0 ? plural(starter.counts.actions, 'action', 'actions') : 'look-up only'}</span></h2>
+          {starter.actions.length > 0 ? (
+            <p>Each action is one change staff make to the register. The register keeps who made it and when.</p>
+          ) : (
+            <p>This starter defines no actions: its roles look records up. Your team adds the changes staff make to the register.</p>
+          )}
         </div>
-        <dl class="starter-actions">
-          {starter.actions.map((action) => (
-            <div>
-              <dt>{action.label}</dt>
-              <dd>{action.description}</dd>
-            </div>
-          ))}
-        </dl>
+        {starter.actions.length > 0 && (
+          <dl class="starter-actions">
+            {starter.actions.map((action) => (
+              <div>
+                <dt>{action.label}</dt>
+                <dd>{action.description}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
       </div>
     </section>
 
     <section class="section" aria-labelledby="access-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <p class="eyebrow">{plural(starter.accessProfiles.length, 'role', 'roles')}</p>
-          <h2 id="access-title">Who can do what</h2>
+          <h2 id="access-title">Who can do what: <span class="starter-count">{plural(starter.accessProfiles.length, 'role', 'roles')}</span></h2>
           <p>The starter sets out roles: what each may record and which records it may see. Your team decides which people and systems hold each role.</p>
         </div>
         <div class="starter-roles">
@@ -120,6 +132,7 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
                 <dd>{profile.recordTypes.length > 0 ? list(profile.recordTypes.map(recordTypeLabel)) : 'No records'}</dd>
               </dl>
               <StarterTechnical
+                label="access profile, scopes and purposes"
                 items={[
                   { term: 'Access profile', value: profile.id },
                   { term: 'Required scopes', value: profile.requiredScopes.length > 0 ? list(profile.requiredScopes) : 'none' },
@@ -132,7 +145,26 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
       </div>
     </section>
 
-    <section class="section section-muted" id="whats-inside" aria-labelledby="inside-title">
+    {sources.length > 0 && (
+      <section class="section section-muted" aria-labelledby="sources-title">
+        <div class="section-inner">
+          <div class="section-heading compact">
+            <h2 id="sources-title">Modeled on public registers</h2>
+            <p>The record model was drawn from how these registers are kept in public. Using them as a model does not mean their operators use or endorse the starter.</p>
+          </div>
+          <ul class="starter-sources">
+            {sources.map((source) => (
+              <li>
+                <a href={source.href} rel="noopener">{source.host}</a>
+                {source.rest && <span class="starter-source-path">{source.rest}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    <section class="section" id="whats-inside" aria-labelledby="inside-title">
       <div class="section-inner">
         <div class="section-heading compact">
           <p class="eyebrow">Free of charge</p>
@@ -142,14 +174,11 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
         <div class="starter-inside">
           <div>
             <h3>Parts of this starter</h3>
-            <StarterIncludes includes={starter.includes} variant="list" />
+            <StarterIncludes includes={starter.includes} />
           </div>
           <div>
             <h3>Details your team fills in</h3>
-            <p>The starter ships with example values for these; your team replaces them with its own.</p>
-            <ul class="starter-values">
-              {starter.valuesKeys.map((key) => <li>{words(key)}</li>)}
-            </ul>
+            <p>Your team fills in your authority's name, jurisdiction and addresses; the technical details list the exact values.</p>
             <h3>Files in the zip</h3>
             <p>A README that says what the starter records and what it leaves to other systems, a description of the record model, the values file, the project files, and the Apache 2.0 licence, notice, and PublicSchema CC BY 4.0 licence files.</p>
             <h3>Not exactly your register?</h3>
@@ -157,11 +186,12 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
             <p class="starter-request"><a class="button button-primary" href={requestHref} data-journey="starter-request">Request the starter</a></p>
             <div class="starter-inside-technical">
               <StarterTechnical
+                label="file, checksum, versions and values"
                 items={[
                   { term: 'File', value: `${zipName} (${sizeKb} KB), checksum confirms the file you receive` },
                   { term: 'SHA-256', value: starter.download.sha256 },
                   { term: 'Exported with', value: `${baseRegistry.name} ${startersSource.breg.version}, PublicSchema ${startersSource.publicschema.version}` },
-                  { term: 'Values keys', value: list(starter.valuesKeys) },
+                  { term: 'Values your team fills in', value: list(starter.valuesKeys) },
                 ]}
               />
             </div>
@@ -185,7 +215,15 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
       </div>
     </section>
 
-    <DocsHandoff />
+    <DocsHandoff
+      eyebrow="Ready to try it?"
+      heading="Request this starter, free."
+      body="Request it and tell us what your register needs that it does not cover."
+      primaryLabel="Request the starter"
+      primaryHref={requestHref}
+      emphasis="docs"
+      note={`Or write to ${contactEmail} with the subject “${requestSubject}”.`}
+    />
   </main>
   <SiteFooter />
 </Base>
@@ -211,6 +249,39 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
 
   .starter-page h2 {
     font-size: clamp(28px, 3.7vw, 42px);
+  }
+
+  .starter-count {
+    color: var(--registry-blue);
+    font-family: var(--registry-mono);
+    font-size: var(--type-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .starter-hero-terms {
+    margin: -12px 0 24px;
+  }
+
+  .starter-after-request {
+    border-top: 1px solid var(--registry-rule);
+    margin-top: 20px;
+    max-width: 760px;
+    padding-top: 16px;
+  }
+
+  .starter-page .starter-after-request h2 {
+    color: var(--registry-ink);
+    font-size: var(--type-base);
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .starter-after-request p {
+    margin-top: 6px;
   }
 
   .starter-page .section-inner {
@@ -316,16 +387,32 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     margin-top: 28px;
   }
 
-  .starter-values {
-    border-left: 3px solid var(--registry-blue);
-    font-size: var(--type-md);
+  .starter-sources {
     list-style: none;
     margin: 0;
-    padding: 2px 0 2px 18px;
+    max-width: 760px;
+    padding: 0;
   }
 
-  .starter-values li + li {
-    margin-top: 4px;
+  .starter-sources li {
+    border-bottom: 1px solid var(--registry-rule);
+    padding: 10px 0;
+  }
+
+  .starter-sources li:first-child {
+    border-top: 1px solid var(--registry-rule);
+  }
+
+  .starter-sources a {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .starter-source-path {
+    color: var(--registry-muted);
+    display: block;
+    font-size: var(--type-xs);
+    overflow-wrap: anywhere;
   }
 
   .starter-inside-technical {

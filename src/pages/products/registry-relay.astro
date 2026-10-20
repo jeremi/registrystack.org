@@ -6,15 +6,15 @@ const product = products.find((p) => p.key === 'protected-registry-apis')!;
 ---
 <Product
   product={product}
-  heading="Publish selected registry data."
-  description="Registry Relay gives other services a controlled interface to look up and read selected data from an existing registry. Define the fields, their meaning, and the rules for access, while keeping record maintenance in the source system."
+  heading="Give each service the fields you agreed, and nothing else."
+  description="Some services need the values themselves: a legal name and legal form, or a farmer’s registered status. Registry Relay reads them from the register you already run and returns only the fields your office agreed with that service, with a record of every request."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="relay-example-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One example: information for a public assistance service</p>
         <h2 id="relay-example-title">Share enrollment details without the rest of the household record.</h2>
-        <p>A public assistance service needs a household’s reference, district, and enrollment status to process an application. The registry team agrees to provide those fields while withholding the home address and payment details.</p>
+        <p>A public assistance service needs a household’s reference, district, and enrollment status to process an application. The office that keeps the register agrees to provide those fields while withholding the home address and payment details.</p>
       </div>
       <ProtectedRegistryApiFlow />
     </div>
@@ -22,7 +22,7 @@ const product = products.find((p) => p.key === 'protected-registry-apis')!;
   <section class="section" aria-labelledby="relay-access-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">A reusable interface for your registry</p>
+        <p class="eyebrow">A reusable interface for your register</p>
         <h2 id="relay-access-title">Define what services can read and how they find it.</h2>
         <p>Publish agreed information about people, households, businesses, facilities, or other records your organization maintains. Define permitted reads and lookups, with consistent field meanings and access rules for receiving services.</p>
       </div>
@@ -42,7 +42,7 @@ const product = products.find((p) => p.key === 'protected-registry-apis')!;
         <p>Agree which information is useful, who may receive it, and how current the published data needs to be.</p>
       </div>
       <dl>
-        <dt>Your registry team agrees the information</dt><dd>Define the published records, field meanings, and access each service needs. Keep responsibility for corrections and updates with the source register.</dd>
+        <dt>Your office agrees the information</dt><dd>Define the published records, field meanings, and access each service needs. Keep responsibility for corrections and updates with the source register.</dd>
         <dt>Your technical team prepares the data</dt><dd>Provide the reviewed source view and any extraction or update process it requires. Configure Relay’s interface and access rules, and connect the receiving service.</dd>
         <dt>Choose the response your service needs</dt><dd>When a service needs a defined fact, such as adult status or a residence region, <a href="/products/evidence-gateway/">Evidence Gateway</a> can derive and sign that answer from a configured source.</dd>
       </dl>

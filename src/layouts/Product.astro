@@ -7,12 +7,13 @@ import type { products } from '../data/products';
 interface Props {
   product: (typeof products)[number];
   heading: string;
+  // The hero lead. The search snippet is the product's shorter `description`.
   description: string;
   note?: string;
 }
 const { product, heading, description, note } = Astro.props;
 ---
-<Base title={product.name + ' | Registry Stack'} description={description}>
+<Base title={product.name + ' | Registry Stack'} description={product.description}>
   <SiteHeader current={product.key} />
   <main class="product-page">
     <section class="hero" aria-labelledby="product-title">

@@ -5,13 +5,14 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
-import { solutionAreas } from '../../data/solutions';
+import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
+import { askQuestionHref, contactEmail } from '../../data/contact';
 const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
 ---
 <Solution
   area={area}
   heading="Record what is registered, who holds it, and since when."
-  description="Valuation offices, planners, notaries, and tax and transport services ask your register who holds a parcel or a vehicle, and the answer often leaves as a spreadsheet by email. Registry Stack gives your office one register of the assets it records and the rights over them, and shares only the details you have agreed with each office that needs them."
+  description="A transfer waits in the backlog, two entries claim the same parcel, and the valuation office and the notaries work from a spreadsheet your staff exported last quarter. Registry Stack gives your office one register of the assets it records and the rights over them, and shares only the details you have agreed with each office that needs them."
 >
   <SolutionExample
     eyebrow="One example: a valuation office reads parcel rights"
@@ -19,7 +20,7 @@ const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
     intro="A property valuation office prepares the valuation roll and needs to know who holds each parcel and in what share. The cadastre agrees to provide those details and nothing else."
     items={[
       { term: 'Who asks', body: 'The valuation office, for the parcels in the roll it is preparing.' },
-      { term: 'What the authority wants', body: 'The valuation office reads the holder, the share, and the period of the right for each parcel from your register, rather than from a spreadsheet sent by email.' },
+      { term: 'What the office wants', body: 'The valuation office reads the holder, the share, and the period of the right for each parcel from your register, rather than from a spreadsheet sent by email.' },
       { term: 'What happens', body: 'Registry Relay gives the valuation office the details your office agreed to share. A request for anything else is refused, and every request is kept with who asked and when.' },
       { term: 'What stays with your office', body: 'Everything the valuation office has not agreed to receive, and the rest of your register, stays with your office.' },
     ]}
@@ -29,11 +30,11 @@ const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="land-change-title">Other offices read the register, and nobody edits its past.</h2>
+        <h2 id="land-change-title">One entry per parcel, and nobody re-types the register into a spreadsheet.</h2>
       </div>
       <div class="product-facts">
         <article><h3>Each right shows who holds it, in what share, and since when</h3><p>A parcel, building, vehicle, or vessel is entered once, and each right, holder, or keeper is recorded against it for a period. Shares in a parcel or a ship are kept as shares, so a valuation or tax office reads them as your register holds them.</p></article>
-        <article><h3>Holders’ details go only to the people you name</h3><p>Your office decides which entries anyone may see, which stay with your team, and which only named roles may look up, and for what reason. Vehicle keepers, vessel owners, and parcel holders start in that last group; public transport stops are open to all.</p></article>
+        <article><h3>Your law decides what is public</h3><p>Your office sets which entries are public under your law and which only named roles may look up. The starters begin with holders restricted, and your team opens what your law opens; public transport stops begin open to all.</p></article>
         <article><h3>A new valuation is a new entry</h3><p>In most of these registers an entry is recorded once and not edited afterwards. A new valuation or a new right is added beside the old one, so the register shows what was recorded and when.</p></article>
       </div>
     </div>
@@ -42,6 +43,7 @@ const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
     area={area}
     heading="Start from an asset register like yours."
     intro="A starter sets out what a register of this kind holds and who may change it, for one common register of land, buildings, vehicles, or places. Your team takes the closest one and adapts it to its own law."
+    featuredNote="The cadastre starter records the parcel right; sharing holder and share with a valuation office is set up in Registry Relay."
   />
   <SolutionFit
     area={area}
@@ -67,7 +69,7 @@ const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
       },
       {
         q: 'Can a valuation office read our register without an account on our system?',
-        a: 'Its service reads the details your office has agreed to share with it, such as holder and share, and nothing else. Your office decides which services may read, and which details.',
+        a: 'Two cases. A member of the public or a notary looking up one parcel uses the public register your application publishes under your law. A service that needs holder details as part of its own process, such as the valuation office preparing its roll, reads the details your office has agreed to share with it, such as holder and share, and nothing else. Your office decides which services may read, and which details.',
         link: { href: '/products/registry-relay/', label: 'How Registry Relay shares agreed details' },
       },
       {
@@ -77,7 +79,7 @@ const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
+        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
         link: { href: '/starters/#land-property-and-assets', label: 'Browse the land, property and vehicle starters' },
       },
       {
@@ -85,7 +87,16 @@ const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
         a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
+      ...sharedFamilyFaq,
     ]}
   />
-  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+  <DocsHandoff
+    eyebrow="Work with us"
+    heading="Talk it through with the people who build it."
+    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    primaryLabel="Ask a question"
+    primaryHref={askQuestionHref(area.name)}
+    emphasis="docs"
+    note={`Or write to ${contactEmail}.`}
+  />
 </Solution>

@@ -5,7 +5,8 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
-import { solutionAreas } from '../../data/solutions';
+import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
+import { askQuestionHref, contactEmail } from '../../data/contact';
 const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
 ---
 <Solution
@@ -76,7 +77,7 @@ const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
+        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
         link: { href: '/starters/#reference-registers', label: 'Browse the reference register starters' },
       },
       {
@@ -84,7 +85,16 @@ const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
         a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
+      ...sharedFamilyFaq,
     ]}
   />
-  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+  <DocsHandoff
+    eyebrow="Work with us"
+    heading="Talk it through with the people who build it."
+    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    primaryLabel="Ask a question"
+    primaryHref={askQuestionHref(area.name)}
+    emphasis="docs"
+    note={`Or write to ${contactEmail}.`}
+  />
 </Solution>

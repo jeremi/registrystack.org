@@ -5,13 +5,14 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
-import { solutionAreas } from '../../data/solutions';
+import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
+import { askQuestionHref, contactEmail } from '../../data/contact';
 const area = solutionAreas.find((a) => a.key === 'business-and-tax')!;
 ---
 <Solution
   area={area}
   heading="Keep the register of businesses that other services check."
-  description="Procurement teams, banks, and licensing offices ask your registry whether a business is registered and active, and each answer means someone pulling the file. Registry Stack gives your office one register of the businesses and taxpayers it has registered, and lets other services check a registration without seeing the file."
+  description="Annual filings arrive faster than they are entered, a company with three registrations has three files, and the procurement teams and banks that need to know whether a business is active ask your staff instead of your register. Registry Stack gives your office one register of the businesses and taxpayers it has registered, and lets other services check a registration without seeing the file."
 >
   <SolutionExample
     eyebrow="One example: a supplier registration check"
@@ -19,7 +20,7 @@ const area = solutionAreas.find((a) => a.key === 'business-and-tax')!;
     intro="A government procurement team needs to know whether a supplier is actively registered before it processes the supplier’s tender. Your register can answer that question without sending the supplier’s file."
     items={[
       { term: 'Who asks', body: 'The procurement team, for the supplier named on the tender.' },
-      { term: 'What the authority wants', body: 'The procurement team learns whether the supplier is active or inactive, in an answer it can check came from your register, and learns nothing else.' },
+      { term: 'What the office wants', body: 'The procurement team learns whether the supplier is active or inactive, in an answer it can check came from your register, and learns nothing else.' },
       { term: 'What happens', body: 'The procurement team asks Evidence Gateway. The gateway confirms your office has agreed this team may ask, reads the status from your register, and returns the answer. The procurement team decides what it means for the tender.' },
       { term: 'What stays with your office', body: 'Filing history, addresses, and ownership details stay in your register.' },
     ]}
@@ -29,11 +30,11 @@ const area = solutionAreas.find((a) => a.key === 'business-and-tax')!;
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="business-change-title">Fewer requests for extracts, and a register that shows what changed.</h2>
+        <h2 id="business-change-title">One entry per business, and extracts your staff stop preparing by hand.</h2>
       </div>
       <div class="product-facts">
         <article><h3>A business is entered once, however many registrations it holds</h3><p>The business is one entry. Its company registration, its tax registration, and each authorization it holds are linked to it, so your staff look up one business and see everything registered against it.</p></article>
-        <article><h3>Owners and accounts are looked up only by those you name</h3><p>Who owns a business, which accounts it holds, and what it has borrowed are personal and financial information. Your office names who may look them up and under which legal duty, and they look up a business they already know; nobody pages through the list. A credit register records what was lent, not each repayment.</p></article>
+        <article><h3>Owners are looked up only by those you name</h3><p>Who owns a business is personal information. Your office names who may look owners up and under which legal duty, and they look up a business they already know; nobody pages through the list.</p></article>
         <article><h3>A filing keeps its history from receipt to publication</h3><p>Your team records a filing on the day it arrives, then records its review and its publication as each is decided. The earlier status stays visible, so the register shows when a filing was received and when it was published.</p></article>
       </div>
     </div>
@@ -53,6 +54,7 @@ const area = solutionAreas.find((a) => a.key === 'business-and-tax')!;
     }}
     extra={[
       { term: 'Your registration process keeps deciding', body: 'Applications, fees, and the decision to register a business or a taxpayer stay in the systems that handle them today. The register records a registration once your office has decided it.' },
+      { term: 'If your office is a central bank or financial supervisor', body: 'The bank account, credit and collateral starters follow the same rules, with lookups limited to named roles and no balances or repayments recorded.' },
     ]}
     muted
   >
@@ -62,12 +64,12 @@ const area = solutionAreas.find((a) => a.key === 'business-and-tax')!;
     items={[
       {
         q: 'Does this replace our business registration system?',
-        a: 'No. The system that takes applications, collects fees, and issues the registration stays where it is and records the result in the register. If your register already works, other services can check it where it is.',
+        a: 'It depends on what holds your register today. If a registration system takes applications, collects fees and issues the registration, that system stays and records the result in the register. If your register is a spreadsheet, or lives inside an application you are retiring, Base Registry Engine can be the register, with your team planning the migration of the existing entries.',
         link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
       },
       {
         q: 'Can a bank check a business is registered without an account on our system?',
-        a: 'The bank’s service asks your register a question you have agreed to answer, such as whether a business is actively registered, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
+        a: 'Two cases. A member of the public or a bank looking up one business uses the public register your application publishes under your law. A service that needs to check businesses as part of its own process asks your register a question you have agreed to answer, such as whether a business is actively registered, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
         link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
       },
       {
@@ -77,15 +79,28 @@ const area = solutionAreas.find((a) => a.key === 'business-and-tax')!;
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
+        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
         link: { href: '/starters/#business-and-tax', label: 'Browse the business and tax starters' },
+      },
+      {
+        q: 'Can we still sell certificates and extracts?',
+        a: 'Yes. The register holds the entries; what your office charges for, and how it issues a certificate, stays with your office and its application.',
       },
       {
         q: 'Where does our technical team start?',
         a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
+      ...sharedFamilyFaq,
     ]}
   />
-  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+  <DocsHandoff
+    eyebrow="Work with us"
+    heading="Talk it through with the people who build it."
+    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    primaryLabel="Ask a question"
+    primaryHref={askQuestionHref(area.name)}
+    emphasis="docs"
+    note={`Or write to ${contactEmail}.`}
+  />
 </Solution>

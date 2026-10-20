@@ -5,6 +5,7 @@ import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas } from '../../data/solutions';
+import { askQuestionHref, contactEmail } from '../../data/contact';
 import { products } from '../../data/products';
 const area = solutionAreas.find((a) => a.key === 'check-a-fact')!;
 const evidence = products.find((p) => p.key === 'evidence-gateway')!;
@@ -38,25 +39,12 @@ const relay = products.find((p) => p.key === 'protected-registry-apis')!;
       </div>
     </div>
   </section>
-  <section class="section section-muted" aria-labelledby="check-ai-title">
-    <div class="section-inner product-fit">
-      <div class="section-heading compact">
-        <p class="eyebrow">AI-assisted services</p>
-        <h2 id="check-ai-title">An AI-assisted service asks under the same rules.</h2>
-      </div>
-      <div>
-        <p>Some services use AI to guide an applicant or a caseworker. Such a service asks your register the way any other service does: it may ask only the questions agreed with it, and it gets only the answer.</p>
-        <p>The choice is the same as for any other service: send copies of the records, or answer the question. A housing benefit service could receive each applicant’s income records and let its application work them out. Or your office agrees one question, such as whether annual net income is below the benefit threshold, and your register returns that answer. If your register holds gross monthly income and the rule needs net annual income, the agreed question carries that conversion, and the AI-assisted service never holds the record.</p>
-        <p>The service that asks stays responsible for what it does with the answer, including decisions about eligibility and approvals, and how it treats the people it asks about.</p>
-      </div>
-    </div>
-  </section>
   <SolutionFit
     area={area}
     heading="Give a service a checked answer, or the fields it needs."
     jobs={{
       'evidence-gateway': 'Use it when the other service needs a yes or no, or a status, such as whether a person is an adult or a business is registered: it gets that answer and can check it came from your register and was not altered.',
-      'protected-registry-apis': 'Use it when the other service has to work with the values themselves, such as a business’s legal name and legal form, or a farmer’s registered status and farm size: it gets the fields your office agreed, and no others.',
+      'protected-registry-apis': 'Use it when the other service has to work with the values themselves, such as a business’s legal name and legal form, or whether a farmer is registered and for which farm: it gets the fields your office agreed, and no others.',
     }}
     extra={[
       { term: 'Your register stays where it is', body: 'Both work from a register your office already runs, and neither requires Base Registry Engine. If you use both, your technical team sets up the connection to your register.' },
@@ -82,6 +70,10 @@ const relay = products.find((p) => p.key === 'protected-registry-apis')!;
         a: 'No. The agreement still says what a service may know and why. The questions and fields your office sets up follow that agreement, and a request outside it is refused and kept on record.',
       },
       {
+        q: 'What if the asking service uses AI?',
+        a: 'It asks your register the way any other service does: only the questions agreed with it, and it gets only the answer. A housing benefit service could receive each applicant’s income records for its AI to work through, or your office can agree one question, such as whether annual net income is below the benefit threshold, and return only that answer. With the agreed question, the AI-assisted service never holds the record. The service that asks stays responsible for what it does with the answer, including eligibility decisions and how it treats the people it asks about.',
+      },
+      {
         q: 'Where does our technical team start?',
         a: `With the ${evidence.name} tutorial, which answers a yes-or-no question from sample data and checks the answer, on a laptop. If a service needs the values themselves, the ${relay.name} tutorial is the next step.`,
         link: { href: evidence.tutorialHref, label: evidence.tutorialLabel },
@@ -93,5 +85,13 @@ const relay = products.find((p) => p.key === 'protected-registry-apis')!;
       },
     ]}
   />
-  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team agrees the questions and connects the register." emphasis="pilot" />
+  <DocsHandoff
+    eyebrow="Work with us"
+    heading="Talk it through with the people who build it."
+    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    primaryLabel="Ask a question"
+    primaryHref={askQuestionHref(area.name)}
+    emphasis="docs"
+    note={`Or write to ${contactEmail}.`}
+  />
 </Solution>

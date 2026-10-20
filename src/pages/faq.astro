@@ -3,10 +3,11 @@ import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import DocsHandoff from '../components/DocsHandoff.astro';
+import { askQuestionHref, contactEmail } from '../data/contact';
 
 const pageTitle = 'FAQ | Registry Stack';
 const pageDescription =
-  'Answers about product fit, control of your records, self-service evaluation, and implementation and support.';
+  'Answers about which products and starters fit, control of your records, self-service evaluation, and implementation and support.';
 
 // Grouped so a reader can scan to their own concern. Each answer stays short and
 // links to the page that carries the depth, so the FAQ does not become a second
@@ -17,22 +18,38 @@ const groups = [
     "items": [
       {
         "q": "What does Registry Stack help us do?",
-        "a": "Base Registry Engine stores and manages records about people, households, organizations, assets, and more. Your applications can create, find, and update those records under your rules. Evidence Gateway lets approved services receive signed facts from a source your organization controls, without receiving its full records.",
+        "a": "Base Registry Engine holds the register: records about people, households, organizations, assets, and more, which your applications create, find, and update under your rules. Evidence Gateway lets approved services receive a signed answer from a register your organization controls, without receiving its full records. Registry Casework puts the changes that need an officer's decision in one queue. Registry Relay publishes selected fields from an existing register to approved services.",
         "link": {
-          "label": "Find the solutions for the register you keep",
+          "label": "Explore the product choices",
+          "href": "/solutions/#products"
+        }
+      },
+      {
+        "q": "Which products do we need?",
+        "a": "Usually one to start. Base Registry Engine holds a register. Evidence Gateway answers a defined question about a register you already have. Registry Casework queues the changes an officer must decide. Registry Relay publishes selected fields to approved services. Each runs on its own; the solution page for your register says which ones most offices of that kind start with.",
+        "link": {
+          "label": "Find your register",
           "href": "/solutions/"
         }
       },
       {
-        "q": "Do we need both main products?",
-        "a": "No. Base Registry Engine stores and maintains your organization's records. Evidence Gateway can answer questions using an existing source. Each can be used independently. If you choose to combine them, your technical team configures their connection.",
+        "q": "Which solution area am I in?",
+        "a": "Start from the kind of register your office keeps: licences, businesses and taxpayers, people and households, land, property and vehicles, agriculture and food, health and regulated products, or public bodies and reference lists. If your question is about checking facts between services or reviewing changes, those two areas apply to every kind of register.",
         "link": {
-          "label": "Explore the product choices",
-          "href": "/"
+          "label": "See the solution areas",
+          "href": "/solutions/"
         }
       },
       {
-        "q": "Can we keep our existing registry?",
+        "q": "Who is behind Registry Stack?",
+        "a": "Aubex Consulting LLC, based in San Francisco, builds and supports Registry Stack. The software is open source under Apache-2.0, and Aubex offers paid implementation pilots and support at published prices.",
+        "link": {
+          "label": "Read who does the work",
+          "href": "/pricing/#team"
+        }
+      },
+      {
+        "q": "Can we keep our existing register?",
         "a": "Yes. Evidence Gateway can use an existing source to answer configured questions, such as whether a supplier is actively registered. When a service needs selected fields instead, Registry Relay can provide access to data your team prepares from that source.",
         "link": {
           "label": "Explore Evidence Gateway",
@@ -78,7 +95,7 @@ const groups = [
       },
       {
         "q": "Does every new question mean a new integration project?",
-        "a": "No. The registry is connected once. Each further question a service asks is a configuration change: your team defines the answer, its source, and who may receive it, and reviews that definition before it goes live. The first connection carries the integration cost; later questions reuse it.",
+        "a": "No. The register is connected once. Each further question a service asks is a configuration change: your team defines the answer, its source, and who may receive it, and reviews that definition before it goes live. The first connection carries the integration cost; later questions reuse it.",
         "link": {
           "label": "Read how to define the question first",
           "href": "/blog/before-you-connect-a-registry-define-the-question/"
@@ -87,10 +104,39 @@ const groups = [
     ]
   },
   {
+    "heading": "Starters",
+    "items": [
+      {
+        "q": "What is a starter?",
+        "a": "A starting configuration for one common kind of register: the kinds of record it holds, the fields, and who may change what. Your team generates a project from it and adds what your register needs. A starter is a starting point, not a running registry, and does not show that the register is in use anywhere.",
+        "link": {
+          "label": "Browse the starters",
+          "href": "/starters/"
+        }
+      },
+      {
+        "q": "How do we get a starter?",
+        "a": "From the starter's page, by email. Someone on the Aubex team replies from contact@registrystack.org with the zip attached and its SHA-256 checksum, and says when to expect it. Nobody calls unless you ask, and we add you to no mailing list.",
+        "link": {
+          "label": "Choose a starter",
+          "href": "/starters/"
+        }
+      },
+      {
+        "q": "Why is it sent by email rather than downloaded?",
+        "a": "The starters repository is not yet public. Until it is, we send each starter as a zip on request. Each zip carries a checksum so your team can confirm it is the file we published.",
+        "link": {
+          "label": "Browse the starters",
+          "href": "/starters/"
+        }
+      }
+    ]
+  },
+  {
     "heading": "Evaluation and paid support",
     "items": [
       {
-        "q": "Is there a software license fee?",
+        "q": "Is there a software licence fee?",
         "a": "No. Registry Stack is Apache-2.0 open-source software. Your team provides the hosting, implementation, and operation. Self-service use is separate from paid delivery and private support.",
         "link": {
           "label": "Read the documentation",
@@ -111,6 +157,14 @@ const groups = [
         "link": {
           "label": "See implementation and support pricing",
           "href": "/pricing/"
+        }
+      },
+      {
+        "q": "Are the examples real?",
+        "a": "No. Every record, name and organization in the illustrations is fictional and labeled as such. We do not publish customer names or outcomes we cannot show.",
+        "link": {
+          "label": "See where the project stands",
+          "href": "/#project-status"
         }
       }
     ]
@@ -175,7 +229,14 @@ const faqSchema = {
     ))}
   </main>
 
-  <DocsHandoff />
+  <DocsHandoff
+    heading="Still have a question?"
+    body="Write to us and say which register you keep."
+    primaryLabel="Ask a question"
+    primaryHref={askQuestionHref()}
+    emphasis="docs"
+    note={contactEmail}
+  />
   <SiteFooter />
 </Base>
 

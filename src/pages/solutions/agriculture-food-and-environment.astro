@@ -5,21 +5,22 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
-import { solutionAreas } from '../../data/solutions';
+import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
+import { askQuestionHref, contactEmail } from '../../data/contact';
 const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environment')!;
 ---
 <Solution
   area={area}
   heading="Keep the registers of farms, animals, food businesses, and permits current."
-  description="Subsidy programmes, inspectors, and exporters ask your office whether a farm is registered or a permit is valid, and each answer means someone opens the file and copies it out. Registry Stack gives your office one register of the holdings, establishments, and permits it has recorded, and lets those services get the answer they need without seeing the rest of the file."
+  description="Subsidy season brings a registration drive, the same holding appears under two names, and the programme cannot tell which farmer is registered for which farm without asking your office. Registry Stack gives your office one register of the holdings, establishments, and permits it has recorded, and lets other services get the answer they need without seeing the rest of the file."
 >
   <SolutionExample
     eyebrow="One example: a subsidy programme checks a farm"
-    heading="Give a subsidy programme the farmer’s status and farm size."
-    intro="A subsidy programme needs a farmer’s registration status and the size of the farm before it can process a claim. Your office agrees to give it those two details and nothing else."
+    heading="Tell a subsidy programme whether a farmer is registered, and for which farm."
+    intro="A subsidy programme needs to know whether a farmer is registered, and for which farm, before it can process a claim. Your office agrees to give it those two details and nothing else."
     items={[
       { term: 'Who asks', body: 'The subsidy programme, for the farmer named on a claim.' },
-      { term: 'What the authority wants', body: 'The two details, such as registered and 2.5 hectares, from the register your office keeps, and no more.' },
+      { term: 'What the office wants', body: 'Whether the farmer is registered, and for which farm, from the register your office keeps, and no more.' },
       { term: 'What happens', body: 'The programme asks your register about the farmer and gets back those two details. A request for anything else is refused, and every request is kept with who asked and when.' },
       { term: 'What stays with your office', body: 'Plot coordinates, household members, crop history, and financial records stay in your register and are never sent.' },
     ]}
@@ -29,7 +30,7 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="agriculture-change-title">Fewer requests for the file, and a status history nobody has to rebuild.</h2>
+        <h2 id="agriculture-change-title">One entry per holding, and a status history nobody has to rebuild.</h2>
       </div>
       <div class="product-facts">
         <article><h3>Every permit is tied to the site it covers</h3><p>Each farm, food establishment, or site is recorded once, and every registration or permit your office issues is linked to it. When one food business runs two establishments, each has its own registration, and an inspector can see which one is current.</p></article>
@@ -42,6 +43,7 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
     area={area}
     heading="Start from an agriculture, food, or environment register like yours."
     intro="A starter sets out what a register of this kind holds and who may change it, for one common register of holdings, animals, establishments, or permits. Your team takes the closest one and adapts it to its own agriculture, food, or environmental law."
+    featuredNote="The farmer registry starter records the farm and the registration; the two details a programme reads are shared through Registry Relay, which the starter does not include."
   />
   <SolutionFit
     area={area}
@@ -49,7 +51,7 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
     jobs={{
       'base-registry': 'Holds the register of farms, animals, establishments, or permits, and every later change of status, under your rules for who may record what.',
       'evidence-gateway': 'Answers a yes-or-no question, such as whether a farmer is registered, without sending plot or household details.',
-      'protected-registry-apis': 'Gives a programme the few details it has agreed with your office, such as registered status and farm size, when a yes or no is not enough.',
+      'protected-registry-apis': 'Gives a programme the few details it has agreed with your office, such as registered status and the farm it is registered for, when a yes or no is not enough.',
     }}
     extra={[
       { term: 'Your office keeps deciding', body: 'Inspections, assessments, and the decision to register a farm or grant a permit stay in your own process. The register records the result; it does not decide who qualifies for a subsidy or who owns the land.' },
@@ -77,7 +79,7 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
+        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
         link: { href: '/starters/#agriculture-food-and-environment', label: 'Browse the agriculture, food and environment starters' },
       },
       {
@@ -85,7 +87,16 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
         a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
+      ...sharedFamilyFaq,
     ]}
   />
-  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+  <DocsHandoff
+    eyebrow="Work with us"
+    heading="Talk it through with the people who build it."
+    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    primaryLabel="Ask a question"
+    primaryHref={askQuestionHref(area.name)}
+    emphasis="docs"
+    note={`Or write to ${contactEmail}.`}
+  />
 </Solution>

@@ -5,13 +5,14 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
-import { solutionAreas } from '../../data/solutions';
+import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
+import { askQuestionHref, contactEmail } from '../../data/contact';
 const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')!;
 ---
 <Solution
   area={area}
   heading="Keep records about people current, and let programmes check them."
-  description="Benefit programmes, schools, and pension services ask your office about the people in your register, and each request means a copy of someone’s file or a phone call. Registry Stack gives your office one register of people and households, and lets a programme check the one fact it needs without seeing the person’s file."
+  description="The same household is registered in three programmes under three spellings, a correction made in one never reaches the others, and each programme asks your office for the file when it needs one answer. Registry Stack gives your office one register of people and households, and lets a programme check the one fact it needs without seeing the person’s file."
 >
   <SolutionExample
     eyebrow="One example: a school meal programme checks enrollment"
@@ -20,8 +21,8 @@ const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')
     items={[
       { term: 'Who asks', body: 'The school meal programme, for the household named on the application.' },
       { term: 'What the office wants', body: 'The programme learns whether the household is enrolled, as your social registry defines it, in an answer it can check came from your register, and learns nothing else.' },
-      { term: 'What happens', body: 'The programme asks Evidence Gateway. The gateway confirms your office has agreed this programme may ask, for this reason, reads the status from your registry, and returns the answer. The programme decides what it means for the application.' },
-      { term: 'What stays with your office', body: 'The household’s case file, income details, and payment history stay in your registry.' },
+      { term: 'What happens', body: 'The programme asks Evidence Gateway. The gateway confirms your office has agreed this programme may ask, for this reason, reads the status from your register, and returns the answer. The programme decides what it means for the application.' },
+      { term: 'What stays with your office', body: 'The household’s case file, income details, and payment history stay in your register.' },
     ]}
     note="The same register can support a local authority’s own work on residents: staff register people, link them to households, and update details as circumstances change."
     link={{ href: '/products/base-registry/#product-example', label: 'See resident and household records' }}
@@ -30,19 +31,21 @@ const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="people-change-title">Programmes get their answer, and the person’s file stays with you.</h2>
+        <h2 id="people-change-title">One entry per person, and the file never leaves your office.</h2>
       </div>
       <div class="product-facts">
         <article><h3>Each person is entered once and linked to their household</h3><p>A person is one entry, linked to the household they live in. When someone moves out, your team changes the link and the earlier household stays in the history. A citizenship already recognized and the person’s identifiers in other sectors are recorded with them in one step.</p></article>
         <article><h3>Nobody pages through the list of people</h3><p>Records about people are personal data. A service your office allows to look someone up finds a person it already knows; it cannot list the register. For voter rolls, learner records, and criminal records, that is how the register works from the start.</p></article>
         <article><h3>Every change shows who decided it and when</h3><p>Your register records what the responsible authority has decided, such as an enrollment or a final conviction. Each later change is kept in the person’s history with who made it.</p></article>
       </div>
+      <p class="product-note">If your office keeps a social registry of assessed households as well as the list of who is enrolled, start from the enrollment starter and add the household record your intake process needs.</p>
     </div>
   </section>
   <SolutionStarters
     area={area}
     heading="Start from a register of people like yours."
-    intro="A starter sets out what a register of this kind holds and who may change it, for one common register about people. Your team takes the closest one and adapts it to its own law."
+    intro="A starter sets out what a register of this kind holds and who may change it. This family has no single starter to open first: offices that keep a population register start from Population register; offices that run a benefit programme start from Social registry and programme enrollment. Take the closest one and adapt it."
+    featuredNote="The enrollment starter records the enrollment; the question a programme asks is set up in Evidence Gateway, which the starter does not include."
   />
   <SolutionFit
     area={area}
@@ -78,7 +81,7 @@ const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package your technical team requests from the starter’s page and opens to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere.',
+        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
         link: { href: '/starters/#people-and-social-programmes', label: 'Browse the starters for registers of people' },
       },
       {
@@ -86,7 +89,16 @@ const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')
         a: 'With the Base Registry Engine tutorial, which builds a small register on a laptop, and then with the starter closest to your register.',
         link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
+      ...sharedFamilyFaq,
     ]}
   />
-  <DocsHandoff eyebrow="Work with us" heading="Get help when you need it." body="Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the register." emphasis="pilot" primaryHref="/starters/" primaryLabel="Browse the starters" />
+  <DocsHandoff
+    eyebrow="Work with us"
+    heading="Talk it through with the people who build it."
+    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    primaryLabel="Ask a question"
+    primaryHref={askQuestionHref(area.name)}
+    emphasis="docs"
+    note={`Or write to ${contactEmail}.`}
+  />
 </Solution>

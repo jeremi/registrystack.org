@@ -1,21 +1,29 @@
 ---
 import { products } from '../data/products';
 import { solutionAreas } from '../data/solutions';
+import { askQuestionHref, contactEmail } from '../data/contact';
 const year = new Date().getFullYear();
 const repoHref = 'https://github.com/registrystack/registry-stack';
 const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 // The flagship products lead the column, as they do in the header menu.
 const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
-const columns = [
-  { title: 'Solutions', links: registerFamilies.map((area) => ({ href: area.slug, label: area.name })) },
+// An entry with `heading` instead of `href` is a sub-label over the entries
+// that follow it in the column.
+type FooterEntry = { href: string; label: string } | { heading: string };
+const columns: { title: string; links: FooterEntry[] }[] = [
+  { title: 'Solutions', links: [
+    ...registerFamilies.map((area) => ({ href: area.slug, label: area.name })),
+    { heading: 'Work every register shares' },
+    ...crossCutting.map((area) => ({ href: area.slug, label: area.name })),
+  ] },
   { title: 'Products', links: productEntries.map((product) => ({ href: product.href, label: product.name })) },
   { title: 'Explore', links: [
     { href: '/starters/', label: 'Starters' },
-    ...crossCutting.map((area) => ({ href: area.slug, label: area.name })),
     { href: '/blog/', label: 'Blog' },
     { href: '/security/', label: 'Security' },
     { href: '/faq/', label: 'FAQ' },
+    { href: '/pricing/#team', label: 'About' },
   ] },
   { title: 'For developers', links: [
     { href: '/#developers', label: 'Try a tutorial' },
@@ -26,6 +34,8 @@ const columns = [
     { href: '/pricing/', label: 'Implementation pilots' },
     { href: '/pricing/#support', label: 'Support contracts' },
     { href: '/pricing/#inquiry', label: 'Discuss your needs' },
+    { href: askQuestionHref(), label: 'Ask a question' },
+    { href: `mailto:${contactEmail}`, label: contactEmail },
   ] },
 ];
 ---
@@ -40,7 +50,9 @@ const columns = [
       {columns.map((column) => (
         <div class="footer-col">
           <p class="footer-col-title">{column.title}</p>
-          <ul>{column.links.map((link) => (<li><a href={link.href}>{link.label}</a></li>))}</ul>
+          <ul>{column.links.map((link) => 'heading' in link
+            ? <li class="footer-col-label">{link.heading}</li>
+            : <li><a href={link.href}>{link.label}</a></li>)}</ul>
         </div>
       ))}
     </nav>
