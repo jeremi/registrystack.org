@@ -367,13 +367,17 @@ for (const options of [
     }
     await followAnchor(page.locator('.hero .hero-actions a').first(), '#product-example', `${product.name} primary action`);
     await page.goto(new URL(product.path, url).href);
-    await followAnchor(page.locator('.hero .hero-actions a').nth(1), '#developers', `${product.name} developer action`);
+    await followAnchor(page.locator('.hero .hero-actions a').nth(1), '#fit', `${product.name} implementation fit action`);
     const tutorial = page.locator(`#developers a[href^="https://docs.registrystack.org${product.tutorial}"]`);
     if (!await tutorial.count() || !await tutorial.first().isVisible() ||
         new URL(await tutorial.first().getAttribute('href')).pathname !== product.tutorial) {
       fail(`${product.name} is missing its maintained tutorial`);
     }
     if (!await page.locator('.final-cta a[href="/pricing/"]').isVisible()) fail(`${product.name} is missing its closing pricing path`);
+    const serviceInquiry = page.locator('.final-cta .button-primary');
+    if (!await serviceInquiry.isVisible() || !isServiceMailto(await serviceInquiry.getAttribute('href'))) {
+      fail(`${product.name} is missing its service inquiry with needs-first fields`);
+    }
     const unnamedSections = await page.locator('main > section').evaluateAll((sections) => sections.filter((section) => {
       if (section.getAttribute('aria-label')?.trim()) return false;
       const labels = section.getAttribute('aria-labelledby')?.split(/\s+/) ?? [];

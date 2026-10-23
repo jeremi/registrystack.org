@@ -10,7 +10,7 @@ export const products = [
   {
     key: 'base-registry', name: 'Base Registry Engine', solution: 'Base registry', shortName: 'Base Registry Engine', featured: true, menu: true,
     intent: 'Maintain records and their history',
-    description: 'Open-source software to build and run a base registry: define the records, control who may change them, keep a history, and serve other applications.',
+    description: 'Maintain your register, control access and keep a history of changes. Open-source software that connects to your public services.',
     href: '/products/base-registry/',
     tutorialHref: 'https://docs.registrystack.org/tutorials/first-breg/',
     tutorialLabel: 'Run the registry tutorial',
@@ -19,7 +19,7 @@ export const products = [
   {
     key: 'evidence-gateway', name: 'Evidence Gateway', solution: 'Evidence Gateway', shortName: 'Evidence', featured: true, menu: true,
     intent: 'Let authorized services check register information',
-    description: 'Give approved services a signed answer to a defined question from your register, without handing over the record. Open-source software.',
+    description: 'Let authorized services check information from your register. Return only the agreed answer, with a digital signature identifying the issuer.',
     href: '/products/evidence-gateway/',
     tutorialHref: 'https://docs.registrystack.org/tutorials/first-evidence-assertion/',
     tutorialLabel: 'Run the evidence tutorial',
@@ -28,11 +28,11 @@ export const products = [
   {
     key: 'casework', name: 'Registry Casework', solution: 'Casework', shortName: 'Casework', featured: false, menu: true,
     intent: 'Assign reviews and record staff decisions',
-    description: 'Assign requests to staff, track due dates and record their decisions. Open-source review software that connects to your register.',
+    description: 'Assign requests to staff, track due dates and record their decisions. Open-source review software that connects to your public services.',
     href: '/products/casework/',
     tutorialHref: 'https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/',
-    tutorialLabel: 'Pair a registry proposal with Casework',
-    firstResult: 'Pair a registry Proposal Action with a Casework review policy and bind Casework as its review authority.',
+    tutorialLabel: 'Read the review integration tutorial',
+    firstResult: 'Prepare and validate configuration for a proposed register change that requires staff review.',
   },
 ] as const;
 

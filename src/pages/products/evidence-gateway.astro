@@ -6,15 +6,15 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
 ---
 <Product
   product={product}
-  heading="Provide a limited answer from an authorized source."
-  description="Give approved services digitally signed answers from sources your organization maintains. Define what each answer means, what it may reveal, and who may receive it, while keeping the full source record in its source system."
+  heading="Let other services check information from your register."
+  description="A procurement service may need to confirm a supplier’s registration without receiving its full record. Evidence Gateway checks your register and returns the agreed information with a digital signature. Your institution decides which services may ask and what they can receive."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="evidence-example-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One example: a supplier registration check</p>
         <h2 id="evidence-example-title">Does this supplier have an active business registration?</h2>
-        <p>A government procurement service needs the answer before processing a supplier’s application. The business register can provide that status while keeping addresses, filing history, and other details out of the response.</p>
+        <p>A government procurement service needs to check a supplier’s registration before it processes an application. The business registration authority connects Evidence Gateway to its business register. The procurement service receives the registration status, without the address, filing history or other details.</p>
       </div>
       <EvidenceGatewayFlow />
       <p class="product-note">The digital signature lets the service verify that the expected issuer produced the answer and that the answer has not been altered. It does not prove that the source record is correct. The procurement service remains responsible for deciding what the answer means for the application.</p>
@@ -23,49 +23,41 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
   <section class="section" aria-labelledby="evidence-define-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">An answer both teams understand</p>
-        <h2 id="evidence-define-title">Agree the question, the source, and who may ask.</h2>
-        <p>An answer can confirm adult status, report registration status, or return a residence region. The office that keeps the register and the receiving services agree what each answer means. Evidence Gateway applies those definitions and the organization’s access rules to each request.</p>
+        <p class="eyebrow">Practical capabilities</p>
+        <h2 id="evidence-define-title">Define the question, its source, and who may ask.</h2>
+        <p>The office that maintains the register agrees each answer with the services that will use it. Evidence Gateway applies that definition and the institution’s access rules whenever a connected service asks the question.</p>
       </div>
       <div class="product-facts">
-        <article><h3>Define the answer and its source</h3><p>Choose the source information and how to derive the permitted answer. Return only the defined facts, such as a residence region without the street address, or adult status without a date of birth.</p></article>
-        <article><h3>Limit who may ask</h3><p>Authorize services for defined answers and agreed purposes. Evidence Gateway checks that permission before consulting the configured source and records the outcome of the request.</p></article>
-        <article><h3>Set a validity period</h3><p>Set how long an answer may be used. Your team maintains the source; the receiving service verifies the answer’s dates, expected issuer, and signature before use.</p></article>
+        <article><h3>Return only the information needed</h3><p>Define the answer from approved source information. Return a person’s region of residence without a street address, or confirm that they are 18 or older without returning their date of birth.</p></article>
+        <article><h3>Limit who may ask</h3><p>Authorize connected services for specific answers and purposes. Evidence Gateway checks that permission before reading the source and records the request outcome.</p></article>
+        <article><h3>Check the answer’s dates</h3><p>The answer states when Evidence Gateway made the check and when the answer expires. Those dates do not show when the source record was last updated. Your implementation also checks how up to date the source information is.</p></article>
       </div>
     </div>
   </section>
-  <section class="section section-muted" aria-labelledby="evidence-fit-title">
+  <section id="fit" class="section section-muted" aria-labelledby="evidence-fit-title">
     <div class="section-inner product-fit">
       <div class="section-heading compact">
         <p class="eyebrow">How it fits your organization</p>
-        <h2 id="evidence-fit-title">Keep maintaining the register where it is.</h2>
-        <p>Evidence Gateway can use an existing source. Your organization keeps ownership of its records, continues to maintain them in its current system, and decides which services may receive each answer.</p>
+        <h2 id="evidence-fit-title">Add information checks beside the register you already use.</h2>
+        <p>Evidence Gateway can read an existing source. Your organization keeps its records in the current system, maintains their quality, and decides which connected services may receive each answer.</p>
         <p>Using Evidence Gateway does not require <a href="/products/base-registry/">Base Registry Engine</a>. If you choose both, your technical team configures the connection between them.</p>
       </div>
       <dl>
-        <dt>Your office defines the answers</dt><dd>Agree what each fact means, its permitted uses, and the source responsible for the underlying information. The same source can support different defined answers for different services.</dd>
-        <dt>Your technical team connects the source</dt><dd>Your register is read through an interface your system offers that returns JSON, a read-only extract your team publishes and refreshes, or a Base Registry Engine register. Your team configures how Evidence Gateway reads it, checks requests, and signs answers, then operates the service and manages its access rules.</dd>
-        <dt>The receiving service makes its decision</dt><dd>Its team verifies the answer, decides how to use it alongside its own rules and other information, and remains responsible for that decision. Your organization remains responsible for the source records.</dd>
-        <dt>Verifiable credentials</dt><dd>Evidence Gateway can issue an answer as a verifiable credential. A separate delivery adapter can pass it to a compatible digital wallet. The implementation team tests how the wallet receives, stores and presents the credential, and how the receiving service checks it. <a href="/solutions/verifiable-credentials/">Explore the credential solution</a>.</dd>
+        <dt>Your institution defines each answer</dt><dd>Agree what the question and answer mean, which source provides the information, how recent that information must be, and which services may use it.</dd>
+        <dt>Choose who delivers the implementation</dt><dd>Aubex, another delivery partner, or your own team can connect the source and receiving services, configure access and signing, and test the complete exchange. Agree who will host, operate and support the service.</dd>
+        <dt>The receiving service owns its decision</dt><dd>Its team uses the answer alongside its own rules and other information. The answer does not decide eligibility or grant authority to change a record.</dd>
+        <dt>Let people share an issued credential</dt><dd>Evidence Gateway can also issue a digitally signed statement, called a verifiable credential, that a person can keep in a digital wallet. The implementation connects and tests a compatible wallet and a service that accepts it. Issued credentials do not update with the register; Registry Stack currently has no way to cancel one before it expires. <a href="/solutions/verifiable-credentials/">Explore verifiable credentials</a>.</dd>
       </dl>
     </div>
   </section>
   <section id="developers" class="section" aria-labelledby="evidence-developers-title">
-    <div class="section-inner product-fit">
+    <div class="section-inner">
       <div class="section-heading compact">
         <p class="eyebrow">For developers and implementers</p>
         <h2 id="evidence-developers-title">Request and verify your first signed answer.</h2>
-        <p>The introductory tutorial opens a predefined adult-status project, runs its synthetic source, requests the configured answer, and verifies the signed JWS response without returning the person’s name or date of birth.</p>
-        <p><a class="inline-cta" href={product.tutorialHref}>Run the adult-status tutorial →</a></p>
-        <a class="inline-cta" href="https://docs.registrystack.org/products/registry-evidence/">Read the product documentation →</a>
+        <p>The introductory tutorial requests and verifies an adult-status answer without returning the person’s name or date of birth. The <a href="https://docs.registrystack.org/products/registry-evidence/">product documentation</a> covers source connections and operation; the <a href="https://docs.registrystack.org/tutorials/return-a-governed-value/">defined-value tutorial</a> covers answers such as a residence region.</p>
+        <p><a class="inline-cta" href={product.tutorialHref}>{product.tutorialLabel} →</a></p>
       </div>
-      <dl>
-        <dt>Source connection</dt><dd>The tutorial supplies a local source. An institutional source is a fixed HTTP request that returns JSON, or a read-only SQLite extract your team refreshes; each needs a reviewed configuration describing the connection and how to derive the answer. A Base Registry Engine register has its own tutorial.</dd>
-        <dt>Answer and verification</dt><dd>The introductory tutorial covers a signed JWS response. The receiving service verifies the expected issuer, signature, request binding, and freshness. These checks establish origin and integrity, not whether the source information is factually correct. SD-JWT VC is a separate supported output format.</dd>
-        <dt>Wallet delivery profile</dt><dd>The separate Evidence OID4VCI adapter supports the project’s defined OpenID for Verifiable Credential Issuance profile for holder-bound credential output. This is bounded protocol support, not a claim that any chosen wallet can store or present the credential. Verify the intended wallet and verifier combination for the pilot.</dd>
-        <dt>When a service needs a value, not a yes or no</dt><dd>An answer can be one of a set of values your office declares, such as a residence region, and nothing outside that set. The <a href="https://docs.registrystack.org/tutorials/return-a-governed-value/">Return a governed value</a> tutorial shows how. A service that needs the records themselves reads the register through the access your office grants it.</dd>
-        <dt>Registry Relay</dt><dd>Registry Relay, which published selected fields from an existing register, was retired upstream on 3 October 2026 and receives no further releases or security fixes. Its <a href="https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/">decision record</a> explains why.</dd>
-      </dl>
     </div>
   </section>
 </Product>

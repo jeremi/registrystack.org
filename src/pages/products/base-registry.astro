@@ -6,14 +6,14 @@ const product = products.find((p) => p.key === 'base-registry')!;
 ---
 <Product
   product={product}
-  heading="Store and manage the records your services rely on."
-  description="Base Registry Engine holds the register your organization is responsible for: the records, who may change them, and the history of every change. Other applications create, find, and update records through it under your rules. A base registry, called a basisregistratie in the Netherlands and an authentic source in Belgium, is the agreed source for defined information about people, organizations, places, or assets."
+  heading="Maintain the records your public services rely on."
+  description="Base Registry Engine maintains the records a government institution is responsible for, such as people, businesses, licences, places, or assets. It applies the institution’s access rules, keeps a history of changes, and lets approved staff applications and online services work with the register."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="registry-lifecycle-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">From the first record to years of changes</p>
-        <h2 id="registry-lifecycle-title">Create, connect, and maintain your records.</h2>
+        <p class="eyebrow">One example: a population register</p>
+        <h2 id="registry-lifecycle-title">Maintain linked records as circumstances change.</h2>
         <p>A population registry office could use the engine for a register of residents and households. Staff register people, find existing records, and update details as circumstances change. The engine stores the information and its history; your application provides the screens.</p>
       </div>
       <figure class="record-example" aria-labelledby="record-example-caption">
@@ -34,62 +34,40 @@ const product = products.find((p) => p.key === 'base-registry')!;
   <section class="section" aria-labelledby="breg-records-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">Your records, your rules</p>
-        <h2 id="breg-records-title">A shared foundation for your applications.</h2>
-        <p>Define the register once, then use it across the applications that maintain and consult it. The engine applies the same configured rules to each request.</p>
+        <p class="eyebrow">Practical capabilities</p>
+        <h2 id="breg-records-title">Manage records under the same rules across your services.</h2>
+        <p>Your institution defines the information, relationships, and permissions once. Staff applications, online services, and connected systems then work with the register under those rules.</p>
       </div>
       <div class="product-facts">
-        <article><h3>Model the information you need</h3><p>Define record types, required fields, valid values, and relationships. Your register can hold several kinds of records together, such as people, households, and memberships.</p></article>
-        <article><h3>Control access and changes</h3><p>Decide which records and fields each role can read or change. Routine updates can be applied directly. When an Action requires review, the engine holds the proposed change and accepts a matching result from the configured external review authority. An authorized caller then applies an approved proposal. Related changes can be applied together so they stay consistent.</p></article>
-        <article><h3>Keep continuity over time</h3><p>Inspect earlier revisions and prevent an older edit from overwriting a newer change. As your needs evolve, update the record definitions through versioned configuration and planned data migrations.</p></article>
+        <article><h3>Define connected records</h3><p>Set the kinds of records the register holds, their required information, valid values, and relationships. A register can connect people to households, businesses to establishments, or professionals to licences.</p></article>
+        <article><h3>Control who may read and change them</h3><p>Give each staff role or connected service access to the records and fields it needs. Where staff approval is required, connect a review service such as Registry Casework. The register applies approved changes under your institution’s rules.</p></article>
+        <article><h3>Follow each record over time</h3><p>Keep earlier revisions so authorized staff can see what changed, and prevent an older edit from overwriting a newer one. Changes to the register’s structure or rules use reviewed configuration and, where needed, a planned data migration.</p></article>
       </div>
     </div>
   </section>
-  <section class="section section-muted" aria-labelledby="breg-duties-title">
-    <div class="section-inner product-fit">
-      <div class="section-heading compact">
-        <p class="eyebrow">Connect the capabilities your service needs</p>
-        <h2 id="breg-duties-title">Keep record management separate from review and information sharing.</h2>
-        <p>Base Registry Engine manages records and permitted changes. Evidence Gateway and Registry Casework have separate responsibilities and run independently. Add and connect them only when the service needs those capabilities.</p>
-      </div>
-      <dl>
-        <dt>Manage the source records</dt><dd>Base Registry Engine stores the records and their history and applies your rules for who may read or change them.</dd>
-        <dt>Provide a limited answer when a full record is unnecessary</dt><dd><a href="/products/evidence-gateway/">Evidence Gateway</a> can return a defined, digitally signed answer, such as an age check, without returning the full record. A service that needs records reads them through the access your organization grants.</dd>
-        <dt>Coordinate work that needs a person to decide</dt><dd><a href="/products/casework/">Registry Casework</a> owns the review policy and decision. Base Registry Engine holds the proposal, accepts only a result that matches it, and still requires an authorized caller to apply an approved change.</dd>
-        <dt>Review changes and refused requests</dt><dd>The engine records changes and refused requests made by authenticated callers, so an authorized reviewer can reconstruct what happened and which identity made the request. A request without a verified identity is rejected before it can add an entry to the registry audit journal.</dd>
-      </dl>
-    </div>
-  </section>
-  <section class="section" aria-labelledby="breg-fit-title">
+  <section id="fit" class="section section-muted" aria-labelledby="breg-fit-title">
     <div class="section-inner product-fit">
       <div class="section-heading compact">
         <p class="eyebrow">How it fits your organization</p>
-        <h2 id="breg-fit-title">Build your services around a register you control.</h2>
-        <p>Your organization owns the records and runs the engine and its database on infrastructure you control. Connect staff applications, public services, and other systems through the engine’s interface.</p>
-        <p>Use it to build a new register or move an existing register into a defined structure, with a planned migration of its records.</p>
+        <h2 id="breg-fit-title">Build a register that works with your existing services.</h2>
+        <p>Base Registry Engine maintains records behind staff applications and online services. Use it to build a new register or move existing records into a defined structure. An implementation combines the engine with the screens, identity service, and system connections the service needs.</p>
       </div>
       <dl>
-        <dt>Your team defines the register</dt><dd>Agree what the records mean, how they relate, and who may use them. Your technical team translates those decisions into the configuration that defines storage, validation, and access.</dd>
-        <dt>Your applications serve the people using it</dt><dd>Your team or delivery partner provides the screens, sign-in, and wider service workflows. The engine handles record storage and operations behind those applications.</dd>
-        <dt>Add the other products when needed</dt><dd>Each product runs on its own. Connect Evidence Gateway or Casework to the register when another service needs a fact or a person’s decision, and not before.</dd>
+        <dt>Your institution defines the register</dt><dd>Agree what each record means, how records relate, which changes are allowed, and who may read or change the information.</dd>
+        <dt>Choose who delivers the implementation</dt><dd>Aubex, another delivery partner, or your own team can configure the engine, provide the required screens, connect sign-in and other systems, and plan data migration. A written scope should agree hosting, operation, support, and handover.</dd>
+        <dt>Your operators run the register</dt><dd>Run the engine and its database on infrastructure your organization controls, with the backups, monitoring, access management, and change procedures your service requires.</dd>
+        <dt>Add information checks and staff reviews</dt><dd>Connect <a href="/products/evidence-gateway/">Evidence Gateway</a> when another service needs to check specific information, or <a href="/products/casework/">Registry Casework</a> when staff must review a request and record a decision.</dd>
       </dl>
     </div>
   </section>
-  <section id="developers" class="section section-muted" aria-labelledby="breg-developers-title">
-    <div class="section-inner product-fit">
+  <section id="developers" class="section" aria-labelledby="breg-developers-title">
+    <div class="section-inner">
       <div class="section-heading compact">
         <p class="eyebrow">For developers and implementers</p>
-        <h2 id="breg-developers-title">Create your first register and work with its records.</h2>
-        <p>The introductory tutorial creates a local contact registry. Add and read one contact, then confirm that a test caller from another jurisdiction cannot list it.</p>
-        <p><a class="inline-cta" href={product.tutorialHref}>Run the introductory tutorial →</a></p>
-        <p>To configure external review, pair a registry Proposal Action with a Casework review policy and bind Casework as the registry’s review authority. The tutorial checks that the two projects agree; it does not run a full approval and application journey.</p>
-        <p><a class="inline-cta" href="https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/">Pair a registry proposal with Casework →</a></p>
+        <h2 id="breg-developers-title">Build and inspect a small register.</h2>
+        <p>The introductory tutorial creates a local contact register, adds and reads one contact, and checks that another caller cannot list it. Continue with the <a href="https://docs.registrystack.org/explanation/configuration-defined-registry/">configuration explanation</a> and <a href="https://docs.registrystack.org/operate/breg/">operations documentation</a> when planning a real implementation.</p>
+        <p><a class="inline-cta" href={product.tutorialHref}>{product.tutorialLabel} →</a></p>
       </div>
-      <dl>
-        <dt>Database and application interface</dt><dd>A versioned model defines the PostgreSQL structure, validation, REST API, and OpenAPI description. Existing records require an explicit migration into the engine.</dd>
-        <dt>Changes that belong together</dt><dd>Configured actions can create or update several records in one transaction. Changes to the model are reviewed and tested, with a database migration where the structure changes.</dd>
-        <dt>Continue in the documentation</dt><dd><a href="https://docs.registrystack.org/explanation/configuration-defined-registry/">Read how a configuration-defined registry works</a> for the model, permissions, and application boundary. The tutorials provide their prerequisites and executable steps.</dd>
-      </dl>
     </div>
   </section>
 </Product>

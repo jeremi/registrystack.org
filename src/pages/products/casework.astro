@@ -6,65 +6,56 @@ const product = products.find((p) => p.key === 'casework')!;
 ---
 <Product
   product={product}
-  heading="Coordinate the work that needs a person to decide."
-  description="Corrections, disputes, and requests that another system cannot settle must be assigned, tracked against a due date, and decided. Registry Casework gives your teams one place to receive that work, claim it, record a decision, and show who did what and when. The system that owns the work keeps its own rules about what may change."
+  heading="Review requests and record decisions."
+  description="Government teams need to assign review requests, see who is responsible and when a decision is due, then record the outcome. Registry Casework manages that work and returns the decision to the service that requested the review."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="casework-example-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">One example: a licence scope correction in a register</p>
-        <h2 id="casework-example-title">Review a licence correction and decide the revised request.</h2>
-        <p>A licence holder asks to correct the scope of a licence. The licensing service sends the request for review. If information is missing, the service collects the revision and submits a new review. Each review has a clear owner, due time, and recorded decision.</p>
+        <p class="eyebrow">One example: a licence correction</p>
+        <h2 id="casework-example-title">Assign the request, track its due date, and record the decision.</h2>
+        <p>A licence holder reports that the professional register lists the wrong permitted activities. The licensing application receives the correction request and sends it for staff review in Registry Casework. If a certificate is missing, the licensing application collects it and submits a new review request. Each review has its own due date and history of staff actions.</p>
       </div>
       <CaseworkFlow />
-      <p class="product-note">Casework returns the review result to the service that requested it. The result does not grant permission to change the register. A separately authorized person or service applies an approved correction, and the register checks current permission before accepting it.</p>
+      <p class="product-note">An approval records the staff decision. Permission to change a register remains controlled by that register’s rules.</p>
     </div>
   </section>
   <section class="section" aria-labelledby="casework-inbox-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">One inbox for the work that needs a person</p>
-        <h2 id="casework-inbox-title">Know who holds each item, what is due, and who decided.</h2>
-        <p>Work arrives from a register, a case system, or another service that requests a review. Casework routes it to the agreed queue, and everyone with access sees the same picture: what is waiting, who is working on it, and when each item is due.</p>
+        <p class="eyebrow">Practical capabilities</p>
+        <h2 id="casework-inbox-title">See who is responsible, what is due, and what staff decided.</h2>
+        <p>Review requests can arrive from a register, a case system, or another service. Registry Casework places each request in the agreed queue and records its progress until staff reach a decision.</p>
       </div>
       <div class="product-facts">
-        <article><h3>Claim work and keep it visible</h3><p>An officer claims an item to work on it and releases it if they cannot continue. Colleagues see who holds it. Draft notes stay private to the officer until a decision is recorded.</p></article>
-        <article><h3>Request a revision, then review it separately</h3><p>When information is missing, the officer records that more information is required and closes the current review. The application service handles the applicant’s revision or replacement document and submits a new review with a new due time.</p></article>
-        <article><h3>Return the decision to the requesting service</h3><p>The requesting service retrieves the review result. If a change is approved, a person or service with separate authority applies it in the source system, which checks current permission and records the change.</p></article>
+        <article><h3>Assign work and take responsibility</h3><p>Send each kind of request to the right queue. An officer takes responsibility for a request and can release it if they cannot continue. Supervisors can reassign work when staffing changes.</p></article>
+        <article><h3>Track the time allowed</h3><p>Set the time allowed for each review step and the working-day calendar. Staff can see when a request is due. Registry Casework identifies when follow-up is due, and a connected service sends any email or SMS notices.</p></article>
+        <article><h3>Record and return the decision</h3><p>Record an approval, refusal, request for changes, or other configured outcome. The service that requested the review receives the result and takes the next step under its own rules.</p></article>
       </div>
     </div>
   </section>
-  <section class="section section-muted" aria-labelledby="casework-fit-title">
+  <section id="fit" class="section section-muted" aria-labelledby="casework-fit-title">
     <div class="section-inner product-fit">
       <div class="section-heading compact">
         <p class="eyebrow">How it fits your organization</p>
-        <h2 id="casework-fit-title">Manage review work alongside the source system.</h2>
-        <p>Casework holds the queue, the holder, due times, and review results, and offers them through an API. Staff screens can be integrated with an existing tool, built by your team or delivery partner, or included in a scoped implementation service. The system that owns the work keeps eligibility, permissions, and the records themselves.</p>
-        <p>Work reaches Casework in two ways. A source system can connect through an adapter that presents review work and permitted current context; <a href="/products/base-registry/">Base Registry Engine</a> ships with one, and another system needs an adapter written against the published contract. A service can also submit a review request through the API and follow its progress. Neither route gives Casework authority to change the source system.</p>
-        <p>When a Base Registry Engine Action requires review, the engine holds the proposal while an external review authority owns the review policy and decision. Casework can provide that authority for work that must be assigned to a person, tracked against a due date, and returned to the requesting service. The engine accepts only a result that matches the proposal, and a separately authorized caller applies an approved change.</p>
+        <h2 id="casework-fit-title">Add staff review to a service you already run.</h2>
+        <p>Registry Casework manages staff reviews. An implementation connects it to the screens, sign-in and existing service your staff use. It can accept review requests on its own or connect to proposed changes in Base Registry Engine. Connecting another register requires additional integration work.</p>
       </div>
       <dl>
-        <dt>Your team agrees the queues and targets</dt><dd>Decide which requests need a person to review, which queue receives each kind of work, the settlement target for each queue, and the working-day calendar that reminders and escalation steps follow. Each submitted review runs against its own target until it is settled.</dd>
-        <dt>Supervisors keep the caseload moving</dt><dd>See what each officer holds and for how long, reassign an item, move a caseload when someone is away, and review the reminders and escalations that are due. Casework calculates when they fall due. It does not watch decisions or send notices on its own; an authorized service must request any email or SMS delivery.</dd>
-        <dt>Administrators manage teams, not cases</dt><dd>Set up teams, the queues each team serves, and the holiday calendar. Administrator access covers the team directory only and does not open the content of any item.</dd>
+        <dt>Your institution defines the review</dt><dd>Decide which requests need staff review, which team receives each kind, which outcomes are allowed, and when the decision is due.</dd>
+        <dt>Choose who delivers the implementation</dt><dd>Aubex, another delivery partner, or your own team can provide or adapt staff screens, connect sign-in and the service that requests reviews, and test the complete process. Agree who will host, operate and support the service.</dd>
+        <dt>Keep control of record changes</dt><dd>Registry Casework returns the staff decision. The service that requested the review uses it under the rules for that service. Registry Casework does not change the register itself.</dd>
       </dl>
     </div>
   </section>
   <section id="developers" class="section" aria-labelledby="casework-developers-title">
-    <div class="section-inner product-fit">
+    <div class="section-inner">
       <div class="section-heading compact">
         <p class="eyebrow">For developers and implementers</p>
-        <h2 id="casework-developers-title">Pair a registry proposal with a Casework review policy.</h2>
-        <p>The introductory tutorial pairs a Base Registry Engine Proposal Action with a Casework policy, checks that their context contracts agree, and binds Casework as the registry’s review authority. It establishes the authoring and trust connection; it does not run a complete approval and application journey.</p>
-        <p><a class="inline-cta" href={product.tutorialHref}>Pair a registry proposal with Casework →</a></p>
-        <p>The configuration guide then walks through a starter project: declare queues, routing, and clock policies, test them against synthetic fixtures, and package the reviewed policy for deployment.</p>
-        <p><a class="inline-cta" href="https://docs.registrystack.org/configure/casework/">Configure queues, routing, and clocks →</a></p>
+        <h2 id="casework-developers-title">Prepare a proposed change for review.</h2>
+        <p>The introductory tutorial prepares and validates matching Base Registry Engine and Registry Casework configuration. It does not execute a review or apply a change. Continue with the <a href="https://docs.registrystack.org/configure/casework/">configuration guide</a> and <a href="https://docs.registrystack.org/operate/casework/">operations documentation</a> for implementation.</p>
+        <p><a class="inline-cta" href={product.tutorialHref}>{product.tutorialLabel} →</a></p>
       </div>
-      <dl>
-        <dt>Two sources of work</dt><dd>Casework presents work from a connected source system, which Base Registry Engine provides through its adapter, and submitted review requests that another service creates through the API. The source remains the authority on who may see an item and who may change it.</dd>
-        <dt>Interface, adapters, and clients</dt><dd>One HTTP API covers both kinds of work, with maintained Rust, Node.js, and Python clients. A source adapter implements the published contract for finding review work and providing permitted current context. The requesting service retrieves the terminal result. Applying that result is a separate source-system operation with a fresh authorization check.</dd>
-        <dt>Continue in the documentation</dt><dd><a href="https://docs.registrystack.org/operate/casework/">Run and operate Casework</a> for the database, identity, and audit requirements, and <a href="https://docs.registrystack.org/reference/apis/registry-casework/">read the API reference</a> for the exact operations, headers, and recovery responses.</dd>
-      </dl>
     </div>
   </section>
 </Product>

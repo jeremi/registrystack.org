@@ -271,9 +271,9 @@ for (const { key, file: page } of productPages) {
   if (!source.includes(`products.find((p) => p.key === '${key}')`)) {
     failures.push(page + ` must look up its product by key '${key}'`);
   }
-  if (!source.includes('id="product-example"') || !source.includes('id="developers"') ||
+  if (!source.includes('id="product-example"') || !source.includes('id="fit"') || !source.includes('id="developers"') ||
       !source.includes('href={product.tutorialHref}')) {
-    failures.push(page + ' is missing its example, developer section, or maintained tutorial');
+    failures.push(page + ' is missing its example, implementation fit, developer section, or maintained tutorial');
   }
 }
 // The former product pages under src/pages/solutions/ moved to /products/.
@@ -406,8 +406,8 @@ const productLayout = readSource('src/layouts/Product.astro');
 if (!productLayout.includes('product.name')) {
   failures.push('product layout title must use the product name');
 }
-if (!productLayout.includes('href="#product-example"') || !productLayout.includes('href="#developers"')) {
-  failures.push('product layout is missing its example or developer action');
+if (!productLayout.includes('href="#product-example"') || !productLayout.includes('href="#fit"')) {
+  failures.push('product layout is missing its example or implementation fit action');
 }
 const productClosing = productLayout.match(/<section class="final-cta"[\s\S]*?<\/section>/);
 const productContentIndex = productLayout.indexOf('<slot');

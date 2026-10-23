@@ -82,6 +82,14 @@ and tests the wallet and receiving service. Keep credential validity, source
 freshness and the receiving service's decision distinct; issuance alone does
 not establish a complete wallet service.
 
+Product pages follow the same buyer-first approach: describe the institutional
+task, show a concrete example, explain practical capabilities and describe how
+the product fits existing systems. Keep the technical-team handoff short and
+link to maintained tutorials. Protocol names, configuration contracts and
+command-line instructions belong in the documentation. Explain approvals,
+access, source freshness and implementation responsibilities in plain language
+where they affect the buyer's decision.
+
 ## Site implementation
 
 Solution areas and their starter membership live in `src/data/solutions.ts`.

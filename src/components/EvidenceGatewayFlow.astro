@@ -12,34 +12,34 @@ const sourceFields = [
 <figure class="evidence-flow" aria-labelledby="evidence-flow-title">
   <figcaption id="evidence-flow-title">Illustrative example with a fictional business registration</figcaption>
 
-  <section class="request-strip" aria-labelledby="request-title">
+  <section class="request-strip" aria-label="Request from the procurement service">
     <div class="request-origin">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="m3 8 9-5 9 5M4 9h16M5 20h14M7 10v7m5-7v7m5-7v7" />
       </svg>
       <p class="flow-label">Procurement service</p>
     </div>
-    <h3 id="request-title">Is this business actively registered?</h3>
+    <h3 id="request-title">Does this supplier have an active business registration?</h3>
     <span class="request-reference">A-1042</span>
   </section>
 
   <div class="request-path">
     <section class="source-step" aria-labelledby="evidence-source-title">
       <div class="panel-heading">
-        <p class="flow-label">Kept by the business registry</p>
+        <p class="flow-label">Business register</p>
         <h3 id="evidence-source-title">Source record</h3>
       </div>
       <RecordCard recordType="Business registration" recordId="A-1042" icon="business" fields={sourceFields} />
-      <p class="source-note">The registry continues to maintain these fields.</p>
+      <p class="source-note">The registration authority continues to maintain the record.</p>
     </section>
 
     <section class="authority-step" aria-labelledby="authority-title">
       <p class="flow-label">Evidence Gateway</p>
-      <h3 id="authority-title">A defined answer</h3>
+      <h3 id="authority-title">Check registration status</h3>
       <svg class="evidence-arrow" viewBox="0 0 120 32" fill="none" aria-hidden="true">
         <path d="M1 16h114m-11-11 11 11-11 11" />
       </svg>
-      <p>Checks permission.<br />Derives the configured status and signs the answer.</p>
+      <p>Checks whether the procurement service may ask.<br />Reads the source and returns a signed answer about registration status.</p>
     </section>
 
     <section class="answer-step" aria-labelledby="answer-title">
@@ -47,13 +47,13 @@ const sourceFields = [
         <p class="flow-label">Returned to the service</p>
         <h3 id="answer-title">Digitally signed answer</h3>
       </div>
-      <SignedAnswer fieldLabel="Registration status" value="Active" recipient="Procurement service" issuer="Business registry" />
-      <p class="verification-note">The service checks the issuer, signature, and validity dates before use.</p>
+      <SignedAnswer fieldLabel="Registration status" value="Active" recipient="Procurement service" issuer="Business registration authority" />
+      <p class="verification-note">The procurement service verifies the answer before using it.</p>
     </section>
   </div>
 
   <div class="flow-caption">
-    <p><strong>Kept at source</strong> Address, filing history, and other source fields.</p>
+    <p><strong>Not returned to the procurement service</strong> Address, filing history, and other source fields.</p>
     <p><strong>Audit</strong> The request and its outcome are recorded.</p>
   </div>
 </figure>

@@ -3,13 +3,13 @@ import RecordCard from './RecordCard.astro';
 
 const requestFields = [
   { label: 'Licence', value: 'LIC-4471' },
-  { label: 'Requested change', value: 'Scope of practice' },
+  { label: 'Requested change', value: 'Correct recorded activities' },
   { label: 'Submitted by', value: 'Licence holder' },
   { label: 'Received', value: 'Tuesday 09:14' },
 ];
 const licenceFields = [
-  { label: 'Scope of practice', value: 'Corrected' },
-  { label: 'Changed by', value: 'Licensing service' },
+  { label: 'Permitted activities', value: 'Corrected' },
+  { label: 'Changed by', value: 'Licensing application' },
   { label: 'Applied', value: 'Wednesday 10:02' },
   { label: 'Revision', value: '12' },
 ];
@@ -18,31 +18,31 @@ const licenceFields = [
 <figure class="casework-flow" aria-labelledby="casework-flow-title">
   <div class="flow-intro">
     <p class="flow-kicker">An illustrative correction request</p>
-    <h3 id="casework-flow-title">A reviewer decides. A separately authorized service applies an approved change.</h3>
+    <h3 id="casework-flow-title">Staff review the request. The licensing application updates the professional register after approval.</h3>
   </div>
 
   <div class="work-journey" role="group" aria-label="Fictional licence correction moving from request to inbox to applied change">
     <section class="request-panel" aria-labelledby="request-panel-title">
       <div class="panel-heading">
-        <p class="panel-label">Professional register</p>
+        <p class="panel-label">Licensing application</p>
         <h4 id="request-panel-title">Correction request</h4>
       </div>
       <RecordCard recordType="Correction request" recordId="REQ-3106" icon="data" fields={requestFields} />
-      <p class="panel-note">The register keeps the licence record and decides who may change it.</p>
+      <p class="panel-note">The licensing application collects the request and supporting documents.</p>
     </section>
 
     <section class="inbox-panel" aria-labelledby="inbox-panel-title">
       <div class="panel-heading">
         <p class="panel-label">Registry Casework</p>
-        <h4 id="inbox-panel-title">Queue: Licence corrections</h4>
+        <h4 id="inbox-panel-title">Licence correction reviews</h4>
       </div>
       <ol class="item-history">
-        <li><strong>First review submitted</strong><span>Routed to Licence corrections with its own due time.</span></li>
-        <li><strong>Changes requested</strong><span>The reviewer records that a certificate is missing, which settles this review.</span></li>
-        <li><strong>Application revised</strong><span>The licensing service collects the replacement document and submits a new review.</span></li>
-        <li><strong>Revised request approved</strong><span>A reviewer records the decision on the new review, which has its own due time.</span></li>
+        <li><strong>Request sent for review</strong><span>The request enters the licence corrections queue with a due date.</span></li>
+        <li><strong>Missing certificate identified</strong><span>The reviewer asks for the certificate. This completes the first review.</span></li>
+        <li><strong>Certificate provided</strong><span>The licensing application collects the certificate and submits a new review request.</span></li>
+        <li><strong>Revised request approved</strong><span>A reviewer records the approval. This review has its own due date.</span></li>
       </ol>
-      <p class="panel-note">Supervisors see who holds each item and for how long.</p>
+      <p class="panel-note">Supervisors can see who is responsible for each review and when it is due.</p>
     </section>
 
     <section class="register-panel" aria-labelledby="register-panel-title">
@@ -51,21 +51,21 @@ const licenceFields = [
         <h4 id="register-panel-title">Change applied</h4>
       </div>
       <div class="applied-record">
-        <p class="applied-label"><span aria-hidden="true">↳</span> Applied by the licensing service</p>
+        <p class="applied-label"><span aria-hidden="true">↳</span> Updated by the licensing application</p>
         <RecordCard recordType="Licence record" recordId="LIC-4471" icon="person" fields={licenceFields} />
       </div>
-      <p class="panel-note">The licensing service retrieves the result, checks current permission, and applies the change separately.</p>
+      <p class="panel-note">The licensing application asks the professional register to apply the approved correction. The register checks permission before accepting the change.</p>
     </section>
 
     <div class="audit-slip">
       <svg class="audit-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h4" />
       </svg>
-      <p><strong>Review history</strong> When each review was submitted, assigned, and settled. The register records the separate application of the approved change.</p>
+      <p><strong>Review history</strong> When each review was submitted, assigned and completed, and who made the decision. The register keeps the history of record changes.</p>
     </div>
   </div>
 
-  <figcaption>Fictional licence data. The application service manages revisions, Casework records each review, and the register controls the final change.</figcaption>
+  <figcaption>Fictional licence data. In this example, the licensing application submits the approved correction to the professional register. Registry Casework records each staff review.</figcaption>
 </figure>
 
 <style>
