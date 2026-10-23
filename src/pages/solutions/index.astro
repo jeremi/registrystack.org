@@ -57,11 +57,11 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
     <section id="services" class="section section-muted" aria-labelledby="shared-work-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">Checks and staff reviews</p>
+          <p class="eyebrow">Checks, staff reviews and credentials</p>
           <h2 id="shared-work-title">Improve a service you already run.</h2>
           <p>Use Registry Stack with the registers and other software your institution already uses.</p>
         </div>
-        <ul class="solution-area-grid solution-area-pair">
+        <ul class="solution-area-grid">
           {crossCutting.map((area) => (
             <li>
               <a href={area.slug}>
@@ -109,7 +109,6 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
 
 <style>
   .solution-area-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; list-style: none; margin: 0; padding: 0; }
-  .solution-area-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .solution-product-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .solution-area-grid li { border-top: 1px solid #c9d0c5; }
   .solution-area-grid a { display: grid; gap: 4px; padding: 18px 0 20px; }
@@ -124,6 +123,6 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
     .solution-area-grid, .solution-product-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 620px) {
-    .solution-area-grid, .solution-area-pair, .solution-product-row { grid-template-columns: 1fr; }
+    .solution-area-grid, .solution-product-row { grid-template-columns: 1fr; }
   }
 </style>

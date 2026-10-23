@@ -1,6 +1,6 @@
 // The solution areas the site is organized by. A register family groups the
-// starters a reader would recognize as the same kind of work; the two
-// cross-cutting areas describe optional checks and reviews used across services.
+// starters a reader would recognize as the same kind of work; cross-cutting
+// areas describe capabilities that can be used across services.
 //
 // `starters` lists the ids from the published starters catalogue
 // (src/data/starters.json). Every active starter belongs to exactly one
@@ -62,7 +62,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/business-and-tax/',
     name: 'Business, tax and finance registers',
     pageTitle: 'Business and tax register software',
-    intent: 'Register businesses and changes, then support permitted checks',
+    intent: 'Record business registrations and changes, and let approved services check their status',
     kind: 'register-family',
     starters: [
       'bank-account-register',
@@ -86,15 +86,15 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'business-register',
     audience: 'For company registrars, tax administrations, customs and financial supervisors.',
-    description: 'Register businesses, taxpayers, suppliers and filings, review changes and provide permitted checks to connected services.',
+    description: 'Record business and taxpayer registrations, review changes and let approved services check registration status.',
     products: ['base-registry', 'evidence-gateway'],
   },
   {
     key: 'people-and-social-programmes',
     slug: '/solutions/people-and-social-programmes/',
     name: 'People, households and social programmes',
-    pageTitle: 'Population and social registry software',
-    intent: 'Maintain people and household records for public programmes',
+    pageTitle: 'People, population and programme register software',
+    intent: 'Maintain identity, household, enrollment and status records for public services',
     kind: 'register-family',
     starters: [
       'alerts-watchlist',
@@ -112,8 +112,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'voter-registration',
     ],
     openFirst: ['population-register', 'social-registry'],
-    audience: 'For population registries, social protection ministries and civil registration offices.',
-    description: 'Maintain people and household records, record corrections and let programmes check a permitted fact without receiving a file.',
+    audience: 'For population and civil registration offices, social protection ministries, education, immigration and electoral authorities.',
+    description: 'Maintain people, identity, household, enrollment and status records. Review corrections and let authorized services check specific information.',
     products: ['base-registry', 'evidence-gateway', 'casework'],
   },
   {
@@ -121,7 +121,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/land-property-and-assets/',
     name: 'Land, property, vehicles and places',
     pageTitle: 'Land, property and vehicle register software',
-    intent: 'Maintain accountable records of assets, relationships and changes',
+    intent: 'Record assets, their holders and rights, and the history of changes',
     kind: 'register-family',
     starters: [
       'address-building-register',
@@ -142,7 +142,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'land-parcels',
     audience: 'For cadastres, land registries, vehicle and vessel registries.',
-    description: 'Maintain accountable records of parcels, buildings, vehicles, vessels and the relationships or rights recorded against them.',
+    description: 'Maintain records of parcels, buildings, vehicles, vessels and their holders or rights, with a history of changes.',
     products: ['base-registry'],
   },
   {
@@ -172,7 +172,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'farmer-registry',
     audience: 'For agriculture ministries, veterinary and food safety authorities and environment agencies.',
-    description: 'Register producers, sites, food businesses, permits and natural resources, with traceable changes and controlled sharing.',
+    description: 'Register producers, sites, food businesses, permits and natural resources. Record changes and let approved services check their status.',
     products: ['base-registry', 'evidence-gateway'],
   },
   {
@@ -194,7 +194,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'health-facilities',
     audience: 'For health facility registrars, medicines and device regulators and radiation protection authorities.',
-    description: 'Maintain facility, trial, device, operator and hazard records, including status changes and permitted checks by connected services.',
+    description: 'Maintain facility, trial, device, operator and hazard records. Record decisions and let approved services check their status.',
     products: ['base-registry', 'evidence-gateway'],
   },
   {
@@ -241,6 +241,18 @@ export const solutionAreas: readonly SolutionArea[] = [
     description: 'Assign requests to staff, track due dates and record decisions. Only authorized staff or systems can apply the approved change.',
     products: ['casework', 'base-registry'],
   },
+  {
+    key: 'verifiable-credentials',
+    slug: '/solutions/verifiable-credentials/',
+    name: 'Issue verifiable credentials',
+    pageTitle: 'Verifiable credentials from government registers',
+    intent: 'Issue a digitally signed statement, such as licence status, to a compatible wallet',
+    example: 'For example, a professional council can issue a credential containing licence status without including the licence history.',
+    kind: 'cross-cutting',
+    starters: [],
+    description: 'Issue verifiable credentials from register information. Connect a compatible wallet and receiving service as part of your implementation.',
+    products: ['evidence-gateway'],
+  },
 ] as const;
 
 // Questions every register family page asks after its own, before the
@@ -248,7 +260,7 @@ export const solutionAreas: readonly SolutionArea[] = [
 export const sharedFamilyFaq: readonly { q: string; a: string; link?: { href: string; label: string } }[] = [
   {
     q: 'What can an implementation include?',
-    a: 'A scoped implementation can configure the relevant Registry Stack components and starting configuration, and can include staff or public screens, identity, hosting, migration and integrations. The written scope says what the delivery team provides, what the institution provides and how the service will be accepted.',
+    a: 'An implementation can include configuration, applicant and staff screens, sign-in, hosting, data migration and connections to existing systems. A written scope states what the delivery team provides, what your institution provides and how you will check that the service meets your requirements.',
     link: { href: '/pricing/', label: 'See implementation and support options' },
   },
   {
@@ -258,20 +270,30 @@ export const sharedFamilyFaq: readonly { q: string; a: string; link?: { href: st
   },
   {
     q: 'Where does it run, and who runs it?',
-    a: 'It can run on infrastructure your institution controls or infrastructure operated by a provider it appoints. The implementation scope identifies who hosts the service, manages identity and access, operates the database, keeps backups and retains audit records.',
+    a: 'It can run on infrastructure your institution controls or with a provider you choose. The written scope identifies who hosts and operates the service, manages user access, keeps backups and retains audit records.',
     link: { href: '/security/', label: 'Who is responsible for what' },
   },
   {
     q: 'What do our staff use day to day?',
-    a: 'Staff can use screens delivered as part of the implementation, or an existing application can connect to Registry Stack. Some starting configurations include a model of staff screens. The service design, roles and required public access are agreed during scoping.',
+    a: 'Staff can use screens delivered with the implementation or an existing application connected to Registry Stack. Some starting configurations include example staff screens. We agree the tasks, staff permissions and public access the service needs before delivery.',
   },
   {
-    q: 'What happens to our records if we stop?',
-    a: 'If Evidence Gateway answers from an existing system, the source records remain there. Records held in Base Registry Engine remain in the institution’s PostgreSQL database with their history. The core components remain available under Apache-2.0, so another capable team can operate and adapt them. The proposal or contract should state the licence and ownership of any custom screens, integrations or configuration delivered with the service.',
+    q: 'Can another team operate the service if we change provider?',
+    a: 'Yes. Another capable team can operate and adapt the Apache-2.0 core components. Your institution keeps its records and their history, whether in an existing system or in the database used by Base Registry Engine. The contract should define handover arrangements and the licence and ownership of any custom screens, integrations or configuration.',
   },
   {
     q: 'What does a first step look like?',
     a: 'Tell us about one service: who applies or asks for a change, what staff decide, which record must stay current and which systems people use today. We can identify a useful starting configuration and explain how Registry Stack could fit.',
+  },
+  {
+    q: 'How can our technical team test a check against an existing register?',
+    a: 'Start with the Evidence Gateway tutorial. It answers a yes-or-no question from sample data and verifies the result on a laptop. Your team can then assess how to connect your existing register.',
+    link: { href: 'https://docs.registrystack.org/tutorials/first-evidence-assertion/', label: 'Run the information-check tutorial' },
+  },
+  {
+    q: 'How can our technical team test building a register?',
+    a: 'Start with the Base Registry Engine tutorial to create records and inspect their history. Then explore a starting configuration for the kind of register you need.',
+    link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
   },
 ];
 

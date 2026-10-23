@@ -5,25 +5,25 @@ import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas } from '../../data/solutions';
-import { askQuestionHref, contactEmail } from '../../data/contact';
+import { describeServiceHref, contactEmail } from '../../data/contact';
 import { products } from '../../data/products';
 const area = solutionAreas.find((a) => a.key === 'review-changes')!;
 const casework = products.find((p) => p.key === 'casework')!;
 ---
 <Solution
   area={area}
-  heading="Give each request for human review an owner and an accountable decision."
-  description="Bring corrections, disputes and proposed changes into one review process that shows who is responsible and what is due. An approval records the decision, then a person or service with permission applies the change to the register."
+  heading="Help staff review requests and record decisions."
+  description="Assign correction requests, objections and other proposed changes to staff. Track due dates and record each decision. After approval, a staff member or connected service with permission applies the change to the register."
 >
   <SolutionExample
-    eyebrow="One example: a licence scope correction"
-    heading="Correct a licence with one officer accountable from request to decision."
-    intro="A professional register receives a request to correct the scope of a licence. An officer needs to review the evidence, keep the request moving and record a decision before the licence changes."
+    eyebrow="One example: a licence correction"
+    heading="Review a request to correct a licence."
+    intro="A professional says their licence lists the wrong permitted activities. An officer reviews the supporting evidence and decides whether to approve the correction."
     items={[
-      { term: 'Who asks', body: 'The licence holder, or a service that spotted the wrong scope, sends a correction request to the register.' },
-      { term: 'What staff need', body: 'One officer owns the request, its due date is visible to the team, and the licence remains unchanged until the approved correction is applied.' },
-      { term: 'What happens', body: 'An officer reviews the request. If information is missing, the officer closes the review with changes requested. The application service accepts the holder’s revision and submits it for a new review. After approval, a person or service with permission applies the correction to the register.' },
-      { term: 'What is kept', body: 'The application service keeps the holder’s current submission. Casework keeps each review assignment and decision. The register keeps the licence, who may change it and the history of the correction.' },
+      { term: 'Submit a correction request', body: 'The licence holder uses the application service to explain the error and provide supporting evidence.' },
+      { term: 'Assign the review', body: 'The request is assigned to an officer. The team can see who is responsible and when a decision is due. The licence remains unchanged during review.' },
+      { term: 'Review and decide', body: 'If information is missing, the officer ends the review by requesting changes. The holder revises the application and submits it for a new review. After approval, a staff member or connected service with permission applies the correction.' },
+      { term: 'Keep the decision and history', body: 'The application service keeps the holder’s current submission. Casework records each review assignment and decision. The register keeps the corrected licence and the history of its changes.' },
     ]}
     link={{ href: '/products/casework/#product-example', label: 'See the correction step by step' }}
   />
@@ -31,64 +31,64 @@ const casework = products.find((p) => p.key === 'casework')!;
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="review-change-title">Every review has an owner, while the register keeps control of record changes.</h2>
+        <h2 id="review-change-title">See who is responsible and what needs a decision.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Your service defines which requests need review</h3><p>Your team decides which proposed changes require a person, such as a licence scope, a parcel relationship or a household member. Each kind of request can have its own queue, reviewer role and due date.</p></article>
-        <article><h3>You can see who holds what, and what is overdue</h3><p>Each item has one officer and a due date. A supervisor sees which items have stalled and can chase them, and whoever asked can see the decision as soon as it is recorded; Casework itself sends no messages.</p></article>
-        <article><h3>A review decision does not change the register by itself</h3><p>Casework records who reviewed and decided the request. Applying the resulting change requires an actor already authorised by the register, and the register records that action in its own history.</p></article>
+        <article><h3>Choose which requests need staff review</h3><p>Your institution decides which changes need a decision, such as correcting a licence or adding a household member. Each type of request can have its own review team and due date.</p></article>
+        <article><h3>Track assignments and overdue requests</h3><p>Staff can see their assigned requests and due dates. Supervisors can identify overdue work and follow up with the responsible officer. An application connected to Casework can display the recorded decision.</p></article>
+        <article><h3>Keep a record of the decision and change</h3><p>Casework records who reviewed and decided the request. Only staff or systems authorized by the register can apply the approved change. The register records that change in its own history.</p></article>
       </div>
       <div id="what-your-office-calls-it" class="product-note">
-        <h3>What your office calls it</h3>
-        <p>Corrections and objections in a land register. Grievance redress in a social programme. Fitness-to-practise and disciplinary cases in a professional register. Appeals against a refused registration. Each is a request that needs a named officer, a due date and a record of who decided.</p>
+        <h3>Other requests your team could review</h3>
+        <p>A correction to a land record, an objection to a household’s recorded details or a request to change a professional’s permitted activities. The review process, required evidence and decision rules are configured for the institution’s work.</p>
       </div>
     </div>
   </section>
   <SolutionFit
     area={area}
-    heading="Connect each proposed change to the review it requires."
+    heading="Connect staff reviews to your register."
     muted
     jobs={{
-      casework: 'Applies the review policy, assigns the request, tracks its due date and records the officer’s decision.',
-      'base-registry': 'Holds the proposed change, sends it to the configured review authority and accepts the matching result before the change can be applied.',
+      casework: 'Assigns requests to reviewers, tracks due dates and records decisions according to the review rules your team configures.',
+      'base-registry': 'Keeps records and their history. For a change that requires review, it checks the review result and the permission to apply the change.',
     }}
     extra={[
-      { term: 'Your officers keep deciding', body: 'The decision on each request stays with your officers and your rules. The queue tracks the work; it does not decide.' },
+      { term: 'Your institution sets the rules', body: 'Your team decides who reviews each type of request and what they must consider. Staff make the decision; Casework records it.' },
       { term: 'Screens for reviewers', body: 'Reviewers can use screens provided with the service or work through an existing staff application connected to Casework. They see the request, supporting material, due date and actions available to their role.' },
-      { term: 'Requests from other systems', body: 'Casework works with Base Registry Engine as it comes. Another register system needs a connection your technical team builds, and any service can hand in a request and follow its progress.' },
+      { term: 'An existing register', body: 'Base Registry Engine has a supported connection to Casework. Your implementation team can build a connection for another register, including how it submits requests and receives review decisions.' },
     ]}
   >
-    <p>Pair a Proposal Action with a Casework policy when a register change needs an accountable review. A proposal configured without review follows its register conditions and has no approval outcome.</p>
+    <p>Agree which changes need review, who may decide them and who may update the register. Then connect those steps to the screens your applicants and staff use.</p>
   </SolutionFit>
   <SolutionFaq
     items={[
       {
         q: 'Does this replace our register system?',
-        a: 'No. Casework holds the work: who has each request, what is due, and who decided. Your register stays the authority on what a record says and who may change it.',
+        a: 'No. Casework records assignments, due dates and review decisions. Your register continues to hold the official records and control who may change them. Connecting an existing register is part of the implementation.',
         link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
       },
       {
-        q: 'Can a request change the register without an officer?',
-        a: 'For this reviewed flow, Casework records the officer’s decision. Base Registry Engine accepts only a matching result from the configured review authority, then checks the caller’s permission, the proposal conditions and that accepted result before applying the change. A different proposal explicitly configured without review has no officer approval outcome.',
+        q: 'Does an approval update the register automatically?',
+        a: 'Approval records the review decision. A staff member or connected service must then apply the change with the register’s permission. Your institution can also configure other types of change that do not require a staff review.',
       },
       {
-        q: 'Can other services send requests into the queue?',
-        a: 'Yes. A service hands in a request, can follow its progress, and sees the decision when an officer records it. Base Registry Engine connects to Casework as it comes; another system needs an adapter written against Casework’s published contract.',
+        q: 'Can an existing application submit requests?',
+        a: 'Yes. A connected application can submit requests, follow their progress and retrieve recorded decisions. Base Registry Engine has a supported connection; other systems need an integration.',
         link: { href: casework.tutorialHref, label: casework.tutorialLabel },
       },
       {
         q: 'Where does our technical team start?',
-        a: 'The reviewed-change tutorial shows how to pair a Base Registry Engine Proposal Action with a Casework policy and configure Casework as its review authority. It is a configuration guide for the two products, rather than a complete application service.',
+        a: 'The reviewed-change tutorial shows how to connect Base Registry Engine to Casework, submit a proposed change, review it and apply an approved result. Applicant and staff applications are connected as part of the service implementation.',
         link: { href: 'https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/', label: 'Configure a reviewed register change' },
       },
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Talk it through with the people who build it."
-    body="Tell us which requests need human review, who decides and how staff apply an approved change. We can show how the queue, reviewer screens and register can work together."
-    primaryLabel="Ask a question"
-    primaryHref={askQuestionHref(area.name)}
+    heading="Discuss a staff review process with our team."
+    body="Tell us which requests staff review, who decides and how an approved change is applied. We can show how staff screens, review assignments and the register can work together."
+    primaryLabel="Discuss your service"
+    primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
     note={`Or write to ${contactEmail}.`}
   />

@@ -9,7 +9,7 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
-import { askQuestionHref, contactEmail } from '../../data/contact';
+import { describeServiceHref, contactEmail } from '../../data/contact';
 import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
 
@@ -29,7 +29,7 @@ const steps: WeekStep[] = [
     when: 'Review and decision',
     ...weekProduct('casework'),
     title: 'Your team decides',
-    text: 'The proposal enters the code-list queue. E. Lindqvist confirms the source notice and approves the change.',
+    text: 'The proposal is assigned to E. Lindqvist, who confirms the ministry’s notice and approves the change.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Code list changes' },
       { state: 'Claimed', note: 'Held by E. Lindqvist' },
@@ -40,7 +40,7 @@ const steps: WeekStep[] = [
     when: 'Authorised list change',
     ...weekProduct('base-registry'),
     title: 'The list changes and keeps the old entry',
-    text: 'The officer closes NR-07 with its end date and names its successor, under their own name. A record that pointed to NR-07 still finds it.',
+    text: 'The officer closes NR-07 with its end date and names its successor. The register records the officer’s name, and records that use NR-07 still link to the retained entry.',
     card: { kind: 'record', recordType: 'Code list entry', recordId: 'NR-07', icon: 'data', fields: [
       { label: 'Status', value: 'Closed from 1 January' },
       { label: 'Successor', value: 'NR-05' },
@@ -51,7 +51,7 @@ const steps: WeekStep[] = [
     when: 'Updated catalogue published',
     ...weekProduct('manifest'),
     title: 'The catalogue is published',
-    text: 'The catalogue describes the list and its new version, so every register and service that reads it picks up the change from one place.',
+    text: 'The team publishes a catalogue that describes the list and its new version. Connected registers and services can retrieve the change from this maintained source.',
     card: { kind: 'document', documentType: 'Published catalogue', format: 'DCAT', title: 'Administrative areas, version 2027-01', fields: [
       { label: 'Entries', value: '312' },
       { label: 'Changed', value: 'NR-07 closed, NR-05 extended' },
@@ -63,13 +63,13 @@ const steps: WeekStep[] = [
 <Solution
   area={area}
   heading="Maintain the shared lists and classifications other services rely on."
-  description="Manage proposals, review and publication for place names, organisation directories, classifications and code lists. Connected services can read the current version while historical records continue to resolve earlier entries."
+  description="Review and publish changes to place names, organization directories, classifications and code lists. Connected services can retrieve the current version, while records that use an earlier code still refer to a known entry."
 >
   <section class="section" id="example" aria-labelledby="reference-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="reference-week-title">A change is proposed, the responsible team decides, the list keeps its history and connected services can read the new version.</h2>
+        <h2 id="reference-week-title">Review and publish one code-list change.</h2>
       </div>
       <RegisterWeek
         id="reference-week"
@@ -83,12 +83,12 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="reference-change-title">One maintained source, traceable changes and fewer unmanaged copies.</h2>
+        <h2 id="reference-change-title">Maintain one current list and keep earlier entries.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Every register uses the same code for the same place</h3><p>Each entry carries its official code, its parent where there is one, and the dates it applies. The address register and the statistics office read the same list.</p><a class="inline-cta" href="/products/base-registry/">How the register serves other services <span aria-hidden="true">→</span></a></article>
+        <article><h3>Use the same code for the same place</h3><p>Each entry contains its official code, its parent where there is one, and the dates it applies. The address register and the statistics office can retrieve entries from the same list.</p><a class="inline-cta" href="/products/base-registry/">How the register serves other services <span aria-hidden="true">→</span></a></article>
         <article><h3>Only your team changes the list</h3><p>Your staff record every change, whether a new district, a renamed ministry or a withdrawn tax regime. Other teams read; they do not edit.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
-        <article><h3>The list is published as a catalogue others can read</h3><p>A catalogue describes what the list holds and its current version, in the open formats public data portals use, from one maintained source.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/publishing-pipeline/">How publication works <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Publish a catalogue that other services can retrieve</h3><p>The catalogue describes what the list contains and identifies its current version. It uses open formats supported by public data portals.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/publishing-pipeline/">How publication works <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
@@ -101,12 +101,12 @@ const steps: WeekStep[] = [
     items={[
       {
         q: 'Does this replace the spreadsheet we send out?',
-        a: 'It replaces the copies. Your team still maintains the list, in the register instead of a spreadsheet, and each service reads the current version from it instead of keeping its own.',
+        a: 'It can replace the spreadsheet copies your team sends out. Your team maintains the list in the register, and connected services retrieve the current version instead of keeping separate copies.',
         link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
       },
       {
         q: 'What happens to records that point to an old code?',
-        a: 'They keep working. A renamed or withdrawn entry stays in the list with the dates it applied, so a record that used it still points to a real entry, and anyone reading it can see when it stopped applying.',
+        a: 'A renamed or withdrawn entry remains in the list with the dates it applied. Records using the old code can still refer to that entry. Each connected service needs rules for handling a renamed or withdrawn code.',
       },
       {
         q: 'Does the list hold the district boundaries too?',
@@ -122,20 +122,15 @@ const steps: WeekStep[] = [
         a: 'A starter is a starting configuration for a particular kind of shared list. It is available by request and must be adapted to your change process, publication needs and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#reference-registers', label: 'Browse the reference register starters' },
       },
-      {
-        q: 'Where does our technical team start?',
-        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
-        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
-      },
       ...sharedFamilyFaq,
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Talk it through with the people who build it."
+    heading="Discuss your shared list with our implementation team."
     body="Tell us which shared list you maintain, who approves changes and which services depend on it. We can show how Registry Stack could publish one current version while preserving earlier entries."
-    primaryLabel="Ask a question"
-    primaryHref={askQuestionHref(area.name)}
+    primaryLabel="Discuss your service"
+    primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
     note={`Or write to ${contactEmail}.`}
   />

@@ -9,7 +9,7 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
-import { askQuestionHref, contactEmail } from '../../data/contact';
+import { describeServiceHref, contactEmail } from '../../data/contact';
 import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'business-and-tax')!;
 
@@ -40,7 +40,7 @@ const steps: WeekStep[] = [
     when: 'Company record updated',
     ...weekProduct('base-registry'),
     title: 'The entry changes and keeps its history',
-    text: 'The registrar records the new address under their own name. Revision 23 holds it; revision 22 stays readable.',
+    text: 'The registrar records the new address, and the register records who made the change. Revision 23 holds it; revision 22 stays readable.',
     card: { kind: 'record', recordType: 'Business entry', recordId: 'BR-20417', icon: 'business', fields: [
       { label: 'Registered address', value: 'Updated' },
       { label: 'Changed by', value: 'L. Mensah' },
@@ -51,21 +51,21 @@ const steps: WeekStep[] = [
     when: 'Notification requested',
     ...weekProduct('messaging'),
     title: 'The company is told',
-    text: 'After the company record is updated, the filing service calls Messaging to send the reviewed email template. Messaging sends only when an authorised caller triggers it, and returns the delivery result to the filing service.',
+    text: 'After the company record is updated, the filing service calls Messaging to send the reviewed email template. Messaging sends only when an authorized caller triggers it, and returns the delivery result to the filing service.',
     card: { kind: 'notice', channel: 'Email', to: 'Company secretary', subject: 'Change of address recorded, BR-20417', status: 'Delivered' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Connect business registration, changes and permitted checks."
-  description="Give businesses a route to submit registrations and changes, give registrars an accountable review process, and maintain the resulting business information in a governed register. Connected services can check a permitted fact without receiving the filing file."
+  heading="Manage business registrations and changes."
+  description="Businesses submit registrations and changes. Registrars review each filing and record the approved information in the business register. A bank, procurement system or other approved service can check a permitted fact without receiving the filing file."
 >
   <section class="section" id="example" aria-labelledby="business-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="business-week-title">A company files a change, a registrar decides, the register is updated and the filing service sends the notice.</h2>
+        <h2 id="business-week-title">Follow a company address change.</h2>
       </div>
       <RegisterWeek
         id="business-week"
@@ -79,12 +79,12 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="business-change-title">A clearer change process and one maintained business record.</h2>
+        <h2 id="business-change-title">Keep a clear history of business changes.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>A business is entered once, however many registrations it holds</h3><p>Its company registration, its tax registration and each authorization are linked to one entry, so your staff look up one business and see everything registered against it.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
-        <article><h3>A bank or procurement team checks a registration without the file</h3><p>It gets a yes or no with your register’s name on it. Filing history, addresses and owners stay in your register.</p><a class="inline-cta" href="/solutions/check-a-fact/">How a service checks a fact <span aria-hidden="true">→</span></a></article>
-        <article><h3>Certificates can be reproduced from fixed inputs</h3><p>Registry Render produces the same bytes when the record revision, template, rendering version and other inputs are unchanged. The application decides when a certificate or extract may be issued.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/">How deterministic rendering works <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Link a business to its registrations</h3><p>Staff can record company registrations, tax registrations and authorizations against a business entry. When another institution holds a registration, the implementation must agree how to identify the business and connect that information.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
+        <article><h3>Check a registration without the full file</h3><p>A bank or procurement team receives only the answer your office permits, such as whether the business is registered. Filing history, addresses and owners stay in your register.</p><a class="inline-cta" href="/solutions/check-a-fact/">How a service checks a fact <span aria-hidden="true">→</span></a></article>
+        <article><h3>Reproduce a certificate when another copy is needed</h3><p>When given the same issue details, Registry Render reproduces the certificate so the later copy matches the original. The application decides when a certificate or extract may be issued.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/">How Registry Render reproduces a document <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
@@ -102,16 +102,16 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Can a bank check a business is registered without an account on our system?',
-        a: 'Two cases. A member of the public or a bank looking up one business uses the public register your application publishes under your law. A service that needs to check businesses as part of its own process asks your register a question you have agreed to answer, such as whether a business is actively registered, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
+        a: 'Two cases. A member of the public or a bank looking up one business uses the public register your application publishes under your law. A service that needs to check businesses as part of its own process asks your register a question you have agreed to answer, such as whether the register records a business as active, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
         link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
       },
       {
         q: 'Who can see who owns a business?',
-        a: 'Your office decides, role by role: who may record an owner, who may look one up, and under which legal duty. Every look-up and every change is kept with who did it and when.',
+        a: 'Your office decides who may record an owner, who may look one up and under which legal duty. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
       {
-        q: 'If our office is a central bank or financial supervisor?',
+        q: 'What if our office is a central bank or financial supervisor?',
         a: 'The bank account, credit and collateral starters follow the same rules, with lookups limited to named roles and no balances or repayments recorded.',
         link: { href: '/starters/#business-and-tax', label: 'Browse the business and tax starters' },
       },
@@ -122,23 +122,18 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Can we still sell certificates and extracts?',
-        a: 'Yes. Your institution keeps control of any fees and issuance rules. Registry Render can reproduce a certificate when the record revision, template, rendering version and other inputs are unchanged; the service application decides when issuance is authorised.',
+        a: 'Yes. Your institution keeps control of any fees and issuance rules. When given the same issue details, Registry Render reproduces the certificate so a later copy matches the original. The service application decides when issuance is authorized.',
         link: { href: 'https://docs.registrystack.org/explanation/render-determinism/', label: 'How deterministic rendering works' },
-      },
-      {
-        q: 'Where does our technical team start?',
-        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
-        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
       },
       ...sharedFamilyFaq,
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Talk it through with the people who build it."
+    heading="Discuss your service with our implementation team."
     body="Tell us which registration or filing service you want to improve, who submits changes, who decides and which systems staff use today. We can show how Registry Stack could fit."
-    primaryLabel="Ask a question"
-    primaryHref={askQuestionHref(area.name)}
+    primaryLabel="Discuss your service"
+    primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
     note={`Or write to ${contactEmail}.`}
   />

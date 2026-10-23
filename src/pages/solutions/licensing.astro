@@ -7,7 +7,7 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
-import { askQuestionHref, contactEmail } from '../../data/contact';
+import { describeServiceHref, contactEmail } from '../../data/contact';
 import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'licensing')!;
 
@@ -48,22 +48,22 @@ const steps: WeekStep[] = [
   {
     when: 'Employer status check',
     ...weekProduct('evidence-gateway'),
-    title: 'An employer checks the licence status',
-    text: 'An employer authorised to make this check asks whether the licence is in good standing and receives a digitally signed answer. The application and supporting evidence are not disclosed.',
+    title: 'An employer checks the recorded licence status',
+    text: 'An employer authorized to make this check asks whether the register records the licence as in good standing and receives a digitally signed answer. The application and supporting evidence are not disclosed.',
     card: { kind: 'answer', fieldLabel: 'Licence in good standing', value: 'Yes', recipient: 'Employer’s HR service', issuer: 'Licensing board' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Connect licensing applications, decisions, licence records and renewal."
-  description="Give applicants a clear route to submit information and replace missing evidence, give officers an accountable review process, and keep each authorised licence change in the register. Employers and other permitted services can check a defined status without receiving the application file."
+  heading="Manage licence applications and renewals."
+  description="Applicants submit information and replace missing supporting evidence. Officers review each application and record a decision. A staff member or connected service with permission then updates the licence register. Employers and other approved services can check a defined licence status without receiving the application file."
 >
   <section class="section" id="example" aria-labelledby="licensing-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="licensing-week-title">A holder applies, supplies the evidence an officer needs, receives a decision and can show the current licence status.</h2>
+        <h2 id="licensing-week-title">Follow a licence renewal.</h2>
       </div>
       <RegisterWeek
         id="licensing-week"
@@ -78,12 +78,12 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="licensing-change-title">One connected journey, with each responsibility kept clear.</h2>
+        <h2 id="licensing-change-title">Separate the decision from the register update.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Applicants can complete the evidence trail</h3><p>When a review ends with changes requested, the application service shows what is missing, accepts replacement evidence and resubmits the revised application for a new review. The institution decides what evidence its rules require.</p><a class="inline-cta" href="/customization/">How a service is adapted <span aria-hidden="true">→</span></a></article>
+        <article><h3>Applicants can replace missing supporting evidence</h3><p>When an officer requests changes, the application service shows what is missing. The applicant can provide a replacement and submit the revised application for another review. The institution decides what evidence its rules require.</p><a class="inline-cta" href="/customization/">How a service is adapted <span aria-hidden="true">→</span></a></article>
         <article><h3>A suspension never overwrites the licence it suspends</h3><p>Each renewal, suspension or revocation is its own entry, with who recorded it and when. Lift a suspension and both decisions stay in order.</p><a class="inline-cta" href="/products/base-registry/">How the register keeps its history <span aria-hidden="true">→</span></a></article>
-        <article><h3>Review and record change remain distinct</h3><p>An officer records the licensing decision. The resulting change is applied only through the register’s own authorised process, with the decision and record history available for later review.</p><a class="inline-cta" href="/solutions/review-changes/">How accountable review works <span aria-hidden="true">→</span></a></article>
+        <article><h3>Officers decide; permitted staff update the register</h3><p>An officer records the licensing decision. The licence record changes only when a staff member or connected service with permission applies the approved change. The decision and record history remain available for later review.</p><a class="inline-cta" href="/solutions/review-changes/">How staff review works <span aria-hidden="true">→</span></a></article>
       </div>
     </div>
   </section>
@@ -101,16 +101,21 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Can an employer check a licence without an account on our system?',
-        a: 'Two cases. A member of the public or an employer looking up one licence uses the public register your application publishes under your law. A service that needs to check licences as part of its own process asks your register a question you have agreed to answer, such as whether a licence is active for a category, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
+        a: 'Two cases. A member of the public or an employer looking up one licence uses the public register your application publishes under your law. A service that needs to check licences as part of its own process asks your register a question you have agreed to answer, such as whether the register records a licence as active for a category, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
         link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
       },
       {
+        q: 'Can a professional receive a credential in a digital wallet?',
+        a: 'Yes, as part of an implementation with a compatible wallet and receiving service. Evidence Gateway can issue a verifiable credential containing the licence status recorded by the register. The implementation must test the complete journey and define how long the credential is valid and when a fresh one is needed.',
+        link: { href: '/solutions/verifiable-credentials/', label: 'Explore verifiable credentials' },
+      },
+      {
         q: 'Does this give us a public search page?',
-        a: 'Yes, when the authority wants one. An implementation can include a public search page with the permitted licence details, accessible user journeys and a connection to the register. The proposal states whether this is included.',
+        a: 'Yes, when the authority wants one. An implementation can include an accessible public search page that shows the permitted licence details from the register. The proposal states whether this is included.',
       },
       {
         q: 'Who can see a licence record?',
-        a: 'Your office decides, role by role: who may record a licence, who may record a suspension, who may look one up, and for what reason. Every look-up and every change is kept with who did it and when.',
+        a: 'Your office decides who may record a licence, record a suspension or look up a licence, and for what reason. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
       {
@@ -118,20 +123,15 @@ const steps: WeekStep[] = [
         a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to the authority’s rules, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#licensing', label: 'Browse the licensing starters' },
       },
-      {
-        q: 'Where does our technical team start?',
-        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
-        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
-      },
       ...sharedFamilyFaq,
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Talk it through with the people who build it."
+    heading="Discuss your service with our implementation team."
     body="Tell us which licensing service you want to improve, who applies, who decides and which systems must connect. We can identify a useful starting configuration and scope the screens, identity, hosting and integrations with you."
-    primaryLabel="Ask a question"
-    primaryHref={askQuestionHref(area.name)}
+    primaryLabel="Discuss your service"
+    primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
     note={`Or write to ${contactEmail}.`}
   />

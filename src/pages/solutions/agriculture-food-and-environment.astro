@@ -9,7 +9,7 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
-import { askQuestionHref, contactEmail } from '../../data/contact';
+import { describeServiceHref, contactEmail } from '../../data/contact';
 import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environment')!;
 
@@ -39,8 +39,8 @@ const steps: WeekStep[] = [
   {
     when: 'Producer record updated',
     ...weekProduct('base-registry'),
-    title: 'The holding is recorded and keeps its history',
-    text: 'The officer records the holding under their own name. Each later change of status is added beside it, never over it.',
+    title: 'The officer records the holding and its history',
+    text: 'The officer records the holding. The register records the officer’s name and retains each earlier status when the record changes.',
     card: { kind: 'record', recordType: 'Holding record', recordId: 'HLD-5582', icon: 'data', fields: [
       { label: 'Status', value: 'Registered' },
       { label: 'District', value: 'Northern' },
@@ -50,22 +50,22 @@ const steps: WeekStep[] = [
   {
     when: 'Permitted programme check',
     ...weekProduct('evidence-gateway'),
-    title: 'A subsidy programme asks, and gets only the district',
-    text: 'A subsidy programme authorised to make this check asks which district the holding is registered in and receives that value in a digitally signed answer. Plot coordinates and household details are not disclosed.',
+    title: 'A subsidy programme receives only the registered district',
+    text: 'A subsidy programme authorized to make this check asks which district the holding is registered in. It receives that value in a digitally signed answer, without plot coordinates or household details.',
     card: { kind: 'answer', fieldLabel: 'Registered in district', value: 'Northern', recipient: 'Subsidy programme', issuer: 'Farm register' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Keep producer, site, establishment and permit records usable across services."
-  description="Connect registration, review and authorised changes, reduce duplicate entries and let permitted programmes check a defined fact without receiving the full record. Your institution keeps control of the register and its rules."
+  heading="Maintain producer, holding, establishment and permit records."
+  description="Staff can review registrations and record approved changes to holdings, establishments and permits. Authorized programmes can check information such as registration status without receiving the full record. Your institution sets the register’s rules and access."
 >
   <section class="section" id="example" aria-labelledby="agriculture-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="agriculture-week-title">A farmer applies, an officer checks the holding, the registration is recorded and a programme receives the district it is allowed to use.</h2>
+        <h2 id="agriculture-week-title">Review and record one holding registration.</h2>
       </div>
       <RegisterWeek
         id="agriculture-week"
@@ -79,12 +79,12 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="agriculture-change-title">One maintained identity for each holding, with traceable status changes.</h2>
+        <h2 id="agriculture-change-title">Maintain holding records and their status history.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Every permit is tied to the site it covers</h3><p>Each farm, establishment or site is recorded once, and every registration or permit is linked to it. One food business with two establishments has two registrations, and an inspector sees which is current.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
-        <article><h3>A change of status never erases the earlier one</h3><p>A suspended permit or a withdrawn authorization is added as its own entry, with who recorded it and when. The register shows what was valid on the day of an inspection.</p><a class="inline-cta" href="/solutions/review-changes/">How a decision reaches the register <span aria-hidden="true">→</span></a></article>
-        <article><h3>Counts for the season, without the farmers’ details</h3><p>The register publishes counts, such as registered holdings per district, with small counts suppressed and no individual records.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/">How statistical releases work <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Link each permit to the site it covers</h3><p>Each farm, establishment or site has its own record, and each registration or permit links to it. If one food business operates two establishments, each establishment can have its own registration and recorded status.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
+        <article><h3>Keep earlier statuses when a permit changes</h3><p>A suspension or withdrawal is recorded with the name of the officer and the date. Staff can see which status the register showed on the day of an inspection.</p><a class="inline-cta" href="/solutions/review-changes/">How a decision reaches the register <span aria-hidden="true">→</span></a></article>
+        <article><h3>Publish seasonal counts without farmers’ details</h3><p>Your authority can publish counts, such as registered holdings per district, while suppressing small counts and excluding individual records.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/">How statistical releases work <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
@@ -108,7 +108,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Who can see a farmer’s record?',
-        a: 'Your office decides, role by role: who may record a registration, who may record a permit, who may look one up, and for what reason. Every look-up and every change is kept with who did it and when.',
+        a: 'Your office decides, role by role: who may record a registration, who may record a permit, who may look one up, and for what reason. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
       {
@@ -116,20 +116,15 @@ const steps: WeekStep[] = [
         a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to your rules, field operations and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#agriculture-food-and-environment', label: 'Browse the agriculture, food and environment starters' },
       },
-      {
-        q: 'Where does our technical team start?',
-        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
-        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
-      },
       ...sharedFamilyFaq,
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Talk it through with the people who build it."
+    heading="Discuss your service with our implementation team."
     body="Tell us which producer, establishment or permit service you want to improve, who records field information and what other programmes need to check. We can show how Registry Stack could fit."
-    primaryLabel="Ask a question"
-    primaryHref={askQuestionHref(area.name)}
+    primaryLabel="Discuss your service"
+    primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
     note={`Or write to ${contactEmail}.`}
   />

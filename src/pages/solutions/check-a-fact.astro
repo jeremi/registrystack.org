@@ -5,22 +5,22 @@ import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas } from '../../data/solutions';
-import { askQuestionHref, contactEmail } from '../../data/contact';
+import { describeServiceHref, contactEmail } from '../../data/contact';
 import { products } from '../../data/products';
 const area = solutionAreas.find((a) => a.key === 'check-a-fact')!;
 const evidence = products.find((p) => p.key === 'evidence-gateway')!;
 ---
 <Solution
   area={area}
-  heading="Let an authorised service check a defined fact without receiving the record."
-  description="Start with the decision another service must make, then define the smallest answer it needs. Evidence Gateway returns that answer from an authorised source with a digital signature, while the consuming service remains responsible for how it uses the result."
+  heading="Let other services check information in your register."
+  description="Give authorized services an answer to a specific question, such as whether an applicant meets an age requirement, without sending the full record. Each answer is digitally signed so the receiving system can check who issued it and whether it was altered."
 >
   <section id="example" class="section section-muted" aria-labelledby="check-example-title">
     <div class="section-inner">
       <div class="section-heading center">
         <p class="eyebrow">One example: a civil register</p>
-        <h2 id="check-example-title">One civil register provides different permitted checks without sending the source record.</h2>
-        <p>A pension service asks whether a person is recorded as alive. A licensing service asks whether an applicant meets an age threshold. The civil-registration authority defines which question each service may ask and authorises the calling service. A request outside that permission is refused.</p>
+        <h2 id="check-example-title">Answer different questions from the same register.</h2>
+        <p>A pension service asks whether a person is recorded as alive. A licensing service asks whether an applicant meets an age requirement. The civil-registration authority decides which question each service may ask. Neither service receives the person’s full record.</p>
       </div>
       <MinimizationFunnel />
     </div>
@@ -29,66 +29,66 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="check-change-title">Less unnecessary disclosure, with origin and integrity that the recipient can verify.</h2>
+        <h2 id="check-change-title">Answer the question without sending the whole record.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>The receiving service gets the defined answer</h3><p>The office that keeps the register specifies what the question means and how the answer is worked out. A service can receive an age-threshold result without receiving the date of birth.</p></article>
-        <article><h3>Only an authorised service can make the check</h3><p>Each connected service may ask specific questions for agreed purposes. Anything else is refused. Requests and outcomes are recorded so the registry team can review how the connection is used.</p></article>
-        <article><h3>The signature proves origin and integrity</h3><p>The receiving service verifies that the answer came from the register, was not altered and is within its validity period. The signature does not prove that the source record is correct or decide what the answer means for the applicant.</p></article>
+        <article><h3>Choose what each check returns</h3><p>Your team defines the question and how the register’s information answers it. A licensing service can learn whether an applicant meets an age requirement without receiving their date of birth.</p></article>
+        <article><h3>Control who can make each check</h3><p>Your institution grants each connected service permission to ask specific questions. Requests outside those permissions are refused. Your team can review recorded requests and outcomes.</p></article>
+        <article><h3>Check who issued the answer</h3><p>The receiving service checks the signature and validity period. This confirms who issued the answer and whether it was altered. It does not prove that the source record is correct or decide what the answer means for the applicant.</p></article>
       </div>
     </div>
   </section>
   <SolutionFit
     area={area}
-    heading="Give a service a checked answer, or the fields it needs."
+    heading="Connect to the register you already use."
     jobs={{
-      'evidence-gateway': 'Use it when another service needs a defined yes-or-no result, status or value from a declared list. It returns a digitally signed answer that the recipient can verify came from the register and was not altered.',
+      'evidence-gateway': 'Answers a question using information from your register, then digitally signs the result. The answer can be yes or no, or a value from a list your institution defines.',
     }}
     extra={[
-      { term: 'Your register stays where it is', body: 'Evidence Gateway works from the register your office already runs, through a connection your technical team sets up: an interface your system offers or a read-only extract your team publishes. It does not require Base Registry Engine.' },
+      { term: 'Your staff keep using their register', body: 'Your technical team connects Evidence Gateway to the existing system or to a read-only extract. Staff continue to maintain records in that system. Base Registry Engine is optional.' },
     ]}
   >
-    <p>Start from what the other service has to decide, and give it the least that decision needs. A good first question is the one your office is asked for most often.</p>
+    <p>Start with a question your team answers often. Agree who may ask it, what information the answer can contain and how recent that information must be.</p>
   </SolutionFit>
   <SolutionFaq
     muted
     items={[
       {
         q: 'Do we have to move our register?',
-        a: 'No. Evidence Gateway reads from the register your office already runs, through a connection your technical team sets up. Your staff keep recording and correcting records where they do today, and the answers reflect what the register holds, as of the interface or extract they read.',
+        a: 'No. Your technical team connects Evidence Gateway to your existing register or to an extract from it. Answers reflect the information available through that connection, so the implementation must account for any delay in updating an extract.',
         link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
       },
       {
         q: 'How does the receiving service know an answer is genuine?',
-        a: 'Each answer carries a digital signature from the register that issued it and its validity period. The receiving service can verify origin and integrity itself. The signature does not prove the source data is correct or that the subject is legally entitled to something.',
+        a: 'The receiving service checks the issuer’s digital signature and the answer’s validity period. A valid signature confirms who issued the answer and that it was not altered. The institution receiving it still applies its own rules when making a decision.',
         link: { href: evidence.href, label: `About ${evidence.name}` },
       },
       {
         q: 'Does this replace our data-sharing agreements?',
-        a: 'No. The agreement still says what a service may know and why. The questions and fields your office sets up follow that agreement, and a request outside it is refused and kept on record.',
+        a: 'No. Your institution still agrees what each service may know and why. The questions and access permissions must be configured to follow that agreement.',
       },
       {
-        q: 'What if the asking service uses AI?',
-        a: 'It uses the same authorised connection as any other service and receives only the agreed answer. The organisation using AI remains responsible for the decision and its treatment of the person concerned. Registry Stack does not make the eligibility decision.',
+        q: 'How recent is the information?',
+        a: 'The answer identifies when the source information was observed and when the answer expires. If the connection uses an extract, its refresh schedule affects freshness. Your institution and the receiving service agree how recent the information must be for that check.',
       },
       {
         q: 'Where does our technical team start?',
-        a: `With the ${evidence.name} tutorial, which answers a yes-or-no question from sample data and checks the answer, on a laptop.`,
+        a: `The ${evidence.name} tutorial shows how to answer a yes-or-no question from sample data and verify the result on a laptop.`,
         link: { href: evidence.tutorialHref, label: evidence.tutorialLabel },
       },
       {
-        q: 'And if a service needs a value, not a yes or no?',
-        a: 'An answer can be one of a set of values your office declares, such as the region a person lives in, and nothing outside that set. A service that needs the records themselves, such as a legal name, reads the register through the access your office grants it; Registry Stack does not publish fields from a register it does not hold.',
+        q: 'Can the answer be a status or category?',
+        a: 'Yes. It can be a value from a list your institution defines, such as a registration status or region. A service that needs record details, such as a legal name, needs separate access to the register. Evidence Gateway provides answers to predefined questions, rather than general access to record fields.',
         link: { href: 'https://docs.registrystack.org/tutorials/return-a-governed-value/', label: 'Run the governed value tutorial' },
       },
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Talk it through with the people who build it."
-    body="Tell us which register holds the source record, which service needs an answer and what decision that answer supports. We can help define the first question and connect both sides."
-    primaryLabel="Ask a question"
-    primaryHref={askQuestionHref(area.name)}
+    heading="Discuss an information check with our team."
+    body="Tell us which register holds the information, which service needs it and what that service needs to know. We can help define the first question and connect both systems."
+    primaryLabel="Discuss your service"
+    primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
     note={`Or write to ${contactEmail}.`}
   />

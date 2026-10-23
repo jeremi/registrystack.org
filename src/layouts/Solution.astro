@@ -25,7 +25,7 @@ const { area, heading, description } = Astro.props;
 // Every area leads to its service example first. A register family then offers
 // optional starting configurations; a cross-cutting area offers how it fits.
 const isFamily = area.kind === 'register-family';
-const primary = Astro.props.primary ?? { href: '#example', label: isFamily ? 'Follow the service journey' : 'See the example' };
+const primary = Astro.props.primary ?? { href: '#example', label: 'See a service example' };
 const secondary = Astro.props.secondary ?? (isFamily
   ? { href: '#starters', label: 'Explore starting configurations' }
   : { href: '#fit', label: 'How it fits' });

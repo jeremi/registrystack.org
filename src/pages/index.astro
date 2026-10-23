@@ -82,8 +82,8 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
         </div>
         <RegisterDay />
         <div class="shared-work" id="shared-work">
-          <p>Explore the capabilities behind this journey:</p>
-          <ul class="register-grid register-pair">
+          <p>Explore related capabilities:</p>
+          <ul class="register-grid shared-capabilities">
             {crossCutting.map((area) => (
               <li>
                 <a href={area.slug}>
@@ -159,7 +159,7 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
   .register-intent { color: var(--registry-muted); font-size: var(--type-md); }
   .register-audience { color: var(--registry-body); font-size: var(--type-sm); margin-top: 4px; }
   .featured-solutions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .register-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .shared-capabilities { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .shared-work { border-top: 1px solid var(--registry-rule); margin-top: 36px; padding-top: 20px; }
   .shared-work > p { color: var(--registry-body); font-size: var(--type-base); margin: 0 0 8px; }
   .home-solution-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 24px; max-width: none; margin-top: 0; }
@@ -175,6 +175,6 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
   .developer-grid p { font-size: var(--type-body-sm); }
   .developer-grid a { font-size: var(--type-base); }
   .developer-note { font-size: var(--type-base); margin-top: 28px; }
-  @media (max-width: 900px) { .hero-top, .home-solution-grid, .featured-solutions { grid-template-columns: 1fr; } }
-  @media (max-width: 700px) { .adoption-grid, .register-pair, .developer-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .hero-top, .home-solution-grid, .featured-solutions, .shared-capabilities { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) { .adoption-grid, .developer-grid { grid-template-columns: 1fr; } }
 </style>

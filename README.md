@@ -76,6 +76,12 @@ supplier’s registration is clearer than “share a limited answer.” Keep the
 meanings consistent across cards, menus and metadata; adapt the sentence to the
 reader rather than repeating a slogan.
 
+For verifiable credentials, explain what information the institution issues,
+who receives it and which service will accept it. The implementation connects
+and tests the wallet and receiving service. Keep credential validity, source
+freshness and the receiving service's decision distinct; issuance alone does
+not establish a complete wallet service.
+
 ## Site implementation
 
 Solution areas and their starter membership live in `src/data/solutions.ts`.

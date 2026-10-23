@@ -9,7 +9,7 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
-import { askQuestionHref, contactEmail } from '../../data/contact';
+import { describeServiceHref, contactEmail } from '../../data/contact';
 import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')!;
 
@@ -29,7 +29,7 @@ const steps: WeekStep[] = [
     when: 'Assessment and decision',
     ...weekProduct('casework'),
     title: 'An officer decides',
-    text: 'The complete application enters the enrolment queue. A. Haddad reviews the application and assessment, then records the programme’s decision.',
+    text: 'The complete application enters the enrollment queue. A. Haddad reviews the application and assessment, then records the programme’s decision.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Enrollment' },
       { state: 'Claimed', note: 'Held by A. Haddad' },
@@ -50,22 +50,22 @@ const steps: WeekStep[] = [
   {
     when: 'Permitted programme check',
     ...weekProduct('evidence-gateway'),
-    title: 'Another programme checks enrolment',
-    text: 'A school meal programme authorised to make this check asks whether the household is enrolled and receives a digitally signed answer. Income information and case notes are not disclosed.',
+    title: 'Another programme checks enrollment',
+    text: 'A school meal programme authorized to make this check asks whether the household is enrolled and receives a digitally signed answer. Income information and case notes are not disclosed.',
     card: { kind: 'answer', fieldLabel: 'Household enrolled', value: 'Yes', recipient: 'School meal programme', issuer: 'Social registry' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Maintain people and household records for public services."
-  description="Connect applications, assessments, corrections and permitted updates to the household record, then let approved programmes check a defined fact without receiving a person’s file. Each programme remains responsible for its own eligibility rules and decisions."
+  heading="Maintain people, household and enrollment records."
+  description="Record identity, household relationships, enrollment or status for the service your institution runs. Staff review applications and corrections; authorized services can check specific information without receiving the full file. Each institution remains responsible for its eligibility rules and decisions."
 >
   <section class="section" id="example" aria-labelledby="people-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="people-week-title">A household applies, the programme assesses it, the enrolment is recorded and another service checks the status it is allowed to use.</h2>
+        <h2 id="people-week-title">Follow a household enrollment application.</h2>
       </div>
       <RegisterWeek
         id="people-week"
@@ -79,20 +79,20 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="people-change-title">Current records, traceable corrections and less unnecessary disclosure.</h2>
+        <h2 id="people-change-title">Control what each programme can check.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Each person is entered once and linked to their household</h3><p>When someone moves out, your team changes the link and the earlier household stays in the history.</p><a class="inline-cta" href="/products/base-registry/">How the register holds people and households <span aria-hidden="true">→</span></a></article>
-        <article><h3>Nobody pages through the list of people</h3><p>A programme your office allows finds a person it already knows; it cannot list the register. Every look-up is kept with who asked and when.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
-        <article><h3>A verifiable credential can be produced for integration</h3><p>Evidence Gateway can produce a verifiable credential containing an agreed answer such as “enrolled”. The team implementing the service must evaluate whether its chosen wallet can store and present that credential; the released capability does not establish wallet compatibility.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/evidence-oid4vci/">How credential output is configured <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Link people to their household records</h3><p>When someone moves out, your team changes the link and the earlier household stays in the history.</p><a class="inline-cta" href="/products/base-registry/">How the register holds people and households <span aria-hidden="true">→</span></a></article>
+        <article><h3>Limit checks to the person a service needs to ask about</h3><p>Your institution can allow a programme to check a known person’s status while preventing it from listing everyone in the register. The implementation defines permissions and audit coverage for each connection.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
+        <article><h3>Issue a credential confirming programme enrollment</h3><p>An implementation can use Evidence Gateway to issue a digital credential stating whether someone is enrolled. The implementation connects and tests the wallet that receives it and the service that accepts it.</p><a class="inline-cta" href="/solutions/verifiable-credentials/">Explore verifiable credentials <span aria-hidden="true">→</span></a></article>
       </div>
-      <p class="product-note">If your office keeps a social registry of assessed households as well as the list of who is enrolled, start from the enrollment starter and add the household record your intake process needs.</p>
+      <p class="product-note">The enrollment starter records who is enrolled. A social registry of assessed households also needs the household record used by its intake process.</p>
     </div>
   </section>
   <SolutionStarters
     area={area}
     heading="Start from a register of people like yours."
-    intro="A starting configuration can model a population register, a social registry or programme enrolment. The right starting point depends on which organisation keeps each record and makes each decision."
+    intro="Starting configurations cover population, identity, education, immigration, voting and social programme records. Choose according to the service, the information it needs and which institution is responsible for each decision."
     featuredNote="The enrollment starter records the enrollment; the question a programme asks is set up in Evidence Gateway, which the starter does not include."
   />
   <SolutionFaq
@@ -109,11 +109,11 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Does it assess eligibility or calculate benefits?',
-        a: 'No. A programme that receives an answer decides what it means for its applicant under its own rules. The register records the decision made by the organisation responsible for that record.',
+        a: 'No. A programme that receives an answer decides what it means for its applicant under its own rules. The register records the decision made by the organization responsible for that record.',
       },
       {
         q: 'Who can see a person’s record?',
-        a: 'Your office decides, role by role: who may record a person, who may change a household, and who may look someone up, and for what reason. Every look-up and every change is kept with who did it and when.',
+        a: 'Your office decides who may record a person, change a household or look someone up, and for what reason. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
       {
@@ -121,20 +121,15 @@ const steps: WeekStep[] = [
         a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to your rules, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#people-and-social-programmes', label: 'Browse the starters for registers of people' },
       },
-      {
-        q: 'Where does our technical team start?',
-        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
-        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
-      },
       ...sharedFamilyFaq,
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Talk it through with the people who build it."
-    body="Tell us which population or programme service you want to improve, who makes each decision and which systems need to exchange information. We can show how Registry Stack could fit while sharing only what each service needs."
-    primaryLabel="Ask a question"
-    primaryHref={askQuestionHref(area.name)}
+    heading="Discuss your service with our implementation team."
+    body="Tell us which service and people records you want to improve, who makes each decision and which systems need to exchange information. We can show how Registry Stack could fit while sharing only what each service needs."
+    primaryLabel="Discuss your service"
+    primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
     note={`Or write to ${contactEmail}.`}
   />

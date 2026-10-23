@@ -9,7 +9,7 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
-import { askQuestionHref, contactEmail } from '../../data/contact';
+import { describeServiceHref, contactEmail } from '../../data/contact';
 import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'health-and-safety')!;
 
@@ -29,7 +29,7 @@ const steps: WeekStep[] = [
     when: 'Review and decision',
     ...weekProduct('casework'),
     title: 'An officer decides the suspension',
-    text: 'The complete case enters the authorisations queue. P. Castillo reviews the report and the operator’s response, then approves the suspension.',
+    text: 'The complete case enters the authorizations queue. P. Castillo reviews the report and the operator’s response, then approves the suspension.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Authorizations' },
       { state: 'Claimed', note: 'Held by P. Castillo' },
@@ -40,7 +40,7 @@ const steps: WeekStep[] = [
     when: 'Authorisation record updated',
     ...weekProduct('base-registry'),
     title: 'The authorization is suspended and keeps its history',
-    text: 'The officer records the suspension under their own name, beside the authorization it suspends. Lift it later and both decisions stay in order.',
+    text: 'The officer records the suspension against the authorization. The register records who made the change. Lift it later and both decisions stay in order.',
     card: { kind: 'record', recordType: 'Facility record', recordId: 'HF-0732', icon: 'business', fields: [
       { label: 'Operating authorization', value: 'Suspended' },
       { label: 'Changed by', value: 'P. Castillo' },
@@ -51,21 +51,21 @@ const steps: WeekStep[] = [
     when: 'Insurer status check',
     ...weekProduct('evidence-gateway'),
     title: 'An insurer checks the current status',
-    text: 'A health insurance fund authorised to make this check asks whether the clinic is authorised to operate and receives a digitally signed answer. The inspection report and operator response are not disclosed.',
+    text: 'A health insurance fund authorized to make this check asks whether the clinic is authorized to operate and receives a digitally signed answer. The inspection report and operator response are not disclosed.',
     card: { kind: 'answer', fieldLabel: 'Authorized to operate', value: 'No', recipient: 'Health insurance fund', issuer: 'Health facility register' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Maintain a reliable view of regulated facilities and their status."
-  description="Connect registration, inspection findings, human decisions and authorised status changes. Inspectors, insurers and other permitted services can use the same facility identity and check a defined status without receiving the regulatory file."
+  heading="Maintain regulated facility, operator, product and hazard records."
+  description="Staff can review inspection findings, record decisions and apply authorized status changes. Inspectors, insurers and other permitted services can use the same facility code and check a specific status without receiving the regulatory file."
 >
   <section class="section" id="example" aria-labelledby="health-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="health-week-title">An inspector reports a concern, the operator can respond, an officer decides and connected services see the current status.</h2>
+        <h2 id="health-week-title">Record a status change after an inspection.</h2>
       </div>
       <RegisterWeek
         id="health-week"
@@ -79,12 +79,12 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="health-change-title">One facility identity, traceable decisions and controlled status checks.</h2>
+        <h2 id="health-change-title">Use one facility code and return only permitted status information.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Every facility has one entry and one code</h3><p>Each provider, each facility it operates and each authorization are recorded once, so the insurer, the inspectorate and the health information system read the same list and the same code.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
-        <article><h3>An authorization keeps its history</h3><p>A renewal, suspension or withdrawal is added beside the earlier decision, with who recorded it and when, so the register shows what was valid on the day of an inspection.</p><a class="inline-cta" href="/solutions/review-changes/">How a decision reaches the register <span aria-hidden="true">→</span></a></article>
-        <article><h3>Public notices stay public, and private entries stay closed</h3><p>A medicine shortage notice is for everyone. A person’s organ donation instruction is shown only to a hospital your office has agreed may ask, and only as the answer it needs.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
+        <article><h3>Agree a facility code that connected systems can use</h3><p>Staff maintain separate records for the provider, its facilities and their authorizations. The implementation connects insurers, inspectorates and health information systems to the agreed facility codes.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
+        <article><h3>Keep earlier decisions when an authorization changes</h3><p>A renewal, suspension or withdrawal is recorded with the name of the officer and the date. Staff can see which status the register showed on the day of an inspection.</p><a class="inline-cta" href="/solutions/review-changes/">How a decision reaches the register <span aria-hidden="true">→</span></a></article>
+        <article><h3>Publish notices and restrict inspection records</h3><p>An approved medicine-shortage notice can be public. An inspection report can remain restricted to staff, while a permitted service receives only the facility status it is allowed to check.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
       </div>
     </div>
   </section>
@@ -111,7 +111,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Who can see an entry, and what does the public see?',
-        a: 'Your office decides, entry by entry and role by role: what the public may read, who may record an authorization, and who may look one up. Every look-up and every change is kept with who did it and when.',
+        a: 'Your office decides, entry by entry and role by role: what the public may read, who may record an authorization, and who may look one up. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
       {
@@ -119,20 +119,15 @@ const steps: WeekStep[] = [
         a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to your rules, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#health-and-safety', label: 'Browse the health and safety starters' },
       },
-      {
-        q: 'Where does our technical team start?',
-        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
-        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
-      },
       ...sharedFamilyFaq,
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Talk it through with the people who build it."
+    heading="Discuss your service with our implementation team."
     body="Tell us which facility or oversight service you want to improve, who reports changes, who decides and which systems need the resulting status. We can show how Registry Stack could fit."
-    primaryLabel="Ask a question"
-    primaryHref={askQuestionHref(area.name)}
+    primaryLabel="Discuss your service"
+    primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
     note={`Or write to ${contactEmail}.`}
   />

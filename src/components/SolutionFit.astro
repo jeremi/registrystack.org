@@ -34,7 +34,7 @@ const areaProducts = area.products.map((key) => {
       <p class="eyebrow">How it fits your institution</p>
       <h2 id="solution-fit-title">{heading}</h2>
       <slot />
-      {area.kind === 'register-family' && <p><a class="inline-cta" href="/solutions/review-changes/#what-your-office-calls-it">See how accountable review works for any register <span aria-hidden="true">→</span></a></p>}
+      {area.kind === 'register-family' && <p><a class="inline-cta" href="/solutions/review-changes/#what-your-office-calls-it">See how staff review a request <span aria-hidden="true">→</span></a></p>}
     </div>
     <dl>
       {areaProducts.map(({ product, job }) => (

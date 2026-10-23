@@ -57,6 +57,7 @@ const paths = [
   '/solutions/reference-registers/',
   '/solutions/check-a-fact/',
   '/solutions/review-changes/',
+  '/solutions/verifiable-credentials/',
   '/starters/',
   '/starters/professional-licensing/',
   '/starters/health-facilities/',

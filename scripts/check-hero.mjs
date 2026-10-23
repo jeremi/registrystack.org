@@ -57,6 +57,12 @@ const solutionMenuHrefs = [
   ...[...readFileSync(resolve('src/data/solutions.ts'), 'utf8').matchAll(/slug: '(\/solutions\/[^']+)'/g)]
     .map((match) => match[1]),
 ];
+const familySolutionHrefs = new Set(
+  [...readFileSync(resolve('src/data/solutions.ts'), 'utf8')
+    .matchAll(/slug: '(\/solutions\/[^']+)'[\s\S]*?kind: '(register-family|cross-cutting)'/g)]
+    .filter((match) => match[2] === 'register-family')
+    .map((match) => match[1]),
+);
 const redirects = [
   ['/why/', '/'],
   ['/problem/', '/'],
@@ -160,7 +166,11 @@ for (const options of [
           }
         }
       }
-      for (const route of ['/solutions/check-a-fact/', '/solutions/review-changes/']) {
+      for (const route of ['/solutions/check-a-fact/', '/solutions/review-changes/', '/solutions/verifiable-credentials/']) {
+        await page.goto(url);
+        if (await page.locator(`#shared-work a[href="${route}"]`).count() !== 1) {
+          fail(`the homepage must offer a clear route to ${route}`);
+        }
         await page.goto(`${url}solutions/`);
         const taskLink = page.locator(`main a[href="${route}"]`);
         if (await taskLink.count() !== 1) {
@@ -172,11 +182,36 @@ for (const options of [
         if (new URL(page.url()).pathname !== route || !await page.locator('main h1').isVisible()) {
           fail(`the solutions overview link did not open ${route}`);
         }
+        for (const anchor of ['example', 'fit']) {
+          const action = page.locator(`.hero-actions a[href="#${anchor}"]`);
+          if (await action.count() !== 1 || await page.locator(`#${anchor}`).count() !== 1) {
+            fail(`${route} must lead to its ${anchor} section`);
+          }
+        }
       }
       await page.goto(`${url}solutions/`);
       const inquiry = page.locator('.final-cta a[href^="mailto:"]');
       if (await inquiry.count() !== 1 || !isServiceMailto(await inquiry.getAttribute('href'))) {
         fail('the solutions closing invitation must let readers describe their service without choosing a configuration');
+      }
+      for (const route of solutionMenuHrefs.slice(1)) {
+        const response = await page.goto(new URL(route, url).href);
+        if (response?.status() !== 200) {
+          fail(`${route} must open before a reader discusses a service`);
+          continue;
+        }
+        const contact = page.locator('.final-cta .button-primary');
+        if (await contact.count() !== 1 || !isServiceMailto(await contact.getAttribute('href'))) {
+          fail(`${route} must offer a service inquiry with useful fields`);
+        }
+        if (familySolutionHrefs.has(route)) {
+          for (const tutorial of ['first-breg', 'first-evidence-assertion']) {
+            // Cross-site attribution adds query parameters when JavaScript runs.
+            if (await page.locator(`main a[href^="https://docs.registrystack.org/tutorials/${tutorial}/"]`).count() === 0) {
+              fail(`${route} must link to the ${tutorial} evaluation route`);
+            }
+          }
+        }
       }
     }
   }

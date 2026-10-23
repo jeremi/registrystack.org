@@ -46,7 +46,7 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
         <dt>Your office defines the answers</dt><dd>Agree what each fact means, its permitted uses, and the source responsible for the underlying information. The same source can support different defined answers for different services.</dd>
         <dt>Your technical team connects the source</dt><dd>Your register is read through an interface your system offers that returns JSON, a read-only extract your team publishes and refreshes, or a Base Registry Engine register. Your team configures how Evidence Gateway reads it, checks requests, and signs answers, then operates the service and manages its access rules.</dd>
         <dt>The receiving service makes its decision</dt><dd>Its team verifies the answer, decides how to use it alongside its own rules and other information, and remains responsible for that decision. Your organization remains responsible for the source records.</dd>
-        <dt>Credential output for a wallet integration</dt><dd>Evidence Gateway can issue an answer in a credential format. A separate delivery adapter can pass it to a compatible digital wallet. The chosen wallet must be tested for the project, including whether it can receive, store, and later present that credential.</dd>
+        <dt>Verifiable credentials</dt><dd>Evidence Gateway can issue an answer as a verifiable credential. A separate delivery adapter can pass it to a compatible digital wallet. The implementation team tests how the wallet receives, stores and presents the credential, and how the receiving service checks it. <a href="/solutions/verifiable-credentials/">Explore the credential solution</a>.</dd>
       </dl>
     </div>
   </section>

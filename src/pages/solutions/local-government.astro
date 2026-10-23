@@ -7,7 +7,7 @@ import DocsHandoff from '../../components/DocsHandoff.astro';
 import { describeServiceHref, contactEmail } from '../../data/contact';
 
 const pageTitle = 'Local government services | Registry Stack';
-const pageDescription = 'Run clearer local permit and registration services, from applications and staff review to current records, notices and renewals.';
+const pageDescription = 'Run local permit and registration services, from applications and staff review to record updates, notices and renewals.';
 ---
 
 <Base title={pageTitle} description={pageDescription}>
@@ -18,8 +18,8 @@ const pageDescription = 'Run clearer local permit and registration services, fro
         <div class="hero-copy">
           <p class="eyebrow">Local government</p>
           <h1 id="local-government-title">Run local permits and registrations from application to renewal.</h1>
-          <p class="hero-lead">Give residents and businesses a clear way to apply, give staff one place to review the work, and keep the resulting permit or registration current. Registry Stack can connect to the payment, document and mapping systems your authority already uses.</p>
-          <p>We offer scoped implementation pilots for one local service, with the applicant and staff screens, integrations and operating responsibilities agreed as part of the service.</p>
+          <p class="hero-lead">Give residents and businesses a clear way to apply, give staff one place to review each request, and keep the resulting permit or registration record current. Registry Stack can connect to the payment, document and mapping systems your authority already uses.</p>
+          <p>We offer scoped implementation pilots for one local service. A written scope defines the applicant and staff screens, integrations, and who will host, operate and support each part.</p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href="#example">See three possible services</a>
             <a class="button button-secondary" href="#what-changes">Follow the service</a>
@@ -32,7 +32,7 @@ const pageDescription = 'Run clearer local permit and registration services, fro
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Possible local services</p>
-          <h2 id="local-examples-title">Three services that use the same practical building blocks.</h2>
+          <h2 id="local-examples-title">Three examples of services an implementation could support.</h2>
           <p>These fictional examples show possible services. The forms, decisions and public information would follow each authority’s own rules.</p>
         </div>
         <div class="product-facts">
@@ -59,16 +59,16 @@ const pageDescription = 'Run clearer local permit and registration services, fro
       <div class="section-inner product-fit">
         <div class="section-heading compact">
           <p class="eyebrow">From application to renewal</p>
-          <h2 id="local-journey-title">Give applicants and staff one clear route through the service.</h2>
-          <p>The same pattern supports a permit, premises registration or another local service. Each step can use the authority’s existing channels and systems where they already work well.</p>
+          <h2 id="local-journey-title">Support applications, staff reviews and record updates.</h2>
+          <p>These steps can support a permit, premises registration or another local service. Each step can use the authority’s existing channels and systems where they already work well.</p>
         </div>
         <dl>
           <dt>Apply and provide evidence</dt>
           <dd>Applicants can start a request, save it, return later, explain why a document is unavailable, replace evidence and see the latest version they submitted.</dd>
           <dt>Review and decide</dt>
-          <dd>Staff receive the request in the right queue and check the evidence. If something is missing, they close the review with changes requested; the applicant revises the request and submits it for a new review. Supervisors can see who owns each active review and what needs attention.</dd>
+          <dd>Staff receive the request in the right queue and check the evidence. If something is missing, they request changes; the applicant revises the request and submits it for a new review. Supervisors can see which officer is responsible for each active review and what needs attention.</dd>
           <dt>Update the permit or registration</dt>
-          <dd>After the decision, a staff member or connected service with permission records the permit, registration or status. Earlier versions remain available for audit and correction.</dd>
+          <dd>After the decision, a staff member or connected service with permission records the permit, registration or status. Authorized staff can still see earlier versions.</dd>
           <dt>Notify, inspect and renew</dt>
           <dd>The service can send an approved notice when the application system requests it. Inspectors can check permitted details, and staff can manage renewal, suspension, correction and closure.</dd>
         </dl>
@@ -80,7 +80,7 @@ const pageDescription = 'Run clearer local permit and registration services, fro
         <div class="section-heading">
           <p class="eyebrow">Fits existing systems</p>
           <h2 id="local-scope-title">Keep the systems that still serve the authority well.</h2>
-          <p>Registry Stack can provide the register and connect to existing payment, identity, mapping, document or finance systems. An implementation can also include applicant, staff or public screens, hosting, data migration and integrations. The proposal states what will be delivered and what the authority will operate.</p>
+          <p>Registry Stack can provide the register and connect to existing payment, identity, mapping, document or finance systems. An implementation can also include applicant, staff or public screens, hosting, data migration and integrations. The written scope states what the delivery team will provide and what the authority will operate.</p>
         </div>
       </div>
     </section>
@@ -101,7 +101,7 @@ const pageDescription = 'Run clearer local permit and registration services, fro
           },
           {
             q: 'Can the implementation include screens and hosting?',
-            a: 'Yes. An implementation can include applicant, staff or public screens, identity, hosting, migration and integrations. The proposal states what is included; the core open-source components and available starting configurations are the foundation rather than a ready-made municipal service.',
+            a: 'Yes. An implementation can include applicant, staff or public screens, identity, hosting, migration and integrations. The written scope states what is included. The core open-source components and available starting configurations must be adapted; they are not a ready-made municipal service.',
           },
           {
             q: 'Which service should we discuss first?',

@@ -9,7 +9,7 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
-import { askQuestionHref, contactEmail } from '../../data/contact';
+import { describeServiceHref, contactEmail } from '../../data/contact';
 import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
 
@@ -40,7 +40,7 @@ const steps: WeekStep[] = [
     when: 'Property record updated',
     ...weekProduct('base-registry'),
     title: 'The parcel’s rights change and keep their history',
-    text: 'The registrar records the new holder under their own name. The earlier right stays in the history with the period it applied.',
+    text: 'The registrar records the new holder, and the register records who made the change. The earlier right stays in the history with the period it applied.',
     card: { kind: 'record', recordType: 'Parcel record', recordId: 'P-11-0482', icon: 'data', fields: [
       { label: 'Holder', value: 'New holder recorded' },
       { label: 'Changed by', value: 'S. Nakamura' },
@@ -51,7 +51,7 @@ const steps: WeekStep[] = [
     when: 'Extract requested',
     ...weekProduct('render'),
     title: 'The new holder gets a printed extract',
-    text: 'The service requests an extract from the recorded revision and keeps its fingerprint. With the same record revision, template, rendering version and other inputs, Registry Render produces the same bytes again.',
+    text: 'The service requests an extract from the recorded revision and keeps its fingerprint. When given the same issue details, Registry Render reproduces the extract so a later copy matches the original.',
     card: { kind: 'document', documentType: 'Title extract', title: 'Parcel P-11-0482, extract of rights', fields: [
       { label: 'Holder', value: 'As recorded in revision 9' },
       { label: 'Revision', value: '9' },
@@ -62,14 +62,14 @@ const steps: WeekStep[] = [
 ---
 <Solution
   area={area}
-  heading="Keep asset information and changes accountable."
-  description="Connect applications, human review and authorised changes to records of parcels, buildings, vehicles, vessels or public assets. Share only the information each connected service is permitted to receive, while maps, documents and specialist systems remain in their proper systems."
+  heading="Manage asset records and their changes."
+  description="Registrars review applications and record approved changes to parcels, buildings, vehicles, vessels or public assets. Connected services receive only the information your office allows. Existing maps, deeds and specialist records can stay in their current systems."
 >
   <section class="section" id="example" aria-labelledby="land-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="land-week-title">A transfer is lodged, a registrar reviews it, the authorised change is recorded and the service can issue an extract.</h2>
+        <h2 id="land-week-title">Follow a property transfer.</h2>
       </div>
       <RegisterWeek
         id="land-week"
@@ -83,12 +83,12 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="land-change-title">Traceable relationships and changes, connected to the systems already in use.</h2>
+        <h2 id="land-change-title">Review current rights and earlier changes.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Each right shows who holds it, in what share, and since when</h3><p>A parcel, building, vehicle or vessel is entered once, and each right or keeper is recorded against it for a period. A valuation office reads holder and share as your register holds them.</p><a class="inline-cta" href="/products/base-registry/">How the register serves other services <span aria-hidden="true">→</span></a></article>
+        <article><h3>Record who holds each right</h3><p>Staff record each right or keeper against the relevant parcel, building, vehicle or vessel, including the share and the period it applies. A valuation office reads holder and share as your register holds them.</p><a class="inline-cta" href="/products/base-registry/">How the register serves other services <span aria-hidden="true">→</span></a></article>
         <article><h3>Your law decides what is public</h3><p>Your office sets which entries are public and which only named roles may look up. The starters begin with holders restricted; public transport stops begin open to all.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
-        <article><h3>An extract can be reproduced from fixed inputs</h3><p>Registry Render produces the same bytes when the record revision, template, rendering version and other inputs are unchanged. The institution’s service controls when an extract may be issued and what legal effect it has.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/">How deterministic rendering works <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Reproduce an extract when another copy is needed</h3><p>When given the same issue details, Registry Render reproduces the extract so the later copy matches the original. The institution’s service controls when an extract may be issued and what legal effect it has.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/">How Registry Render reproduces a document <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
@@ -96,18 +96,18 @@ const steps: WeekStep[] = [
     area={area}
     heading="Start from an asset register like yours."
     intro="A starting configuration can provide a model for land, buildings, vehicles, vessels or places. It is adapted to your law, terminology, decision process and existing mapping or document systems."
-    featuredNote="The cadastre starter records the parcel right and defines a reader role; your team gives that role to the valuation office’s service."
+    featuredNote="The cadastre starting configuration records the parcel right. Your team decides whether the valuation office’s service may read holder and share information."
   />
   <SolutionFaq
     items={[
       {
         q: 'Does this replace our cadastre system?',
-        a: 'No. Your mapping system keeps parcel boundaries and your document store keeps deeds and plans. Base Registry Engine is for the register of rights you build new, or decide to move. If that register stays in its current system, that system serves its details; Registry Stack does not publish fields from a register it does not hold.',
+        a: 'No. Your mapping system keeps parcel boundaries and your document store keeps deeds and plans. Base Registry Engine is for the register of rights you build new, or decide to move. If that register stays in its current system, the current system must provide its details; Registry Stack does not publish fields from a register it does not hold.',
         link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'How it sits beside existing systems' },
       },
       {
         q: 'Can a valuation office read our register without an account on our system?',
-        a: 'Two cases. A member of the public or a notary looking up one parcel uses the public register your application publishes under your law. A service that needs holder details as part of its own process, such as the valuation office preparing its roll, reads the details your office has agreed to share with it, such as holder and share, and nothing else. Your office decides which services may read, and which details.',
+        a: 'Two cases. A person or notary looking up one parcel uses the public search service your application provides under your law. A connected service, such as a valuation office preparing its roll, receives only the details your office has agreed to share, such as holder and share. Your office decides which services may read each detail.',
         link: { href: '/products/base-registry/', label: 'How Base Registry Engine serves other services' },
       },
       {
@@ -117,7 +117,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Who can see who holds a parcel or a vehicle?',
-        a: 'Your office decides, role by role: who may record a right, who may look up a holder, and for what reason. Every look-up and every change is kept with who did it and when.',
+        a: 'Your office decides who may record a right, who may look up a holder and for what reason. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
       {
@@ -125,20 +125,15 @@ const steps: WeekStep[] = [
         a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to your law, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#land-property-and-assets', label: 'Browse the land, property and vehicle starters' },
       },
-      {
-        q: 'Where does our technical team start?',
-        a: 'If you keep your register where it is: the Evidence Gateway tutorial, which answers a question from sample data on a laptop. If you are building or moving a register: the Base Registry Engine tutorial, then the starter closest to your register.',
-        link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
-      },
       ...sharedFamilyFaq,
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Talk it through with the people who build it."
-    body="Tell us which asset-record service you want to improve, who maintains the official record and which mapping, document or valuation systems staff use today. We can show how Registry Stack could fit."
-    primaryLabel="Ask a question"
-    primaryHref={askQuestionHref(area.name)}
+    heading="Discuss your service with our implementation team."
+    body="Tell us which asset register you want to improve, who maintains the official record and which mapping, document or valuation systems staff use today. We can show how Registry Stack could fit."
+    primaryLabel="Discuss your service"
+    primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
     note={`Or write to ${contactEmail}.`}
   />

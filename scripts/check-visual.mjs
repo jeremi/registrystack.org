@@ -17,6 +17,7 @@ mkdirSync(outputDir, { recursive: true });
 // by service areas and shared capabilities. Products lists every core product plus
 // starters, developer tutorials and documentation.
 const countMatches = (relativePath, pattern) => (readFileSync(resolve(relativePath), 'utf8').match(pattern) ?? []).length;
+const expectedCapabilities = countMatches('src/data/solutions.ts', /kind: 'cross-cutting'/g);
 const expectedMenuLinks = [
   1 + countMatches('src/data/solutions.ts', /slug: '\/solutions\//g),
   3 + countMatches('src/data/products.ts', /href: '\/products\//g),
@@ -72,6 +73,7 @@ const routes = [
   { name: 'solutions-reference-registers', path: '/solutions/reference-registers/' },
   { name: 'solutions-check-a-fact', path: '/solutions/check-a-fact/' },
   { name: 'solutions-review-changes', path: '/solutions/review-changes/' },
+  { name: 'solutions-verifiable-credentials', path: '/solutions/verifiable-credentials/' },
   { name: 'starters', path: '/starters/' },
   { name: 'starter-professional-licensing', path: '/starters/professional-licensing/' },
   { name: 'starter-health-facilities', path: '/starters/health-facilities/' },
@@ -170,7 +172,7 @@ for (const viewport of viewports) {
       failures.push(`${label}: expected both homepage solution and capability link groups`);
     } else {
       checkArrangement('solution', layouts.registers[0].items, 3, viewport.name !== 'desktop');
-      checkArrangement('capability', layouts.registers[1].items, 2, viewport.name === 'mobile');
+      checkArrangement('capability', layouts.registers[1].items, expectedCapabilities, viewport.name !== 'desktop');
       for (const [index, group] of layouts.registers.entries()) {
         for (const [itemIndex, item] of group.items.entries()) {
           const name = `homepage link group ${index + 1}, item ${itemIndex + 1}`;
