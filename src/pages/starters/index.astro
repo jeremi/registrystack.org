@@ -19,7 +19,7 @@ const featured = registerFamilies.flatMap((area) => {
 });
 
 const pageTitle = 'Starters | Registry Stack';
-const pageDescription = 'Starting configurations for common registers, grouped by the kind of register an organization keeps.';
+const pageDescription = 'Browse examples of public registers and find a starting configuration to adapt. Configuration files are available free by email request.';
 const discussHref = describeServiceHref('a registry service');
 const requestHref = starterRequestHref('a starter not selected yet');
 ---
@@ -31,8 +31,8 @@ const requestHref = starterRequestHref('a starter not selected yet');
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Starters</p>
-          <h1 id="starters-title">Inspect a starting configuration for a register like yours.</h1>
-          <p class="hero-lead">{starterCount} starting configurations cover common registers, including professional licences, registered companies, and land parcels. Each page shows the records, staff actions, access roles, and any additional definitions included. Use the catalogue to assess domain fit, or describe your service before choosing a starting point. The configurations are free by email request.</p>
+          <h1 id="starters-title">Find a starting point for your register.</h1>
+          <p class="hero-lead">Browse {starterCount} register examples, including professional licences, companies and land parcels. Each page describes a starting configuration and the records and staff actions it covers. Configuration files are available free by email request.</p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href={discussHref}>Discuss your service</a>
             <a class="button button-secondary" href={requestHref}>Request a starter</a>
@@ -54,7 +54,7 @@ const requestHref = starterRequestHref('a starter not selected yet');
         <div class="section-heading compact">
           <p class="eyebrow">Start here</p>
           <h2 id="start-here-title">Selected starting configurations.</h2>
-          <p>Open one to see how the catalogue describes a register in that family. The other configurations cover related records and administrative responsibilities.</p>
+          <p>Choose an example to read about the records, staff actions and access roles it covers.</p>
         </div>
         <div class="starter-grid">
           {featured.map(({ area, starter }) => <StarterCard starter={starter} featured eyebrow={area.name} />)}
@@ -118,8 +118,8 @@ const requestHref = starterRequestHref('a starter not selected yet');
 
     <DocsHandoff
       eyebrow="Discuss your service"
-      heading="Begin with your requirements or inspect the catalogue."
-      body="Describe the register or service you need. We can discuss the closest starting point, the changes required, and the work needed around it."
+      heading="Discuss the register your service needs."
+      body="Tell us about your service. We can help identify a starting point and discuss the changes, screens and system connections you need."
       primaryLabel="Describe your service"
       primaryHref={discussHref}
       emphasis="docs"

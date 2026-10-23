@@ -96,6 +96,9 @@ for (const viewport of viewports) {
   if (route.name === 'solutions') {
     await page.locator('#services').screenshot({ path: resolve(outputDir, `solutions-services-${viewport.name}.png`) });
   }
+  if (route.name === 'starters') {
+    await page.locator('.hero').screenshot({ path: resolve(outputDir, `starters-hero-${viewport.name}.png`) });
+  }
   if (route.path.startsWith('/products/')) {
     await page.locator('.hero').screenshot({ path: resolve(outputDir, `${route.name}-hero-${viewport.name}.png`) });
     await page.locator('#fit').screenshot({ path: resolve(outputDir, `${route.name}-fit-${viewport.name}.png`) });
