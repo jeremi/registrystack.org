@@ -15,7 +15,7 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
 
 const steps: WeekStep[] = [
   {
-    when: 'Monday 08:30',
+    when: 'Registration submitted',
     product: 'Your registration drive',
     title: 'A farmer registers a holding',
     text: 'A farmer registers a holding at the district office. The register does not change until an officer decides.',
@@ -26,18 +26,18 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Monday to Tuesday',
+    when: 'Review and decision',
     ...weekProduct('casework'),
     title: 'An officer decides',
-    text: 'The request lands in the registrations queue. D. Mwangi takes it, checks the holding is not already registered under another name, and approves it.',
+    text: 'The request enters the registrations queue. D. Mwangi checks that the holding is not already registered under another name and approves the application.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Registrations' },
       { state: 'Claimed', note: 'Held by D. Mwangi' },
-      { state: 'Approved', note: 'Tuesday 16:00' },
+      { state: 'Approved', note: 'Duplicate check complete' },
     ] },
   },
   {
-    when: 'Tuesday 16:00',
+    when: 'Producer record updated',
     ...weekProduct('base-registry'),
     title: 'The holding is recorded and keeps its history',
     text: 'The officer records the holding under their own name. Each later change of status is added beside it, never over it.',
@@ -48,29 +48,29 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Tuesday 16:20',
+    when: 'Permitted programme check',
     ...weekProduct('evidence-gateway'),
     title: 'A subsidy programme asks, and gets only the district',
-    text: 'Twenty minutes later the subsidy programme asks which district the holding is registered in and receives that one value, signed. Plot coordinates and household details stay in your register.',
+    text: 'A subsidy programme authorised to make this check asks which district the holding is registered in and receives that value in a digitally signed answer. Plot coordinates and household details are not disclosed.',
     card: { kind: 'answer', fieldLabel: 'Registered in district', value: 'Northern', recipient: 'Subsidy programme', issuer: 'Farm register' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Keep the registers of farms, animals, food businesses, and permits current."
-  description="Subsidy season brings a registration drive, the same holding appears under two names, and the programme cannot tell which farmer is registered for which farm without asking your office. Registry Stack gives your office one register of the holdings, establishments, and permits it has recorded, and lets other services get the answer they need without seeing the rest of the file."
+  heading="Keep producer, site, establishment and permit records usable across services."
+  description="Connect registration, review and authorised changes, reduce duplicate entries and let permitted programmes check a defined fact without receiving the full record. Your institution keeps control of the register and its rules."
 >
   <section class="section" id="example" aria-labelledby="agriculture-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="agriculture-week-title">A holding is registered on Monday, recorded on Tuesday, and relied on by a programme twenty minutes later.</h2>
+        <h2 id="agriculture-week-title">A farmer applies, an officer checks the holding, the registration is recorded and a programme receives the district it is allowed to use.</h2>
       </div>
       <RegisterWeek
         id="agriculture-week"
         kicker="Holding HLD-5582, one request"
-        heading="Each step names the product that does it."
+        heading="Follow the producer registration."
         steps={steps}
       />
     </div>
@@ -79,7 +79,7 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="agriculture-change-title">One entry per holding, and a status history nobody has to rebuild.</h2>
+        <h2 id="agriculture-change-title">One maintained identity for each holding, with traceable status changes.</h2>
       </div>
       <div class="product-facts">
         <article><h3>Every permit is tied to the site it covers</h3><p>Each farm, establishment or site is recorded once, and every registration or permit is linked to it. One food business with two establishments has two registrations, and an inspector sees which is current.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
@@ -91,7 +91,7 @@ const steps: WeekStep[] = [
   <SolutionStarters
     area={area}
     heading="Start from an agriculture, food, or environment register like yours."
-    intro="A starter sets out what a register of this kind holds and who may change it, for one common register of holdings, animals, establishments, or permits. Your team takes the closest one and adapts it to its own agriculture, food, or environmental law."
+    intro="A starting configuration can provide a model for holdings, animals, establishments, permits or natural resources. It is adapted to your rules, field operations and existing sector systems."
     featuredNote="The farmer registry starter records the farm and the registration; the question a programme asks is set up in Evidence Gateway, which the starter does not include."
   />
   <SolutionFaq
@@ -113,7 +113,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
+        a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to your rules, field operations and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#agriculture-food-and-environment', label: 'Browse the agriculture, food and environment starters' },
       },
       {
@@ -127,7 +127,7 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Work with us"
     heading="Talk it through with the people who build it."
-    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    body="Tell us which producer, establishment or permit service you want to improve, who records field information and what other programmes need to check. We can show how Registry Stack could fit."
     primaryLabel="Ask a question"
     primaryHref={askQuestionHref(area.name)}
     emphasis="docs"

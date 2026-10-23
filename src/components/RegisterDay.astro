@@ -1,14 +1,13 @@
 ---
-// The home page's story: one licence correction, from request to a
-// signed answer. The same story is the brief for the home page video. The
-// figure itself is RegisterWeek, which every register family page also uses.
+// Illustrative licensing journey. A review decision and the authorized
+// register change are separate steps; the illustration does not imply timing.
 import RegisterWeek from './RegisterWeek.astro';
 import type { WeekStep } from '../data/register-week';
 
 const steps: WeekStep[] = [
   {
-    when: 'Tuesday 09:14',
-    product: 'Your application',
+    when: 'Request',
+    product: 'Applicant service',
     title: 'A request arrives',
     text: 'A licence holder asks the board to correct the scope of practice on their licence. The register does not change until an officer decides.',
     card: { kind: 'record', recordType: 'Correction request', recordId: 'REQ-3106', icon: 'data', fields: [
@@ -18,22 +17,22 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Tuesday to Wednesday',
+    when: 'Review',
     product: 'Registry Casework',
     title: 'An officer decides',
-    text: 'The request lands in the licence corrections queue. R. Adeyemi takes it, asks for the missing certificate, and approves the correction inside the board&rsquo;s 48-hour target.',
+    text: 'An officer takes responsibility for the request, checks the submitted documents and records the review decision.',
     card: { kind: 'history', items: [
-      { state: 'Received', note: 'Routed to Licence corrections' },
-      { state: 'Claimed', note: 'Held by R. Adeyemi' },
-      { state: 'Waiting', note: 'Certificate requested from the applicant' },
-      { state: 'Approved', note: 'Wednesday 10:02' },
+      { state: 'Received', note: 'Licence correction requested' },
+      { state: 'Assigned', note: 'R. Adeyemi reviews the request' },
+      { state: 'Evidence checked', note: 'Submitted certificate reviewed' },
+      { state: 'Approved', note: 'Decision and reason recorded' },
     ] },
   },
   {
-    when: 'Wednesday 10:02',
+    when: 'Update',
     product: 'Base Registry Engine',
     title: 'The record changes and keeps its history',
-    text: 'The officer applies the approved change under their own account. The register records revision 12 against their name, and revision 11 stays readable.',
+    text: 'An authorized officer applies the approved correction. The register records who changed the licence and retains the previous version.',
     card: { kind: 'record', recordType: 'Licence record', recordId: 'LIC-4471', icon: 'person', fields: [
       { label: 'Scope of practice', value: 'Corrected' },
       { label: 'Changed by', value: 'R. Adeyemi' },
@@ -41,10 +40,10 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Wednesday 10:20',
+    when: 'Check',
     product: 'Evidence Gateway',
-    title: 'Another service asks, and gets a signed answer',
-    text: 'Twenty minutes later a procurement service asks whether the licence is in good standing. It receives a signed yes. The licence file, the correction, and the holder&rsquo;s details stay in the register.',
+    title: 'A connected service checks the licence',
+    text: 'An authorized procurement service asks whether the licence is in good standing. It receives the answer, digitally signed by the board, without receiving the full licence file.',
     card: { kind: 'answer', fieldLabel: 'Licence in good standing', value: 'Yes', recipient: 'Procurement service', issuer: 'Licensing board' },
   },
 ];
@@ -53,6 +52,6 @@ const steps: WeekStep[] = [
 <RegisterWeek
   id="register-day"
   kicker="One licence, one request"
-  heading="A correction arrives on Tuesday. An officer decides on Wednesday, and twenty minutes later another service can rely on it."
+  heading="Follow a licence correction from request to updated record."
   steps={steps}
 />

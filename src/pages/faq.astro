@@ -7,7 +7,7 @@ import { askQuestionHref, contactEmail } from '../data/contact';
 
 const pageTitle = 'FAQ | Registry Stack';
 const pageDescription =
-  'Answers about which products and starters fit, control of your records, self-service evaluation, and implementation and support.';
+  'Answers about service fit, control of your records, starting configurations, self-service evaluation, implementation, and support.';
 
 // Grouped so a reader can scan to their own concern. Each answer stays short and
 // links to the page that carries the depth, so the FAQ does not become a second
@@ -18,7 +18,7 @@ const groups = [
     "items": [
       {
         "q": "What does Registry Stack help us do?",
-        "a": "Base Registry Engine holds the register: records about people, households, organizations, assets, and more, which your applications create, find, and update under your rules. Evidence Gateway lets approved services receive a signed answer from a register your organization controls, without receiving its full records. Registry Casework puts the changes that need an officer's decision in one queue.",
+        "a": "Registry Stack helps your institution deliver services that depend on authoritative records. You can maintain records under your rules, route changes that need an officer's review, and give approved services a defined, digitally signed answer without sharing a complete record.",
         "link": {
           "label": "Explore the product choices",
           "href": "/solutions/#products"
@@ -26,7 +26,7 @@ const groups = [
       },
       {
         "q": "Which products do we need?",
-        "a": "Usually one to start. Base Registry Engine holds a register. Evidence Gateway answers a defined question about a register you already have. Registry Casework queues the changes an officer must decide. Each runs on its own; the solution page for your register says which ones most offices of that kind start with.",
+        "a": "You can begin with the service you need rather than choosing products yourself. Base Registry Engine maintains records, Evidence Gateway answers defined questions from an authorized source, and Registry Casework coordinates changes an officer must review. Each runs independently, and a solution can combine only the products its journey requires.",
         "link": {
           "label": "Find your register",
           "href": "/solutions/"
@@ -34,7 +34,7 @@ const groups = [
       },
       {
         "q": "Which solution area am I in?",
-        "a": "Start from the kind of register your office keeps: licences, businesses and taxpayers, people and households, land, property and vehicles, agriculture and food, health and regulated products, or public bodies and reference lists. If your question is about checking facts between services or reviewing changes, those two areas apply to every kind of register.",
+        "a": "Start from the kind of service or register your institution needs: licences, businesses and taxpayers, people and households, land, property and vehicles, agriculture and food, health and regulated products, or public bodies and reference lists. Checking facts between services and reviewing changes can apply across these areas.",
         "link": {
           "label": "See the solution areas",
           "href": "/solutions/"
@@ -42,7 +42,7 @@ const groups = [
       },
       {
         "q": "Who is behind Registry Stack?",
-        "a": "Aubex Consulting LLC, based in San Francisco, builds and supports Registry Stack. The software is open source under Apache-2.0, and Aubex offers paid implementation pilots and support at published prices.",
+        "a": "Aubex Consulting LLC, based in San Francisco, builds and supports Registry Stack. The core software is open source under Apache-2.0. Aubex offers paid implementation pilots and support at published prices.",
         "link": {
           "label": "Read who does the work",
           "href": "/pricing/#team"
@@ -50,7 +50,7 @@ const groups = [
       },
       {
         "q": "Can we keep our existing register?",
-        "a": "Yes, with a connection your technical team sets up. Evidence Gateway reads your register through an interface your system offers or a read-only extract your team publishes, and answers the questions you have configured, such as whether a supplier is actively registered. A service that needs the records themselves reads the register through the access your office grants it; Registry Stack does not publish fields from a register it does not hold.",
+        "a": "Yes. Evidence Gateway can use an interface your system offers or a read-only extract to answer approved questions, such as whether a supplier is actively registered. Your team can establish that connection in a self-service implementation, or a paid delivery scope can assign the integration work.",
         "link": {
           "label": "Explore Evidence Gateway",
           "href": "/products/evidence-gateway/"
@@ -58,7 +58,7 @@ const groups = [
       },
       {
         "q": "What is Registry Stack not?",
-        "a": "It is not a central data store, a data exchange platform, or a replacement for the applications your staff use. It does not copy your registries into one place, and it does not decide eligibility for you. Each product does one job beside the systems you already run: hold records, answer a defined question, publish selected fields, or coordinate the officers who review changes. The documentation keeps a list of what the software does not do yet.",
+        "a": "Registry Stack is a set of focused products for governed records, review, and limited information sharing. It works beside identity, staff and public screens, payments, data exchange, and other systems your service uses. Your institution remains responsible for policy decisions such as eligibility and permission to practise.",
         "link": {
           "label": "Read the known limitations",
           "href": "https://docs.registrystack.org/explanation/known-limitations/"
@@ -67,11 +67,11 @@ const groups = [
     ]
   },
   {
-    "heading": "Your records and your applications",
+    "heading": "Your service and records",
     "items": [
       {
         "q": "Who owns and controls the records?",
-        "a": "Your organization does. You decide who may create or change a record, which services can ask for information, and what they may receive. The software applies the rules your team configures. You host the deployment; the software does not send your records or audit logs to Aubex.",
+        "a": "Your organization does. You decide who may create or change a record, which services may ask for information, and what they may receive. You or an operator you appoint controls the deployment. The software applies the rules your team configures and does not send your records or audit logs to Aubex.",
         "link": {
           "label": "Understand the security responsibilities",
           "href": "/security/"
@@ -79,7 +79,7 @@ const groups = [
       },
       {
         "q": "What does our team supply?",
-        "a": "Your organization defines the records and access rules, provides the application people use, and operates the service. Base Registry Engine handles record storage, relationships, and controlled access and updates. Evidence Gateway connects to a source your team makes available and returns the answers you have defined.",
+        "a": "For a self-service implementation, your team defines the journey, records, access rules, screens, identity, integrations, hosting, migration, and operation. In a paid delivery engagement, the written scope can include some of that work. It states what your team and ours will each deliver, including handover.",
         "link": {
           "label": "See how Base Registry Engine supports your application",
           "href": "/products/base-registry/"
@@ -87,7 +87,7 @@ const groups = [
       },
       {
         "q": "Can we start from a spreadsheet or legacy database?",
-        "a": "Yes, with preparation by your technical team. To let services check a fact from it, your team publishes a read-only extract that Evidence Gateway reads and refreshes it as often as you agree. To move records into Base Registry Engine, your team defines the record structure and plans the migration.",
+        "a": "Yes. A service can read an agreed extract from an existing source, or records can be prepared for migration into Base Registry Engine. The implementation scope defines mapping, data quality checks, refresh or migration steps, and who is responsible for each one.",
         "link": {
           "label": "Explore Evidence Gateway",
           "href": "/products/evidence-gateway/"
@@ -95,7 +95,7 @@ const groups = [
       },
       {
         "q": "Does every new question mean a new integration project?",
-        "a": "No. The register is connected once. Each further question a service asks is a configuration change: your team defines the answer, its source, and who may receive it, and reviews that definition before it goes live. The first connection carries the integration cost; later questions reuse it.",
+        "a": "A source connection can support more than one predefined question when they use the same interface and authority. Each question still needs its answer, source, permitted recipients, and purpose defined and reviewed before use. A question that needs another source or interface may require additional integration work.",
         "link": {
           "label": "Read how to define the question first",
           "href": "/blog/before-you-connect-a-registry-define-the-question/"
@@ -108,7 +108,7 @@ const groups = [
     "items": [
       {
         "q": "What is a starter?",
-        "a": "A ready-made definition of one common kind of register: the records it keeps, what staff do with them, and who may do what. Your team generates a project from it and adapts it to your law. It is a starting point, not a running registry, and does not show that the register is in use anywhere.",
+        "a": "A starter is a reusable starting configuration for one kind of register. It defines records, actions, and access roles that your team can adapt to local law and process. The catalogue is not a collection of ready-to-run applications: screens, identity, integrations, hosting, data, and operation still need to be supplied or scoped.",
         "link": {
           "label": "Browse the starters",
           "href": "/starters/"
@@ -116,7 +116,7 @@ const groups = [
       },
       {
         "q": "How do we get a starter?",
-        "a": "From the starter's page, by email: the button opens a message to contact@registrystack.org that names the starter. We reply with the zip, and if another starter fits better, the reply says which.",
+        "a": "Starters are currently free by request. The button on a starter page opens an email to contact@registrystack.org that names it. We send the configuration as a zip, or help identify a closer starting point if the one you named does not fit.",
         "link": {
           "label": "Choose a starter",
           "href": "/starters/"
@@ -124,10 +124,18 @@ const groups = [
       },
       {
         "q": "Why is it sent by email rather than downloaded?",
-        "a": "The starters repository is not yet public. Until it is, we send each starter as a zip on request. Each zip carries a checksum so your team can confirm it is the file we published.",
+        "a": "Starting configurations are currently available by request. Contact us to receive a model for your team to evaluate and adapt. Building a service also requires screens, integrations and deployment suited to your institution.",
         "link": {
           "label": "Browse the starters",
           "href": "/starters/"
+        }
+      },
+      {
+        "q": "Do we need to choose a starter before asking for help?",
+        "a": "No. Describe the service, its users, the records it depends on, and what should improve. In an implementation engagement, our team can identify the nearest available model and adapt it with you.",
+        "link": {
+          "label": "Describe the service you need",
+          "href": "/pricing/#inquiry"
         }
       }
     ]
@@ -137,7 +145,7 @@ const groups = [
     "items": [
       {
         "q": "Is there a software licence fee?",
-        "a": "No. Registry Stack is Apache-2.0 open-source software. Your team provides the hosting, implementation, and operation. Self-service use is separate from paid delivery and private support.",
+        "a": "The core Registry Stack software is available under Apache 2.0 with no software licence fee. Implementation and private support are paid services. Registry Studio is in development under a separate proprietary licence, and Registry App Kit is not a public download.",
         "link": {
           "label": "Read the documentation",
           "href": "https://docs.registrystack.org/"
@@ -145,7 +153,7 @@ const groups = [
       },
       {
         "q": "What does using the free software commit us to?",
-        "a": "Keeping the licence and notice files with the software, and crediting PublicSchema where its record definitions are used. Nothing else: no fee, no obligation to buy services, and no data sent to Aubex. A starter request is an email, and we use it only to reply.",
+        "a": "Self-service use does not require buying implementation or support. Your team must preserve the applicable licence and notice files, including attribution for PublicSchema record definitions where used. The core software does not send your records or audit logs to Aubex.",
         "link": {
           "label": "Read the privacy policy",
           "href": "/privacy/"
@@ -153,7 +161,7 @@ const groups = [
       },
       {
         "q": "How mature is the software?",
-        "a": "Pre-1.0, built for self-hosted institutional pilots. Interfaces may change before 1.0, so your team keeps clients and deployments on compatible releases. Releases are numbered, signed and ship a software bill of materials, and the documentation keeps a list of known limitations. There is no hosted service.",
+        "a": "The core software is in Beta for institutional pilots. Your organization or an appointed provider operates it. Interfaces may change before version 1.0, so your technical team needs to plan upgrades. A paid implementation proposal states who provides and operates the hosting.",
         "link": {
           "label": "Read the known limitations",
           "href": "https://docs.registrystack.org/explanation/known-limitations/"
@@ -161,7 +169,7 @@ const groups = [
       },
       {
         "q": "What can our developers try?",
-        "a": "The Base Registry Engine tutorial creates and updates a sample business record. The Evidence Gateway tutorial checks a synthetic person's adult status and verifies the signed answer. Each tutorial explains its prerequisites and steps.",
+        "a": "The Base Registry Engine tutorial creates a contact registry, adds and reads a contact, and shows how permissions limit who can find it. The Evidence Gateway tutorial checks a fictional person's adult status and verifies the signed answer. Each tutorial explains its prerequisites and steps.",
         "link": {
           "label": "Choose an introductory tutorial",
           "href": "/#developers"
@@ -169,18 +177,18 @@ const groups = [
       },
       {
         "q": "What implementation and support services are available?",
-        "a": "We can help deliver a scoped implementation pilot. If your team handles implementation itself, you can choose an ongoing support contract. Both are paid services, with the scope and fee agreed before work begins. You can discuss your needs before installing the software.",
+        "a": "An implementation pilot can cover an agreed service journey, screens, identity, integrations, data preparation or migration, hosting responsibilities, and handover. Annual support is for teams that implement and operate Registry Stack themselves. The written scope says what is included, who does each part, and the fee.",
         "link": {
           "label": "See implementation and support pricing",
           "href": "/pricing/"
         }
       },
       {
-        "q": "Are the examples real?",
-        "a": "No. Every record, name and organization in the illustrations is fictional. The site names no deployments; we name one only when its operator agrees.",
+        "q": "Can AI help customize our service?",
+        "a": "Yes, through an implementation pilot with our team. We use AI tools to help adapt records, forms and review steps, then test the result with you. The configured service does not require an AI service for ordinary operation. Registry Studio is in development; its self-service AI assistant is planned.",
         "link": {
-          "label": "See where the project stands",
-          "href": "/#project-status"
+          "label": "Explore AI-assisted customization",
+          "href": "/customization/"
         }
       }
     ]
@@ -247,7 +255,7 @@ const faqSchema = {
 
   <DocsHandoff
     heading="Still have a question?"
-    body="Write to us and say which register you keep."
+    body="Tell us about the service you need and what you would like to know."
     primaryLabel="Ask a question"
     primaryHref={askQuestionHref()}
     emphasis="docs"

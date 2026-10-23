@@ -2,8 +2,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 // Structural invariant checks only. Marketing copy is intentionally reviewed
-// by people, not pinned in this script. These checks protect the use-case-first
-// information architecture (solutions, then starters, then products),
+// by people, not pinned in this script. These checks protect the buyer-first
+// information architecture (services, customization, then products),
 // redirects, required components, and site wiring.
 
 const failures = [];
@@ -95,41 +95,37 @@ for (const relativePath of ['src/data/products.ts', ...markdownLinkFiles]) {
   }
 }
 
-// 2. Homepage orientation: how a register runs comes first (with the work
-// every register shares inside it), then control, the register a reader keeps,
-// the products, and the developer paths.
+// 2. Homepage orientation: start from the service, explain customization and
+// an example journey, then ownership, products, adoption and developer paths.
 const homeSource = readSource('src/pages/index.astro');
 const productSource = readSource('src/data/products.ts');
 const heroMatch = homeSource.match(/<section class="hero[^"]*"[\s\S]*?<\/section>/);
-if (!homeSource.includes('<RegistryExample')) {
-  failures.push('homepage is missing its explanatory registry example');
+if (!homeSource.includes('<ServiceOutline')) {
+  failures.push('homepage is missing its service-owner outline');
 }
 if (!homeSource.includes('<RegisterDay')) {
-  failures.push('homepage is missing the register-day sequence that shows how a register runs');
+  failures.push('homepage is missing the example journey from request to current record');
 }
-if (!heroMatch || !heroMatch[0].includes('href="#how-a-register-runs"') || !heroMatch[0].includes('href={askQuestionHref()}')) {
-  failures.push('homepage hero is missing its "See how a register runs" and "Ask a question" actions');
+if (!heroMatch || !heroMatch[0].includes('href="/solutions/"') ||
+    !heroMatch[0].includes('href={describeServiceHref()}') ||
+    !heroMatch[0].includes('data-journey="service-inquiry"')) {
+  failures.push('homepage hero is missing its solution route or needs-first service inquiry');
 }
 // `how-it-works` and `start-testing` are kept for inbound links to the
 // former product and developer anchors.
-for (const anchor of ['how-a-register-runs', 'registers', 'shared-work', 'products', 'how-it-works', 'developers', 'start-testing', 'project-status']) {
+for (const anchor of ['registers', 'customization', 'how-a-register-runs', 'shared-work', 'open-source', 'products', 'how-it-works', 'get-started', 'developers', 'start-testing', 'project-status']) {
   if (!homeSource.includes(`id="${anchor}"`)) failures.push(`homepage is missing the ${anchor} destination`);
 }
-const homeSectionOrder = ['how-a-register-runs', 'shared-work', 'ownership-title', 'registers', 'products', 'developers', 'project-status', 'pilot-title'];
-const homeSectionIndexes = homeSectionOrder.map((id) => homeSource.indexOf(`id="${id}"`));
-if (homeSectionIndexes.some((index, position) => index < 0 || (position > 0 && index < homeSectionIndexes[position - 1]))) {
-  failures.push(`homepage sections must run in this order: ${homeSectionOrder.join(', ')}`);
-}
-// The parts around the three products are named once, under the product
-// cards, from the shared data, so the home page and the solution stories
-// agree on what else ships.
-if (!homeSource.includes('companionServices.map') || homeSource.indexOf('companionServices.map') < homeSource.indexOf('id="products"')) {
-  failures.push('homepage must list the companion services from products.ts under the product cards');
+const buyerEntryIndexes = ['registers', 'customization'].map((id) => homeSource.indexOf(`id="${id}"`));
+const evaluationIndexes = ['products', 'developers'].map((id) => homeSource.indexOf(`id="${id}"`));
+if (buyerEntryIndexes.some((index) => index < 0) || evaluationIndexes.some((index) => index < 0) ||
+    Math.max(...buyerEntryIndexes) > Math.min(...evaluationIndexes)) {
+  failures.push('homepage must introduce solutions and customization before product and technical evaluation');
 }
 if (!homeSource.includes('home-solution-grid') || !homeSource.includes('developer-tutorial')) {
   failures.push('homepage is missing its product choices or developer tutorials');
 }
-// The four products are equal cards on the homepage, each with its own page.
+// The three core products are equal cards on the homepage, each with its own page.
 const homeProductCards = homeSource.match(/class="home-solution-card"/g) ?? [];
 if (homeProductCards.length !== productPages.length ||
     productPages.some(({ route }) => !homeSource.includes(`href="${route}"`))) {
@@ -155,7 +151,7 @@ for (const { route } of productPages) {
 for (const route of [
   'https://docs.registrystack.org/tutorials/first-breg/',
   'https://docs.registrystack.org/tutorials/first-evidence-assertion/',
-  'https://docs.registrystack.org/start/casework/',
+  'https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/',
 ]) {
   if (!productSource.includes(route)) failures.push('product data is missing a current tutorial: ' + route);
 }
@@ -169,6 +165,10 @@ const navigationSource = [
 ].join('\n');
 for (const route of [
   ...productPages.map((page) => page.route),
+  '/solutions/',
+  '/solutions/local-government/',
+  '/customization/',
+  '/digital-public-infrastructure/',
   '/starters/',
   '/blog/',
   '/security/',
@@ -195,21 +195,30 @@ for (const [label, source] of [['header', headerSource], ['footer', footerSource
   if (!source.includes("from '../data/products'") || !source.includes('product.href') || !source.includes('product.name')) {
     failures.push(`${label} does not build its product entries from products.ts by product name`);
   }
-  if (!source.includes("'/starters/'")) failures.push(`${label} is missing the starters catalogue`);
-  // A reader without a technical question can reach a person from every page.
-  if (!source.includes("from '../data/contact'") || !/askQuestionHref\(|mailto:\$\{contactEmail\}|mailto:contact@registrystack\.org/.test(source)) {
-    failures.push(`${label} is missing the "Ask a question" email link`);
-  }
-  if (!source.includes('Work every register shares')) {
-    failures.push(`${label} does not group the cross-cutting solution areas under "Work every register shares"`);
+  if (!source.includes("'/starters/'")) failures.push(`${label} is missing the starting configurations`);
+  if (!source.includes('Shared capabilities')) {
+    failures.push(`${label} does not group the cross-cutting solution areas under "Shared capabilities"`);
   }
 }
-if (!headerSource.includes('href="/solutions/"') || !headerSource.includes('All solutions')) {
-  failures.push('the Solutions menu does not open with "All solutions"');
+if (!headerSource.includes('href="/solutions/"') || !headerSource.includes('All solutions') ||
+    !headerSource.includes('href="/solutions/local-government/"')) {
+  failures.push('the Solutions menu must open with all solutions and the local-government route');
+}
+for (const route of ['/starters/', '/#developers', 'https://docs.registrystack.org/']) {
+  if (!headerSource.includes(`href: '${route}'`)) failures.push(`the Products menu is missing ${route}`);
+}
+for (const route of ['/customization/', '/pricing/']) {
+  if (!headerSource.includes(`href: '${route}'`)) failures.push(`header is missing its direct ${route} route`);
+}
+if (!headerSource.includes('href="/pricing/#inquiry"') || !headerSource.includes('>Contact</a>')) {
+  failures.push('header Contact action must lead to /pricing/#inquiry');
 }
 // The footer prints the address itself, not only a button that opens it.
 if (!/label: contactEmail\b|>contact@registrystack\.org</.test(footerSource)) {
   failures.push('footer does not print the contact address in text');
+}
+for (const route of ['/solutions/', '/solutions/local-government/', '/customization/', '/digital-public-infrastructure/', '/starters/', '/blog/', '/security/', '/faq/', '/pricing/#inquiry']) {
+  if (!footerSource.includes(`href: '${route}'`)) failures.push(`footer is missing ${route}`);
 }
 if (!footerSource.includes("'/pricing/#team'")) failures.push('footer is missing the About link to /pricing/#team');
 
@@ -231,7 +240,7 @@ const expectedRedirects = [
   "'/problem/': '/'",
   "'/ecosystem/': '/'",
   "'/how-it-fits/': '/'",
-  "'/ai/': '/solutions/'",
+  "'/ai/': '/customization/'",
   "'/use-cases/': '/solutions/'",
   "'/notary/': '/products/evidence-gateway/'",
   "'/relay/': '/products/evidence-gateway/'",
@@ -303,9 +312,10 @@ for (const { area, file } of solutionPageFiles) {
   else warnings.push(message);
 }
 
-// Solution area pages are written for the person who runs the register, not
-// for a technical evaluator: the implementation vocabulary belongs on the
-// starter and product pages. Each term is matched as a whole word, ignoring
+// Register-family pages are written for the person who runs the register, not
+// for a technical evaluator: implementation vocabulary belongs on starter and
+// product pages. Cross-cutting capability pages may explain the capability
+// they are specifically about. Each term is matched as a whole word, ignoring
 // case, in the page's visible text and attributes alike.
 const solutionPageVocabulary = [
   'record type', 'record types', 'access profile', 'access profiles', 'mutation mode', 'create-only',
@@ -316,9 +326,11 @@ for (const { area, file } of solutionPageFiles) {
   if (!source) continue;
   // Only the template body: the frontmatter imports product and area data by name.
   const body = source.replace(/^---[\s\S]*?---/, '');
-  for (const term of solutionPageVocabulary) {
-    const pattern = new RegExp(`(^|[^A-Za-z-])${term.replace(/[-]/g, '\\-')}(?=$|[^A-Za-z-])`, 'im');
-    if (pattern.test(body)) failures.push(`solution page ${file} uses the term "${term}"; keep implementation vocabulary on starter and product pages`);
+  if (area.kind === 'register-family') {
+    for (const term of solutionPageVocabulary) {
+      const pattern = new RegExp(`(^|[^A-Za-z-])${term.replace(/[-]/g, '\\-')}(?=$|[^A-Za-z-])`, 'im');
+      if (pattern.test(body)) failures.push(`register-family page ${file} uses the term "${term}"; keep implementation vocabulary on starter and product pages`);
+    }
   }
   if (source.includes('SolutionDevelopers')) failures.push(`solution page ${file} renders a developer section; developer next steps live in its FAQ`);
   // A register family tells one request, start to finish, for its own kind of record,
@@ -382,6 +394,10 @@ for (const starter of catalogueStarters) {
 const starterPageSource = readSource('src/pages/starters/[id].astro');
 if (starterPageSource.includes('href={starter.download.path}')) failures.push('starter page links the zip; starters are sent on request');
 if (!starterPageSource.includes('data-journey="starter-request"')) failures.push('starter page is missing the starter request action');
+const startersIndexSource = readSource('src/pages/starters/index.astro');
+if (!/not public yet[\s\S]*email request|email request[\s\S]*not public yet/i.test(startersIndexSource)) {
+  failures.push('starters catalogue must state that unpublished starter files are available by email request');
+}
 const startersUpstream = JSON.parse(readSource('src/upstream/starters.json') || '{}');
 if (startersUpstream.starterCount !== catalogueStarters.length) {
   failures.push(`src/upstream/starters.json starterCount ${startersUpstream.starterCount} does not match the ${catalogueStarters.length} starters in src/data/starters.json`);
@@ -414,8 +430,11 @@ const handoffExempt = new Set([
 ]);
 for (const relativePath of sweptFiles) {
   if (!relativePath.startsWith('src/pages/') || handoffExempt.has(relativePath)) continue;
-  if (!/DocsHandoff|<Product|<Article/.test(readSource(relativePath))) {
-    failures.push(`${relativePath} is missing the docs handoff CTA (DocsHandoff)`);
+  const source = readSource(relativePath);
+  const hasBuyerHandoff = /data-journey="service-inquiry"/.test(source) &&
+    /<section class="final-cta"[\s\S]*?href="\/pricing\//.test(source);
+  if (!/DocsHandoff|<Product|<Article/.test(source) && !hasBuyerHandoff) {
+    failures.push(`${relativePath} is missing a docs or buyer delivery handoff`);
   }
 }
 // Blog articles reach the handoff through their shared layout.
@@ -453,6 +472,9 @@ if (!pricingSource.includes('href={askQuestionHref()}')) failures.push('pricing 
 if (!/Budget[^'\n]*\(optional\)/.test(pricingSource) || !/Timing[^'\n]*\(optional\)/.test(pricingSource)) {
   failures.push('pricing brief must mark budget and timing as optional');
 }
+for (const need of [/service you need/i, /who will use it/i, /what should improve/i]) {
+  if (!need.test(pricingSource)) failures.push(`pricing brief is missing the needs-first field ${need}`);
+}
 if (!pricingSource.includes('id="team"') || !pricingSource.includes('id="stewardship"')) {
   failures.push('pricing page is missing the team block (#team) or the #stewardship anchor the pilot redirect keeps');
 }
@@ -485,6 +507,25 @@ if (!productLayout.includes('description={product.description}')) {
 }
 if (!pricingSource.includes('/#developers')) {
   failures.push('pricing page is missing the self-service developer path');
+}
+
+// Inquiry mailtos use encoded real line breaks, and the service path asks for
+// the need, users and desired improvement before a buyer chooses a product.
+const contactSource = readSource('src/data/contact.ts');
+if (!contactSource.includes("bodyLines.join('\\n')") || contactSource.includes("bodyLines.join('\\\\n')")) {
+  failures.push('contact mailtos must join fields with real newline characters');
+}
+for (const field of ['The service you need: ', 'Who will use it: ', 'What should improve: ']) {
+  if (!contactSource.includes(`'${field}'`)) failures.push(`service inquiry email is missing field: ${field.trim()}`);
+}
+
+// Planned product and standards work stays clearly distinguished from what a
+// buyer can use today.
+const customizationSource = readSource('src/pages/customization.astro');
+const studioSection = customizationSource.match(/<section\b[^>]*id="studio"[\s\S]*?<\/section>/)?.[0] ?? '';
+if (!/Registry Studio/i.test(studioSection) ||
+    !/\b(planned|in development|developing|future|not (?:yet|currently) available)\b/i.test(studioSection)) {
+  failures.push('customization page must identify Registry Studio as planned or in development');
 }
 
 // 5. Social sharing: the layout declares a large-image card, so it must point

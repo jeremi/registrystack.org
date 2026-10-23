@@ -4,19 +4,22 @@
 // in the docs.
 import { products } from '../data/products';
 import { solutionAreas } from '../data/solutions';
-import { askQuestionHref } from '../data/contact';
 const { current } = Astro.props;
 const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 
 const links = [
-  { href: '/starters/', label: 'Starters', key: 'starters' },
-  { href: '/blog/', label: 'Blog', key: 'blog' },
+  { href: '/customization/', label: 'Customization', key: 'customization' },
   { href: '/pricing/', label: 'Pricing', key: 'pricing' },
 ];
+const evaluationLinks = [
+  { href: '/starters/', label: 'Starting configurations', key: 'starters' },
+  { href: '/#developers', label: 'Developer tutorials', key: 'developers' },
+  { href: 'https://docs.registrystack.org/', label: 'Documentation', key: 'docs' },
+];
 
-const onSolutionPage = current === 'solutions' || solutionAreas.some((area) => area.key === current);
-const onProductPage = products.some((product) => product.key === current);
+const onSolutionPage = current === 'solutions' || current === 'local-government' || solutionAreas.some((area) => area.key === current);
+const onProductPage = current === 'starters' || products.some((product) => product.key === current);
 // The flagship products lead the menu; the data order is otherwise kept.
 const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
 ---
@@ -32,7 +35,11 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       <div class="nav-group-panel">
         <a href="/solutions/" aria-current={current === 'solutions' ? 'page' : undefined}>
           <span class="nav-entry-name">All solutions</span>
-          <span class="nav-entry-blurb">Start from the register you keep</span>
+          <span class="nav-entry-blurb">Find a starting point for your service</span>
+        </a>
+        <a href="/solutions/local-government/" aria-current={current === 'local-government' ? 'page' : undefined}>
+          <span class="nav-entry-name">Local government</span>
+          <span class="nav-entry-blurb">Permits, premises, facilities and local services</span>
         </a>
         <hr class="nav-group-rule" />
         {registerFamilies.map((area) => (
@@ -42,7 +49,7 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
           </a>
         ))}
         <hr class="nav-group-rule" />
-        <p class="nav-group-label">Work every register shares</p>
+        <p class="nav-group-label">Shared capabilities</p>
         {crossCutting.map((area) => (
           <a href={area.slug} aria-current={current === area.key ? 'page' : undefined}>
             <span class="nav-entry-name">{area.name}</span>
@@ -60,13 +67,17 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
             <span class="nav-entry-blurb">{product.intent}</span>
           </a>
         ))}
+        <hr class="nav-group-rule" />
+        {evaluationLinks.map((link) => (
+          <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>
+            <span class="nav-entry-name">{link.label}</span>
+          </a>
+        ))}
       </div>
     </details>
     {links.map((link) => (
       <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
     ))}
-    <a href="https://docs.registrystack.org/">Docs</a>
-    <a class="nav-outline" href={askQuestionHref()}>Ask a question</a>
-    <a class="nav-emphasis" href="/#developers">For developers</a>
+    <a class="nav-emphasis" href="/pricing/#inquiry">Contact</a>
   </nav>
 </header>

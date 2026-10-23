@@ -15,7 +15,7 @@ const area = solutionAreas.find((a) => a.key === 'land-property-and-assets')!;
 
 const steps: WeekStep[] = [
   {
-    when: 'Monday 09:00',
+    when: 'Transfer lodged',
     product: 'Your lodgement service',
     title: 'A transfer is lodged',
     text: 'A notary lodges a transfer of parcel P-11-0482 with the deed attached. The register does not change until a registrar decides.',
@@ -26,18 +26,18 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Monday to Wednesday',
+    when: 'Review and decision',
     ...weekProduct('casework'),
     title: 'A registrar decides',
-    text: 'The transfer lands in the transfers queue. S. Nakamura takes it, checks the deed against the survey, and approves it.',
+    text: 'The transfer enters the review queue. S. Nakamura checks the deed against the survey information and approves the application.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Transfers' },
       { state: 'Claimed', note: 'Held by S. Nakamura' },
-      { state: 'Approved', note: 'Wednesday 11:40' },
+      { state: 'Approved', note: 'Checks complete' },
     ] },
   },
   {
-    when: 'Wednesday 11:40',
+    when: 'Property record updated',
     ...weekProduct('base-registry'),
     title: 'The parcel’s rights change and keep their history',
     text: 'The registrar records the new holder under their own name. The earlier right stays in the history with the period it applied.',
@@ -48,33 +48,33 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Wednesday 11:45',
+    when: 'Extract requested',
     ...weekProduct('render'),
     title: 'The new holder gets a printed extract',
-    text: 'Minutes later a title extract is printed from the register and its fingerprint is kept beside the record. Print it again next year and the bytes match.',
+    text: 'The service requests an extract from the recorded revision and keeps its fingerprint. With the same record revision, template, rendering version and other inputs, Registry Render produces the same bytes again.',
     card: { kind: 'document', documentType: 'Title extract', title: 'Parcel P-11-0482, extract of rights', fields: [
-      { label: 'Holder', value: 'As recorded on Wednesday' },
+      { label: 'Holder', value: 'As recorded in revision 9' },
       { label: 'Revision', value: '9' },
-      { label: 'Printed', value: 'Wednesday 11:45' },
+      { label: 'Issued from', value: 'Revision 9' },
     ], hash: '3f9a…c21e' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Record what is registered, who holds it, and since when."
-  description="A transfer waits in the backlog, two entries claim the same parcel, and the valuation office and the notaries work from a spreadsheet your staff exported last quarter. Registry Stack gives your office one register of the assets it records and the rights over them, and shares only the details you have agreed with each office that needs them."
+  heading="Keep asset information and changes accountable."
+  description="Connect applications, human review and authorised changes to records of parcels, buildings, vehicles, vessels or public assets. Share only the information each connected service is permitted to receive, while maps, documents and specialist systems remain in their proper systems."
 >
   <section class="section" id="example" aria-labelledby="land-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="land-week-title">A transfer is lodged on Monday. The registrar decides on Wednesday, and the new holder has an extract minutes later.</h2>
+        <h2 id="land-week-title">A transfer is lodged, a registrar reviews it, the authorised change is recorded and the service can issue an extract.</h2>
       </div>
       <RegisterWeek
         id="land-week"
         kicker="Parcel P-11-0482, one request"
-        heading="Each step names the product that does it."
+        heading="Follow the property transfer."
         steps={steps}
       />
     </div>
@@ -83,19 +83,19 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="land-change-title">One entry per parcel, and the services you connect stop re-typing it into spreadsheets.</h2>
+        <h2 id="land-change-title">Traceable relationships and changes, connected to the systems already in use.</h2>
       </div>
       <div class="product-facts">
         <article><h3>Each right shows who holds it, in what share, and since when</h3><p>A parcel, building, vehicle or vessel is entered once, and each right or keeper is recorded against it for a period. A valuation office reads holder and share as your register holds them.</p><a class="inline-cta" href="/products/base-registry/">How the register serves other services <span aria-hidden="true">→</span></a></article>
         <article><h3>Your law decides what is public</h3><p>Your office sets which entries are public and which only named roles may look up. The starters begin with holders restricted; public transport stops begin open to all.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
-        <article><h3>An extract prints the same every time</h3><p>A title extract or certificate is printed from the register, with its fingerprint kept beside the record. A reprint matches the original byte for byte.</p><a class="inline-cta" href="https://docs.registrystack.org/start/registry-render/">How printed documents work <span aria-hidden="true">↗</span></a></article>
+        <article><h3>An extract can be reproduced from fixed inputs</h3><p>Registry Render produces the same bytes when the record revision, template, rendering version and other inputs are unchanged. The institution’s service controls when an extract may be issued and what legal effect it has.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/">How deterministic rendering works <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
   <SolutionStarters
     area={area}
     heading="Start from an asset register like yours."
-    intro="A starter sets out what a register of this kind holds and who may change it, for one common register of land, buildings, vehicles, or places. Your team takes the closest one and adapts it to its own law."
+    intro="A starting configuration can provide a model for land, buildings, vehicles, vessels or places. It is adapted to your law, terminology, decision process and existing mapping or document systems."
     featuredNote="The cadastre starter records the parcel right and defines a reader role; your team gives that role to the valuation office’s service."
   />
   <SolutionFaq
@@ -112,7 +112,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Is a printed extract proof of what the register holds?',
-        a: 'The extract shows what the register held when it was printed, and its fingerprint is kept with the record. Whether a paper extract has legal effect is a matter for your law; a service that needs the current state asks the register.',
+        a: 'The extract represents the record revision used to render it, and its fingerprint can be retained with that record. Whether an extract proves title or has another legal effect depends on the institution’s law and process; Registry Stack does not make that legal determination.',
         link: { href: 'https://docs.registrystack.org/explanation/render-determinism/', label: 'Why a reprint matches the original' },
       },
       {
@@ -122,7 +122,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
+        a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to your law, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#land-property-and-assets', label: 'Browse the land, property and vehicle starters' },
       },
       {
@@ -136,7 +136,7 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Work with us"
     heading="Talk it through with the people who build it."
-    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    body="Tell us which asset-record service you want to improve, who maintains the official record and which mapping, document or valuation systems staff use today. We can show how Registry Stack could fit."
     primaryLabel="Ask a question"
     primaryHref={askQuestionHref(area.name)}
     emphasis="docs"

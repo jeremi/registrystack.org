@@ -15,7 +15,7 @@ const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
 
 const steps: WeekStep[] = [
   {
-    when: 'Monday 09:30',
+    when: 'Change proposed',
     product: 'Your intake application',
     title: 'A change is proposed',
     text: 'The ministry notifies your office that two districts merge on 1 January. The list does not change until your team decides.',
@@ -26,18 +26,18 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Monday to Tuesday',
+    when: 'Review and decision',
     ...weekProduct('casework'),
     title: 'Your team decides',
-    text: 'The proposal lands in the code list queue. E. Lindqvist takes it, confirms the gazette notice, and approves it.',
+    text: 'The proposal enters the code-list queue. E. Lindqvist confirms the source notice and approves the change.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Code list changes' },
       { state: 'Claimed', note: 'Held by E. Lindqvist' },
-      { state: 'Approved', note: 'Tuesday 10:15' },
+      { state: 'Approved', note: 'Source confirmed' },
     ] },
   },
   {
-    when: 'Tuesday 10:15',
+    when: 'Authorised list change',
     ...weekProduct('base-registry'),
     title: 'The list changes and keeps the old entry',
     text: 'The officer closes NR-07 with its end date and names its successor, under their own name. A record that pointed to NR-07 still finds it.',
@@ -48,33 +48,33 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Tuesday 10:30',
+    when: 'Updated catalogue published',
     ...weekProduct('manifest'),
     title: 'The catalogue is published',
     text: 'The catalogue describes the list and its new version, so every register and service that reads it picks up the change from one place.',
     card: { kind: 'document', documentType: 'Published catalogue', format: 'DCAT', title: 'Administrative areas, version 2027-01', fields: [
       { label: 'Entries', value: '312' },
       { label: 'Changed', value: 'NR-07 closed, NR-05 extended' },
-      { label: 'Published', value: 'Tuesday 10:30' },
+      { label: 'Status', value: 'Current version published' },
     ], footnote: 'Readable by any service that follows the catalogue standard' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Publish the lists other registers rely on, from one maintained source."
-  description="Other registers and services keep their own copies of your codes and names, so when your office renames a territory or withdraws a tax regime, each copy drifts out of date on its own schedule. Registry Stack gives your office one maintained list that every register reads from, with the history of each entry."
+  heading="Maintain the shared lists and classifications other services rely on."
+  description="Manage proposals, review and publication for place names, organisation directories, classifications and code lists. Connected services can read the current version while historical records continue to resolve earlier entries."
 >
   <section class="section" id="example" aria-labelledby="reference-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="reference-week-title">A merger is notified on Monday. Your team decides on Tuesday, and every register reads the new list fifteen minutes later.</h2>
+        <h2 id="reference-week-title">A change is proposed, the responsible team decides, the list keeps its history and connected services can read the new version.</h2>
       </div>
       <RegisterWeek
         id="reference-week"
         kicker="District code NR-07, one request"
-        heading="Each step names the product that does it."
+        heading="Follow the code-list change."
         steps={steps}
       />
     </div>
@@ -83,7 +83,7 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="reference-change-title">One list to maintain, and no copies drifting apart.</h2>
+        <h2 id="reference-change-title">One maintained source, traceable changes and fewer unmanaged copies.</h2>
       </div>
       <div class="product-facts">
         <article><h3>Every register uses the same code for the same place</h3><p>Each entry carries its official code, its parent where there is one, and the dates it applies. The address register and the statistics office read the same list.</p><a class="inline-cta" href="/products/base-registry/">How the register serves other services <span aria-hidden="true">→</span></a></article>
@@ -95,7 +95,7 @@ const steps: WeekStep[] = [
   <SolutionStarters
     area={area}
     heading="Start from a reference register like yours."
-    intro="A starter sets out what a list of this kind holds and who may change it, for one common directory, code list, or catalogue. Your team takes the closest one and adapts it to the list it maintains."
+    intro="A starting configuration can model a directory, code list or catalogue, including who may propose and approve changes. It is adapted to your publication process and the services that use the list."
   />
   <SolutionFaq
     items={[
@@ -119,7 +119,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
+        a: 'A starter is a starting configuration for a particular kind of shared list. It is available by request and must be adapted to your change process, publication needs and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#reference-registers', label: 'Browse the reference register starters' },
       },
       {
@@ -133,7 +133,7 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Work with us"
     heading="Talk it through with the people who build it."
-    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    body="Tell us which shared list you maintain, who approves changes and which services depend on it. We can show how Registry Stack could publish one current version while preserving earlier entries."
     primaryLabel="Ask a question"
     primaryHref={askQuestionHref(area.name)}
     emphasis="docs"

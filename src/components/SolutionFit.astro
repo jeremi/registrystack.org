@@ -1,5 +1,5 @@
 ---
-// "How it fits your organization" for a solution area: each product the area
+// "How it fits your institution" for a solution area: each product the area
 // leads to, from products.ts, with its job in this area, then how the area
 // sits with systems the organization already runs. A register family also
 // links to the review queue page, which applies to any register.
@@ -31,10 +31,10 @@ const areaProducts = area.products.map((key) => {
 <section id="fit" class={muted ? 'section section-muted' : 'section'} aria-labelledby="solution-fit-title">
   <div class="section-inner product-fit">
     <div class="section-heading compact">
-      <p class="eyebrow">How it fits your organization</p>
+      <p class="eyebrow">How it fits your institution</p>
       <h2 id="solution-fit-title">{heading}</h2>
       <slot />
-      {area.kind === 'register-family' && <p><a class="inline-cta" href="/solutions/review-changes/#what-your-office-calls-it">See how the review queue works for any register <span aria-hidden="true">→</span></a></p>}
+      {area.kind === 'register-family' && <p><a class="inline-cta" href="/solutions/review-changes/#what-your-office-calls-it">See how accountable review works for any register <span aria-hidden="true">→</span></a></p>}
     </div>
     <dl>
       {areaProducts.map(({ product, job }) => (

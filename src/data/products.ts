@@ -14,7 +14,7 @@ export const products = [
     href: '/products/base-registry/',
     tutorialHref: 'https://docs.registrystack.org/tutorials/first-breg/',
     tutorialLabel: 'Run the registry tutorial',
-    firstResult: 'Create and update a sample business record, then try a request that should be refused.',
+    firstResult: 'Create a local contact registry, add and read one contact, then confirm that a caller from another jurisdiction cannot list it.',
   },
   {
     key: 'evidence-gateway', name: 'Evidence Gateway', solution: 'Evidence Gateway', shortName: 'Evidence', featured: true, menu: true,
@@ -23,42 +23,47 @@ export const products = [
     href: '/products/evidence-gateway/',
     tutorialHref: 'https://docs.registrystack.org/tutorials/first-evidence-assertion/',
     tutorialLabel: 'Run the evidence tutorial',
-    firstResult: 'Request a signed adult-status answer from a synthetic source, then verify its signature.',
+    firstResult: 'Inspect the predefined adult-status project, request its signed answer from a synthetic source, and verify the JWS response.',
   },
   {
     key: 'casework', name: 'Registry Casework', solution: 'Casework', shortName: 'Casework', featured: false, menu: true,
     intent: 'Coordinate human decisions',
     description: 'One queue for the changes that need a person to decide: who holds each item, what is due and who decided. Open source, works with your register.',
     href: '/products/casework/',
-    tutorialHref: 'https://docs.registrystack.org/start/casework/',
-    tutorialLabel: 'Read the Casework overview',
-    firstResult: 'See what runs where, how work reaches the inbox, and which guide to open next for your role.',
+    tutorialHref: 'https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/',
+    tutorialLabel: 'Pair a registry proposal with Casework',
+    firstResult: 'Pair a registry Proposal Action with a Casework review policy and bind Casework as its review authority.',
   },
 ] as const;
 
-// The released parts around the three products. Each has docs, not a product
+// Supporting parts around the three products. Each has docs, not a product
 // page: the home page names them once under the product cards, and a
 // register family's working week labels the step a service does. `job` is
-// the one line the home page prints, in the office's words.
+// the one line the home page prints. `status` prevents documented development
+// work from being presented as a released product.
 export const companionServices = [
   {
     key: 'render', name: 'Registry Render',
-    job: 'prints a certificate, extract or letter from the register, identical every time',
+    job: 'returns same bytes when package hash, document type, locale, canonical data and issuedAt match; callers retain hashes',
     href: 'https://docs.registrystack.org/start/registry-render/',
+    status: 'released',
   },
   {
     key: 'messaging', name: 'Registry Messaging',
-    job: 'sends the email or SMS notice an officer’s decision calls for',
+    job: 'delivers an approved email or SMS template when an authorized service requests it',
     href: 'https://docs.registrystack.org/start/messaging/',
+    status: 'released',
   },
   {
     key: 'scheduling', name: 'Registry Scheduling',
-    job: 'books counter slots and appointments',
+    job: 'defines capacity, holds and appointment-booking rules',
     href: 'https://docs.registrystack.org/reference/scheduling-configuration/',
+    status: 'development',
   },
   {
     key: 'manifest', name: 'Registry Manifest',
     job: 'publishes what the register holds as a catalogue other services can read',
     href: 'https://docs.registrystack.org/products/registry-manifest/',
+    status: 'released',
   },
 ] as const;

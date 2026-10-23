@@ -15,10 +15,10 @@ const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')
 
 const steps: WeekStep[] = [
   {
-    when: 'Monday 10:20',
+    when: 'Application submitted',
     product: 'Your intake application',
     title: 'A household applies',
-    text: 'A household applies for enrollment at the district office. The register does not change until an officer decides.',
+    text: 'A household applies for enrollment at the district office. The intake service collects the programme’s assessment information, including the home-visit report, before sending the complete case for a decision. The register does not change yet.',
     card: { kind: 'record', recordType: 'Application', recordId: 'APP-5120', icon: 'household', fields: [
       { label: 'Household', value: 'HH-30944' },
       { label: 'Programme', value: 'Social protection' },
@@ -26,19 +26,18 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Monday to Thursday',
+    when: 'Assessment and decision',
     ...weekProduct('casework'),
     title: 'An officer decides',
-    text: 'The application lands in the enrollment queue. A. Haddad takes it, waits for the home visit report, and approves it.',
+    text: 'The complete application enters the enrolment queue. A. Haddad reviews the application and assessment, then records the programme’s decision.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Enrollment' },
       { state: 'Claimed', note: 'Held by A. Haddad' },
-      { state: 'Waiting', note: 'Home visit report requested' },
-      { state: 'Approved', note: 'Thursday 15:10' },
+      { state: 'Approved', note: 'Assessment complete' },
     ] },
   },
   {
-    when: 'Thursday 15:10',
+    when: 'Household record updated',
     ...weekProduct('base-registry'),
     title: 'The household record changes and keeps its history',
     text: 'The officer records the enrollment under their own name. Revision 4 holds the status; revision 3 stays readable.',
@@ -49,29 +48,29 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Thursday 15:30',
+    when: 'Permitted programme check',
     ...weekProduct('evidence-gateway'),
-    title: 'A programme asks, and gets a signed yes',
-    text: 'Twenty minutes later the school meal programme asks whether the household is enrolled and receives a signed yes. Income and case notes stay in your register.',
+    title: 'Another programme checks enrolment',
+    text: 'A school meal programme authorised to make this check asks whether the household is enrolled and receives a digitally signed answer. Income information and case notes are not disclosed.',
     card: { kind: 'answer', fieldLabel: 'Household enrolled', value: 'Yes', recipient: 'School meal programme', issuer: 'Social registry' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Keep records about people current, and let programmes check them."
-  description="The same household is registered in three programmes under three spellings, a correction made in one never reaches the others, and each programme asks your office for the file when it needs one answer. Registry Stack gives your office one register of people and households, and lets a programme check the one fact it needs without seeing the person’s file."
+  heading="Maintain people and household records for public services."
+  description="Connect applications, assessments, corrections and permitted updates to the household record, then let approved programmes check a defined fact without receiving a person’s file. Each programme remains responsible for its own eligibility rules and decisions."
 >
   <section class="section" id="example" aria-labelledby="people-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="people-week-title">A household applies on Monday. Enrolled on Thursday, and a programme can rely on it twenty minutes later.</h2>
+        <h2 id="people-week-title">A household applies, the programme assesses it, the enrolment is recorded and another service checks the status it is allowed to use.</h2>
       </div>
       <RegisterWeek
         id="people-week"
         kicker="Household HH-30944, one request"
-        heading="Each step names the product that does it."
+        heading="Follow the household application."
         steps={steps}
       />
     </div>
@@ -80,12 +79,12 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="people-change-title">One entry per person, and the file never leaves your office.</h2>
+        <h2 id="people-change-title">Current records, traceable corrections and less unnecessary disclosure.</h2>
       </div>
       <div class="product-facts">
         <article><h3>Each person is entered once and linked to their household</h3><p>When someone moves out, your team changes the link and the earlier household stays in the history.</p><a class="inline-cta" href="/products/base-registry/">How the register holds people and households <span aria-hidden="true">→</span></a></article>
         <article><h3>Nobody pages through the list of people</h3><p>A programme your office allows finds a person it already knows; it cannot list the register. Every look-up is kept with who asked and when.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
-        <article><h3>A person can carry the answer</h3><p>Where your office chooses, an answer such as “enrolled” is issued to the person’s digital wallet, to show a service that accepts it.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/evidence-oid4vci/">How wallet delivery is set up <span aria-hidden="true">↗</span></a></article>
+        <article><h3>A verifiable credential can be produced for integration</h3><p>Evidence Gateway can produce a verifiable credential containing an agreed answer such as “enrolled”. The team implementing the service must evaluate whether its chosen wallet can store and present that credential; the released capability does not establish wallet compatibility.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/evidence-oid4vci/">How credential output is configured <span aria-hidden="true">↗</span></a></article>
       </div>
       <p class="product-note">If your office keeps a social registry of assessed households as well as the list of who is enrolled, start from the enrollment starter and add the household record your intake process needs.</p>
     </div>
@@ -93,7 +92,7 @@ const steps: WeekStep[] = [
   <SolutionStarters
     area={area}
     heading="Start from a register of people like yours."
-    intro="A starter sets out what a register of this kind holds and who may change it. This family has no single starter to open first: offices that keep a population register start from Population register; offices that run a benefit programme start from Social registry and programme enrollment. Take the closest one and adapt it."
+    intro="A starting configuration can model a population register, a social registry or programme enrolment. The right starting point depends on which organisation keeps each record and makes each decision."
     featuredNote="The enrollment starter records the enrollment; the question a programme asks is set up in Evidence Gateway, which the starter does not include."
   />
   <SolutionFaq
@@ -110,7 +109,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Does it assess eligibility or calculate benefits?',
-        a: 'No. A programme that receives an answer decides what it means for its applicant, under its own rules. The register records what the responsible authority has decided.',
+        a: 'No. A programme that receives an answer decides what it means for its applicant under its own rules. The register records the decision made by the organisation responsible for that record.',
       },
       {
         q: 'Who can see a person’s record?',
@@ -119,7 +118,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
+        a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to your rules, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#people-and-social-programmes', label: 'Browse the starters for registers of people' },
       },
       {
@@ -133,7 +132,7 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Work with us"
     heading="Talk it through with the people who build it."
-    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    body="Tell us which population or programme service you want to improve, who makes each decision and which systems need to exchange information. We can show how Registry Stack could fit while sharing only what each service needs."
     primaryLabel="Ask a question"
     primaryHref={askQuestionHref(area.name)}
     emphasis="docs"

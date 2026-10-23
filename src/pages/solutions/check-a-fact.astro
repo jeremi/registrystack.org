@@ -12,15 +12,15 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
 ---
 <Solution
   area={area}
-  heading="Let a service check a fact without receiving the record."
-  description="Other services ask your office for copies of records when all they need is one fact: whether a person is alive, whether an applicant is 18 or older, whether a business is registered. Registry Stack lets those services ask your register that one question and receive only the answer, while the record stays with your office."
+  heading="Let an authorised service check a defined fact without receiving the record."
+  description="Start with the decision another service must make, then define the smallest answer it needs. Evidence Gateway returns that answer from an authorised source with a digital signature, while the consuming service remains responsible for how it uses the result."
 >
   <section id="example" class="section section-muted" aria-labelledby="check-example-title">
     <div class="section-inner">
       <div class="section-heading center">
         <p class="eyebrow">One example: a civil register</p>
-        <h2 id="check-example-title">One register answers several services without sending the record.</h2>
-        <p>A pension service asks whether a person is alive. A licensing service asks whether they are 18 or older. Your office decides which questions each service may ask. A question it has not agreed to is refused, and nothing from the record is sent.</p>
+        <h2 id="check-example-title">One civil register provides different permitted checks without sending the source record.</h2>
+        <p>A pension service asks whether a person is recorded as alive. A licensing service asks whether an applicant meets an age threshold. The civil-registration authority defines which question each service may ask and authorises the calling service. A request outside that permission is refused.</p>
       </div>
       <MinimizationFunnel />
     </div>
@@ -29,12 +29,12 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="check-change-title">Fewer copies leave your office, and each answer can be checked.</h2>
+        <h2 id="check-change-title">Less unnecessary disclosure, with origin and integrity that the recipient can verify.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>A service gets the answer, not the file</h3><p>Your office agrees with each service what a question means and how it is worked out from the record. A service can learn the region a person lives in without the street address, or that they are an adult without their date of birth.</p></article>
-        <article><h3>Only the services you agreed with can ask</h3><p>Each service may ask the questions agreed with it, for the reason agreed with it. Anything else is refused. Every question and its outcome are kept, so your office can show who asked what, and when.</p></article>
-        <article><h3>The receiving service can trust the answer without calling you</h3><p>Your office sets how long an answer holds. Before relying on it, the receiving service checks that the answer came from your register, was not altered, and is still in date.</p></article>
+        <article><h3>The receiving service gets the defined answer</h3><p>The office that keeps the register specifies what the question means and how the answer is worked out. A service can receive an age-threshold result without receiving the date of birth.</p></article>
+        <article><h3>Only an authorised service can make the check</h3><p>Each connected service may ask specific questions for agreed purposes. Anything else is refused. Requests and outcomes are recorded so the registry team can review how the connection is used.</p></article>
+        <article><h3>The signature proves origin and integrity</h3><p>The receiving service verifies that the answer came from the register, was not altered and is within its validity period. The signature does not prove that the source record is correct or decide what the answer means for the applicant.</p></article>
       </div>
     </div>
   </section>
@@ -42,7 +42,7 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
     area={area}
     heading="Give a service a checked answer, or the fields it needs."
     jobs={{
-      'evidence-gateway': 'Use it when the other service needs a yes or no, or a status, such as whether a person is an adult or a business is registered: it gets that answer and can check it came from your register and was not altered.',
+      'evidence-gateway': 'Use it when another service needs a defined yes-or-no result, status or value from a declared list. It returns a digitally signed answer that the recipient can verify came from the register and was not altered.',
     }}
     extra={[
       { term: 'Your register stays where it is', body: 'Evidence Gateway works from the register your office already runs, through a connection your technical team sets up: an interface your system offers or a read-only extract your team publishes. It does not require Base Registry Engine.' },
@@ -60,7 +60,7 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
       },
       {
         q: 'How does the receiving service know an answer is genuine?',
-        a: 'Each answer carries a digital signature from your register and the dates it is valid for. The receiving service checks both itself, so it does not need to call your office to confirm the answer.',
+        a: 'Each answer carries a digital signature from the register that issued it and its validity period. The receiving service can verify origin and integrity itself. The signature does not prove the source data is correct or that the subject is legally entitled to something.',
         link: { href: evidence.href, label: `About ${evidence.name}` },
       },
       {
@@ -69,7 +69,7 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
       },
       {
         q: 'What if the asking service uses AI?',
-        a: 'It asks your register the way any other service does: only the questions agreed with it, and it gets only the answer. A housing benefit service could receive each applicant’s income records for its AI to work through, or your office can agree one question, such as whether annual net income is below the benefit threshold, and return only that answer. With the agreed question, the AI-assisted service never holds the record. The service that asks stays responsible for what it does with the answer, including eligibility decisions and how it treats the people it asks about.',
+        a: 'It uses the same authorised connection as any other service and receives only the agreed answer. The organisation using AI remains responsible for the decision and its treatment of the person concerned. Registry Stack does not make the eligibility decision.',
       },
       {
         q: 'Where does our technical team start?',
@@ -86,7 +86,7 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
   <DocsHandoff
     eyebrow="Work with us"
     heading="Talk it through with the people who build it."
-    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    body="Tell us which register holds the source record, which service needs an answer and what decision that answer supports. We can help define the first question and connect both sides."
     primaryLabel="Ask a question"
     primaryHref={askQuestionHref(area.name)}
     emphasis="docs"

@@ -57,6 +57,28 @@ const CLASSIFICATIONS: Record<string, string> = {
 export const classificationWords = (classification: string): string =>
   CLASSIFICATIONS[classification] ?? classification;
 
+const ACTION_DESCRIPTIONS: Record<string, string> = {
+  'Record an external authority decision as an immediate registry effect.':
+    'Record a decision already made by the responsible authority.',
+  'Atomically record an external assessment and certification.':
+    'Record the external assessment and certification together.',
+  'Atomically record an animal, microchip, assignment and first keeper responsibility.':
+    'Record the animal, microchip, assignment, and first keeper responsibility together.',
+  'Apply a keeper change immediately and record both responsibility-period boundaries atomically.':
+    'Record the keeper change and both responsibility-period boundaries together.',
+  'Record an externally approved licence and its initial term atomically.':
+    'Record the externally approved licence and its initial term together.',
+  'Append an externally approved revocation and close future renewal recording atomically.':
+    'Record the externally approved revocation and close future renewal recording together.',
+  'Atomically record a person, an already-decided citizenship recognition, and an opaque sector identifier assignment.':
+    'Record the person, decided citizenship recognition, and sector identifier assignment together.',
+};
+
+// Catalogue descriptions keep the exact technical wording from the generated
+// source. The public page uses familiar words for transaction effects.
+export const actionDescriptionWords = (description: string): string =>
+  ACTION_DESCRIPTIONS[description] ?? description;
+
 // The first sentence of a paragraph: up to the first '.', '!' or '?' that is
 // followed by a capital letter, so 'e.g. permits' does not end it.
 export const firstSentence = (text: string): string => text.split(/(?<=[.!?])\s+(?=[A-Z])/)[0];

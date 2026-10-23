@@ -80,11 +80,11 @@ const html = `<!doctype html>
     </div>
     <div>
       <p class="kicker">Open-source software for public registers</p>
-      <h1>Run your register. Decide every change.<br>Answer the services that rely on it.</h1>
+      <h1>Public registers and services,<br>built around your rules.</h1>
     </div>
     <div class="foot">
       <span class="url">registrystack.org</span>
-      <span class="works">Base Registry Engine &middot; Evidence Gateway</span>
+      <span class="works">Adapt. Connect. Keep control.</span>
     </div>
   </body>
 </html>`;

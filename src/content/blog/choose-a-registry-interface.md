@@ -11,7 +11,7 @@ featured: true
 status: published
 ---
 
-> **Note, October 2026.** Registry Relay, which this guide refers to, was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. Evidence Gateway continues, and the guidance here on agreeing questions and reviewing access still applies.
+> **Note, October 2026.** Registry Relay was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. Evidence Gateway continues, and the decision guidance in this article describes the current product boundary.
 
 Most registry integrations start with the wrong question. "Which API do we
 need?" assumes the answer is an API. Two questions come first: who maintains the

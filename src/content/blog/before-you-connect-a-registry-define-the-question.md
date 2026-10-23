@@ -11,7 +11,7 @@ featured: true
 status: published
 ---
 
-> **Note, October 2026.** Registry Relay, which this guide refers to, was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. Evidence Gateway continues, and the guidance here on agreeing questions and reviewing access still applies.
+> **Note, October 2026.** Registry Relay was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. The Relay-specific product routes and audit boundaries below are historical and must not be used as current implementation guidance. Evidence Gateway continues, and the guidance here on agreeing questions and reviewing access still applies.
 
 A service team asks a civil registry for access. The first response is often a
 list of fields: name, date of birth, address, family status, and perhaps a copy

@@ -1,7 +1,6 @@
 ---
-// Reader: the head of a licensing office, asking "what would a week with this
-// look like for my register?" Sections follow their next questions: show me a
-// week, what changes for my office, where do we start, the doubts, who to ask.
+// Reader: the service owner responsible for a licensing journey, from
+// application and evidence through decision, licence record and renewal.
 import Solution from '../../layouts/Solution.astro';
 import RegisterWeek from '../../components/RegisterWeek.astro';
 import SolutionStarters from '../../components/SolutionStarters.astro';
@@ -14,58 +13,62 @@ const area = solutionAreas.find((a) => a.key === 'licensing')!;
 
 const steps: WeekStep[] = [
   {
-    when: 'Monday 08:40',
-    ...weekProduct('scheduling'),
-    title: 'A holder books a counter slot',
-    text: 'A licence holder due for renewal books a slot at your counter. Nothing in the register changes yet.',
-    card: { kind: 'booking', service: 'Licence renewal', place: 'Counter 3, licensing office', slot: 'Wednesday 10:30', status: 'Confirmed' },
+    when: 'Application submitted',
+    product: 'Your application service',
+    title: 'A licence holder applies to renew',
+    text: 'The holder submits the renewal form and supporting evidence through the service channel your authority provides. This creates an application; it does not change the licence record.',
+    card: { kind: 'record', recordType: 'Renewal application', recordId: 'APP-2093', icon: 'person', fields: [
+      { label: 'Licence', value: 'LIC-2093' },
+      { label: 'Request', value: 'Renewal' },
+      { label: 'Evidence', value: 'Submitted for review' },
+    ] },
   },
   {
-    when: 'Wednesday 10:30',
+    when: 'Review and decision',
     ...weekProduct('casework'),
     title: 'An officer reviews the renewal',
-    text: 'The renewal lands in the renewals queue. M. Okafor takes it at the counter, checks the certificate, and approves it.',
+    text: 'M. Okafor reviews the renewal and closes that review with changes requested because a certificate is unreadable. The application service shows the request to the holder, accepts the replacement and sends the revised application into a new review. The officer approves the complete application.',
     card: { kind: 'history', items: [
-      { state: 'Received', note: 'Routed to Renewals' },
-      { state: 'Claimed', note: 'Held by M. Okafor' },
-      { state: 'Approved', note: 'Wednesday 11:20' },
+      { state: 'Review 1', note: 'Completed: changes requested' },
+      { state: 'Application service', note: 'Replacement accepted and resubmitted' },
+      { state: 'Review 2', note: 'Completed: approved' },
     ] },
   },
   {
-    when: 'Wednesday 11:22',
+    when: 'Licence record updated',
     ...weekProduct('base-registry'),
-    title: 'The licence changes and keeps its history',
-    text: 'The officer records the renewal under their own name. Revision 7 holds the new expiry; revision 6 stays readable.',
-    card: { kind: 'record', recordType: 'Licence record', recordId: 'LIC-2093', icon: 'person', fields: [
+    title: 'A new licence term is recorded',
+    text: 'After approval, a staff member or connected service with permission records a new term for the licence. Earlier terms remain in its history.',
+    card: { kind: 'record', recordType: 'Licence term', recordId: 'TERM-2093-07', icon: 'person', fields: [
       { label: 'Valid until', value: '2029-10-31' },
-      { label: 'Changed by', value: 'M. Okafor' },
-      { label: 'Revision', value: '7' },
+      { label: 'Recorded by', value: 'Licensing service' },
+      { label: 'Term', value: '7' },
     ] },
   },
   {
-    when: 'Wednesday 11:40',
+    when: 'Employer status check',
     ...weekProduct('evidence-gateway'),
-    title: 'An employer asks, and gets a signed yes',
-    text: 'Twenty minutes later an employer asks whether the licence is in good standing and receives a signed yes. The holder’s file stays in your register.',
+    title: 'An employer checks the licence status',
+    text: 'An employer authorised to make this check asks whether the licence is in good standing and receives a digitally signed answer. The application and supporting evidence are not disclosed.',
     card: { kind: 'answer', fieldLabel: 'Licence in good standing', value: 'Yes', recipient: 'Employer’s HR service', issuer: 'Licensing board' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Know who holds each licence, on what terms, and what changed."
-  description="Employers, inspectors and other services ask your licensing office whether a licence is valid, and every correction waits for someone to find the file. Registry Stack gives your office one register of the licences it has issued: other services check a licence without seeing the file, and each change an officer must decide waits in one queue."
+  heading="Connect licensing applications, decisions, licence records and renewal."
+  description="Give applicants a clear route to submit information and replace missing evidence, give officers an accountable review process, and keep each authorised licence change in the register. Employers and other permitted services can check a defined status without receiving the application file."
 >
   <section class="section" id="example" aria-labelledby="licensing-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="licensing-week-title">Booked on Monday, renewed at the counter on Wednesday, and relied on by an employer twenty minutes later.</h2>
+        <h2 id="licensing-week-title">A holder applies, supplies the evidence an officer needs, receives a decision and can show the current licence status.</h2>
       </div>
       <RegisterWeek
         id="licensing-week"
         kicker="Licence LIC-2093, one request"
-        heading="Each step names the product that does it."
+        heading="Follow the renewal."
         steps={steps}
       />
     </div>
@@ -74,19 +77,19 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="licensing-change-title">Fewer calls about the file, and a register that explains itself.</h2>
+        <h2 id="licensing-change-title">One connected journey, with each responsibility kept clear.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Services you connect stop asking for the file</h3><p>An employer or inspector gets a yes or no with your register’s name on it, and nothing from the holder’s file.</p><a class="inline-cta" href="/solutions/check-a-fact/">How a service checks a fact <span aria-hidden="true">→</span></a></article>
+        <article><h3>Applicants can complete the evidence trail</h3><p>When a review ends with changes requested, the application service shows what is missing, accepts replacement evidence and resubmits the revised application for a new review. The institution decides what evidence its rules require.</p><a class="inline-cta" href="/customization/">How a service is adapted <span aria-hidden="true">→</span></a></article>
         <article><h3>A suspension never overwrites the licence it suspends</h3><p>Each renewal, suspension or revocation is its own entry, with who recorded it and when. Lift a suspension and both decisions stay in order.</p><a class="inline-cta" href="/products/base-registry/">How the register keeps its history <span aria-hidden="true">→</span></a></article>
-        <article><h3>Every correction has one owner and a due date</h3><p>Corrections and disputes wait in one queue. One officer holds each, the clock is visible to the team, and the register changes only when that officer says so.</p><a class="inline-cta" href="https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/">See a change reviewed before it is applied <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Review and record change remain distinct</h3><p>An officer records the licensing decision. The resulting change is applied only through the register’s own authorised process, with the decision and record history available for later review.</p><a class="inline-cta" href="/solutions/review-changes/">How accountable review works <span aria-hidden="true">→</span></a></article>
       </div>
     </div>
   </section>
   <SolutionStarters
     area={area}
     heading="Start from a licence register like yours."
-    intro="A starter sets out what a register of this kind holds and who may change it, for one common kind of licence. Your team takes the closest one and adapts it to its own licensing law."
+    intro="A starting configuration can provide a model for one common kind of licence, including the information held and the changes staff may make. Browse if useful, or tell us about your licensing service and we will help identify a suitable starting point."
   />
   <SolutionFaq
     items={[
@@ -102,7 +105,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Does this give us a public search page?',
-        a: 'Not on its own. The register serves its data under your rules, and other services check a licence through it. A search page for the public comes from your application or the people who build it.',
+        a: 'Yes, when the authority wants one. An implementation can include a public search page with the permitted licence details, accessible user journeys and a connection to the register. The proposal states whether this is included.',
       },
       {
         q: 'Who can see a licence record?',
@@ -111,7 +114,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
+        a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to the authority’s rules, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#licensing', label: 'Browse the licensing starters' },
       },
       {
@@ -125,7 +128,7 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Work with us"
     heading="Talk it through with the people who build it."
-    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    body="Tell us which licensing service you want to improve, who applies, who decides and which systems must connect. We can identify a useful starting configuration and scope the screens, identity, hosting and integrations with you."
     primaryLabel="Ask a question"
     primaryHref={askQuestionHref(area.name)}
     emphasis="docs"

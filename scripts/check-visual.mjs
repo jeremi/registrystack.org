@@ -13,13 +13,13 @@ if (!existsSync(htmlPath)) {
 
 mkdirSync(outputDir, { recursive: true });
 
-// The header has two menus: Solutions opens with an "All solutions" link and
-// then lists every solution area, Products lists every product. Count both
-// from the data files the header is built from.
+// The header has two menus: Solutions opens with "All solutions" and "Local
+// government", then the taxonomy. Products lists every core product plus
+// starters, developer tutorials and documentation.
 const countMatches = (relativePath, pattern) => (readFileSync(resolve(relativePath), 'utf8').match(pattern) ?? []).length;
 const expectedMenuLinks = [
-  1 + countMatches('src/data/solutions.ts', /slug: '\/solutions\//g),
-  countMatches('src/data/products.ts', /href: '\/products\//g),
+  2 + countMatches('src/data/solutions.ts', /slug: '\/solutions\//g),
+  3 + countMatches('src/data/products.ts', /href: '\/products\//g),
 ];
 
 const server = createServer(async (request, response) => {
@@ -60,6 +60,9 @@ const routes = [
   { name: 'evidence-gateway', path: '/products/evidence-gateway/' },
   { name: 'casework', path: '/products/casework/' },
   { name: 'solutions', path: '/solutions/' },
+  { name: 'customization', path: '/customization/' },
+  { name: 'digital-public-infrastructure', path: '/digital-public-infrastructure/' },
+  { name: 'solutions-local-government', path: '/solutions/local-government/' },
   { name: 'solutions-licensing', path: '/solutions/licensing/' },
   { name: 'solutions-business-and-tax', path: '/solutions/business-and-tax/' },
   { name: 'solutions-people-and-social-programmes', path: '/solutions/people-and-social-programmes/' },
@@ -70,6 +73,9 @@ const routes = [
   { name: 'solutions-check-a-fact', path: '/solutions/check-a-fact/' },
   { name: 'solutions-review-changes', path: '/solutions/review-changes/' },
   { name: 'starters', path: '/starters/' },
+  { name: 'starter-professional-licensing', path: '/starters/professional-licensing/' },
+  { name: 'starter-health-facilities', path: '/starters/health-facilities/' },
+  { name: 'starter-public-funding-state-aid', path: '/starters/public-funding-state-aid/' },
   { name: 'blog', path: '/blog/' },
   { name: 'security', path: '/security/' },
   { name: 'pricing', path: '/pricing/' },
@@ -163,6 +169,42 @@ for (const viewport of viewports) {
   await page.close();
 }
 }
+
+// A desktop menu must fit inside a short viewport. Keyboard focus should enter
+// at the first link and reach the last link, scrolling the panel when needed.
+const shortDesktop = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+for (const [index, name] of ['Solutions', 'Products'].entries()) {
+  await shortDesktop.goto(`http://127.0.0.1:${port}/`);
+  const menu = shortDesktop.locator('.nav-group').nth(index);
+  const summary = menu.locator('summary');
+  const panel = menu.locator('.nav-group-panel');
+  const links = panel.locator('a');
+  await summary.focus();
+  await shortDesktop.keyboard.press('Enter');
+
+  const panelBounds = await panel.boundingBox();
+  if (!panelBounds || panelBounds.y + panelBounds.height > 721) {
+    failures.push(`1280x720: ${name} menu extends below the viewport`);
+  }
+
+  await shortDesktop.keyboard.press('Tab');
+  const firstReachable = await links.first().evaluate((link) => {
+    const rect = link.getBoundingClientRect();
+    return document.activeElement === link && rect.top >= 0 && rect.bottom <= window.innerHeight;
+  });
+  if (!firstReachable) failures.push(`1280x720: keyboard cannot reach the first ${name} menu link`);
+
+  const linkCount = await links.count();
+  for (let position = 1; position < linkCount; position += 1) {
+    await shortDesktop.keyboard.press('Tab');
+  }
+  const lastReachable = await links.last().evaluate((link) => {
+    const rect = link.getBoundingClientRect();
+    return document.activeElement === link && rect.top >= 0 && rect.bottom <= window.innerHeight;
+  });
+  if (!lastReachable) failures.push(`1280x720: keyboard cannot reach the last ${name} menu link`);
+}
+await shortDesktop.close();
 
 const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
 await page.goto(`http://127.0.0.1:${port}/`);

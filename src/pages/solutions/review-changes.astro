@@ -12,18 +12,18 @@ const casework = products.find((p) => p.key === 'casework')!;
 ---
 <Solution
   area={area}
-  heading="Put each change that needs a decision in front of the person who decides."
-  description="Corrections, disputes and requests to change a record reach your office in many ways, and nobody can say at a glance who holds each one or which are overdue. Registry Stack gives your officers one queue, with one owner and a due date on each item, and the register changes only when an officer decides."
+  heading="Give each request for human review an owner and an accountable decision."
+  description="Bring corrections, disputes and proposed changes into one review process that shows who is responsible and what is due. An approval records the decision, then a person or service with permission applies the change to the register."
 >
   <SolutionExample
     eyebrow="One example: a licence scope correction"
     heading="Correct a licence with one officer accountable from request to decision."
-    intro="A professional register receives a request to correct the scope of a licence. The office wants an officer to review each correction before it takes effect, a first response within 48 hours, and a clear record of who decided."
+    intro="A professional register receives a request to correct the scope of a licence. An officer needs to review the evidence, keep the request moving and record a decision before the licence changes."
     items={[
       { term: 'Who asks', body: 'The licence holder, or a service that spotted the wrong scope, sends a correction request to the register.' },
-      { term: 'What the office wants', body: 'One officer holds the request, the 48-hour clock is visible to the team, and nothing changes in the register until that officer approves.' },
-      { term: 'What happens', body: 'The request lands in the team’s queue. An officer takes it, asks the holder for anything missing, and approves the correction. The officer then applies it in the register under their own name.' },
-      { term: 'What stays with your office', body: 'The register keeps the licence, its rules on who may change it, and the history of the change. The queue keeps who held the request and when it was answered.' },
+      { term: 'What staff need', body: 'One officer owns the request, its due date is visible to the team, and the licence remains unchanged until the approved correction is applied.' },
+      { term: 'What happens', body: 'An officer reviews the request. If information is missing, the officer closes the review with changes requested. The application service accepts the holder’s revision and submits it for a new review. After approval, a person or service with permission applies the correction to the register.' },
+      { term: 'What is kept', body: 'The application service keeps the holder’s current submission. Casework keeps each review assignment and decision. The register keeps the licence, who may change it and the history of the correction.' },
     ]}
     link={{ href: '/products/casework/#product-example', label: 'See the correction step by step' }}
   />
@@ -31,12 +31,12 @@ const casework = products.find((p) => p.key === 'casework')!;
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="review-change-title">Every request has an owner, and late ones are easy to see.</h2>
+        <h2 id="review-change-title">Every review has an owner, while the register keeps control of record changes.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Routine updates go through; the rest wait for an officer</h3><p>Your office decides which changes need a person, such as a licence scope, a parcel holder or a household member. Routine updates are recorded directly. The rest go to the queue for that kind of request, with that queue’s response target.</p></article>
+        <article><h3>Your service defines which requests need review</h3><p>Your team decides which proposed changes require a person, such as a licence scope, a parcel relationship or a household member. Each kind of request can have its own queue, reviewer role and due date.</p></article>
         <article><h3>You can see who holds what, and what is overdue</h3><p>Each item has one officer and a due date. A supervisor sees which items have stalled and can chase them, and whoever asked can see the decision as soon as it is recorded; Casework itself sends no messages.</p></article>
-        <article><h3>The officer who decides is the officer on the record</h3><p>An officer applies an approved change under their own name, and only if the register already lets them make it. Each request keeps who held it, who decided and when, so anyone reviewing it later can follow it without asking the people involved.</p></article>
+        <article><h3>A review decision does not change the register by itself</h3><p>Casework records who reviewed and decided the request. Applying the resulting change requires an actor already authorised by the register, and the register records that action in its own history.</p></article>
       </div>
       <div id="what-your-office-calls-it" class="product-note">
         <h3>What your office calls it</h3>
@@ -46,19 +46,19 @@ const casework = products.find((p) => p.key === 'casework')!;
   </section>
   <SolutionFit
     area={area}
-    heading="Approvals in the register, or a queue for your officers."
+    heading="Connect each proposed change to the review it requires."
     muted
     jobs={{
-      casework: 'Gives each request to an officer, tracks it against a due date, lets a supervisor chase it when it stalls, and lets whoever asked see the decision.',
-      'base-registry': 'Holds a proposed change until the required number of officers have approved it, when that is all the review needs.',
+      casework: 'Applies the review policy, assigns the request, tracks its due date and records the officer’s decision.',
+      'base-registry': 'Holds the proposed change, sends it to the configured review authority and accepts the matching result before the change can be applied.',
     }}
     extra={[
       { term: 'Your officers keep deciding', body: 'The decision on each request stays with your officers and your rules. The queue tracks the work; it does not decide.' },
-      { term: 'Screens for your officers', body: 'Casework supplies the queue and its rules. The screens your officers use come from your own application or an existing staff tool.' },
+      { term: 'Screens for reviewers', body: 'Reviewers can use screens provided with the service or work through an existing staff application connected to Casework. They see the request, supporting material, due date and actions available to their role.' },
       { term: 'Requests from other systems', body: 'Casework works with Base Registry Engine as it comes. Another register system needs a connection your technical team builds, and any service can hand in a request and follow its progress.' },
     ]}
   >
-    <p>If a fixed number of approvals is enough, the register can require them on its own. Choose Casework when the work has to go to a named officer, be tracked against a due date, chased, and its decision shown to whoever asked.</p>
+    <p>Pair a Proposal Action with a Casework policy when a register change needs an accountable review. A proposal configured without review follows its register conditions and has no approval outcome.</p>
   </SolutionFit>
   <SolutionFaq
     items={[
@@ -69,7 +69,7 @@ const casework = products.find((p) => p.key === 'casework')!;
       },
       {
         q: 'Can a request change the register without an officer?',
-        a: 'Only the kinds of change your office lets through directly. Anything sent to review waits until an officer approves it, and that officer applies it under their own name.',
+        a: 'For this reviewed flow, Casework records the officer’s decision. Base Registry Engine accepts only a matching result from the configured review authority, then checks the caller’s permission, the proposal conditions and that accepted result before applying the change. A different proposal explicitly configured without review has no officer approval outcome.',
       },
       {
         q: 'Can other services send requests into the queue?',
@@ -78,15 +78,15 @@ const casework = products.find((p) => p.key === 'casework')!;
       },
       {
         q: 'Where does our technical team start?',
-        a: 'With the Base Registry Engine reviewed-change tutorial, which proposes a different site for an asset, collects two approvals, and applies the change on a laptop. Then with the Casework overview, which shows how work reaches the queue.',
-        link: { href: 'https://docs.registrystack.org/tutorials/review-registry-changes/', label: 'Run the reviewed-change tutorial' },
+        a: 'The reviewed-change tutorial shows how to pair a Base Registry Engine Proposal Action with a Casework policy and configure Casework as its review authority. It is a configuration guide for the two products, rather than a complete application service.',
+        link: { href: 'https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/', label: 'Configure a reviewed register change' },
       },
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
     heading="Talk it through with the people who build it."
-    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    body="Tell us which requests need human review, who decides and how staff apply an approved change. We can show how the queue, reviewer screens and register can work together."
     primaryLabel="Ask a question"
     primaryHref={askQuestionHref(area.name)}
     emphasis="docs"

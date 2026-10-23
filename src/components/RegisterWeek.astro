@@ -20,9 +20,10 @@ interface Props {
 
 const { id = 'register-week', kicker, heading, steps } = Astro.props;
 const titleId = `${id}-title`;
+const captionId = `${id}-caption`;
 ---
 
-<figure class="register-week" id={id} aria-labelledby={titleId} data-register-day>
+<figure class="register-week" id={id} aria-labelledby={titleId} aria-describedby={captionId} data-register-day>
   <div class="day-intro">
     <div>
       <p class="day-kicker">{kicker}</p>
@@ -62,11 +63,12 @@ const titleId = `${id}-title`;
       </li>
     ))}
   </ol>
-
+  <figcaption id={captionId}>Illustrative journey using fictional records. Screens, rules and connections are configured for your service.</figcaption>
 </figure>
 
 <style>
   .register-week { margin: clamp(24px, 4vw, 36px) 0 0; max-width: var(--registry-max); }
+  figcaption { color: var(--registry-body); font-size: var(--type-sm); line-height: 1.5; margin-top: 16px; }
   .day-intro { align-items: start; border-bottom: 1px solid var(--registry-paper-rule); display: flex; gap: 20px; justify-content: space-between; margin-bottom: 24px; padding-bottom: 18px; }
   .day-intro h3 { font-size: var(--type-subhead); line-height: 1.4; margin: 7px 0 0; max-width: 640px; }
   .day-kicker, .step-product { color: var(--registry-blue); font: var(--type-2xs)/1.5 var(--registry-mono); margin: 0; text-transform: uppercase; }

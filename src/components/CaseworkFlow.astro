@@ -9,7 +9,7 @@ const requestFields = [
 ];
 const licenceFields = [
   { label: 'Scope of practice', value: 'Corrected' },
-  { label: 'Changed by', value: 'R. Adeyemi' },
+  { label: 'Changed by', value: 'Licensing service' },
   { label: 'Applied', value: 'Wednesday 10:02' },
   { label: 'Revision', value: '12' },
 ];
@@ -18,7 +18,7 @@ const licenceFields = [
 <figure class="casework-flow" aria-labelledby="casework-flow-title">
   <div class="flow-intro">
     <p class="flow-kicker">An illustrative correction request</p>
-    <h3 id="casework-flow-title">One officer takes the request. The register records the change in their name.</h3>
+    <h3 id="casework-flow-title">A reviewer decides. A separately authorized service applies an approved change.</h3>
   </div>
 
   <div class="work-journey" role="group" aria-label="Fictional licence correction moving from request to inbox to applied change">
@@ -37,10 +37,10 @@ const licenceFields = [
         <h4 id="inbox-panel-title">Queue: Licence corrections</h4>
       </div>
       <ol class="item-history">
-        <li><strong>Received</strong><span>Routed to Licence corrections. First response due within 48 hours.</span></li>
-        <li><strong>Claimed</strong><span>Held by R. Adeyemi. Draft notes stay private to the holder.</span></li>
-        <li><strong>Correction requested</strong><span>Certificate missing. The clock pauses while the item awaits the applicant.</span></li>
-        <li><strong>Approved</strong><span>Decision recorded inside the 48-hour target. The paused time did not count.</span></li>
+        <li><strong>First review submitted</strong><span>Routed to Licence corrections with its own due time.</span></li>
+        <li><strong>Changes requested</strong><span>The reviewer records that a certificate is missing, which settles this review.</span></li>
+        <li><strong>Application revised</strong><span>The licensing service collects the replacement document and submits a new review.</span></li>
+        <li><strong>Revised request approved</strong><span>A reviewer records the decision on the new review, which has its own due time.</span></li>
       </ol>
       <p class="panel-note">Supervisors see who holds each item and for how long.</p>
     </section>
@@ -51,21 +51,21 @@ const licenceFields = [
         <h4 id="register-panel-title">Change applied</h4>
       </div>
       <div class="applied-record">
-        <p class="applied-label"><span aria-hidden="true">↳</span> Applied by the officer</p>
+        <p class="applied-label"><span aria-hidden="true">↳</span> Applied by the licensing service</p>
         <RecordCard recordType="Licence record" recordId="LIC-4471" icon="person" fields={licenceFields} />
       </div>
-      <p class="panel-note">The officer applies the approved change under their own account, with the access they already have.</p>
+      <p class="panel-note">The licensing service retrieves the result, checks current permission, and applies the change separately.</p>
     </section>
 
     <div class="audit-slip">
       <svg class="audit-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h4" />
       </svg>
-      <p><strong>History</strong> Who received, held, asked, approved, and applied the item, and when. Supervisors read it without opening the database.</p>
+      <p><strong>Review history</strong> When each review was submitted, assigned, and settled. The register records the separate application of the approved change.</p>
     </div>
   </div>
 
-  <figcaption>Fictional licence data. The register keeps the record and its permissions; Casework keeps the queue, the holder, and the clock.</figcaption>
+  <figcaption>Fictional licence data. The application service manages revisions, Casework records each review, and the register controls the final change.</figcaption>
 </figure>
 
 <style>

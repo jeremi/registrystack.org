@@ -1,6 +1,13 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
 
+import {
+  checkExternalLink,
+  defaultLinkConcurrency,
+  isVerifiedBotBlock,
+  mapWithConcurrency,
+} from "./check-links-http.mjs";
+
 const dist = resolve("dist");
 const failures = [];
 const warnings = [];
@@ -128,26 +135,16 @@ for (const href of requiredMailto) {
     failures.push(`missing required contact link: ${href}`);
 }
 
-for (const href of externalLinks) {
-  // Some hosts (the lab among them) reject HEAD outright, so fall back to GET
-  // before declaring the link dead.
-  let response = await fetch(href, {
-    method: "HEAD",
-    redirect: "follow",
-  }).catch((error) => ({
-    ok: false,
-    status: `fetch failed: ${error.message}`,
-  }));
+const externalResults = await mapWithConcurrency(
+  externalLinks,
+  defaultLinkConcurrency,
+  async (href) => ({ href, response: await checkExternalLink(href) }),
+);
+for (const { href, response } of externalResults) {
   if (!response.ok) {
-    response = await fetch(href, { method: "GET", redirect: "follow" }).catch(
-      (error) => ({
-        ok: false,
-        status: `fetch failed: ${error.message}`,
-      }),
-    );
-  }
-  if (!response.ok) {
-    if (isWarnOnly(href)) {
+    if (isVerifiedBotBlock(href, response.status)) {
+      warnings.push(`citation verified separately; automated request blocked ${href}: ${response.status}`);
+    } else if (isWarnOnly(href)) {
       warnings.push(`external link unreachable ${href}: ${response.status}`);
     } else {
       failures.push(`external link failed ${href}: ${response.status}`);

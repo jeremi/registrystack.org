@@ -10,4 +10,15 @@ export const mailtoHref = (subject: string, bodyLines: string[]): string =>
 
 // The light question a reader asks before any scoping: no budget, no timeline.
 export const askQuestionHref = (about = 'Registry Stack'): string =>
-  mailtoHref(`Question about ${about}`, ['Organization: ', 'Your role: ', 'The register you keep: ', 'Your question: ']);
+  mailtoHref(`Question about ${about}`, ['Organization: ', 'Your role: ', 'The service or need: ', 'Your question: ']);
+
+// A needs-first inquiry for readers who want to discuss a service before
+// choosing a product, starter, or delivery route.
+export const describeServiceHref = (about = 'Registry Stack'): string =>
+  mailtoHref(`Service inquiry: ${about}`, [
+    'Organization: ',
+    'Your role: ',
+    'The service you need: ',
+    'Who will use it: ',
+    'What should improve: ',
+  ]);

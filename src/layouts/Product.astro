@@ -2,6 +2,7 @@
 import Base from './Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { contactEmail, describeServiceHref } from '../data/contact';
 import type { products } from '../data/products';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
   note?: string;
 }
 const { product, heading, description, note } = Astro.props;
+const discussHref = describeServiceHref(product.name);
 ---
 <Base title={product.name + ' | Registry Stack'} description={product.description}>
   <SiteHeader current={product.key} />
@@ -23,20 +25,24 @@ const { product, heading, description, note } = Astro.props;
           <h1 id="product-title">{heading}</h1>
           <p class="hero-lead">{description}</p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="#product-example">See it in practice</a>
+            <a class="button button-primary" href="#product-example">See an example</a>
             <a class="button button-secondary" href="#developers">For developers</a>
           </div>
-          {note && <p class="hero-note">{note}</p>}
+          <p class="hero-note">{note ?? 'Open-source software for institutional pilots. We can include screens and integrations in a scoped implementation.'}</p>
         </div>
       </div>
     </section>
     <slot />
     <section class="final-cta" aria-labelledby="product-pilot-title">
       <div class="section-inner">
-        <p class="eyebrow">Work with us</p>
-        <h2 id="product-pilot-title">Get help when you need it.</h2>
-        <p>Get hands-on help through a paid implementation pilot, or ongoing support while your team builds and runs the solution.</p>
-        <a class="button button-primary" href="/pricing/">Implementation and support <span aria-hidden="true">→</span></a>
+        <p class="eyebrow">Discuss your service</p>
+        <h2 id="product-pilot-title">Start with the service you need to deliver.</h2>
+        <p>Describe the records, decisions, and systems involved. We can discuss whether this product fits, what must be configured or integrated, and where your team or a delivery partner would take responsibility.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href={discussHref}>Describe your service</a>
+          <a class="button button-secondary" href="/pricing/">Implementation and support</a>
+        </div>
+        <p class="final-cta-note">Or email {contactEmail}.</p>
       </div>
     </section>
   </main>
@@ -55,6 +61,7 @@ const { product, heading, description, note } = Astro.props;
   .product-page :global(.product-fit dd) { margin: 0 0 20px; padding-bottom: 18px; border-bottom: 1px solid var(--registry-rule); line-height: 1.55; }
   .product-page :global(.product-fit dd:last-child) { margin-bottom: 0; }
   .product-page :global(.product-note) { border-left: 3px solid var(--registry-blue); padding-left: 18px; margin: 28px 0 0; }
+  .product-page :global(.final-cta-note) { font-size: var(--type-sm); margin-top: 12px; opacity: 0.85; }
   @media (max-width: 700px) {
     .product-page :global(.product-facts), .product-page :global(.product-fit) { grid-template-columns: 1fr; gap: 24px; }
   }

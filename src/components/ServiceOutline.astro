@@ -1,0 +1,38 @@
+---
+// A service owner's overview, not a screenshot or an interactive product demo.
+const steps = [
+  { role: 'Applicant', action: 'Submit an application', detail: 'Provide details and supporting documents.' },
+  { role: 'Review team', action: 'Review and decide', detail: 'Request clarification and record the decision.' },
+  { role: 'Register', action: 'Maintain the licence record', detail: 'Keep the current information and change history.' },
+  { role: 'Connected service', action: 'Check permitted information', detail: 'Confirm licence status without receiving the full file.' },
+];
+---
+<figure class="service-outline" aria-labelledby="service-outline-title service-outline-caption">
+  <div class="outline-heading">
+    <p class="outline-label">Example service</p>
+    <h2 id="service-outline-title">Licensing</h2>
+  </div>
+  <ol>
+    {steps.map((step, index) => (
+      <li>
+        <span class="outline-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+        <div><p class="outline-role">{step.role}</p><h3>{step.action}</h3><p>{step.detail}</p></div>
+      </li>
+    ))}
+  </ol>
+  <figcaption id="service-outline-caption">Illustrative service journey. Screens, rules and connections are configured for each implementation.</figcaption>
+</figure>
+<style>
+  .service-outline { margin: 0; background: var(--registry-white); color: var(--registry-ink); box-shadow: var(--offset-lg); }
+  .outline-heading { padding: 24px 28px 18px; border-bottom: 1px solid var(--registry-rule); }
+  .outline-label { color: var(--registry-blue); font: var(--type-xs)/1.5 var(--registry-mono); text-transform: uppercase; margin: 0 0 6px; }
+  .outline-heading h2 { font-size: var(--type-2xl); margin: 0; }
+  ol { list-style: none; padding: 4px 28px; margin: 0; }
+  li { display: grid; grid-template-columns: 28px 1fr; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--registry-rule); }
+  li:last-child { border-bottom: 0; }
+  .outline-number { color: var(--registry-blue); font: 600 var(--type-xs)/1.6 var(--registry-mono); }
+  .outline-role { color: var(--registry-muted); font-size: var(--type-xs); margin: 0 0 4px; }
+  h3 { font-size: var(--type-body-sm); line-height: 1.4; margin: 0 0 5px; }
+  li p:last-child { font-size: var(--type-sm); line-height: 1.5; color: var(--registry-body); margin: 0; }
+  figcaption { padding: 16px 28px; background: var(--registry-paper); color: var(--registry-body); font-size: var(--type-xs); line-height: 1.5; }
+</style>

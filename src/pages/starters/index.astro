@@ -8,7 +8,8 @@ import DocsHandoff from '../../components/DocsHandoff.astro';
 import StarterCard from '../../components/StarterCard.astro';
 import { registerFamilies } from '../../data/solutions';
 import { products } from '../../data/products';
-import { featuredStarterForArea, starterById, starterCount, startersForArea, startersSource } from '../../data/starters';
+import { contactEmail, describeServiceHref } from '../../data/contact';
+import { featuredStarterForArea, starterById, starterCount, starterRequestHref, startersForArea, startersSource } from '../../data/starters';
 
 const baseRegistry = products.find((p) => p.key === 'base-registry')!;
 const groups = registerFamilies.map((area) => ({ area, starters: startersForArea(area) }));
@@ -19,6 +20,8 @@ const featured = registerFamilies.flatMap((area) => {
 
 const pageTitle = 'Starters | Registry Stack';
 const pageDescription = 'Starting configurations for common registers, grouped by the kind of register an organization keeps.';
+const discussHref = describeServiceHref('a registry service');
+const requestHref = starterRequestHref('a starter not selected yet');
 ---
 
 <Base title={pageTitle} description={pageDescription}>
@@ -28,8 +31,12 @@ const pageDescription = 'Starting configurations for common registers, grouped b
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Starters</p>
-          <h1 id="starters-title">Start from a register like yours.</h1>
-          <p class="hero-lead">{starterCount} ready-made register definitions, one for each common kind of register: who holds a professional licence, which companies are registered, who owns which parcel. Each sets out the records, what staff do with them, and who may do what. Pick the closest one, fill in your jurisdiction, and adapt the rest. Free, on request.</p>
+          <h1 id="starters-title">Inspect a starting configuration for a register like yours.</h1>
+          <p class="hero-lead">{starterCount} starting configurations cover common registers, including professional licences, registered companies, and land parcels. Each page shows the records, staff actions, access roles, and any additional definitions included. Use the catalogue to assess domain fit, or describe your service before choosing a starting point. The configurations are free by email request.</p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href={discussHref}>Discuss your service</a>
+            <a class="button button-secondary" href={requestHref}>Request a starter</a>
+          </div>
           <nav class="starter-contents-nav hero-note" aria-label="On this page">
             <p>On this page:</p>
             <ul>
@@ -46,13 +53,13 @@ const pageDescription = 'Starting configurations for common registers, grouped b
       <div class="section-inner">
         <div class="section-heading compact">
           <p class="eyebrow">Start here</p>
-          <h2 id="start-here-title">The starters to open first.</h2>
-          <p>One per family: the register most offices of that kind keep, and the one its family page walks through. We work on these most. The rest of the catalogue covers the registers around them.</p>
+          <h2 id="start-here-title">Selected starting configurations.</h2>
+          <p>Open one to see how the catalogue describes a register in that family. The other configurations cover related records and administrative responsibilities.</p>
         </div>
         <div class="starter-grid">
           {featured.map(({ area, starter }) => <StarterCard starter={starter} featured eyebrow={area.name} />)}
         </div>
-        <p class="starter-cards-legend">Each card names the starter and what it records. Some starters also come with parts the starter page lists: staff screens, an Evidence Gateway companion, client definitions, statistics, reusable modules.</p>
+        <p class="starter-cards-legend">Each card names the starter and what it records. Some starters also come with parts the starter page lists: staff-screen definitions, an Evidence Gateway companion, client definitions, statistics, reusable modules.</p>
       </div>
     </section>
 
@@ -67,7 +74,7 @@ const pageDescription = 'Starting configurations for common registers, grouped b
             <p class="eyebrow">{starters.length === 1 ? '1 starter' : `${starters.length} starters`}</p>
             <h2 id={`${area.key}-title`}><a href={area.slug}>{area.name}</a></h2>
             <p>{area.intent}.</p>
-            {featuredStarter && <p class="starter-open-first">Open first: <a href="#start-here">{featuredStarter.title}</a> (in Start here above)</p>}
+            {featuredStarter && <p class="starter-open-first">Open first: <a href={`/starters/${featuredStarter.id}/`}>{featuredStarter.title}</a></p>}
             {!featuredStarter && openFirst.length > 0 && <p class="starter-open-first">Open first: {openFirst.map((starter, index) => <Fragment>{index > 0 && ", or "}<a href={`/starters/${starter.id}/`}>{starter.title}</a></Fragment>)}</p>}
           </div>
           {rest.length > 0 && (
@@ -84,26 +91,19 @@ const pageDescription = 'Starting configurations for common registers, grouped b
       <div class="section-inner starter-contents">
         <div class="section-heading compact">
           <p class="eyebrow">What you receive</p>
-          <h2 id="starter-contents-title">A starting point your team generates and adapts.</h2>
-          <p>Each starter is free. Request it from its page, with a word on the register you keep. We reply by email with one zip file; if another starter fits better, the reply says which. The zip holds the configuration a developer turns into a registry project on their own machine. Nothing in it runs until your team generates the project and deploys it.</p>
-          <p>Most starters are small on purpose: each holds the one decision the register exists to record, and your team adds the rest.</p>
-          <p>No starter matches a register exactly as it is kept. Take the closest one, add the fields, kinds of record and roles yours needs, and tell us what was missing when you ask for it.</p>
-          <p>The models draw on registers that publish their structure online, many of them in Europe; your team adapts them to your law.</p>
+          <h2 id="starter-contents-title">A reviewed model and project configuration.</h2>
+          <p>Each starter is free. Its page shows the available record types, actions, access roles, configuration values, and optional companion definitions. Request the configuration by email only when it is useful to your evaluation. You can also discuss the service you need before selecting a starter.</p>
+          <p>The core registry configuration defines records, actions, and access. Some starters also have a separate staff-screen definition for an application to implement. Neither is a deployed service. Your institution still needs to review the model against its law, policy, operating process, identity system, existing data, integrations, screens, hosting, and support arrangements.</p>
+          <p>The models draw on public registers that publish their structure. Those references are models, not customer examples or endorsements.</p>
         </div>
         <dl>
-          <dt>In the zip</dt>
-          <dd>A README that says what the starter records and what it leaves to other systems, a description of the record model, a values file with the details your team fills in, the project files, and the licence and notice files.</dd>
+          <dt>Available by email</dt>
+          <dd>The registry model and configuration shown on the starter page, plus any companion definitions that page marks as included.</dd>
           <dt>To generate a project</dt>
-          <dd>A developer generates the project with the {baseRegistry.name} command-line tools, the toolchain the {baseRegistry.name} tutorial sets up. <a href={baseRegistry.tutorialHref}>{baseRegistry.tutorialLabel}</a> to install the tools and create a first registry.</dd>
+          <dd>A developer generates the project with the {baseRegistry.name} command-line tools. <a href={baseRegistry.tutorialHref}>{baseRegistry.tutorialLabel}</a> to install the tools and create a first registry.</dd>
           <dt>Licences</dt>
-          <dd>The starters are open source under the Apache 2.0 licence. The record definitions draw on <a href={startersSource.publicschema.repository}>PublicSchema</a> {startersSource.publicschema.version}, published under the Creative Commons Attribution 4.0 licence (CC BY 4.0). Each zip carries both licences.</dd>
+          <dd>The starter configurations are provided under the Apache 2.0 licence. The record definitions draw on <a href={startersSource.publicschema.repository}>PublicSchema</a> {startersSource.publicschema.version}, available under the Creative Commons Attribution 4.0 licence (CC BY 4.0).</dd>
         </dl>
-      </div>
-      <div class="section-inner starter-version">
-        <details>
-          <summary>Technical details (version the starters were built against)</summary>
-          <p>Each starter is exported from the current development release of {baseRegistry.name} ({startersSource.breg.version}) and states the version in its README, so your team knows what it was built against.</p>
-        </details>
       </div>
     </section>
 
@@ -111,17 +111,19 @@ const pageDescription = 'Starting configurations for common registers, grouped b
       <div class="section-inner">
         <div class="section-heading compact">
           <h2 id="project-status-title">Where the project stands</h2>
-          <p>Source and releases are public under Apache-2.0. Releases are signed and ship a software bill of materials. The starters are free and exported from the current development release of {baseRegistry.name}; each zip states the version it was built against. The software is pre-1.0: interfaces may change before 1.0, and the documentation keeps a list of <a href="https://docs.registrystack.org/explanation/known-limitations/">known limitations</a>. Aubex is taking on implementation pilots. The site names no deployments; we name one only when its operator agrees.</p>
+          <p>The Registry Stack source and software releases are public under Apache 2.0. The starter repository and release are not public yet, so the {starterCount} available configurations are provided by email request. Registry Stack is pre-1.0: interfaces may change before 1.0, and the documentation keeps a list of <a href="https://docs.registrystack.org/explanation/known-limitations/">known limitations</a>.</p>
         </div>
       </div>
     </section>
 
     <DocsHandoff
-      heading="Pick a starter to begin."
-      body="Open the one closest to the register you keep and request it from its page."
-      primaryLabel="Start here starters"
-      primaryHref="#start-here"
+      eyebrow="Discuss your service"
+      heading="Begin with your requirements or inspect the catalogue."
+      body="Describe the register or service you need. We can discuss the closest starting point, the changes required, and the work needed around it."
+      primaryLabel="Describe your service"
+      primaryHref={discussHref}
       emphasis="docs"
+      note={`Or email ${contactEmail}.`}
     />
   </main>
   <SiteFooter />

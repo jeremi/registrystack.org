@@ -25,7 +25,7 @@ export interface SolutionArea {
   starters: readonly string[];
   featuredStarter?: string;
   openFirst?: readonly string[];
-  // The offices the family is for, shown on its card ("For licensing boards, ...").
+  // The institutions the family is for, shown on its card.
   audience?: string;
   // The search snippet for the family page, under 155 characters.
   description?: string;
@@ -38,7 +38,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/licensing/',
     name: 'Licensing and professional registers',
     pageTitle: 'Licensing register software',
-    intent: 'Record who holds a licence, on what terms, and what changed',
+    intent: 'Connect applications, decisions, licence records and renewal',
     kind: 'register-family',
     starters: [
       'driver-licensing',
@@ -52,7 +52,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'professional-licensing',
     audience: 'For licensing boards, professional councils and local licensing teams.',
-    description: 'One register of the licences your office issues. Other services check a licence without seeing the file, and corrections wait in one queue. Open source.',
+    description: 'Connect licensing applications, decisions, licence records and renewals, with controlled checks by employers and other services.',
     products: ['base-registry', 'evidence-gateway', 'casework'],
   },
   {
@@ -60,7 +60,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/business-and-tax/',
     name: 'Business, tax and finance registers',
     pageTitle: 'Business and tax register software',
-    intent: 'Keep the register of businesses, taxpayers, suppliers and filings',
+    intent: 'Register businesses and changes, then support permitted checks',
     kind: 'register-family',
     starters: [
       'bank-account-register',
@@ -84,7 +84,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'business-register',
     audience: 'For company registrars, tax administrations, customs and financial supervisors.',
-    description: 'Keep the register of businesses, taxpayers, suppliers and filings, let other services check an entry, and review changes in one queue. Open source.',
+    description: 'Register businesses, taxpayers, suppliers and filings, review changes and provide permitted checks to connected services.',
     products: ['base-registry', 'evidence-gateway'],
   },
   {
@@ -92,7 +92,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/people-and-social-programmes/',
     name: 'People, households and social programmes',
     pageTitle: 'Population and social registry software',
-    intent: 'Maintain records about people and let programmes check them',
+    intent: 'Maintain people and household records for public programmes',
     kind: 'register-family',
     starters: [
       'alerts-watchlist',
@@ -111,7 +111,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     openFirst: ['population-register', 'social-registry'],
     audience: 'For population registries, social protection ministries and civil registration offices.',
-    description: 'Maintain records about people and let programmes check a fact without receiving the file. Open-source register software.',
+    description: 'Maintain people and household records, record corrections and let programmes check a permitted fact without receiving a file.',
     products: ['base-registry', 'evidence-gateway', 'casework'],
   },
   {
@@ -119,7 +119,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/land-property-and-assets/',
     name: 'Land, property, vehicles and places',
     pageTitle: 'Land, property and vehicle register software',
-    intent: 'Register parcels, buildings, vehicles, vessels and the rights over them',
+    intent: 'Maintain accountable records of assets, relationships and changes',
     kind: 'register-family',
     starters: [
       'address-building-register',
@@ -140,7 +140,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'land-parcels',
     audience: 'For cadastres, land registries, vehicle and vessel registries.',
-    description: 'Register parcels, buildings, vehicles, vessels and the rights over them, and let services check an entry without receiving the file. Open source.',
+    description: 'Maintain accountable records of parcels, buildings, vehicles, vessels and the relationships or rights recorded against them.',
     products: ['base-registry'],
   },
   {
@@ -148,7 +148,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/agriculture-food-and-environment/',
     name: 'Agriculture, animals, food and environment',
     pageTitle: 'Farm, animal and environmental register software',
-    intent: 'Register farms, animals, food businesses, permits and natural resources',
+    intent: 'Register producers, sites, establishments, permits and resources',
     kind: 'register-family',
     starters: [
       'animal-breeding-organisations',
@@ -170,7 +170,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'farmer-registry',
     audience: 'For agriculture ministries, veterinary and food safety authorities and environment agencies.',
-    description: 'Register farms, animals, food businesses, permits and natural resources, and let services check a fact without seeing the record. Open source.',
+    description: 'Register producers, sites, food businesses, permits and natural resources, with traceable changes and controlled sharing.',
     products: ['base-registry', 'evidence-gateway'],
   },
   {
@@ -178,7 +178,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/health-and-safety/',
     name: 'Health, safety and regulated products',
     pageTitle: 'Health and safety register software',
-    intent: 'Register facilities, trials, devices, operators and hazards',
+    intent: 'Maintain facility, operator, product and hazard records',
     kind: 'register-family',
     starters: [
       'clinical-trials',
@@ -192,7 +192,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'health-facilities',
     audience: 'For health facility registrars, medicines and device regulators and radiation protection authorities.',
-    description: 'Register facilities, trials, devices, operators and hazards, and let inspectors and services check an entry without seeing the file. Open source.',
+    description: 'Maintain facility, trial, device, operator and hazard records, including status changes and permitted checks by connected services.',
     products: ['base-registry', 'evidence-gateway'],
   },
   {
@@ -200,7 +200,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/reference-registers/',
     name: 'Public bodies, reference lists and catalogues',
     pageTitle: 'Reference register and public body directory software',
-    intent: 'Publish the lists other registers and services rely on',
+    intent: 'Maintain shared classifications, directories and reference data',
     kind: 'register-family',
     starters: [
       'administrative-metadata-catalogue',
@@ -212,7 +212,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'geographic-reference',
     audience: 'For statistics offices, national mapping and gazetteer authorities, and any office that keeps a code list.',
-    description: 'Publish the code lists, place names and public body directories that other registers rely on, from one register your office controls. Open source.',
+    description: 'Maintain the code lists, place names and public-body directories that other registers and services rely on.',
     products: ['base-registry'],
   },
   {
@@ -220,10 +220,10 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/check-a-fact/',
     name: 'Check a fact between services',
     pageTitle: 'Check a fact between government services',
-    intent: 'Answer a defined question from a register without handing over the record',
+    intent: 'Return a permitted answer from a register without sharing the record',
     kind: 'cross-cutting',
     starters: [],
-    description: 'Let another service check a fact in your register, such as an age or a licence status, and get a signed answer without the record. Open source.',
+    description: 'Let an authorised service check a defined fact, such as an age threshold or licence status, without receiving the source record.',
     products: ['evidence-gateway'],
   },
   {
@@ -231,10 +231,10 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/review-changes/',
     name: 'Review changes that need a person',
     pageTitle: 'Review register changes that need a person',
-    intent: 'Give the officers who decide one accountable inbox',
+    intent: 'Assign requests for human review and record accountable decisions',
     kind: 'cross-cutting',
     starters: [],
-    description: 'Put each register change that needs a decision in front of the officer who decides, with a queue, a due date and a record of who decided.',
+    description: 'Assign each request that needs human review, track its decision and keep the resulting register change separately authorised.',
     products: ['casework', 'base-registry'],
   },
 ] as const;
@@ -243,31 +243,31 @@ export const solutionAreas: readonly SolutionArea[] = [
 // closing band. The answers stay true for any register a family groups.
 export const sharedFamilyFaq: readonly { q: string; a: string; link?: { href: string; label: string } }[] = [
   {
-    q: 'What do we receive, and what do we build?',
-    a: 'You receive the software, the starter closest to your register, and the documentation. The software holds the records and their rules, answers the services you connect, and keeps the history. Your team provides the screens staff use, any search page for the public, sign-in for staff and services, and the hosting. A starter’s page says whether it includes a model of staff screens.',
-    link: { href: '/starters/', label: 'See what a starter includes' },
+    q: 'What can an implementation include?',
+    a: 'A scoped implementation can configure the relevant Registry Stack components and starting configuration, and can include staff or public screens, identity, hosting, migration and integrations. The written scope says what the delivery team provides, what the institution provides and how the service will be accepted.',
+    link: { href: '/pricing/', label: 'See implementation and support options' },
   },
   {
     q: 'What does it cost?',
-    a: 'There is no software licence fee; Registry Stack is Apache-2.0 open source. Your costs are hosting and people: someone in the office who decides the rules and roles, a developer who adapts the starter and builds or connects the screens, and an operator who runs the server and the database, keeps backups and holds the signing keys. If you want help, Aubex offers implementation pilots and annual support contracts at published prices, with scope and fee agreed before work starts.',
+    a: 'The core open-source Registry Stack components are Apache-2.0 licensed and carry no software licence fee. Implementation, support, hosting and other applications may have separate commercial terms. Integration, migration and operating costs depend on the service.',
     link: { href: '/pricing/', label: 'See the published prices' },
   },
   {
     q: 'Where does it run, and who runs it?',
-    a: 'On infrastructure your organization controls, or an IT firm you contract. Your operator hosts the database, manages access and keeps the audit records; the software does not send your records or logs to Aubex.',
+    a: 'It can run on infrastructure your institution controls or infrastructure operated by a provider it appoints. The implementation scope identifies who hosts the service, manages identity and access, operates the database, keeps backups and retains audit records.',
     link: { href: '/security/', label: 'Who is responsible for what' },
   },
   {
     q: 'What do our staff use day to day?',
-    a: 'Registry Stack holds the register and its rules. The screens your staff use come from your own application or from an IT firm you contract. Where a starter includes a model of staff screens for the App Kit, its page says so.',
+    a: 'Staff can use screens delivered as part of the implementation, or an existing application can connect to Registry Stack. Some starting configurations include a model of staff screens. The service design, roles and required public access are agreed during scoping.',
   },
   {
     q: 'What happens to our records if we stop?',
-    a: 'If you let services check facts from a register you already run, your records never left it. If you keep the register in Base Registry Engine, they stay in your PostgreSQL database, in a documented structure, with their history. The source code is public under Apache-2.0, so your team or another firm can keep running and changing it without Aubex, and a starter you have received is yours to keep under the same licence. Nothing is locked to a vendor account.',
+    a: 'If Evidence Gateway answers from an existing system, the source records remain there. Records held in Base Registry Engine remain in the institution’s PostgreSQL database with their history. The core components remain available under Apache-2.0, so another capable team can operate and adapt them. The proposal or contract should state the licence and ownership of any custom screens, integrations or configuration delivered with the service.',
   },
   {
     q: 'What does a first step look like?',
-    a: 'If you keep your register where it is, your technical team runs the Evidence Gateway tutorial and agrees with one other service the first question it will ask. If you are building or moving a register, your team runs the registry tutorial on a laptop and requests the starter closest to your register. A pilot engagement scopes the rest.',
+    a: 'Tell us about one service: who applies or asks for a change, what staff decide, which record must stay current and which systems people use today. We can identify a useful starting configuration and explain how Registry Stack could fit.',
   },
 ];
 

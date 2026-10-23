@@ -48,8 +48,9 @@ const server = createServer(async (request, response) => {
 
 await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen));
 const { port } = server.address();
-// The homepage introduces the three products; the service-answer
-// figure lives on its own page.
+// The homepage gives a service-owner outline and one illustrative journey,
+// then introduces the three products. The detailed service-answer figure
+// remains on its own page.
 const homeUrl = `http://127.0.0.1:${port}/`;
 const url = `http://127.0.0.1:${port}${figureRoute}`;
 
@@ -169,6 +170,36 @@ const failures = [];
   if (homeUseCaseCards !== 0) {
     failures.push(`expected no full use-case cards on the homepage, found ${homeUseCaseCards}`);
   }
+
+  const homeOverviewFailures = await page.evaluate(() => {
+    const issues = [];
+    const outline = document.querySelector('figure.service-outline');
+    if (!outline || document.querySelectorAll('figure.service-outline').length !== 1) {
+      issues.push('expected exactly one service outline on the homepage');
+    } else {
+      const labelledBy = outline.getAttribute('aria-labelledby')?.split(/\s+/) ?? [];
+      if (labelledBy.length < 2 || labelledBy.some((id) => !document.getElementById(id)?.textContent.trim())) {
+        issues.push('service outline must reference its visible title and illustrative caption');
+      }
+      if (outline.querySelectorAll('ol > li').length !== 4) {
+        issues.push('service outline must show the four roles from application to permitted check');
+      }
+    }
+    const journey = document.querySelector('figure.register-week');
+    if (!journey || document.querySelectorAll('figure.register-week').length !== 1) {
+      issues.push('expected exactly one example journey on the homepage');
+    } else {
+      const describedBy = journey.getAttribute('aria-describedby')?.split(/\s+/) ?? [];
+      if (describedBy.length !== 1 || describedBy.some((id) => !document.getElementById(id)?.textContent.trim())) {
+        issues.push('example journey must reference its fictional-record caption');
+      }
+      if (journey.querySelectorAll('.day-step').length !== 4) {
+        issues.push('example journey must keep request, review, update and check as separate steps');
+      }
+    }
+    return issues;
+  });
+  failures.push(...homeOverviewFailures);
 
   const solutionCards = await page.locator('.home-solution-card').count();
   if (solutionCards !== 3) {

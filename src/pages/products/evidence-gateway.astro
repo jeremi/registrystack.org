@@ -6,8 +6,8 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
 ---
 <Product
   product={product}
-  heading="Answer the question. Keep the records."
-  description="Give approved services signed facts and limited answers from sources your organization maintains. Define what each answer means, what it may reveal, and who may receive it, while keeping the full source record in your own system."
+  heading="Provide a limited answer from an authorized source."
+  description="Give approved services digitally signed answers from sources your organization maintains. Define what each answer means, what it may reveal, and who may receive it, while keeping the full source record in its source system."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="evidence-example-title">
     <div class="section-inner">
@@ -17,7 +17,7 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
         <p>A government procurement service needs the answer before processing a supplier’s application. The business register can provide that status while keeping addresses, filing history, and other details out of the response.</p>
       </div>
       <EvidenceGatewayFlow />
-      <p class="product-note">The digital signature acts as a seal: the service can check that the expected issuer produced the answer and that it has not been altered. The procurement service remains responsible for deciding what that answer means for the application.</p>
+      <p class="product-note">The digital signature lets the service verify that the expected issuer produced the answer and that the answer has not been altered. It does not prove that the source record is correct. The procurement service remains responsible for deciding what the answer means for the application.</p>
     </div>
   </section>
   <section class="section" aria-labelledby="evidence-define-title">
@@ -30,7 +30,7 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
       <div class="product-facts">
         <article><h3>Define the answer and its source</h3><p>Choose the source information and how to derive the permitted answer. Return only the defined facts, such as a residence region without the street address, or adult status without a date of birth.</p></article>
         <article><h3>Limit who may ask</h3><p>Authorize services for defined answers and agreed purposes. Evidence Gateway checks that permission before consulting the configured source and records the outcome of the request.</p></article>
-        <article><h3>Keep answers current</h3><p>Set how long an answer is valid. Your team keeps the source current and defines how its age is checked; the receiving service verifies the answer’s dates and signature before use.</p></article>
+        <article><h3>Set a validity period</h3><p>Set how long an answer may be used. Your team maintains the source; the receiving service verifies the answer’s dates, expected issuer, and signature before use.</p></article>
       </div>
     </div>
   </section>
@@ -46,7 +46,7 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
         <dt>Your office defines the answers</dt><dd>Agree what each fact means, its permitted uses, and the source responsible for the underlying information. The same source can support different defined answers for different services.</dd>
         <dt>Your technical team connects the source</dt><dd>Your register is read through an interface your system offers that returns JSON, a read-only extract your team publishes and refreshes, or a Base Registry Engine register. Your team configures how Evidence Gateway reads it, checks requests, and signs answers, then operates the service and manages its access rules.</dd>
         <dt>The receiving service makes its decision</dt><dd>Its team verifies the answer, decides how to use it alongside its own rules and other information, and remains responsible for that decision. Your organization remains responsible for the source records.</dd>
-        <dt>Answers a person can carry, from systems you already run</dt><dd>An answer can also be issued as a credential a person keeps in a digital wallet and presents to other services. Health information systems and civil registration systems can serve as sources. Tutorials show <a href="https://docs.registrystack.org/tutorials/issue-fhir-evidence-as-vcs/">a credential from a health record</a> and <a href="https://docs.registrystack.org/tutorials/request-evidence-as-sd-jwt-vc/">an answer requested as a credential</a>.</dd>
+        <dt>Credential output for a wallet integration</dt><dd>Evidence Gateway can issue an answer in a credential format. A separate delivery adapter can pass it to a compatible digital wallet. The chosen wallet must be tested for the project, including whether it can receive, store, and later present that credential.</dd>
       </dl>
     </div>
   </section>
@@ -55,13 +55,14 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
       <div class="section-heading compact">
         <p class="eyebrow">For developers and implementers</p>
         <h2 id="evidence-developers-title">Request and verify your first signed answer.</h2>
-        <p>The introductory tutorial asks “Is this person an adult?” Run a synthetic source, define the question, and verify the signed answer without returning the person’s name or date of birth.</p>
+        <p>The introductory tutorial opens a predefined adult-status project, runs its synthetic source, requests the configured answer, and verifies the signed JWS response without returning the person’s name or date of birth.</p>
         <p><a class="inline-cta" href={product.tutorialHref}>Run the adult-status tutorial →</a></p>
         <a class="inline-cta" href="https://docs.registrystack.org/products/registry-evidence/">Read the product documentation →</a>
       </div>
       <dl>
         <dt>Source connection</dt><dd>The tutorial supplies a local source. An institutional source is a fixed HTTP request that returns JSON, or a read-only SQLite extract your team refreshes; each needs a reviewed configuration describing the connection and how to derive the answer. A Base Registry Engine register has its own tutorial.</dd>
-        <dt>Answer and verification</dt><dd>The tutorial covers signed JWS and SD-JWT VC assertions. The receiving service verifies the expected issuer, signature, request binding, and freshness.</dd>
+        <dt>Answer and verification</dt><dd>The introductory tutorial covers a signed JWS response. The receiving service verifies the expected issuer, signature, request binding, and freshness. These checks establish origin and integrity, not whether the source information is factually correct. SD-JWT VC is a separate supported output format.</dd>
+        <dt>Wallet delivery profile</dt><dd>The separate Evidence OID4VCI adapter supports the project’s defined OpenID for Verifiable Credential Issuance profile for holder-bound credential output. This is bounded protocol support, not a claim that any chosen wallet can store or present the credential. Verify the intended wallet and verifier combination for the pilot.</dd>
         <dt>When a service needs a value, not a yes or no</dt><dd>An answer can be one of a set of values your office declares, such as a residence region, and nothing outside that set. The <a href="https://docs.registrystack.org/tutorials/return-a-governed-value/">Return a governed value</a> tutorial shows how. A service that needs the records themselves reads the register through the access your office grants it.</dd>
         <dt>Registry Relay</dt><dd>Registry Relay, which published selected fields from an existing register, was retired upstream on 3 October 2026 and receives no further releases or security fixes. Its <a href="https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/">decision record</a> explains why.</dd>
       </dl>

@@ -1,8 +1,8 @@
 ---
 // One page per starter. Every fact on the page comes from the catalogue
 // entry in src/data/starters.json; the prose only explains what it means.
-// The page reads the way Registry Studio shows a project: record types,
-// fields and roles in words, with the identifiers in technical details.
+// The page presents record types, fields and roles in words, with the
+// identifiers in technical details.
 import Base from '../../layouts/Base.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
@@ -11,9 +11,9 @@ import StarterIncludes from '../../components/StarterIncludes.astro';
 import StarterRecordType from '../../components/StarterRecordType.astro';
 import StarterTechnical from '../../components/StarterTechnical.astro';
 import { products } from '../../data/products';
-import { contactEmail } from '../../data/contact';
+import { contactEmail, describeServiceHref } from '../../data/contact';
 import { areaForStarter, featuredStarterForArea, starterHoldsText, starterLead, starterRequestHref, starters, startersSource, type Starter } from '../../data/starters';
-import { sourceHost, words } from '../../data/starter-words';
+import { actionDescriptionWords, sourceHost, words } from '../../data/starter-words';
 
 export function getStaticPaths() {
   return starters.map((starter) => ({ params: { id: starter.id }, props: { starter } }));
@@ -29,19 +29,20 @@ if (!area) throw new Error(`starter ${starter.id} is not assigned to a register 
 const featured = featuredStarterForArea(area)?.id === starter.id;
 const baseRegistry = products.find((p) => p.key === 'base-registry')!;
 
-// A starter is sent on request, free of charge, until the catalogue is
-// published for download.
+// A starter is sent on request, free of charge, while its repository and
+// release remain private.
 const requestHref = starterRequestHref(starter.title);
+const discussHref = describeServiceHref(starter.title);
 
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
 const list = (items: string[]) => items.join(', ');
 const recordTypeLabel = (id: string) => starter.recordTypes.find((type) => type.id === id)?.label ?? id;
 const actionLabel = (id: string) => starter.actions.find((action) => action.id === id)?.label ?? id;
-const sizeKb = Math.round(starter.download.bytes / 1024);
-const zipName = starter.download.path.split('/').pop();
 const lead = starterLead(starter);
 const holds = starterHoldsText(starter);
 const requiredFields = starter.recordTypes.some((type) => type.fields.some((field) => field.required));
+const allCreateOnly = starter.recordTypes.length > 0 && starter.recordTypes.every((type) => type.mutationMode === 'create-only');
+const hasCreateOnly = starter.recordTypes.some((type) => type.mutationMode === 'create-only');
 const sources = starter.sourceUrls.map((href) => {
   const url = new URL(href);
   const rest = `${url.pathname}${url.search}`;
@@ -63,10 +64,11 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
           </p>
           <h1 id="starter-title">{starter.title}</h1>
           <p class="hero-lead">{lead}</p>
-          <p class="hero-note starter-hero-terms">Free of charge, sent by email on request.</p>
+          <p class="hero-note starter-hero-terms">Free starting configuration, available by email request.</p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href={requestHref} data-journey="starter-request">Request the starter</a>
-            <a class="button button-secondary" href="#whats-inside">What you receive</a>
+            <a class="button button-primary" href="#whats-inside">What you receive</a>
+            <a class="button button-secondary" href={requestHref} data-journey="starter-request">Request the starter</a>
+            <a class="button button-secondary" href={discussHref}>Discuss your service</a>
           </div>
         </div>
       </div>
@@ -77,7 +79,14 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
         <div class="section-heading compact">
           <h2 id="records-title">What it holds: <span class="starter-count">{plural(starter.counts.recordTypes, 'kind of record', 'kinds of record')}</span></h2>
           {holds && <p>{holds}</p>}
-          <p>Each box is one kind of record the register keeps, with the fields an entry has. Some records are added once and never changed; later events, such as a renewal or a correction, are added as records of their own.</p>
+          <p>Each box is one kind of record the register keeps, with the fields an entry has.</p>
+          {allCreateOnly ? (
+            <p>These records are added once and cannot be edited in place. The record types and actions below show which later events the starter supports. Corrections or renewals not listed here need additional configuration.</p>
+          ) : hasCreateOnly ? (
+            <p>The labels below show which records can change and which are added once. A create-only record cannot be corrected in place. Check whether the starter includes separate correction or renewal records, and add them if your service requires them.</p>
+          ) : (
+            <p>The labels below show how each kind of record can change. Compare that model with the correction, renewal, and closure events your service must preserve.</p>
+          )}
           <p class="starter-legend">Each kind of record carries a sensitivity label: Public; Staff only, for records kept inside the office; Restricted, for the most sensitive. A field carries its own label, shown in the technical details, which can differ from the record’s. “Who can do what” lists the kinds of record each role can see.</p>
         </div>
         <div class="starter-records">
@@ -94,7 +103,7 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
           {starter.actions.length > 0 ? (
             <p>Each action is one change staff make to the register. The register keeps who made it and when.</p>
           ) : (
-            <p>This starter defines no actions yet. Your team adds the changes staff make, such as recording an entry and correcting it, and gives each one to a role below.</p>
+            <p>This starter defines no actions yet. Your team must define the recording and change operations the service needs, including any correction or renewal process, and assign each operation to a role.</p>
           )}
         </div>
         {starter.actions.length > 0 && (
@@ -102,7 +111,18 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
             {starter.actions.map((action) => (
               <div>
                 <dt>{action.label}</dt>
-                <dd>{action.description}</dd>
+                <dd>
+                  {actionDescriptionWords(action.description)}
+                  {actionDescriptionWords(action.description) !== action.description && (
+                    <StarterTechnical
+                      label="catalogue wording"
+                      items={[
+                        { term: 'Action', value: action.id },
+                        { term: 'Technical description', value: action.description },
+                      ]}
+                    />
+                  )}
+                </dd>
               </div>
             ))}
           </dl>
@@ -164,8 +184,8 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
         <div class="section-heading compact">
           <p class="eyebrow">Free of charge</p>
           <h2 id="inside-title">What you receive</h2>
-          <p>One zip file with the configuration above, sent by email when you request it. A developer turns it into a registry project with the {baseRegistry.name} command-line tools; nothing in it runs on its own. It is a starting point to adapt, not a sign that the register is in use anywhere.</p>
-          <p>We reply by email with the zip. If another starter fits better, the reply says which.</p>
+          <p>The model and configuration shown above, sent by email when you request it. The core configuration defines records, actions, and access. Your technical team can adapt it and generate a registry project with the {baseRegistry.name} command-line tools.</p>
+          <p>You can inspect the catalogue details without requesting the file. If you are planning a wider service, discuss your requirements first and use the starter only if it is a useful technical starting point.</p>
         </div>
         <div class="starter-inside">
           <div>
@@ -173,28 +193,25 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
             <StarterIncludes includes={starter.includes} />
           </div>
           <div>
-            <h3>Details your team fills in</h3>
-            <p>Your team fills in your authority's name, jurisdiction and addresses; the technical details list the exact values.</p>
-            <h3>Files in the zip</h3>
-            <p>A README that says what the starter records and what it leaves to other systems, a description of the record model, the values file, the project files, and the Apache 2.0 licence, notice, and PublicSchema CC BY 4.0 licence files.</p>
-            <h3>Not exactly your register?</h3>
-            <p>No starter matches a register as it is kept. If yours needs a field, a kind of record or a role this one lacks, your team adds it after generating the project. Say what is missing when you request the starter; it is how the catalogue gets better.</p>
+            <h3>Configuration values your team supplies</h3>
+            <p>This starter declares {plural(starter.counts.values, 'configuration value', 'configuration values')}. Your team supplies values appropriate to the implementation; the technical details list the exact keys.</p>
+            <h3>Core and optional definitions</h3>
+            <p>The core configuration describes the registry itself. A staff-screen definition, when marked as included, is a separate description for an application to implement. It is not part of the registry runtime and is not a deployed staff application.</p>
+            <h3>Review before implementation</h3>
+            <p>Compare the model with your law, policy, forms, current data, staff responsibilities, and connected systems. Changes may involve more than adding fields or roles, and the starter does not supply migration, identity, integration, hosting, or operating procedures.</p>
             <p class="starter-request"><a class="button button-primary" href={requestHref} data-journey="starter-request">Request the starter</a></p>
-            <p class="starter-legend">Sent by email because the starters repository is not public yet. Requesting one commits you to nothing.</p>
+            <p class="starter-legend">Sent by email, free of charge. Requesting one commits you to nothing.</p>
             <div class="starter-inside-technical">
               <StarterTechnical
-                label="file, checksum, versions and values"
+                label="configuration values"
                 items={[
-                  { term: 'File', value: `${zipName} (${sizeKb} KB), checksum confirms the file you receive` },
-                  { term: 'SHA-256', value: starter.download.sha256 },
-                  { term: 'Exported with', value: `${baseRegistry.name} ${startersSource.breg.version}, PublicSchema ${startersSource.publicschema.version}` },
                   { term: 'Values your team fills in', value: list(starter.valuesKeys) },
                 ]}
               />
             </div>
           </div>
         </div>
-        <p class="starter-attribution">The record definitions draw on <a href={startersSource.publicschema.repository} rel="noopener">PublicSchema</a> {startersSource.publicschema.version}, published under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">Creative Commons Attribution 4.0 licence</a>. The starter itself is published under the Apache 2.0 licence.</p>
+        <p class="starter-attribution">The record definitions draw on <a href={startersSource.publicschema.repository} rel="noopener">PublicSchema</a> {startersSource.publicschema.version}, available under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">Creative Commons Attribution 4.0 licence</a>. The starter configuration is provided under the Apache 2.0 licence.</p>
       </div>
     </section>
 
@@ -213,13 +230,13 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     </section>
 
     <DocsHandoff
-      eyebrow="Ready to try it?"
-      heading="Request this starter, free."
-      body="Request it and tell us what your register needs that it does not cover."
-      primaryLabel="Request the starter"
-      primaryHref={requestHref}
+      eyebrow="Discuss your service"
+      heading="Start with your requirements."
+      body="Describe the service, the register, and the systems involved. We can discuss whether this starter fits and what configuration, integration, and delivery work remains."
+      primaryLabel="Describe your service"
+      primaryHref={discussHref}
       emphasis="docs"
-      note={`Or email ${contactEmail} with the starter’s name, your organization and the register you keep.`}
+      note={`Or email ${contactEmail}. The starter remains available free of charge from the request link above.`}
     />
   </main>
   <SiteFooter />
@@ -242,6 +259,7 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
     padding: 3px 7px;
     text-transform: uppercase;
     vertical-align: middle;
+    white-space: nowrap;
   }
 
   .starter-page h2 {

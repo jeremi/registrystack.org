@@ -15,7 +15,7 @@ const area = solutionAreas.find((a) => a.key === 'business-and-tax')!;
 
 const steps: WeekStep[] = [
   {
-    when: 'Monday 09:10',
+    when: 'Change filed',
     product: 'Your filing service',
     title: 'A company files a change of address',
     text: 'The company secretary files a change of registered address. The register does not change until a registrar decides.',
@@ -26,18 +26,18 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Monday 09:10 to 15:05',
+    when: 'Review and decision',
     ...weekProduct('casework'),
     title: 'A registrar reviews the filing',
-    text: 'The filing lands in the filings queue. L. Mensah takes it, checks the lease supplied, and approves it the same afternoon.',
+    text: 'The filing enters the review queue. L. Mensah checks the evidence supplied and approves the change.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Filings' },
       { state: 'Claimed', note: 'Held by L. Mensah' },
-      { state: 'Approved', note: 'Monday 15:05' },
+      { state: 'Approved', note: 'Evidence accepted' },
     ] },
   },
   {
-    when: 'Monday 15:05',
+    when: 'Company record updated',
     ...weekProduct('base-registry'),
     title: 'The entry changes and keeps its history',
     text: 'The registrar records the new address under their own name. Revision 23 holds it; revision 22 stays readable.',
@@ -48,29 +48,29 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Monday 15:06',
+    when: 'Notification requested',
     ...weekProduct('messaging'),
     title: 'The company is told',
-    text: 'A notice goes to the company secretary by email, from a template your office reviewed. The delivery report is kept beside the filing.',
+    text: 'After the company record is updated, the filing service calls Messaging to send the reviewed email template. Messaging sends only when an authorised caller triggers it, and returns the delivery result to the filing service.',
     card: { kind: 'notice', channel: 'Email', to: 'Company secretary', subject: 'Change of address recorded, BR-20417', status: 'Delivered' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Keep the register of businesses that other services check."
-  description="Annual filings arrive faster than they are entered, a company with three registrations has three files, and the banks and procurement teams that need to know whether a business is active ask your staff instead of your register. Registry Stack gives your office one register of the businesses and taxpayers it has registered, and lets other services check a registration without seeing the file."
+  heading="Connect business registration, changes and permitted checks."
+  description="Give businesses a route to submit registrations and changes, give registrars an accountable review process, and maintain the resulting business information in a governed register. Connected services can check a permitted fact without receiving the filing file."
 >
   <section class="section" id="example" aria-labelledby="business-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="business-week-title">A filing arrives at 09:10. By 15:06 the company is told it is recorded.</h2>
+        <h2 id="business-week-title">A company files a change, a registrar decides, the register is updated and the filing service sends the notice.</h2>
       </div>
       <RegisterWeek
         id="business-week"
         kicker="Business BR-20417, one request"
-        heading="Each step names the product that does it."
+        heading="Follow the registration."
         steps={steps}
       />
     </div>
@@ -79,19 +79,19 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="business-change-title">One entry per business, and extracts your staff stop preparing by hand.</h2>
+        <h2 id="business-change-title">A clearer change process and one maintained business record.</h2>
       </div>
       <div class="product-facts">
         <article><h3>A business is entered once, however many registrations it holds</h3><p>Its company registration, its tax registration and each authorization are linked to one entry, so your staff look up one business and see everything registered against it.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
         <article><h3>A bank or procurement team checks a registration without the file</h3><p>It gets a yes or no with your register’s name on it. Filing history, addresses and owners stay in your register.</p><a class="inline-cta" href="/solutions/check-a-fact/">How a service checks a fact <span aria-hidden="true">→</span></a></article>
-        <article><h3>An extract prints the same every time</h3><p>A certificate or extract is printed from the register, and its fingerprint is kept beside the entry it came from. Reprint it next year and the bytes match.</p><a class="inline-cta" href="https://docs.registrystack.org/start/registry-render/">How printed documents work <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Certificates can be reproduced from fixed inputs</h3><p>Registry Render produces the same bytes when the record revision, template, rendering version and other inputs are unchanged. The application decides when a certificate or extract may be issued.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/">How deterministic rendering works <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
   <SolutionStarters
     area={area}
     heading="Start from a business or tax register like yours."
-    intro="A starter sets out what a register of this kind holds and who may change it, for one common register of businesses, taxpayers, filings, or financial rights. Your team takes the closest one and adapts it to its own law."
+    intro="A starting configuration can provide a model for one register of businesses, taxpayers, filings or financial rights. It is adapted to your rules, the services people use and the systems that must connect."
   />
   <SolutionFaq
     items={[
@@ -117,13 +117,13 @@ const steps: WeekStep[] = [
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
+        a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to your rules, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#business-and-tax', label: 'Browse the business and tax starters' },
       },
       {
         q: 'Can we still sell certificates and extracts?',
-        a: 'Yes. What your office charges for stays with your office. Registry Render prints the certificate or extract from the register, the same bytes on every reprint, and your application decides when one is issued.',
-        link: { href: 'https://docs.registrystack.org/start/registry-render/', label: 'How printed documents work' },
+        a: 'Yes. Your institution keeps control of any fees and issuance rules. Registry Render can reproduce a certificate when the record revision, template, rendering version and other inputs are unchanged; the service application decides when issuance is authorised.',
+        link: { href: 'https://docs.registrystack.org/explanation/render-determinism/', label: 'How deterministic rendering works' },
       },
       {
         q: 'Where does our technical team start?',
@@ -136,7 +136,7 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Work with us"
     heading="Talk it through with the people who build it."
-    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    body="Tell us which registration or filing service you want to improve, who submits changes, who decides and which systems staff use today. We can show how Registry Stack could fit."
     primaryLabel="Ask a question"
     primaryHref={askQuestionHref(area.name)}
     emphasis="docs"

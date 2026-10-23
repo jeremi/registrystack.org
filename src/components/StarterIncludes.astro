@@ -9,11 +9,11 @@ interface Props {
 const { includes } = Astro.props;
 
 const parts: { key: keyof Starter['includes']; label: string; meaning: string }[] = [
-  { key: 'staffUi', label: 'Staff screens', meaning: 'A description of the screens staff use, which the App Kit turns into a working staff application.' },
-  { key: 'evidenceCompanion', label: 'Evidence Gateway companion', meaning: 'A ready-made set of questions other services can ask about these records through Evidence Gateway.' },
-  { key: 'clients', label: 'Client definitions', meaning: 'Descriptions of the systems that will call the register, and what each may do.' },
-  { key: 'statistics', label: 'Statistics', meaning: 'Counts and summaries the register can publish without exposing individual records.' },
-  { key: 'modules', label: 'Reusable modules', meaning: 'Parts of the definition shared with other registers, such as a common address format.' },
+  { key: 'staffUi', label: 'Staff-screen definition', meaning: 'An optional description of staff screens and fields for an application to implement. It is separate from the core registry configuration and is not a deployed staff application.' },
+  { key: 'evidenceCompanion', label: 'Evidence Gateway companion', meaning: 'Definitions for limited evidence questions and their registry sources. They still require a configured Evidence Gateway deployment.' },
+  { key: 'clients', label: 'Client definitions', meaning: 'Definitions of the systems that may call the register and the access each receives.' },
+  { key: 'statistics', label: 'Statistics definitions', meaning: 'Definitions for counts and summaries that do not return individual records.' },
+  { key: 'modules', label: 'Reusable model modules', meaning: 'Shared parts of the record model, such as a common address structure.' },
 ];
 ---
 <p class="starter-includes-head"><span>Part</span><span>In this starter</span></p>

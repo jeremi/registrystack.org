@@ -14,7 +14,7 @@ interface Props {
   muted?: boolean;
 }
 
-const { heading = 'Questions before you decide', items, muted = false } = Astro.props;
+const { heading = 'Questions for planning the service', items, muted = false } = Astro.props;
 ---
 <section id="faq" class={muted ? 'section section-muted' : 'section'} aria-labelledby="solution-faq-title">
   <div class="section-inner">

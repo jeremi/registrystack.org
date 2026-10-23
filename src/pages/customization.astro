@@ -1,0 +1,47 @@
+---
+// Reader: a service owner deciding how to adapt a solution and who can help.
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { contactEmail, describeServiceHref } from '../data/contact';
+---
+<Base title="AI-assisted customization | Registry Stack" description="Describe the public service you need. Get AI-assisted implementation with our team, adapt reusable software and review the result before deployment.">
+  <SiteHeader current="customization" />
+  <main>
+    <section class="hero hero-cover" aria-labelledby="customize-title"><div class="hero-inner"><div class="hero-copy">
+      <p class="eyebrow">AI-assisted customization</p>
+      <h1 id="customize-title">Describe your service. We help build it around your rules.</h1>
+      <p class="hero-lead">Describe your requirements and current process. Our team uses AI tools and reusable software to help adapt the records, forms and review steps with you.</p>
+      <div class="hero-actions"><a class="button button-primary" href={describeServiceHref('customization')} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="#how-customization-works">See the process</a></div>
+      <p class="hero-note">Available through a scoped implementation pilot. We agree the screens, integrations and handover with you. You can also email {contactEmail}.</p>
+    </div></div></section>
+
+    <section class="section" id="how-customization-works" aria-labelledby="process-title"><div class="section-inner">
+      <div class="section-heading"><p class="eyebrow">From requirements to a configured service</p><h2 id="process-title">Start with your needs.</h2><p>You do not need to choose a template first. We identify a suitable starting model from the service you describe, then agree the adaptations with your team.</p></div>
+      <ol class="delivery-steps">
+        <li><h3>Explain the work</h3><p>Who applies, what information they provide, who reviews it and which decisions your institution makes. Existing forms and procedures help define the scope.</p></li>
+        <li><h3>Adapt the service</h3><p>We use AI tools to help prepare the records, staff and applicant screens, and agreed review process. Existing components provide the starting point.</p></li>
+        <li><h3>Review and test</h3><p>Your service and technical teams review the proposed behavior. Test a representative application, decision and record change against the agreed requirements.</p></li>
+        <li><h3>Agree delivery and operation</h3><p>The implementation scope identifies the integrations, data preparation, hosting and handover work, together with the people responsible for each.</p></li>
+      </ol>
+      <p class="section-note">Prefer to explore first? <a href="/starters/">Browse the starting configurations</a> and request one for evaluation.</p>
+      <div class="editorial-callout"><h3>Start with public forms and fictional examples</h3><p>These are enough for an initial discussion. Include any restrictions on AI tools or data use in your inquiry so we can assess an appropriate approach before you share confidential material or personal records.</p></div>
+    </div></section>
+
+    <section class="section section-muted" aria-labelledby="control-title"><div class="section-inner">
+      <div class="section-heading"><p class="eyebrow">AI assists the development work</p><h2 id="control-title">Your institution defines the rules.</h2><p>AI can help prepare configuration and application changes. Your team reviews the result, and the service follows the rules you adopt.</p></div>
+      <div class="value-grid">
+        <article><h3>Review a concrete proposal</h3><p>Discuss the records, permissions and service steps in the context of a working journey.</p></article>
+        <article><h3>Run without an AI dependency</h3><p>The configured application does not need an AI service for its ordinary operation.</p></article>
+        <article><h3>Plan for future changes</h3><p>Keep the configuration and implementation documentation so your team or delivery provider can maintain the service.</p></article>
+      </div>
+    </div></section>
+
+    <section class="section" id="studio" aria-labelledby="studio-title"><div class="section-inner approach-split">
+      <div class="section-heading"><p class="eyebrow">Registry Studio · In development</p><h2 id="studio-title">Direct AI-assisted customization is the next step.</h2><p>We are developing Registry Studio so teams can describe a change, inspect the proposed configuration and review its effect before applying it.</p><p>The self-service AI assistant is planned. Current AI-assisted implementation is delivered with our team.</p></div>
+      <div class="editorial-callout"><h3>Help shape it around your service</h3><p>Tell us which changes take the most effort today: adapting forms, updating review steps, changing the information you collect, or maintaining several related registers.</p><a class="inline-cta" href={describeServiceHref('Registry Studio')} data-journey="service-inquiry">Discuss your customization needs <span aria-hidden="true">→</span></a><p class="contact-note">{contactEmail}</p></div>
+    </div></section>
+
+    <section class="final-cta" aria-labelledby="next-title"><div class="section-inner"><p class="eyebrow">Implementation and support</p><h2 id="next-title">Define one service to work on together.</h2><p>Agree the outcome, responsibilities and fee before implementation begins.</p><a class="button button-primary" href="/pricing/">View implementation options</a></div></section>
+  </main><SiteFooter />
+</Base>

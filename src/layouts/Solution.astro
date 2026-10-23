@@ -22,12 +22,12 @@ interface Props {
 }
 
 const { area, heading, description } = Astro.props;
-// Every area leads to its example first. A register family then offers its
-// starters; a cross-cutting area has none and offers how it fits instead.
+// Every area leads to its service example first. A register family then offers
+// optional starting configurations; a cross-cutting area offers how it fits.
 const isFamily = area.kind === 'register-family';
-const primary = Astro.props.primary ?? { href: '#example', label: isFamily ? 'See one request' : 'See the example' };
+const primary = Astro.props.primary ?? { href: '#example', label: isFamily ? 'Follow the service journey' : 'See the example' };
 const secondary = Astro.props.secondary ?? (isFamily
-  ? { href: '#starters', label: 'See the starters' }
+  ? { href: '#starters', label: 'Explore starting configurations' }
   : { href: '#fit', label: 'How it fits' });
 ---
 <Base title={area.pageTitle + ' | Registry Stack'} description={area.description ?? description}>

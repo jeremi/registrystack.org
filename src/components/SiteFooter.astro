@@ -13,13 +13,17 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
 type FooterEntry = { href: string; label: string } | { heading: string };
 const columns: { title: string; links: FooterEntry[] }[] = [
   { title: 'Solutions', links: [
+    { href: '/solutions/', label: 'All solutions' },
+    { href: '/solutions/local-government/', label: 'Local government' },
     ...registerFamilies.map((area) => ({ href: area.slug, label: area.name })),
-    { heading: 'Work every register shares' },
+    { heading: 'Shared capabilities' },
     ...crossCutting.map((area) => ({ href: area.slug, label: area.name })),
   ] },
   { title: 'Products', links: productEntries.map((product) => ({ href: product.href, label: product.name })) },
   { title: 'Explore', links: [
-    { href: '/starters/', label: 'Starters' },
+    { href: '/starters/', label: 'Starting configurations' },
+    { href: '/customization/', label: 'AI-assisted customization' },
+    { href: '/digital-public-infrastructure/', label: 'Digital public infrastructure' },
     { href: '/blog/', label: 'Blog' },
     { href: '/security/', label: 'Security' },
     { href: '/faq/', label: 'FAQ' },
@@ -43,7 +47,7 @@ const columns: { title: string; links: FooterEntry[] }[] = [
   <div class="site-footer-inner">
     <div class="footer-brand">
       <a class="footer-brand-name" href="/">Registry Stack</a>
-      <p>Open-source building blocks for registries and the services that use them.</p>
+      <p>Public registers and services, built around your rules.</p>
       <p>Built and supported by Aubex.</p>
     </div>
     <nav class="footer-nav" aria-label="Footer">
@@ -58,7 +62,7 @@ const columns: { title: string; links: FooterEntry[] }[] = [
     </nav>
   </div>
   <div class="site-footer-base">
-    <p>&copy; {year} Aubex Consulting LLC. Apache-2.0 open source.</p>
+    <p>&copy; {year} Aubex Consulting LLC. Core software: Apache-2.0.</p>
     <p><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/imprint/">Legal notice</a></p>
   </div>
 </footer>

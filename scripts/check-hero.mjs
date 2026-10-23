@@ -42,17 +42,22 @@ const failures = [];
 const products = [
   { path: '/products/base-registry/', name: 'Base Registry Engine', tutorial: '/tutorials/first-breg/' },
   { path: '/products/evidence-gateway/', name: 'Evidence Gateway', tutorial: '/tutorials/first-evidence-assertion/' },
-  { path: '/products/casework/', name: 'Registry Casework', tutorial: '/start/casework/' },
+  { path: '/products/casework/', name: 'Registry Casework', tutorial: '/tutorials/review-breg-changes-in-casework/' },
 ];
-// The Products menu lists every product page, and each product has an equal
-// card on the homepage.
-const productMenuRoutes = products.map((product) => product.path);
+// The Products menu lists the three product pages and the evaluation routes.
+// Each core product also has an equal card on the homepage.
+const productMenuHrefs = [
+  ...products.map((product) => product.path),
+  '/starters/',
+  '/#developers',
+  'https://docs.registrystack.org/',
+];
 const redirects = [
   ['/why/', '/'],
   ['/problem/', '/'],
   ['/ecosystem/', '/'],
   ['/how-it-fits/', '/'],
-  ['/ai/', '/solutions/'],
+  ['/ai/', '/customization/'],
   ['/use-cases/', '/solutions/'],
   ['/pilot/', '/pricing/'],
   ['/pilot/#support', '/pricing/#support'],
@@ -67,7 +72,22 @@ const redirects = [
   ['/solutions/casework/', '/products/casework/'],
 ];
 
-// Seeing how a register runs, asking a question, understanding the products,
+const mailtoBody = (href) => {
+  if (!href?.startsWith('mailto:contact@registrystack.org?')) return '';
+  return new URL(href).searchParams.get('body') ?? '';
+};
+const isServiceMailto = (href) => {
+  if (!href?.startsWith('mailto:contact@registrystack.org?')) return false;
+  const url = new URL(href);
+  const body = mailtoBody(href);
+  return /^Service inquiry: /.test(url.searchParams.get('subject') ?? '') &&
+    body.includes('\n') && !body.includes('\\n') &&
+    /^The service you need:\s*$/im.test(body) &&
+    /^Who will use it:\s*$/im.test(body) &&
+    /^What should improve:\s*$/im.test(body);
+};
+
+// Exploring solutions, describing a service, understanding the products,
 // trying a tutorial, and finding paid help must all work without JavaScript
 // and with reduced motion.
 for (const options of [
@@ -78,6 +98,24 @@ for (const options of [
   const page = await context.newPage();
   const mode = options.javaScriptEnabled === false ? 'no JavaScript' : 'reduced motion';
   const fail = (message) => failures.push(`${mode}: ${message}`);
+  // Buyers can enter through customization, programme-level DPI, or a local
+  // service without choosing a starter or relying on JavaScript.
+  for (const route of ['/customization/', '/digital-public-infrastructure/', '/solutions/local-government/']) {
+    const response = await page.goto(new URL(route, url).href);
+    if (response?.status() !== 200) {
+      fail(`buyer route ${route} does not open successfully`);
+      continue;
+    }
+    if (!await page.locator('main h1').isVisible()) fail(`buyer route ${route} has no visible title`);
+    const nextSteps = page.locator('main a[href="/pricing/"], main a[href="/pricing/#inquiry"], main a[href^="mailto:contact@registrystack.org?"]');
+    if (!await nextSteps.count()) fail(`buyer route ${route} has no way to discuss delivery`);
+    const serviceInquiries = page.locator('main a[data-journey="service-inquiry"]');
+    for (const inquiry of await serviceInquiries.all()) {
+      if (!isServiceMailto(await inquiry.getAttribute('href'))) {
+        fail(`buyer route ${route} has a service inquiry without needs-first newline-separated fields`);
+      }
+    }
+  }
   const followAnchor = async (link, target, label) => {
     if (await link.count() !== 1 || await link.getAttribute('href') !== target) {
       fail(`${label} must lead to ${target}`);
@@ -90,9 +128,27 @@ for (const options of [
   };
   await page.goto(url);
 
-  await followAnchor(page.locator('.hero .hero-actions a').first(), '#how-a-register-runs', 'hero primary action');
-  if (await page.locator('main > section').nth(1).getAttribute('id') !== 'how-a-register-runs') {
-    fail('the first section after the hero must show how a register runs');
+  const heroPrimary = page.locator('.hero .hero-actions a').first();
+  if (await heroPrimary.count() !== 1 || await heroPrimary.getAttribute('href') !== '/solutions/' || !await heroPrimary.isVisible()) {
+    fail('hero primary action must visibly lead to /solutions/');
+  } else {
+    await heroPrimary.click();
+    await page.waitForLoadState('domcontentloaded');
+    if (new URL(page.url()).pathname !== '/solutions/' || !await page.locator('main h1').isVisible()) {
+      fail('hero primary action did not open the solutions page');
+    }
+  }
+  await page.goto(url);
+  const homeOrder = await page.evaluate(() => {
+    const sections = [...document.querySelectorAll('main > section')];
+    return Object.fromEntries(['registers', 'customization', 'products', 'developers'].map((id) => {
+      const target = document.getElementById(id);
+      return [id, sections.findIndex((section) => section === target || section.contains(target))];
+    }));
+  });
+  if (Object.values(homeOrder).some((index) => index < 0) ||
+      Math.max(homeOrder.registers, homeOrder.customization) > Math.min(homeOrder.products, homeOrder.developers)) {
+    fail('homepage must introduce solutions and customization before product and technical evaluation');
   }
   // The register-day sequence keeps all four steps readable: the highlight
   // moves, the text never changes. The pause control only exists when the
@@ -116,30 +172,25 @@ for (const options of [
     const params = new URL(href).searchParams;
     return /^Question about /.test(params.get('subject') ?? '') && !/budget/i.test(params.get('body') ?? '');
   };
-  const heroQuestion = page.locator('.hero .hero-actions a').nth(1);
-  if (!isQuestionMailto(await heroQuestion.getAttribute('href')) || !await heroQuestion.isVisible()) {
-    fail('hero secondary action must be a visible "Ask a question" email');
+  const heroInquiry = page.locator('.hero .hero-actions a').nth(1);
+  if (!isServiceMailto(await heroInquiry.getAttribute('href')) || !await heroInquiry.isVisible()) {
+    fail('hero secondary action must be a visible needs-first "Discuss your service" email');
   }
   // A register family page tells the same kind of story for its own record,
   // and its hero leads to that figure.
   await page.goto(`${url}solutions/licensing/`);
   await followAnchor(page.locator('.hero .hero-actions a').first(), '#example', 'licensing hero primary action');
   await checkWeek('licensing');
+  // These are alternative journeys. Start the developer path from a fresh page.
   await page.goto(url);
-  const navQuestion = page.locator('.top-nav > a[href^="mailto:"]');
-  if (await navQuestion.count() !== 1 || !isQuestionMailto(await navQuestion.getAttribute('href')) || !await navQuestion.isVisible()) {
-    fail('main navigation must offer one visible "Ask a question" email');
-  }
-  // These are alternative journeys. Start the developer path from a fresh
-  // page instead of clicking while the first anchor is still smoothly scrolling.
-  await page.goto(url);
-  const developersLink = page.locator('.top-nav a[href="/#developers"]');
-  if (await developersLink.count() !== 1) {
-    fail('main navigation must lead to /#developers');
-  } else {
+  const developerMenu = page.locator('.nav-group').nth(1);
+  await developerMenu.locator('summary').click();
+  const developersLink = developerMenu.locator('a[href="/#developers"]');
+  if (await developersLink.count() !== 1) fail('Products menu must lead to /#developers');
+  else {
     await developersLink.click();
     await page.waitForURL((current) => current.hash === '#developers');
-    if (!await page.locator('#developers').isVisible()) fail('the developer navigation link did not reach a visible #developers');
+    if (!await page.locator('#developers').isVisible()) fail('the developer menu link did not reach a visible #developers');
   }
 
   const tutorialLinks = await page.locator('#developers a.developer-tutorial').evaluateAll(
@@ -159,27 +210,37 @@ for (const options of [
   if (/\bBReg\b/.test(await page.locator('body').innerText())) {
     fail('homepage exposes the internal product abbreviation');
   }
-  if (!await page.locator('.registry-example').isVisible()) fail('registry example is hidden');
-  if (!await page.locator('#registry-example-caption').isVisible()) fail('example caption is missing');
+  if (!await page.locator('.service-outline').isVisible()) fail('service outline is hidden');
+  if (!await page.locator('#service-outline-caption').isVisible()) fail('service outline caption is missing');
+  if (!await page.locator('#register-day-caption').isVisible()) fail('example journey caption is missing');
 
   // Solutions first, then Products; opening one menu leaves the other closed.
+  await page.goto(url);
   const solutionsMenu = page.locator('.nav-group').nth(0);
   const productsMenu = page.locator('.nav-group').nth(1);
   await solutionsMenu.locator('summary').click();
   const solutionLinks = await solutionsMenu.locator('a').evaluateAll(
     (links) => links.map((link) => new URL(link.href).pathname),
   );
-  if (solutionLinks[0] !== '/solutions/' || solutionLinks.length < 2 ||
-      solutionLinks.slice(1).some((path) => !/^\/solutions\/[a-z-]+\/$/.test(path)) ||
+  if (solutionLinks[0] !== '/solutions/' || solutionLinks[1] !== '/solutions/local-government/' ||
+      solutionLinks.length < 3 ||
+      solutionLinks.slice(2).some((path) => !/^\/solutions\/[a-z-]+\/$/.test(path)) ||
       !await solutionsMenu.locator('a').first().isVisible()) {
-    fail('the Solutions menu must open with all solutions, then list the solution area pages');
+    fail('the Solutions menu must open with all solutions and local government, then list the taxonomy pages');
   }
   await productsMenu.locator('summary').click();
   const menuLinks = await productsMenu.locator('a').evaluateAll(
-    (links) => links.map((link) => new URL(link.href).pathname),
+    (links) => links.map((link) => {
+      const { origin, pathname, hash } = new URL(link.href);
+      return `${origin}${pathname}${hash}`;
+    }),
   );
-  if (menuLinks.length !== productMenuRoutes.length || productMenuRoutes.some((route) => !menuLinks.includes(route))) {
-    fail('the Products menu must list every product page');
+  const expectedProductLinks = productMenuHrefs.map((href) => {
+    const { origin, pathname, hash } = new URL(href, url);
+    return `${origin}${pathname}${hash}`;
+  });
+  if (menuLinks.length !== expectedProductLinks.length || expectedProductLinks.some((href) => !menuLinks.includes(href))) {
+    fail(`the Products menu must list the three products, starters, developer tutorials and documentation (found ${menuLinks.join(', ')})`);
   }
   if (options.javaScriptEnabled !== false && await solutionsMenu.evaluate((menu) => menu.open)) {
     fail('opening the Products menu must close the Solutions menu');
@@ -188,7 +249,7 @@ for (const options of [
     const { origin, pathname, hash } = new URL(link.href);
     return { origin, pathname, hash };
   }));
-  for (const href of ['/starters/', '/blog/', '/pricing/', 'https://docs.registrystack.org/', '/#developers']) {
+  for (const href of ['/customization/', '/pricing/', '/pricing/#inquiry']) {
     const target = new URL(href, url);
     const index = navLinks.findIndex((link) => link.origin === target.origin &&
       link.pathname === target.pathname && link.hash === target.hash);
@@ -240,7 +301,7 @@ for (const options of [
 
   await page.goto(`${url}pricing/`);
   // The light question comes before the brief and asks for no budget; the
-  // brief asks for the register and help needed, with budget and timing optional.
+  // brief asks about the service, users and improvement, with budget and timing optional.
   const questionLinks = page.locator('main a[data-journey="ask-question"]');
   if (await questionLinks.count() !== 1 || !isQuestionMailto(await questionLinks.getAttribute('href')) ||
       !await questionLinks.isVisible()) {
@@ -249,12 +310,17 @@ for (const options of [
   const briefLinks = page.locator('main a[data-journey="implementation-support-inquiry"]');
   if (await briefLinks.count() !== 1) fail('pricing page is missing its inquiry action');
   for (const inquiry of await briefLinks.all()) {
-    const body = new URL(await inquiry.getAttribute('href')).searchParams.get('body') ?? '';
+    const href = await inquiry.getAttribute('href');
+    const body = mailtoBody(href);
+    if (!body.includes('\n') || body.includes('\\n')) fail('pricing inquiry fields must be separated by real newlines');
     for (const [name, field] of [
       ['organization', /organization/i],
-      ['register and help needed', /register and the help you need/i],
-      ['optional timing', /^timing[^\n]*\(optional\)/im],
-      ['optional budget', /^budget[^\n]*\(optional\)/im],
+      ['service', /^.*service you need/im],
+      ['users', /who will use it/i],
+      ['desired improvement', /what should improve/i],
+      ['current systems and help needed', /current records and systems.*where you want help/i],
+      ['optional timing', /^.*timing.*optional/im],
+      ['optional budget', /^.*budget.*optional/im],
     ]) {
       if (!field.test(body)) fail(`pricing inquiry is missing its ${name} field`);
     }
@@ -286,6 +352,19 @@ for (const options of [
   }
   if (!await page.locator('main a[href="/#developers"]').first().isVisible()) {
     fail('pricing page is missing the self-service developer path');
+  }
+
+  // A representative catalogue detail stays honest about availability: the
+  // page is inspectable, while the unpublished file is requested by email.
+  await page.goto(`${url}starters/professional-licensing/`);
+  if (!await page.locator('main h1').isVisible()) fail('representative professional-licensing starter is missing');
+  const starterRequest = page.locator('main .hero a[data-journey="starter-request"]');
+  if (await starterRequest.count() !== 1 || !await starterRequest.isVisible() ||
+      !(await starterRequest.getAttribute('href'))?.startsWith('mailto:contact@registrystack.org?')) {
+    fail('representative starter must offer a visible email request near its introduction');
+  }
+  if (await page.locator('main a[download], main a[href$=".zip"]').count()) {
+    fail('representative starter must not offer an unpublished zip download');
   }
 
   for (const [from, to] of redirects) {

@@ -1,7 +1,7 @@
 // Run with: npm test
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { classificationWords, fieldTypeWords, mutationWords, words } from '../src/data/starter-words.ts';
+import { actionDescriptionWords, classificationWords, fieldTypeWords, mutationWords, words } from '../src/data/starter-words.ts';
 
 test('words turns an identifier into a label', () => {
   assert.equal(words('document-number'), 'Document number');
@@ -35,4 +35,19 @@ test('mutationWords and classificationWords use the Studio vocabulary', () => {
   assert.equal(classificationWords('internal'), 'Staff only');
   assert.equal(classificationWords('restricted'), 'Restricted');
   assert.equal(classificationWords(''), '');
+});
+
+test('actionDescriptionWords explains transaction effects without catalogue jargon', () => {
+  assert.equal(
+    actionDescriptionWords('Record an external authority decision as an immediate registry effect.'),
+    'Record a decision already made by the responsible authority.',
+  );
+  assert.equal(
+    actionDescriptionWords('Apply a keeper change immediately and record both responsibility-period boundaries atomically.'),
+    'Record the keeper change and both responsibility-period boundaries together.',
+  );
+  assert.equal(
+    actionDescriptionWords('A description that already reads plainly.'),
+    'A description that already reads plainly.',
+  );
 });

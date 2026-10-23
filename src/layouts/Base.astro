@@ -15,16 +15,16 @@ interface Props {
 }
 
 const {
-  title = 'Registry Stack | Run your register. Decide every change. Answer the services that rely on it',
+  title = 'Registry Stack | Public registers and services, built around your rules',
   description =
-    'Open-source software for the registers your organization keeps: hold the records, let services check a fact, and queue the changes a person must decide.',
+    'Adapt open-source registry software for your public service. Manage records, applications and approvals with AI-assisted customization and implementation support.',
   noindex = false,
   type = 'website',
   publishedAt,
   updatedAt,
   author = 'Registry Stack',
   ogImagePath = '/og-image.png',
-  ogImageAlt = 'Registry Stack: Run your register. Decide every change. Answer the services that rely on it.',
+  ogImageAlt = 'Registry Stack: Public registers and services, built around your rules.',
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, 'https://registrystack.org').toString();
 const ogImageUrl = new URL(ogImagePath, 'https://registrystack.org').toString();

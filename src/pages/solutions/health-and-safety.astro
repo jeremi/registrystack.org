@@ -15,10 +15,10 @@ const area = solutionAreas.find((a) => a.key === 'health-and-safety')!;
 
 const steps: WeekStep[] = [
   {
-    when: 'Monday 11:00',
+    when: 'Inspection report submitted',
     product: 'Your inspection application',
     title: 'An inspection report arrives',
-    text: 'An inspector files a report on a clinic and recommends suspending its authorization. The register does not change until an officer decides.',
+    text: 'The inspection service gives the clinic operator an opportunity to respond, then submits the inspection report, recommendation and response for a decision. The register does not change yet.',
     card: { kind: 'record', recordType: 'Inspection report', recordId: 'INS-4410', icon: 'data', fields: [
       { label: 'Facility', value: 'Clinic HF-0732' },
       { label: 'Finding', value: 'Equipment not maintained' },
@@ -26,19 +26,18 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Monday to Wednesday',
+    when: 'Review and decision',
     ...weekProduct('casework'),
     title: 'An officer decides the suspension',
-    text: 'The report lands in the authorizations queue. P. Castillo takes it, hears the operator, and approves the suspension.',
+    text: 'The complete case enters the authorisations queue. P. Castillo reviews the report and the operator’s response, then approves the suspension.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Authorizations' },
       { state: 'Claimed', note: 'Held by P. Castillo' },
-      { state: 'Waiting', note: 'Operator’s response requested' },
-      { state: 'Approved', note: 'Wednesday 09:30' },
+      { state: 'Approved', note: 'Operator heard' },
     ] },
   },
   {
-    when: 'Wednesday 09:30',
+    when: 'Authorisation record updated',
     ...weekProduct('base-registry'),
     title: 'The authorization is suspended and keeps its history',
     text: 'The officer records the suspension under their own name, beside the authorization it suspends. Lift it later and both decisions stay in order.',
@@ -49,29 +48,29 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Wednesday 09:45',
+    when: 'Insurer status check',
     ...weekProduct('evidence-gateway'),
-    title: 'An insurer asks, and gets a signed no',
-    text: 'Fifteen minutes later a health insurance fund asks whether the clinic is authorized to operate and receives a signed no. The inspection file stays in your register.',
+    title: 'An insurer checks the current status',
+    text: 'A health insurance fund authorised to make this check asks whether the clinic is authorised to operate and receives a digitally signed answer. The inspection report and operator response are not disclosed.',
     card: { kind: 'answer', fieldLabel: 'Authorized to operate', value: 'No', recipient: 'Health insurance fund', issuer: 'Health facility register' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Know which facilities, products, and operators are authorized."
-  description="Your facility list, the insurer’s list and the health information system’s list disagree on how many clinics there are and what each is called, and every authorization check lands on an officer’s desk. Registry Stack gives your office one register of the authorizations it has issued, and lets other services check one without seeing the rest of the file."
+  heading="Maintain a reliable view of regulated facilities and their status."
+  description="Connect registration, inspection findings, human decisions and authorised status changes. Inspectors, insurers and other permitted services can use the same facility identity and check a defined status without receiving the regulatory file."
 >
   <section class="section" id="example" aria-labelledby="health-week-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="health-week-title">An inspection report arrives on Monday. The suspension is recorded on Wednesday, and an insurer sees it fifteen minutes later.</h2>
+        <h2 id="health-week-title">An inspector reports a concern, the operator can respond, an officer decides and connected services see the current status.</h2>
       </div>
       <RegisterWeek
         id="health-week"
         kicker="Clinic HF-0732, one request"
-        heading="Each step names the product that does it."
+        heading="Follow the inspection decision."
         steps={steps}
       />
     </div>
@@ -80,7 +79,7 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="health-change-title">Fewer calls to confirm an authorization, and notices the public can read.</h2>
+        <h2 id="health-change-title">One facility identity, traceable decisions and controlled status checks.</h2>
       </div>
       <div class="product-facts">
         <article><h3>Every facility has one entry and one code</h3><p>Each provider, each facility it operates and each authorization are recorded once, so the insurer, the inspectorate and the health information system read the same list and the same code.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
@@ -92,7 +91,7 @@ const steps: WeekStep[] = [
   <SolutionStarters
     area={area}
     heading="Start from a health or safety register like yours."
-    intro="A starter sets out what a register of this kind holds and who may change it, for one common register of facilities, trials, devices, or hazards. Your team takes the closest one and adapts it to its own health or safety law."
+    intro="A starting configuration can provide a model for facilities, trials, devices, operators or hazards. It is adapted to your rules, terminology, staff work and existing systems."
   />
   <SolutionFaq
     items={[
@@ -117,7 +116,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A free package requested from the starter’s page and opened to see how a register of this kind is set out: the records it keeps, the changes staff can make, and who may make them. It is a starting point to adapt, not a running system: your team adds what your register needs, and using one does not mean the register is in use anywhere. Anyone from the office can request it; your technical team is who opens it.',
+        a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to your rules, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#health-and-safety', label: 'Browse the health and safety starters' },
       },
       {
@@ -131,7 +130,7 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Work with us"
     heading="Talk it through with the people who build it."
-    body="Tell us which register you keep and what other services ask of it. We reply by email, and a short call is the usual next step. Paid pilots and support are there if you want them."
+    body="Tell us which facility or oversight service you want to improve, who reports changes, who decides and which systems need the resulting status. We can show how Registry Stack could fit."
     primaryLabel="Ask a question"
     primaryHref={askQuestionHref(area.name)}
     emphasis="docs"

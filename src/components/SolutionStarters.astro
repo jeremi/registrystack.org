@@ -1,5 +1,6 @@
 ---
-// The starters a register family groups, its featured starter first, then
+// Optional starting configurations for a register family, with the featured
+// starter first, then
 // the ones to open first, then the order solutions.ts lists them. Titles and one-line leads come from the
 // starters catalogue data.
 import type { SolutionArea } from '../data/solutions';
@@ -21,9 +22,10 @@ const isOpenFirst = (id: string): boolean => area.openFirst?.includes(id) ?? fal
 <section id="starters" class="section" aria-labelledby="solution-starters-title">
   <div class="section-inner">
     <div class="section-heading">
-      <p class="eyebrow">Starters for this register</p>
+      <p class="eyebrow">Optional starting configurations</p>
       <h2 id="solution-starters-title">{heading}</h2>
       <p>{intro}</p>
+      <p class="product-note">Current starting configurations are available by request. Browse them if useful, or begin by describing the service you need and we will help identify the closest starting point.</p>
     </div>
     <ul class="solution-starter-list">
       {areaStarters.map((starter) => (
@@ -39,7 +41,7 @@ const isOpenFirst = (id: string): boolean => area.openFirst?.includes(id) ?? fal
       ))}
     </ul>
     {featuredNote && !area.featuredStarter && <p class="solution-starter-note">{featuredNote}</p>}
-    <p class="solution-starter-all"><a class="inline-cta" href="/starters/">Browse all {starterCount} starters <span aria-hidden="true">→</span></a></p>
+    <p class="solution-starter-all"><a class="inline-cta" href="/starters/">Browse all {starterCount} starting configurations <span aria-hidden="true">→</span></a></p>
   </div>
 </section>
 

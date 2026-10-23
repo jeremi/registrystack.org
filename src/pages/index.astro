@@ -1,22 +1,18 @@
 ---
-// Reader: someone who keeps a register, asking "could this run mine?". The
-// sections answer that reader's questions in order: what this is, what running
-// a register with it looks like, what stays under their control, how to start,
-// what the pieces are called, how a technical team tries it, how mature it is,
-// and who helps.
+// Reader: an institutional service owner deciding whether to discuss a service.
+// Solutions lead; customization, ownership and adoption explain the choice.
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import RegistryExample from '../components/RegistryExample.astro';
+import ServiceOutline from '../components/ServiceOutline.astro';
 import RegisterDay from '../components/RegisterDay.astro';
-import { products, companionServices } from '../data/products';
+import { products } from '../data/products';
 import { registerFamilies, solutionAreas } from '../data/solutions';
-import { starterCount } from '../data/starters';
-import { askQuestionHref } from '../data/contact';
+import { contactEmail, describeServiceHref } from '../data/contact';
 
+const featured = registerFamilies.filter((area) => ['licensing', 'business-and-tax', 'health-and-safety'].includes(area.key));
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 ---
-
 <Base>
   <SiteHeader />
   <main>
@@ -24,67 +20,16 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
       <div class="hero-inner">
         <div class="hero-top">
           <div class="hero-copy">
-            <p class="eyebrow">Open-source software for public registers</p>
-            <h1 id="hero-title">Run your register. Decide every change. Answer the services that rely on it.</h1>
-            <p class="hero-lead">Licensing boards, business registrars, land offices: your office keeps a register that other services rely on. Registry Stack is the software to run it: the records and their history, one queue for the changes an officer must decide, and answers for other services without handing over the file.</p>
+            <p class="eyebrow">Open-source software for public registers and services</p>
+            <h1 id="hero-title">Public registers and services, built around your rules.</h1>
+            <p class="hero-lead">Manage records, applications and approvals with software you can adapt. Connect your existing systems, choose where it runs, and get help delivering the service your institution needs.</p>
             <div class="hero-actions" aria-label="Primary actions">
-              <a class="button button-primary" href="#how-a-register-runs">See how a register runs</a>
-              <a class="button button-secondary" href={askQuestionHref()}>Ask a question</a>
+              <a class="button button-primary" href="/solutions/">Explore solutions</a>
+              <a class="button button-secondary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a>
             </div>
-            <p class="hero-note">Your organization controls the records, the rules, and who gets access. Government first; NGOs and banks that keep authoritative registers use the same software.</p>
+            <p class="hero-note">Start with an implementation pilot, with AI-assisted customization and support from our team. <a href={`mailto:${contactEmail}`}>{contactEmail}</a></p>
           </div>
-          <div class="hero-figure"><RegistryExample /></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="how-a-register-runs" aria-labelledby="run-title">
-      <div class="section-inner">
-        <div class="section-heading">
-          <p class="eyebrow">Running the register, day to day</p>
-          <h2 id="run-title">One request, from arrival to the answer another service relies on.</h2>
-          <p>Whatever your register holds, the work has the same shape. Someone asks for a change. An officer decides. The record changes and keeps its history. Another service asks a question and gets an answer it can trust.</p>
-        </div>
-        <RegisterDay />
-        <div class="shared-work" id="shared-work">
-          <p>Two parts of that work look the same in every register:</p>
-          <ul class="register-grid register-pair">
-            {crossCutting.map((area) => (
-              <li>
-                <a href={area.slug}>
-                  <span class="register-name">{area.name}</span>
-                  <span class="register-intent">{area.intent}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="ownership-title">
-      <div class="section-inner">
-        <div class="section-heading">
-          <p class="eyebrow">Under your organization’s control</p>
-          <h2 id="ownership-title" class="ownership-heading"><span>Your register.</span> <span>Your rules.</span> <span>Your infrastructure.</span></h2>
-          <p>Your team sets the rules, your existing systems stay in place, and you choose who runs the software.</p>
-        </div>
-        <div class="ownership-grid">
-          <article>
-            <h3>Your team sets the rules</h3>
-            <p>Define what your records contain, who can read or change them, and what another service may learn from them.</p>
-            <a class="inline-cta" href="/security/">Read about access and accountability <span aria-hidden="true">→</span></a>
-          </article>
-          <article>
-            <h3>Work with the systems you use</h3>
-            <p>Keep the systems your staff use today. The register sits behind them; other services ask it questions; the changes that need an officer go to your team’s queue. Nothing has to move to start, and nothing moves to us.</p>
-            <a class="inline-cta" href="/faq/">Explore adoption questions <span aria-hidden="true">→</span></a>
-          </article>
-          <article>
-            <h3>Choose how to deliver it</h3>
-            <p>Your team, or an IT firm you contract, can run the open-source software on infrastructure you control. There is no software licence fee; paid implementation and support are available when you need them.</p>
-            <a class="inline-cta" href="/pricing/">See published pricing <span aria-hidden="true">→</span></a>
-          </article>
+          <div class="hero-figure"><ServiceOutline /></div>
         </div>
       </div>
     </section>
@@ -92,163 +37,114 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
     <section class="section" id="registers" aria-labelledby="registers-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">Start from a register like yours</p>
-          <h2 id="registers-title">You do not start from a blank register.</h2>
-          <p>The starters are ready-made definitions for the common kinds: who holds a licence, which companies are registered, who owns which parcel. Each sets out the records, what staff do with them, and who may do what. The areas below group them by the work the register does, with the products that fit.</p>
+          <p class="eyebrow">Solutions for your work</p>
+          <h2 id="registers-title">Start with the service you want to improve.</h2>
+          <p>Issue and renew licences, maintain business records, or keep a facility register up to date. Adapt the records and review process to your institution.</p>
         </div>
-        <ul class="register-grid">
-          {registerFamilies.map((area) => (
-            <li>
-              <a href={area.slug}>
-                <span class="register-name">{area.name}</span>
-                <span class="register-intent">{area.intent}</span>
-                {area.audience && <span class="register-audience">{area.audience}</span>}
-              </a>
-            </li>
+        <ul class="register-grid featured-solutions">
+          {featured.map((area) => (
+            <li><a href={area.slug}><span class="register-name">{area.name}</span><span class="register-intent">{area.intent}</span>{area.audience && <span class="register-audience">{area.audience}</span>}</a></li>
           ))}
         </ul>
-        <p class="example-note"><a class="inline-cta" href="/starters/">Browse the {starterCount} starters <span aria-hidden="true">→</span></a></p>
+        <div class="section-links"><a class="inline-cta" href="/solutions/">Explore all solution areas <span aria-hidden="true">→</span></a><a class="inline-cta" href="/solutions/local-government/">For municipalities and local authorities <span aria-hidden="true">→</span></a></div>
       </div>
     </section>
 
-    <section class="section section-muted" id="products" aria-labelledby="products-title">
-      <div class="section-inner" id="how-it-works">
+    <section class="section section-muted" id="customization" aria-labelledby="customization-title">
+      <div class="section-inner approach-split">
         <div class="section-heading">
-          <p class="eyebrow">The products</p>
-          <h2 id="products-title">Three products run that work.</h2>
-          <p>Use one, two, or all three: hold the register, answer a question about it, or queue the changes for an officer to decide.</p>
+          <p class="eyebrow">AI-assisted customization</p>
+          <h2 id="customization-title">Describe what you need. We help configure it.</h2>
+          <p>Describe your requirements and current process. Our team uses AI tools and reusable software to help adapt the records, forms and review steps with you.</p>
+          <p>You review the proposed workflow and rules. The resulting application runs without an AI service.</p>
+          <a class="inline-cta" href="/customization/">Explore customization <span aria-hidden="true">→</span></a>
         </div>
+        <ol class="approach-steps">
+          <li><strong>Describe the service</strong><span>Who uses it, what information they provide and which decisions your team makes.</span></li>
+          <li><strong>Adapt a starting model</strong><span>We identify a suitable configuration and agree the changes with you.</span></li>
+          <li><strong>Review and test together</strong><span>Check the screens, rules and connections against your agreed service journey.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="how-a-register-runs" aria-labelledby="run-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">A licensing example</p>
+          <h2 id="run-title">Connect the request, the decision and the record.</h2>
+          <p>In this licensing example, a person requests a correction, an officer reviews it, and another service checks the updated licence status.</p>
+        </div>
+        <RegisterDay />
+        <div class="shared-work" id="shared-work">
+          <p>Explore the capabilities behind this journey:</p>
+          <ul class="register-grid register-pair">{crossCutting.map((area) => (<li><a href={area.slug}><span class="register-name">{area.name}</span><span class="register-intent">{area.intent}</span></a></li>))}</ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="open-source" aria-labelledby="ownership-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Open source. Reusable components.</p>
+          <h2 id="ownership-title">Keep control as your services change.</h2>
+        </div>
+        <div class="value-grid">
+          <article><h3>Adapt the software</h3><p>The core software is Apache-2.0 open source. Your team or a provider you choose can inspect, adapt and operate it.</p><a class="inline-cta" href="/faq/">Ownership and licensing <span aria-hidden="true">→</span></a></article>
+          <article><h3>Connect existing systems</h3><p>Add a registry or connect a service to information you already maintain. Agree the interfaces and any migration needed for your use case.</p><a class="inline-cta" href="/solutions/check-a-fact/">Connect a service to a register <span aria-hidden="true">→</span></a></article>
+          <article><h3>Reuse across public services</h3><p>A register can support several services. Combine reusable components as part of a digital public infrastructure programme.</p><a class="inline-cta" href="/digital-public-infrastructure/">Registry Stack and DPI <span aria-hidden="true">→</span></a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="products" aria-labelledby="products-title">
+      <div class="section-inner" id="how-it-works">
+        <div class="section-heading"><p class="eyebrow">The software behind the service</p><h2 id="products-title">Use the capabilities your service needs.</h2><p>Adopt a component on its own or combine them in a configured solution.</p></div>
         <div class="home-solution-grid">
-          <article class="home-solution-card">
-            <p class="eyebrow">Base Registry Engine</p>
-            <h3>Build and run your register.</h3>
-            <p>Store records about people, households, organizations, and assets. Define the records, their relationships, and the rules they must follow. Your applications get one consistent way to create, find, and update them, with access controls and a full change history.</p>
-            <a class="inline-cta" href="/products/base-registry/">Explore Base Registry Engine <span aria-hidden="true">→</span></a>
-          </article>
-          <article class="home-solution-card">
-            <p class="eyebrow">Evidence Gateway</p>
-            <h3>Share a fact a service can verify.</h3>
-            <p>Let approved services ask your register a question and get a signed answer, such as an age check, residence region, or registration status. You decide which questions each service may ask: a licensing service can check that someone is 18 or older without receiving their date of birth.</p>
-            <a class="inline-cta" href="/products/evidence-gateway/">Explore Evidence Gateway <span aria-hidden="true">→</span></a>
-          </article>
-          <article class="home-solution-card">
-            <p class="eyebrow">Registry Casework</p>
-            <h3>Queue the changes an officer must decide.</h3>
-            <p>Give the staff who review requests one accountable inbox: who holds each item, what is due, and who decided. The register keeps its own rules about who may change a record, and the officer applies each change under their own account.</p>
-            <a class="inline-cta" href="/products/casework/">Explore Registry Casework <span aria-hidden="true">→</span></a>
-          </article>
+          <article class="home-solution-card"><p class="eyebrow">Base Registry Engine</p><h3>Manage records and their history.</h3><p>Define the information you keep, its relationships and the rules for reading and changing it.</p><a class="inline-cta" href="/products/base-registry/">Explore Base Registry Engine <span aria-hidden="true">→</span></a></article>
+          <article class="home-solution-card"><p class="eyebrow">Evidence Gateway</p><h3>Share only the information needed.</h3><p>Let authorized services ask predefined questions and receive digitally signed answers from your register.</p><a class="inline-cta" href="/products/evidence-gateway/">Explore Evidence Gateway <span aria-hidden="true">→</span></a></article>
+          <article class="home-solution-card"><p class="eyebrow">Registry Casework</p><h3>Coordinate reviews and decisions.</h3><p>Assign requests, track deadlines and record review decisions. The register controls how approved changes are applied.</p><a class="inline-cta" href="/products/casework/">Explore Registry Casework <span aria-hidden="true">→</span></a></article>
         </div>
-        <div class="home-companions">
-          <p class="home-companions-lead">Four more products handle the work around the register.</p>
-          <ul>
-            {companionServices.map((service) => (
-              <li><a href={service.href}>{service.name} <span aria-hidden="true">↗</span></a><span>{service.job}</span></li>
-            ))}
-          </ul>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="get-started" aria-labelledby="adoption-title">
+      <div class="section-inner">
+        <div class="section-heading"><p class="eyebrow">Choose how to get started</p><h2 id="adoption-title">Build with your team or work with ours.</h2></div>
+        <div class="value-grid adoption-grid">
+          <article><h3>Discuss an implementation</h3><p>Bring one service and the result you need. We agree the configuration, screens, integrations and responsibilities in a written pilot scope.</p><a class="inline-cta" href="/pricing/">Implementation and support <span aria-hidden="true">→</span></a></article>
+          <article><h3>Explore starting configurations</h3><p>Inspect models for common registers and request one for evaluation. We can help select a suitable model if you are unsure where to begin.</p><a class="inline-cta" href="/starters/">Browse starting configurations <span aria-hidden="true">→</span></a></article>
         </div>
       </div>
     </section>
 
     <section class="section" id="developers" aria-labelledby="developers-title">
       <div class="section-inner" id="start-testing">
-        <div class="section-heading">
-          <p class="eyebrow">For developers and technical teams</p>
-          <h2 id="developers-title">Try a working example.</h2>
-          <p>Run a local tutorial with sample data. Each guide includes the setup and steps to inspect the result.</p>
-        </div>
-        <div class="developer-grid">
-          {products.filter((product) => product.featured).map((product) => (
-            <article>
-              <h3>{product.solution}</h3>
-              <p>{product.firstResult}</p>
-              <a class="inline-cta developer-tutorial" href={product.tutorialHref}>{product.tutorialLabel} <span aria-hidden="true">↗</span></a>
-            </article>
-          ))}
-        </div>
-        <p class="developer-note"><a href="https://docs.registrystack.org/">Browse the documentation</a> or <a href="https://github.com/registrystack/registry-stack">inspect the source and releases</a>. The software is Apache-2.0 open source.</p>
+        <div class="section-heading"><p class="eyebrow">For technical teams</p><h2 id="developers-title">Inspect the software. Run an example.</h2><p>Use a local tutorial with sample data to evaluate the core capabilities.</p></div>
+        <div class="developer-grid">{products.filter((product) => product.featured).map((product) => (<article><h3>{product.solution}</h3><p>{product.firstResult}</p><a class="inline-cta developer-tutorial" href={product.tutorialHref}>{product.tutorialLabel} <span aria-hidden="true">↗</span></a></article>))}</div>
+        <p class="developer-note" id="project-status">The core software is available for self-hosted pilots. Read the <a href="https://docs.registrystack.org/explanation/known-limitations/">current limitations</a>, <a href="https://docs.registrystack.org/">documentation</a> and <a href="https://github.com/registrystack/registry-stack">source and releases</a>.</p>
       </div>
     </section>
 
-    <section class="section section-muted" id="project-status" aria-labelledby="project-status-title">
-      <div class="section-inner">
-        <div class="section-heading">
-          <p class="eyebrow">Open source</p>
-          <h2 id="project-status-title">Where the project stands</h2>
-          <p>Source and releases are public under Apache-2.0. Releases are signed and ship a software bill of materials. The software is pre-1.0: interfaces may change before 1.0, and the documentation keeps a list of <a href="https://docs.registrystack.org/explanation/known-limitations/">known limitations</a>. Aubex is taking on implementation pilots; we name a deployment only when its operator agrees.</p>
-          <p>Built on open standards (OpenAPI, SD-JWT VC, FHIR) and open-source components (PostgreSQL). Reads from FHIR and OpenCRVS systems as sources. Record definitions from PublicSchema.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="final-cta" aria-labelledby="pilot-title">
-      <div class="section-inner pilot-invitation">
-        <div>
-          <p class="eyebrow">Work with us</p>
-          <h2 id="pilot-title">Get help when you need it.</h2>
-          <p>Build with your own team, or get help through a paid implementation pilot or ongoing support.</p>
-        </div>
-        <a class="button button-primary" href="/pricing/">Implementation and support <span aria-hidden="true">→</span></a>
-      </div>
-    </section>
+    <section class="final-cta" aria-labelledby="pilot-title"><div class="section-inner"><p class="eyebrow">Your next service</p><h2 id="pilot-title">Tell us what your institution needs.</h2><p>Describe the service, its users and the change you want to make. We can help assess the fit and scope the work.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="/pricing/">View implementation options</a></div><p class="final-cta-note">You can also email {contactEmail}.</p></div></section>
   </main>
   <SiteFooter />
 </Base>
-
 <style>
-  .hero-top { grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr); gap: clamp(32px, 5vw, 56px); }
-  .hero-inner { padding-top: clamp(40px, 5vw, 68px); padding-bottom: clamp(44px, 6vw, 76px); }
-  /* The three-sentence headline sits one size below the token so it holds four lines beside the figure. */
-  .hero-cover h1 { font-size: clamp(2.125rem, 4vw, 3.25rem); }
+  .hero-top { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: clamp(32px, 5vw, 64px); }
+  .hero-inner { padding-top: clamp(40px, 5vw, 72px); padding-bottom: clamp(44px, 6vw, 80px); }
+  .hero-cover h1 { font-size: clamp(2.3rem, 4.4vw, 3.7rem); }
   .hero-lead { font-size: clamp(18px, 1.8vw, 21px); line-height: 1.55; }
-  .hero-figure { padding-right: 12px; }
-  /* The two pages every register shares sit under the work they belong to. */
-  .shared-work { border-top: 1px solid var(--registry-paper-rule); margin-top: clamp(28px, 4vw, 40px); padding-top: 20px; }
-  .shared-work > p { color: var(--registry-body); font-size: var(--type-base); margin: 0 0 8px; }
-  /* Three equal cards: every row takes the height of the tallest card. */
+  .hero-note a { color: inherit; }
+  .featured-solutions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .shared-work { border-top: 1px solid var(--registry-rule); margin-top: 36px; padding-top: 20px; }
   .home-solution-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 24px; max-width: none; margin-top: 0; }
-  @media (max-width: 900px) { .home-solution-grid { grid-template-columns: 1fr; } }
-  .home-solution-card { display: flex; flex-direction: column; gap: 18px; border-top: 3px solid var(--registry-blue); padding: 30px; }
+  .home-solution-card { display: flex; flex-direction: column; gap: 16px; border-top: 3px solid var(--registry-blue); padding: 28px; }
   .home-solution-card .eyebrow { font-size: var(--type-xs); }
-  .home-solution-card h3 { font-size: var(--type-2xl); line-height: 1.2; }
+  .home-solution-card h3 { font-size: var(--type-2xl); line-height: 1.25; }
   .home-solution-card > p:not(.eyebrow) { font-size: var(--type-body-sm); }
   .home-solution-card .inline-cta { font-size: var(--type-base); margin-top: auto; }
-  .home-companions { border-top: 1px solid var(--registry-rule); margin-top: 32px; padding-top: 24px; }
-  .home-companions-lead { color: var(--registry-muted); font-size: var(--type-base); margin: 0 0 16px; }
-  .home-companions ul { display: grid; gap: 12px 32px; grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; margin: 0; padding: 0; }
-  .home-companions li { display: grid; font-size: var(--type-sm); gap: 2px; line-height: 1.5; }
-  .home-companions a { font-weight: 700; }
-  @media (max-width: 700px) { .home-companions ul { grid-template-columns: 1fr; } }
-  .example-note, .developer-note { font-size: var(--type-base); color: var(--registry-muted); margin: 24px 0 0; }
-  /* One line per phrase, matching the three responsibilities below, so the
-     heading breaks where the meaning does instead of mid-sentence. */
-  .ownership-heading { display: grid; font-size: clamp(28px, 3.6vw, 46px); gap: 2px; }
-  .ownership-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
-  .ownership-grid article, .developer-grid article { border-top: 1px solid #c9d0c5; padding-top: 22px; }
-  .ownership-grid h3, .developer-grid h3 { font-size: var(--type-subhead); }
-  .ownership-grid p, .developer-grid p { font-size: var(--type-body-sm); }
-  .ownership-grid a, .developer-grid a { font-size: var(--type-base); }
-  .developer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
-  .register-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; list-style: none; margin: 0; padding: 0; }
-  .register-grid li { border-top: 1px solid #c9d0c5; }
-  .register-grid a { display: grid; gap: 4px; padding: 18px 0 20px; }
-  .register-grid a:hover { text-decoration: none; }
-  .register-grid a:hover .register-name { color: var(--registry-blue); }
-  .register-name { color: var(--registry-ink); font-size: var(--type-body); font-weight: 700; }
-  .register-intent { color: var(--registry-muted); font-size: var(--type-md); }
-  .register-audience { color: var(--registry-body); font-size: var(--type-sm); margin-top: 4px; }
-  .register-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .pilot-invitation { display: flex; gap: 32px; align-items: center; justify-content: space-between; }
-  .pilot-invitation h2 { font-size: var(--type-title); }
-  .pilot-invitation p:not(.eyebrow) { max-width: 660px; margin-bottom: 0; }
-  .pilot-invitation .button { flex-shrink: 0; gap: 18px; }
-  @media (max-width: 900px) {
-    .hero-top { grid-template-columns: 1fr; }
-    .hero-figure { max-width: 520px; }
-    .ownership-grid { grid-template-columns: 1fr; gap: 24px; }
-    .register-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .pilot-invitation { align-items: flex-start; flex-direction: column; }
-  }
-  @media (max-width: 620px) {
-    .home-solution-grid, .developer-grid, .register-grid { grid-template-columns: 1fr; }
-  }
+  .adoption-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .developer-note { font-size: var(--type-base); margin-top: 28px; }
+  @media (max-width: 900px) { .hero-top, .home-solution-grid, .featured-solutions { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) { .adoption-grid { grid-template-columns: 1fr; } }
 </style>

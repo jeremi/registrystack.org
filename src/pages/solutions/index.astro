@@ -8,7 +8,7 @@ import { products } from '../../data/products';
 import { startersForArea, starterCount } from '../../data/starters';
 
 const pageTitle = 'Solutions | Registry Stack';
-const pageDescription = 'Find the kind of register your organization keeps, the starters that model registers like it, and the products that do the work around it.';
+const pageDescription = 'Find a public service or register close to your institution’s work, see what applicants and staff can do, and choose a next step.';
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 // The flagship products lead, as in the Products menu; the data order is otherwise kept.
 const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
@@ -21,22 +21,41 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Solutions</p>
-          <h1 id="solutions-title">Start from the register you keep.</h1>
-          <p class="hero-lead">Find the kind of register your organization keeps: licences, businesses, people, land, farms, facilities, or reference lists. Each area shows the starters that model registers like yours, then the products that do the work around them.</p>
+          <h1 id="solutions-title">Start from the public service you need to improve.</h1>
+          <p class="hero-lead">Explore licensing, registration, facility oversight, local services and the registers that support them. Each solution shows what applicants and staff can do, how records stay current and how the service can fit systems already in use.</p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="#registers">Find your register</a>
-            <a class="button button-secondary" href="/starters/">Browse the {starterCount} starters</a>
+            <a class="button button-primary" href="#services">Find a service</a>
+            <a class="button button-secondary" href="/starters/">Explore {starterCount} starting configurations</a>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="registers" class="section" aria-labelledby="registers-title">
+    <section id="services" class="section" aria-labelledby="services-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">By the register you keep</p>
-          <h2 id="registers-title">Find the kind of register you keep.</h2>
-          <p>Each area groups registers that do the same kind of work, with starting configurations your team can adapt and the products that fit.</p>
+          <p class="eyebrow">For local authorities</p>
+          <h2 id="services-title">Choose one local service to improve first.</h2>
+          <p>Market permits, food-premises registration and rented-housing registration are concrete places to begin. See how applicants, municipal staff and inspectors can work through one connected service.</p>
+        </div>
+        <ul class="solution-area-grid solution-area-pair">
+          <li>
+            <a href="/solutions/local-government/">
+              <span class="solution-area-name">Local government services</span>
+              <span class="solution-area-audience">For municipalities and other local public authorities.</span>
+              <span class="solution-area-intent">Run clearer applications, decisions, registrations and renewals</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="registers" class="section section-muted" aria-labelledby="registers-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">By service and register</p>
+          <h2 id="registers-title">Find the area closest to your institution’s work.</h2>
+          <p>Each area shows the service from request to current record, how it fits existing systems and optional starting configurations that can be adapted.</p>
         </div>
         <ul class="solution-area-grid">
           {registerFamilies.map((area) => (
@@ -53,12 +72,12 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       </div>
     </section>
 
-    <section class="section section-muted" aria-labelledby="shared-work-title">
+    <section class="section" aria-labelledby="shared-work-title">
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Work every register shares</p>
-          <h2 id="shared-work-title">Check facts between services. Review the changes that need a person.</h2>
-          <p>Whatever the register holds, other services ask it questions and some changes wait for an officer’s decision.</p>
+          <h2 id="shared-work-title">Share a limited answer. Coordinate the decisions that need a person.</h2>
+          <p>These capabilities apply across service areas. The source institution controls permitted checks, and an accountable review decision remains separate from the authorised register change.</p>
         </div>
         <ul class="solution-area-grid solution-area-pair">
           {crossCutting.map((area) => (
@@ -77,8 +96,8 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Products</p>
-          <h2 id="products-title">The products that do the work.</h2>
-          <p>Each product runs on its own. Your organization chooses which ones a register needs and configures any connection between them.</p>
+          <h2 id="products-title">Reusable components for applications, records and checks.</h2>
+          <p>A solution can combine the components it needs with configured screens, identity, hosting and integrations. Each component keeps a focused responsibility and can also be adopted independently.</p>
         </div>
         <ul class="solution-area-grid solution-product-row">
           {productEntries.map((product) => (
@@ -93,7 +112,13 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       </div>
     </section>
 
-    <DocsHandoff primaryLabel="Browse the starters" primaryHref="/starters/" />
+    <DocsHandoff
+      eyebrow="Discuss your service"
+      heading="Start with the service that should work better."
+      body="Tell us who uses it, what staff decide and which systems are already in place. We can identify a useful starting configuration and explain how Registry Stack could fit."
+      primaryLabel="Choose a solution area"
+      primaryHref="#services"
+    />
   </main>
   <SiteFooter />
 </Base>

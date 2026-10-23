@@ -1,0 +1,141 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import SolutionFaq from '../../components/SolutionFaq.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import { describeServiceHref, contactEmail } from '../../data/contact';
+
+const pageTitle = 'Local government services | Registry Stack';
+const pageDescription = 'Run clearer local permit and registration services, from applications and staff review to current records, notices and renewals.';
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="local-government" />
+  <main class="solution-page local-government-page">
+    <section class="hero" aria-labelledby="local-government-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Local government</p>
+          <h1 id="local-government-title">Run local permits and registrations from application to renewal.</h1>
+          <p class="hero-lead">Give residents and businesses a clear way to apply, give staff one place to review the work, and keep the resulting permit or registration current. Registry Stack can connect to the payment, document and mapping systems your authority already uses.</p>
+          <p>We offer scoped implementation pilots for one local service, with the applicant and staff screens, integrations and operating responsibilities agreed as part of the service.</p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href="#example">See three possible services</a>
+            <a class="button button-secondary" href="#what-changes">Follow the service</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="example" class="section" aria-labelledby="local-examples-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Possible local services</p>
+          <h2 id="local-examples-title">Three services that use the same practical building blocks.</h2>
+          <p>These fictional examples show possible services. The forms, decisions and public information would follow each authority’s own rules.</p>
+        </div>
+        <div class="product-facts">
+          <article>
+            <h3>Market-trader permits</h3>
+            <p>A trader submits the form and evidence, sees what is missing and replaces a document without starting again. Staff review the application, record the decision and issue the permit. Inspectors can check the current permit status without receiving the application file.</p>
+            <a class="inline-cta" href="/solutions/licensing/">Explore licensing services <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Food-premises registration</h3>
+            <p>A business registers each premises and updates its details when something changes. Staff review the submission and inspection information, correct duplicate entries and maintain the establishment’s current status. Public and partner services see only the details the authority allows.</p>
+            <a class="inline-cta" href="/solutions/agriculture-food-and-environment/">Explore establishment registers <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Rented-housing registration</h3>
+            <p>An owner submits a registration or reports a change. Staff check the information, decide the request and maintain the property’s registration history. The service can keep using existing property, payment and document systems instead of copying their information by hand.</p>
+            <a class="inline-cta" href="/solutions/land-property-and-assets/">Explore property records <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="what-changes" class="section section-muted" aria-labelledby="local-journey-title">
+      <div class="section-inner product-fit">
+        <div class="section-heading compact">
+          <p class="eyebrow">From application to renewal</p>
+          <h2 id="local-journey-title">Give applicants and staff one clear route through the service.</h2>
+          <p>The same pattern supports a permit, premises registration or another local service. Each step can use the authority’s existing channels and systems where they already work well.</p>
+        </div>
+        <dl>
+          <dt>Apply and provide evidence</dt>
+          <dd>Applicants can start a request, save it, return later, explain why a document is unavailable, replace evidence and see the latest version they submitted.</dd>
+          <dt>Review and decide</dt>
+          <dd>Staff receive the request in the right queue and check the evidence. If something is missing, they close the review with changes requested; the applicant revises the request and submits it for a new review. Supervisors can see who owns each active review and what needs attention.</dd>
+          <dt>Update the permit or registration</dt>
+          <dd>After the decision, a staff member or connected service with permission records the permit, registration or status. Earlier versions remain available for audit and correction.</dd>
+          <dt>Notify, inspect and renew</dt>
+          <dd>The service can send an approved notice when the application system requests it. Inspectors can check permitted details, and staff can manage renewal, suspension, correction and closure.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="local-scope-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Fits existing systems</p>
+          <h2 id="local-scope-title">Keep the systems that still serve the authority well.</h2>
+          <p>Registry Stack can provide the register and connect to existing payment, identity, mapping, document or finance systems. An implementation can also include applicant, staff or public screens, hosting, data migration and integrations. The proposal states what will be delivered and what the authority will operate.</p>
+        </div>
+      </div>
+    </section>
+
+    <div id="questions">
+      <SolutionFaq
+        heading="Questions for choosing the first service"
+        items={[
+          {
+            q: 'Do we need to choose a starting configuration first?',
+            a: 'No. Tell us which service you run, who uses it and what should improve. We can identify a useful starting configuration and explain how it would be adapted. Current configurations are available by request.',
+            link: { href: '/starters/', label: 'Explore available starting configurations' },
+          },
+          {
+            q: 'Do we have to replace our current applications?',
+            a: 'No. Registry Stack can provide a new register or connect selected capabilities to systems the authority already uses. A market-permit service, for example, could keep an existing payment system and document store while adding clearer review, permit history and status checks.',
+            link: { href: 'https://docs.registrystack.org/explanation/integration-patterns/', label: 'See integration patterns' },
+          },
+          {
+            q: 'Can the implementation include screens and hosting?',
+            a: 'Yes. An implementation can include applicant, staff or public screens, identity, hosting, migration and integrations. The proposal states what is included; the core open-source components and available starting configurations are the foundation rather than a ready-made municipal service.',
+          },
+          {
+            q: 'Which service should we discuss first?',
+            a: 'Choose a service where applicants repeat information, staff chase missing evidence, records become outdated or other teams keep asking for status. Bring the current form or process and the systems staff use today.',
+          },
+        ]}
+      />
+    </div>
+
+    <DocsHandoff
+      eyebrow="Discuss one local service"
+      heading="Tell us which local service should work better."
+      body="Describe a market permit, premises registration, rented-housing registration or another local service. Include who applies, what staff decide and which systems they use today."
+      primaryLabel="Discuss a local service"
+      primaryHref={describeServiceHref('a local government service')}
+      emphasis="docs"
+      note={`Or write to ${contactEmail}.`}
+    />
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .local-government-page :global(.section-inner) { padding-top: clamp(44px, 6vw, 68px); padding-bottom: clamp(44px, 6vw, 68px); }
+  .local-government-page :global(h2) { font-size: clamp(28px, 3.7vw, 42px); }
+  .local-government-page :global(.product-facts) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .local-government-page :global(.product-facts article) { border-top: 2px solid var(--registry-blue); padding-top: 20px; }
+  .local-government-page :global(.product-facts p) { margin-bottom: 0; }
+  .local-government-page :global(.product-facts .inline-cta) { display: inline-block; margin-top: 12px; }
+  .local-government-page :global(.product-fit) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+  .local-government-page :global(.product-fit dl) { margin: 0; }
+  .local-government-page :global(.product-fit dt) { color: var(--registry-ink); font-weight: 700; margin-bottom: 5px; }
+  .local-government-page :global(.product-fit dd) { border-bottom: 1px solid var(--registry-rule); line-height: 1.55; margin: 0 0 20px; padding-bottom: 18px; }
+  @media (max-width: 700px) {
+    .local-government-page :global(.product-facts), .local-government-page :global(.product-fit) { grid-template-columns: 1fr; gap: 24px; }
+  }
+</style>
