@@ -22,35 +22,16 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
         <div class="hero-copy">
           <p class="eyebrow">Solutions</p>
           <h1 id="solutions-title">Start from the public service you need to improve.</h1>
-          <p class="hero-lead">Explore licensing, registration, facility oversight, local services and the registers that support them. Each solution shows what applicants and staff can do, how records stay current and how the service can fit systems already in use.</p>
+          <p class="hero-lead">Explore licensing, registration, facility oversight and other services for national, regional and local government. Each solution shows what applicants and staff can do, how records stay current and how the service can fit systems already in use.</p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="#services">Find a service</a>
+            <a class="button button-primary" href="#registers">Find a service</a>
             <a class="button button-secondary" href="/starters/">Explore {starterCount} starting configurations</a>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="services" class="section" aria-labelledby="services-title">
-      <div class="section-inner">
-        <div class="section-heading">
-          <p class="eyebrow">For local authorities</p>
-          <h2 id="services-title">Choose one local service to improve first.</h2>
-          <p>Market permits, food-premises registration and rented-housing registration are concrete places to begin. See how applicants, municipal staff and inspectors can work through one connected service.</p>
-        </div>
-        <ul class="solution-area-grid solution-area-pair">
-          <li>
-            <a href="/solutions/local-government/">
-              <span class="solution-area-name">Local government services</span>
-              <span class="solution-area-audience">For municipalities and other local public authorities.</span>
-              <span class="solution-area-intent">Run clearer applications, decisions, registrations and renewals</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <section id="registers" class="section section-muted" aria-labelledby="registers-title">
+    <section id="registers" class="section" aria-labelledby="registers-title">
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">By service and register</p>
@@ -68,6 +49,25 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
               </a>
             </li>
           ))}
+        </ul>
+      </div>
+    </section>
+
+    <section id="services" class="section section-muted" aria-labelledby="services-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">For local authorities</p>
+          <h2 id="services-title">Choose one local service to improve first.</h2>
+          <p>Market permits, food-premises registration and rented-housing registration are concrete places to begin. See how applicants, municipal staff and inspectors can work through one connected service.</p>
+        </div>
+        <ul class="solution-area-grid solution-area-pair">
+          <li>
+            <a href="/solutions/local-government/">
+              <span class="solution-area-name">Local government services</span>
+              <span class="solution-area-audience">For municipalities and other local public authorities.</span>
+              <span class="solution-area-intent">Run clearer applications, decisions, registrations and renewals</span>
+            </a>
+          </li>
         </ul>
       </div>
     </section>
@@ -117,7 +117,7 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       heading="Start with the service that should work better."
       body="Tell us who uses it, what staff decide and which systems are already in place. We can identify a useful starting configuration and explain how Registry Stack could fit."
       primaryLabel="Choose a solution area"
-      primaryHref="#services"
+      primaryHref="#registers"
     />
   </main>
   <SiteFooter />
