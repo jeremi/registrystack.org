@@ -203,9 +203,6 @@ for (const [label, source] of [['header', headerSource], ['footer', footerSource
 if (!headerSource.includes('href="/solutions/"') || !headerSource.includes('All solutions')) {
   failures.push('the Solutions menu must open with all solutions');
 }
-if (!readSource('src/pages/solutions/index.astro').includes('href="/solutions/local-government/"')) {
-  failures.push('the solutions overview must retain the local-government service example');
-}
 for (const route of ['/starters/', '/#developers', 'https://docs.registrystack.org/']) {
   if (!headerSource.includes(`href: '${route}'`)) failures.push(`the Products menu is missing ${route}`);
 }

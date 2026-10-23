@@ -9,7 +9,7 @@
 export const products = [
   {
     key: 'base-registry', name: 'Base Registry Engine', solution: 'Base registry', shortName: 'Base Registry Engine', featured: true, menu: true,
-    intent: 'Build and run a base registry',
+    intent: 'Maintain records and their history',
     description: 'Open-source software to build and run a base registry: define the records, control who may change them, keep a history, and serve other applications.',
     href: '/products/base-registry/',
     tutorialHref: 'https://docs.registrystack.org/tutorials/first-breg/',
@@ -18,7 +18,7 @@ export const products = [
   },
   {
     key: 'evidence-gateway', name: 'Evidence Gateway', solution: 'Evidence Gateway', shortName: 'Evidence', featured: true, menu: true,
-    intent: 'Let services check a fact',
+    intent: 'Let authorized services check register information',
     description: 'Give approved services a signed answer to a defined question from your register, without handing over the record. Open-source software.',
     href: '/products/evidence-gateway/',
     tutorialHref: 'https://docs.registrystack.org/tutorials/first-evidence-assertion/',
@@ -27,8 +27,8 @@ export const products = [
   },
   {
     key: 'casework', name: 'Registry Casework', solution: 'Casework', shortName: 'Casework', featured: false, menu: true,
-    intent: 'Coordinate human decisions',
-    description: 'One queue for the changes that need a person to decide: who holds each item, what is due and who decided. Open source, works with your register.',
+    intent: 'Assign reviews and record staff decisions',
+    description: 'Assign requests to staff, track due dates and record their decisions. Open-source review software that connects to your register.',
     href: '/products/casework/',
     tutorialHref: 'https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/',
     tutorialLabel: 'Pair a registry proposal with Casework',

@@ -1,6 +1,6 @@
 // The solution areas the site is organized by. A register family groups the
 // starters a reader would recognize as the same kind of work; the two
-// cross-cutting areas describe work every register family shares.
+// cross-cutting areas describe optional checks and reviews used across services.
 //
 // `starters` lists the ids from the published starters catalogue
 // (src/data/starters.json). Every active starter belongs to exactly one
@@ -29,6 +29,8 @@ export interface SolutionArea {
   audience?: string;
   // The search snippet for the family page, under 155 characters.
   description?: string;
+  // A concrete example for a cross-cutting capability on the solutions overview.
+  example?: string;
   products: readonly string[];
 }
 
@@ -218,23 +220,25 @@ export const solutionAreas: readonly SolutionArea[] = [
   {
     key: 'check-a-fact',
     slug: '/solutions/check-a-fact/',
-    name: 'Check a fact between services',
-    pageTitle: 'Check a fact between government services',
-    intent: 'Return a permitted answer from a register without sharing the record',
+    name: 'Check information from another register',
+    pageTitle: 'Check information between government services',
+    intent: 'Get an answer to a specific question without receiving the full record',
+    example: 'For example, a procurement system can check whether a supplier is registered. The institution that maintains the register decides which checks are allowed.',
     kind: 'cross-cutting',
     starters: [],
-    description: 'Let an authorised service check a defined fact, such as an age threshold or licence status, without receiving the source record.',
+    description: 'Let an authorized service check information such as an age threshold or licence status without receiving the full record.',
     products: ['evidence-gateway'],
   },
   {
     key: 'review-changes',
     slug: '/solutions/review-changes/',
-    name: 'Review changes that need a person',
-    pageTitle: 'Review register changes that need a person',
-    intent: 'Assign requests for human review and record accountable decisions',
+    name: 'Review requests and record decisions',
+    pageTitle: 'Staff reviews and decisions on register changes',
+    intent: 'Assign requests to staff, track due dates and record the outcome',
+    example: 'For example, a licensing team can review a request to correct a licence record.',
     kind: 'cross-cutting',
     starters: [],
-    description: 'Assign each request that needs human review, track its decision and keep the resulting register change separately authorised.',
+    description: 'Assign requests to staff, track due dates and record decisions. Only authorized staff or systems can apply the approved change.',
     products: ['casework', 'base-registry'],
   },
 ] as const;

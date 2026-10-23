@@ -67,6 +67,15 @@ fit and find a next step without knowing our internal vocabulary? Automated
 checks protect wiring and selected factual boundaries; they cannot answer that
 editorial question.
 
+Review existing copy before reusing it. Name the actor, task and object, then
+explain the useful result. For staff reviews, use “Review requests and record
+decisions” and explain assignment and due dates with a concrete request. For
+information checks, use “Check information from another register” and name a
+question a connected service needs answered. A procurement system checking a
+supplier’s registration is clearer than “share a limited answer.” Keep these
+meanings consistent across cards, menus and metadata; adapt the sentence to the
+reader rather than repeating a slogan.
+
 ## Site implementation
 
 Solution areas and their starter membership live in `src/data/solutions.ts`.

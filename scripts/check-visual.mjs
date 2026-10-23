@@ -91,6 +91,9 @@ for (const viewport of viewports) {
   const page = await browser.newPage({ viewport });
   await page.goto(`http://127.0.0.1:${port}${route.path}`);
   await page.screenshot({ path: resolve(outputDir, `${route.name}-${viewport.name}.png`), fullPage: true });
+  if (route.name === 'solutions') {
+    await page.locator('#services').screenshot({ path: resolve(outputDir, `solutions-services-${viewport.name}.png`) });
+  }
 
   const metrics = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,

@@ -143,19 +143,40 @@ for (const options of [
       fail('hero primary action did not open the solutions page');
     } else {
       await followAnchor(page.locator('.hero .hero-actions a').first(), '#registers', 'solution finder');
-      const examples = page.locator('#services a');
-      const exampleRoutes = ['/solutions/licensing/', '/solutions/health-and-safety/', '/solutions/local-government/'];
-      const exampleHrefs = await examples.evaluateAll((links) => links.map((link) => link.getAttribute('href')));
-      if (exampleHrefs.length !== exampleRoutes.length || exampleRoutes.some((href) => !exampleHrefs.includes(href))) {
-        fail('the solutions overview must offer licensing, health and local-service examples together');
-      }
-      const localExample = page.locator('#services a[href="/solutions/local-government/"]');
-      if (await localExample.count() === 1) {
-        await localExample.click();
+      const licensing = page.locator('#registers a[href="/solutions/licensing/"]');
+      if (await licensing.count() !== 1) {
+        fail('the service catalogue must offer a route to licensing');
+      } else {
+        await licensing.click();
         await page.waitForLoadState('domcontentloaded');
-        if (new URL(page.url()).pathname !== '/solutions/local-government/' || !await page.locator('main h1').isVisible()) {
-          fail('the local-service example must remain reachable through the solutions overview');
+        const localExample = page.locator('main a[href="/solutions/local-government/"]');
+        if (await localExample.count() !== 1) {
+          fail('the licensing page must provide a route to its local-permit example');
+        } else {
+          await localExample.click();
+          await page.waitForLoadState('domcontentloaded');
+          if (new URL(page.url()).pathname !== '/solutions/local-government/' || !await page.locator('main h1').isVisible()) {
+            fail('the local-permit example must open from the licensing page');
+          }
         }
+      }
+      for (const route of ['/solutions/check-a-fact/', '/solutions/review-changes/']) {
+        await page.goto(`${url}solutions/`);
+        const taskLink = page.locator(`main a[href="${route}"]`);
+        if (await taskLink.count() !== 1) {
+          fail(`the solutions overview must offer a clear route to ${route}`);
+          continue;
+        }
+        await taskLink.click();
+        await page.waitForLoadState('domcontentloaded');
+        if (new URL(page.url()).pathname !== route || !await page.locator('main h1').isVisible()) {
+          fail(`the solutions overview link did not open ${route}`);
+        }
+      }
+      await page.goto(`${url}solutions/`);
+      const inquiry = page.locator('.final-cta a[href^="mailto:"]');
+      if (await inquiry.count() !== 1 || !isServiceMailto(await inquiry.getAttribute('href'))) {
+        fail('the solutions closing invitation must let readers describe their service without choosing a configuration');
       }
     }
   }
