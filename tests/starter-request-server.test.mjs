@@ -361,6 +361,7 @@ describe('starter request relay', () => {
       { websiteOrigin: 'https://www.example.test/path' },
       { websiteOrigin: 'https://a.example https://b.example' },
       { mauticBaseUrl: 'http://forms.example.org' },
+      { mauticBaseUrl: 'http://[2606:4700:4700::1111]' },
       { mauticBaseUrl: 'https://user:password@forms.example.org' },
       { mauticBaseUrl: 'https://forms.example.org/?query=yes' },
       { mauticBaseUrl: 'https://forms.example.org/#fragment' },
@@ -368,6 +369,9 @@ describe('starter request relay', () => {
       { mauticFormId: '1.5' },
     ]) {
       assert.throws(() => createStarterRequestServer({ ...base, ...overrides }));
+    }
+    for (const mauticBaseUrl of ['http://mautic:8080', 'http://10.1.2.3', 'http://192.168.1.20', 'http://[fd00::1]']) {
+      assert.doesNotThrow(() => createStarterRequestServer({ ...base, mauticBaseUrl }));
     }
     assert.doesNotThrow(() => createStarterRequestServer({
       ...base,

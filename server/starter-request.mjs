@@ -29,6 +29,12 @@ function isLoopback(hostname) {
 }
 
 function isInternalHttpHost(hostname) {
+  if (hostname.startsWith('[') && hostname.endsWith(']')) {
+    const address = hostname.slice(1, -1).toLowerCase();
+    if (address === '::1') return true;
+    const firstHextet = Number.parseInt(address.split(':', 1)[0], 16);
+    return firstHextet >= 0xfc00 && firstHextet <= 0xfdff;
+  }
   if (isLoopback(hostname) || !hostname.includes('.') || hostname.endsWith('.internal') || hostname.endsWith('.local')) {
     return true;
   }
