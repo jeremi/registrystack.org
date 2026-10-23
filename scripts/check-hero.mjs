@@ -73,7 +73,7 @@ const redirects = [
   ['/pilot/', '/pricing/'],
   ['/pilot/#support', '/pricing/#support'],
   ['/pilot/#scope', '/pricing/#scope'],
-  ['/pilot/#stewardship', '/pricing/#stewardship'],
+  ['/pilot/#stewardship', '/pricing/'],
   ['/notary/', '/products/evidence-gateway/'],
   ['/relay/', '/products/evidence-gateway/'],
   ['/products/registry-relay/', '/products/evidence-gateway/'],
@@ -412,7 +412,6 @@ for (const options of [
       if (!field.test(body)) fail(`pricing inquiry is missing its ${name} field`);
     }
   }
-  if (!await page.locator('#team').isVisible()) fail('pricing page is missing its visible #team block');
   const inquiryLinks = page.locator('main a[href^="mailto:"]');
   for (const inquiry of await inquiryLinks.all()) {
     for (const price of ['US$20,000', 'US$7,500']) {

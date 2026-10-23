@@ -219,7 +219,6 @@ if (!/label: contactEmail\b|>contact@registrystack\.org</.test(footerSource)) {
 for (const route of ['/solutions/', '/customization/', '/digital-public-infrastructure/', '/starters/', '/blog/', '/security/', '/faq/', '/pricing/#inquiry']) {
   if (!footerSource.includes(`href: '${route}'`)) failures.push(`footer is missing ${route}`);
 }
-if (!footerSource.includes("'/pricing/#team'")) failures.push('footer is missing the About link to /pricing/#team');
 
 for (const staleRoute of supersededRoutes) {
   if (headerSource.includes(`'${staleRoute}'`) || headerSource.includes(`"${staleRoute}"`)) {
@@ -474,19 +473,16 @@ if (!/Budget[^'\n]*\(optional\)/.test(pricingSource) || !/Timing[^'\n]*\(optiona
 for (const need of [/service you need/i, /who will use it/i, /what should improve/i]) {
   if (!need.test(pricingSource)) failures.push(`pricing brief is missing the needs-first field ${need}`);
 }
-if (!pricingSource.includes('id="team"') || !pricingSource.includes('id="stewardship"')) {
-  failures.push('pricing page is missing the team block (#team) or the #stewardship anchor the pilot redirect keeps');
-}
 // The two prices appear on the pricing page only; other pages link to it.
 for (const relativePath of sweptFiles) {
   if (relativePath === 'src/pages/pricing.astro') continue;
   if (/US\$\d/.test(readSource(relativePath))) failures.push(`${relativePath} repeats a price; link to /pricing/ instead`);
 }
 
-// The FAQ routes product, solution, starter, and team questions to the pages
+// The FAQ routes product, solution, starter, and provider questions to the pages
 // that answer them, and closes on the light "Ask a question" action.
 const faqSource = readSource('src/pages/faq.astro');
-for (const route of ['/solutions/', '/solutions/#products', '/starters/', '/pricing/#team']) {
+for (const route of ['/solutions/', '/solutions/#products', '/starters/', '/imprint/']) {
   if (!faqSource.includes(`"href": "${route}"`)) failures.push(`FAQ is missing its link to ${route}`);
 }
 if (!/<DocsHandoff[\s\S]*?primaryHref=\{askQuestionHref\(\)\}[\s\S]*?\/>/.test(faqSource)) {

@@ -15,21 +15,21 @@ const brief = [
 ];
 const contactHref = mailtoHref('Registry Stack implementation or support inquiry', brief.map((item) => `${item.field}: `));
 const nextSteps = [
-  'We review the service you described and identify the questions that affect scope.',
-  'We discuss the journey, existing systems, responsibilities, and a suitable starting model.',
-  'We prepare a written scope and fee you can take to procurement.',
+  'We review your needs and follow up with any questions.',
+  'We discuss the service steps, existing systems and responsibilities, then propose a suitable way to start.',
+  'We prepare a written proposal with the work and fee for your procurement team to review.',
 ];
 ---
 
-<Base title="Pricing | Registry Stack" description="Published starting prices for implementation pilots and annual support, what each route covers, and how to discuss the service you need.">
+<Base title="Pricing | Registry Stack" description="Compare starting prices for Registry Stack implementation pilots and annual support. Discuss your service and request a proposal for the work you need.">
   <SiteHeader current="pricing" />
   <main>
     <section class="hero hero-cover" aria-labelledby="pricing-title">
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Pricing</p>
-          <h1 id="pricing-title">Choose the help your team needs to deliver a service.</h1>
-          <p class="hero-lead">Work with us on a scoped implementation pilot, or lead the implementation and add annual technical support.</p>
+          <h1 id="pricing-title">Implementation and support for your service.</h1>
+          <p class="hero-lead">Work with us to configure and test a service, or get annual technical support while your team leads the implementation.</p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href="#scope">Explore paid options</a>
             <a class="button button-secondary" href="#self-service">Use the software yourself</a>
@@ -42,19 +42,19 @@ const nextSteps = [
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Two ways we can help</p>
-          <h2 id="options-title">Public prices</h2>
-          <p>Prices are published so your procurement team can plan before a conversation. We agree the scope, responsibilities, and final fee before work begins.</p>
+          <h2 id="options-title">Starting prices</h2>
+          <p>We agree the work, each team's responsibilities and a fixed fee with you in writing before starting.</p>
         </div>
         <div class="service-options">
           <article id="pilot" aria-labelledby="implementation-title">
             <p class="option-label">Hands-on delivery</p>
             <h3 id="implementation-title">Implementation pilot</h3>
             <p class="starting-fee"><span>From</span> <strong>US$20,000</strong></p>
-            <p class="fee-basis">Per scoped pilot engagement</p>
-            <p>Start with the service your institution needs. Our team can use AI-assisted methods to identify the nearest available model and adapt it with you; you do not need to choose a starter first.</p>
-            <p>The pilot focuses on a defined service that your team can configure, test and evaluate with us. The proposal states whether the deliverable is a test service or includes an operational deployment.</p>
+            <p class="fee-basis">Per pilot, with an agreed scope</p>
+            <p>Describe the service your institution needs. Our team can use AI-assisted tools to find a suitable starting configuration and adapt it to your service.</p>
+            <p>We adapt and test one defined service with your team so your institution can evaluate it. The proposal states whether the pilot is for evaluation or includes a live deployment.</p>
             <h4>What we agree before work starts</h4>
-            <p>The written scope sets the service journey and screens, identity and integrations, data preparation and migration, hosting and operations, handover, acceptance, and fee. It states which items are included and who is responsible for each one.</p>
+            <p>The proposal lists the work involved: service steps and screens, user sign-in, connections to other systems, data preparation and migration, hosting, operation and handover. It specifies what is included, who is responsible and how your team will assess the result.</p>
             <p>The main factors affecting the fee are the service steps and screens, connections to other systems, the condition of existing data, and the deployment and handover work.</p>
           </article>
           <article id="support" aria-labelledby="support-title">
@@ -62,8 +62,8 @@ const nextSteps = [
             <h3 id="support-title">Annual support</h3>
             <p class="starting-fee"><span>From</span> <strong>US$7,500</strong> <span>/ year</span></p>
             <p class="fee-basis">For teams implementing and operating Registry Stack</p>
-            <p>Your team implements and operates the solution. The support scope can cover technical questions, upgrade planning, and troubleshooting for the Registry Stack products and versions you run. The contract states the coverage and each team's responsibilities.</p>
-            <p>Ask for a proposal specifying the supported deployments, contact channel, availability and response commitments your team needs.</p>
+            <p>Your team implements and operates the solution. Support can cover technical questions, upgrade planning and troubleshooting for the Registry Stack products and versions you run. The contract states the coverage and each team's responsibilities.</p>
+            <p>Your proposal lists the deployments covered, how to contact support, when support is available and the agreed response times.</p>
           </article>
         </div>
         <p class="options-next"><a class="inline-cta" href="#inquiry">Discuss your needs <span aria-hidden="true">→</span></a></p>
@@ -80,12 +80,12 @@ const nextSteps = [
           <p class="email-note">Or write to {contactEmail}.</p>
         </div>
         <div class="pilot-brief" aria-labelledby="brief-title">
-          <h3 id="brief-title">Request a scoped proposal.</h3>
-          <p>When you are ready for a scope and fee, send a short written brief with these points.</p>
+          <h3 id="brief-title">Request a proposal.</h3>
+          <p>Describe what you need so we can propose the work and its cost. Include these points in your email.</p>
           <ol>
             {brief.map((item) => <li>{item.title}</li>)}
           </ol>
-          <p>Timing and budget help us scope; leave them blank if you are not there yet.</p>
+          <p>You can leave timing and budget blank if you do not know them yet.</p>
           <div class="inquiry-action">
             <p>Implementation pilots and support contracts are paid services. We confirm the scope and fee with you before starting.</p>
             <a class="button button-primary" href={contactHref} data-journey="implementation-support-inquiry">Send an inquiry</a>
@@ -96,7 +96,7 @@ const nextSteps = [
     </section>
 
     <section class="section" id="next-steps" aria-labelledby="next-steps-title">
-      <div class="section-inner split">
+      <div class="section-inner">
         <div class="section-heading compact">
           <p class="eyebrow">After you write</p>
           <h2 id="next-steps-title">What happens next</h2>
@@ -104,30 +104,16 @@ const nextSteps = [
             {nextSteps.map((step) => <li>{step}</li>)}
           </ol>
         </div>
-        <div class="how-to-buy" aria-labelledby="how-to-buy-title">
-          <h3 id="how-to-buy-title">How to buy</h3>
-          <p>The contracting entity is Aubex Consulting LLC, San Francisco, United States.</p>
-          <p>There is no software licence fee for the core Registry Stack software. The fee for a pilot or a support contract is fixed and agreed in writing before work starts.</p>
-        </div>
       </div>
     </section>
 
     <section class="section section-muted" id="self-service" aria-labelledby="self-service-title">
-      <div class="section-inner split">
+      <div class="section-inner">
         <div class="section-heading compact">
           <p class="eyebrow">Open-source self-service</p>
           <h2 id="self-service-title">Use Registry Stack with your own team.</h2>
           <p>The core Registry Stack software is available under Apache 2.0, with no software licence fee. Your team can evaluate, implement, and operate it using the documentation and source code.</p>
           <a class="button button-secondary" href="/#developers">Explore developer tutorials</a>
-        </div>
-        <div class="stewardship" id="stewardship">
-          <section id="team" aria-labelledby="team-title">
-            <p class="eyebrow">The team behind Registry Stack</p>
-            <h2 id="team-title">Who does the work</h2>
-            <p>Aubex Consulting LLC, San Francisco, builds and supports Registry Stack. Implementation and private support are paid engagements with a fixed fee agreed in writing. The <a href="/imprint/">imprint</a> has the company’s address.</p>
-            <p>Registry Stack is led by Jeremi Joslin. He also leads OpenSPP, the open-source social protection platform, and contributes to interoperability standards through the Social Protection Digital Convergence Initiative.</p>
-            <p><a class="inline-cta" href="https://jeremijoslin.com/en/about">Read Jeremi’s professional background <span aria-hidden="true">↗</span></a></p>
-          </section>
         </div>
       </div>
     </section>
@@ -154,15 +140,11 @@ const nextSteps = [
   .inquiry-action { border-top: 1px solid var(--registry-rule); padding-top: 22px; }
   .inquiry-action > p:first-child { font-size: var(--type-md); line-height: 1.6; }
   .email-note { font-size: var(--type-base); margin: 16px 0 0; overflow-wrap: anywhere; }
-  .stewardship { border-top: 2px solid var(--registry-blue); padding-top: 22px; }
-  .stewardship h2 { font-size: var(--type-2xl); }
   .service-options h4 { font-size: var(--type-body); margin: 22px 0 6px; }
   .pilot-brief > p { font-size: var(--type-md); line-height: 1.6; }
   .next-steps { line-height: 1.6; margin: 20px 0 0; padding-left: 22px; }
   .next-steps li { margin-bottom: 12px; padding-left: 4px; }
   .next-steps li::marker { color: var(--registry-stamp); font-family: var(--registry-mono); }
-  .how-to-buy { border-top: 2px solid var(--registry-blue); padding-top: 22px; }
-  .how-to-buy h3 { font-size: var(--type-2xl); }
   @media (max-width: 700px) {
     .service-options { grid-template-columns: 1fr; }
     .fee-basis { min-height: 0; }
