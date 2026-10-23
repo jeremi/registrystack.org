@@ -126,6 +126,68 @@ for (const viewport of viewports) {
     failures.push(`${label}: text extends outside viewport`);
   }
 
+  // Homepage link titles, descriptions and audiences must remain separate
+  // blocks, even when the page still fits inside the viewport without CSS.
+  if (route.path === '/') {
+    const layouts = await page.evaluate(() => {
+      const bounds = (element) => {
+        const { top, right, bottom, left } = element.getBoundingClientRect();
+        return { top, right, bottom, left };
+      };
+      return {
+        registers: [...document.querySelectorAll('.register-grid')].map((list) => ({
+          items: [...list.children].map((item) => ({
+            ...bounds(item),
+            marker: getComputedStyle(item).listStyleType,
+            parts: [...item.querySelectorAll('a > span')].map(bounds),
+          })),
+        })),
+        developers: [...document.querySelectorAll('.developer-grid > article')].map(bounds),
+      };
+    });
+
+    const checkArrangement = (name, items, count, stacked) => {
+      if (items.length !== count) {
+        failures.push(`${label}: expected ${count} ${name} items, found ${items.length}`);
+        return;
+      }
+      const arranged = items.every((item, index) => {
+        if (index === 0) return true;
+        const previous = items[index - 1];
+        return stacked
+          ? item.top >= previous.bottom - 1 && Math.abs(item.left - previous.left) <= 1
+          : Math.abs(item.top - previous.top) <= 1 && item.left >= previous.right + 16;
+      });
+      if (!arranged) {
+        failures.push(`${label}: ${name} items must form ${stacked ? 'a vertical stack' : 'a spaced row'}`);
+      }
+    };
+
+    if (layouts.registers.length !== 2) {
+      failures.push(`${label}: expected both homepage solution and capability link groups`);
+    } else {
+      checkArrangement('solution', layouts.registers[0].items, 3, viewport.name !== 'desktop');
+      checkArrangement('capability', layouts.registers[1].items, 2, viewport.name === 'mobile');
+      for (const [index, group] of layouts.registers.entries()) {
+        for (const [itemIndex, item] of group.items.entries()) {
+          const name = `homepage link group ${index + 1}, item ${itemIndex + 1}`;
+          if (item.marker !== 'none') failures.push(`${label}: ${name} has a default list marker`);
+          if (item.parts.length < 2 || item.parts.some((part, partIndex) =>
+            partIndex > 0 && part.top < item.parts[partIndex - 1].bottom + 3)) {
+            failures.push(`${label}: ${name} title and supporting text run together`);
+          }
+        }
+      }
+    }
+    checkArrangement('developer tutorial', layouts.developers, 2, viewport.name === 'mobile');
+
+    for (const section of ['registers', 'shared-work', 'developers']) {
+      await page.locator(`#${section}`).screenshot({
+        path: resolve(outputDir, `home-${section}-${viewport.name}.png`),
+      });
+    }
+  }
+
   // The Solutions and Products disclosures must present every listed route at
   // tappable size once opened, on every checked route and viewport.
   {

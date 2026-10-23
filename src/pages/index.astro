@@ -43,7 +43,13 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
         </div>
         <ul class="register-grid featured-solutions">
           {featured.map((area) => (
-            <li><a href={area.slug}><span class="register-name">{area.name}</span><span class="register-intent">{area.intent}</span>{area.audience && <span class="register-audience">{area.audience}</span>}</a></li>
+            <li>
+              <a href={area.slug}>
+                <span class="register-name">{area.name}</span>
+                <span class="register-intent">{area.intent}</span>
+                {area.audience && <span class="register-audience">{area.audience}</span>}
+              </a>
+            </li>
           ))}
         </ul>
         <div class="section-links"><a class="inline-cta" href="/solutions/">Explore all solution areas <span aria-hidden="true">→</span></a><a class="inline-cta" href="/solutions/local-government/">For municipalities and local authorities <span aria-hidden="true">→</span></a></div>
@@ -77,7 +83,16 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
         <RegisterDay />
         <div class="shared-work" id="shared-work">
           <p>Explore the capabilities behind this journey:</p>
-          <ul class="register-grid register-pair">{crossCutting.map((area) => (<li><a href={area.slug}><span class="register-name">{area.name}</span><span class="register-intent">{area.intent}</span></a></li>))}</ul>
+          <ul class="register-grid register-pair">
+            {crossCutting.map((area) => (
+              <li>
+                <a href={area.slug}>
+                  <span class="register-name">{area.name}</span>
+                  <span class="register-intent">{area.intent}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
@@ -135,8 +150,18 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
   .hero-cover h1 { font-size: clamp(2.3rem, 4.4vw, 3.7rem); }
   .hero-lead { font-size: clamp(18px, 1.8vw, 21px); line-height: 1.55; }
   .hero-note a { color: inherit; }
+  .register-grid { display: grid; gap: 0 32px; list-style: none; margin: 0; padding: 0; }
+  .register-grid li { border-top: 1px solid var(--registry-rule); }
+  .register-grid a { display: grid; gap: 4px; padding: 18px 0 20px; }
+  .register-grid a:hover { text-decoration: none; }
+  .register-grid a:hover .register-name { color: var(--registry-blue); }
+  .register-name { color: var(--registry-ink); font-size: var(--type-body); font-weight: 700; }
+  .register-intent { color: var(--registry-muted); font-size: var(--type-md); }
+  .register-audience { color: var(--registry-body); font-size: var(--type-sm); margin-top: 4px; }
   .featured-solutions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .register-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .shared-work { border-top: 1px solid var(--registry-rule); margin-top: 36px; padding-top: 20px; }
+  .shared-work > p { color: var(--registry-body); font-size: var(--type-base); margin: 0 0 8px; }
   .home-solution-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 24px; max-width: none; margin-top: 0; }
   .home-solution-card { display: flex; flex-direction: column; gap: 16px; border-top: 3px solid var(--registry-blue); padding: 28px; }
   .home-solution-card .eyebrow { font-size: var(--type-xs); }
@@ -144,7 +169,12 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
   .home-solution-card > p:not(.eyebrow) { font-size: var(--type-body-sm); }
   .home-solution-card .inline-cta { font-size: var(--type-base); margin-top: auto; }
   .adoption-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .developer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+  .developer-grid article { border-top: 1px solid var(--registry-rule); padding-top: 22px; }
+  .developer-grid h3 { font-size: var(--type-subhead); }
+  .developer-grid p { font-size: var(--type-body-sm); }
+  .developer-grid a { font-size: var(--type-base); }
   .developer-note { font-size: var(--type-base); margin-top: 28px; }
   @media (max-width: 900px) { .hero-top, .home-solution-grid, .featured-solutions { grid-template-columns: 1fr; } }
-  @media (max-width: 700px) { .adoption-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) { .adoption-grid, .register-pair, .developer-grid { grid-template-columns: 1fr; } }
 </style>
