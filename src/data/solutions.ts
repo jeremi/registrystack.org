@@ -51,7 +51,7 @@ export const solutionAreas: readonly SolutionArea[] = [
       'road-transport-licensing',
     ],
     featuredStarter: 'professional-licensing',
-    audience: 'For licensing boards, professional councils and local licensing teams.',
+    audience: 'For licensing authorities and professional councils.',
     description: 'Connect licensing applications, decisions, licence records and renewals, with controlled checks by employers and other services.',
     products: ['base-registry', 'evidence-gateway', 'casework'],
   },

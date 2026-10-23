@@ -156,7 +156,8 @@ for (const route of [
   if (!productSource.includes(route)) failures.push('product data is missing a current tutorial: ' + route);
 }
 
-// 3. Site wiring: shared navigation and footer reach every marketing route.
+// 3. Site wiring: shared navigation reaches the general marketing routes;
+// scoped service examples are reached through the solutions overview.
 const navigationSource = [
   homeSource,
   readSource('src/components/SiteHeader.astro'),
@@ -166,7 +167,6 @@ const navigationSource = [
 for (const route of [
   ...productPages.map((page) => page.route),
   '/solutions/',
-  '/solutions/local-government/',
   '/customization/',
   '/digital-public-infrastructure/',
   '/starters/',
@@ -200,9 +200,11 @@ for (const [label, source] of [['header', headerSource], ['footer', footerSource
     failures.push(`${label} does not group the cross-cutting solution areas under "Shared capabilities"`);
   }
 }
-if (!headerSource.includes('href="/solutions/"') || !headerSource.includes('All solutions') ||
-    !headerSource.includes('href="/solutions/local-government/"')) {
-  failures.push('the Solutions menu must open with all solutions and the local-government route');
+if (!headerSource.includes('href="/solutions/"') || !headerSource.includes('All solutions')) {
+  failures.push('the Solutions menu must open with all solutions');
+}
+if (!readSource('src/pages/solutions/index.astro').includes('href="/solutions/local-government/"')) {
+  failures.push('the solutions overview must retain the local-government service example');
 }
 for (const route of ['/starters/', '/#developers', 'https://docs.registrystack.org/']) {
   if (!headerSource.includes(`href: '${route}'`)) failures.push(`the Products menu is missing ${route}`);
@@ -217,7 +219,7 @@ if (!headerSource.includes('href="/pricing/#inquiry"') || !headerSource.includes
 if (!/label: contactEmail\b|>contact@registrystack\.org</.test(footerSource)) {
   failures.push('footer does not print the contact address in text');
 }
-for (const route of ['/solutions/', '/solutions/local-government/', '/customization/', '/digital-public-infrastructure/', '/starters/', '/blog/', '/security/', '/faq/', '/pricing/#inquiry']) {
+for (const route of ['/solutions/', '/customization/', '/digital-public-infrastructure/', '/starters/', '/blog/', '/security/', '/faq/', '/pricing/#inquiry']) {
   if (!footerSource.includes(`href: '${route}'`)) failures.push(`footer is missing ${route}`);
 }
 if (!footerSource.includes("'/pricing/#team'")) failures.push('footer is missing the About link to /pricing/#team');

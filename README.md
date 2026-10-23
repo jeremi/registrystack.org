@@ -9,8 +9,9 @@ Write first for institutional decision makers, programme and service owners,
 data stewards and governance teams. Government is the primary audience and
 source of examples, at national, regional and local levels. General
 entry pages should reflect that breadth; local-government services are one
-application area. Technical evaluators and implementers have dedicated product,
-starter and documentation paths.
+application area. Organize general navigation by service area and show examples
+from different government levels together. Technical evaluators and implementers
+have dedicated product, starter and documentation paths.
 
 The website helps a reader understand which service they can improve, how the
 software can be adapted, who can deliver it and what to do next. Lead with the

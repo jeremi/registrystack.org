@@ -14,7 +14,6 @@ type FooterEntry = { href: string; label: string } | { heading: string };
 const columns: { title: string; links: FooterEntry[] }[] = [
   { title: 'Solutions', links: [
     { href: '/solutions/', label: 'All solutions' },
-    { href: '/solutions/local-government/', label: 'Local government' },
     ...registerFamilies.map((area) => ({ href: area.slug, label: area.name })),
     { heading: 'Shared capabilities' },
     ...crossCutting.map((area) => ({ href: area.slug, label: area.name })),
@@ -47,7 +46,7 @@ const columns: { title: string; links: FooterEntry[] }[] = [
   <div class="site-footer-inner">
     <div class="footer-brand">
       <a class="footer-brand-name" href="/">Registry Stack</a>
-      <p>Public registers and services, built around your rules.</p>
+      <p>Public registers and services for national, regional and local government.</p>
       <p>Built and supported by Aubex.</p>
     </div>
     <nav class="footer-nav" aria-label="Footer">

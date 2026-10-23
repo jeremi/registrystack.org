@@ -13,12 +13,12 @@ if (!existsSync(htmlPath)) {
 
 mkdirSync(outputDir, { recursive: true });
 
-// The header has two menus: Solutions opens with "All solutions" and "Local
-// government", then the taxonomy. Products lists every core product plus
+// The header has two menus: Solutions opens with "All solutions", followed
+// by service areas and shared capabilities. Products lists every core product plus
 // starters, developer tutorials and documentation.
 const countMatches = (relativePath, pattern) => (readFileSync(resolve(relativePath), 'utf8').match(pattern) ?? []).length;
 const expectedMenuLinks = [
-  2 + countMatches('src/data/solutions.ts', /slug: '\/solutions\//g),
+  1 + countMatches('src/data/solutions.ts', /slug: '\/solutions\//g),
   3 + countMatches('src/data/products.ts', /href: '\/products\//g),
 ];
 
@@ -186,6 +186,9 @@ for (const viewport of viewports) {
         path: resolve(outputDir, `home-${section}-${viewport.name}.png`),
       });
     }
+    await page.locator('.site-footer').screenshot({
+      path: resolve(outputDir, `home-footer-${viewport.name}.png`),
+    });
   }
 
   // The Solutions and Products disclosures must present every listed route at
@@ -208,6 +211,13 @@ for (const viewport of viewports) {
     } else if (menus.flatMap((menu) => menu.links).some((rect) => rect.width < 36 || rect.height < 36)) {
       failures.push(`${label}: open nav menu links are below 36px`);
     }
+  }
+
+  if (route.path === '/') {
+    const solutionsMenu = page.locator('.nav-group').first();
+    await solutionsMenu.locator('summary').click();
+    await page.screenshot({ path: resolve(outputDir, `home-solutions-menu-${viewport.name}.png`) });
+    await solutionsMenu.locator('summary').click();
   }
 
   // On desktop the three homepage product cards should read as a balanced row.

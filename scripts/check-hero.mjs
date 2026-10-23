@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
@@ -51,6 +51,11 @@ const productMenuHrefs = [
   '/starters/',
   '/#developers',
   'https://docs.registrystack.org/',
+];
+const solutionMenuHrefs = [
+  '/solutions/',
+  ...[...readFileSync(resolve('src/data/solutions.ts'), 'utf8').matchAll(/slug: '(\/solutions\/[^']+)'/g)]
+    .map((match) => match[1]),
 ];
 const redirects = [
   ['/why/', '/'],
@@ -136,6 +141,22 @@ for (const options of [
     await page.waitForLoadState('domcontentloaded');
     if (new URL(page.url()).pathname !== '/solutions/' || !await page.locator('main h1').isVisible()) {
       fail('hero primary action did not open the solutions page');
+    } else {
+      await followAnchor(page.locator('.hero .hero-actions a').first(), '#registers', 'solution finder');
+      const examples = page.locator('#services a');
+      const exampleRoutes = ['/solutions/licensing/', '/solutions/health-and-safety/', '/solutions/local-government/'];
+      const exampleHrefs = await examples.evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+      if (exampleHrefs.length !== exampleRoutes.length || exampleRoutes.some((href) => !exampleHrefs.includes(href))) {
+        fail('the solutions overview must offer licensing, health and local-service examples together');
+      }
+      const localExample = page.locator('#services a[href="/solutions/local-government/"]');
+      if (await localExample.count() === 1) {
+        await localExample.click();
+        await page.waitForLoadState('domcontentloaded');
+        if (new URL(page.url()).pathname !== '/solutions/local-government/' || !await page.locator('main h1').isVisible()) {
+          fail('the local-service example must remain reachable through the solutions overview');
+        }
+      }
     }
   }
   await page.goto(url);
@@ -222,11 +243,17 @@ for (const options of [
   const solutionLinks = await solutionsMenu.locator('a').evaluateAll(
     (links) => links.map((link) => new URL(link.href).pathname),
   );
-  if (solutionLinks[0] !== '/solutions/' || solutionLinks[1] !== '/solutions/local-government/' ||
-      solutionLinks.length < 3 ||
-      solutionLinks.slice(2).some((path) => !/^\/solutions\/[a-z-]+\/$/.test(path)) ||
+  if (solutionLinks.length !== solutionMenuHrefs.length ||
+      solutionLinks.some((path, index) => path !== solutionMenuHrefs[index]) ||
       !await solutionsMenu.locator('a').first().isVisible()) {
-    fail('the Solutions menu must open with all solutions and local government, then list the taxonomy pages');
+    fail('the Solutions menu must list all solutions followed by service areas and shared capabilities');
+  }
+  const footerSolutions = await page.locator('.site-footer .footer-col').first().locator('a').evaluateAll(
+    (links) => links.map((link) => new URL(link.href).pathname),
+  );
+  if (footerSolutions.length !== solutionMenuHrefs.length ||
+      footerSolutions.some((path, index) => path !== solutionMenuHrefs[index])) {
+    fail('the footer must use the same service-area navigation as the Solutions menu');
   }
   await productsMenu.locator('summary').click();
   const menuLinks = await productsMenu.locator('a').evaluateAll(

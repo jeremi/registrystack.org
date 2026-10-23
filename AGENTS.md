@@ -7,9 +7,11 @@ It is the maintained audience policy for this site.
 
 ## Audience and review
 
-- Address organizations managing registries. Government is the current primary
-  focus and source of examples; general explanations also apply to other
-  organizations, including NGOs and banks.
+- Address organizations managing registries. National, regional and local
+  government are the current primary focus and source of examples. Keep general
+  navigation organized by service area; a single government level should not
+  define the site's scope. General explanations also apply to other organizations,
+  including NGOs and banks.
 - Write primarily for decision makers, programme and service owners, data
   stewards, and governance teams. Technical evaluators and implementers are an
   important secondary audience. Developer experience is a product requirement;

@@ -35,11 +35,7 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       <div class="nav-group-panel">
         <a href="/solutions/" aria-current={current === 'solutions' ? 'page' : undefined}>
           <span class="nav-entry-name">All solutions</span>
-          <span class="nav-entry-blurb">Find a starting point for your service</span>
-        </a>
-        <a href="/solutions/local-government/" aria-current={current === 'local-government' ? 'page' : undefined}>
-          <span class="nav-entry-name">Local government</span>
-          <span class="nav-entry-blurb">Permits, premises, facilities and local services</span>
+          <span class="nav-entry-blurb">For national, regional and local government</span>
         </a>
         <hr class="nav-group-rule" />
         {registerFamilies.map((area) => (
