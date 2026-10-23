@@ -1,0 +1,37 @@
+services:
+  starter-request:
+    build:
+      context: .
+    restart: unless-stopped
+    init: true
+    environment:
+      WEBSITE_ORIGIN: ${WEBSITE_ORIGIN:?Set WEBSITE_ORIGIN}
+      MAUTIC_BASE_URL: ${MAUTIC_BASE_URL:?Set MAUTIC_BASE_URL}
+      MAUTIC_FORM_ID: ${MAUTIC_FORM_ID:?Set MAUTIC_FORM_ID}
+      PER_IP_RATE_LIMIT: ${PER_IP_RATE_LIMIT:-100}
+      GLOBAL_RATE_LIMIT: ${GLOBAL_RATE_LIMIT:-300}
+      PORT: "3000"
+    ports:
+      - "127.0.0.1:${STARTER_REQUEST_PORT:-3000}:3000"
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,noexec,nosuid,nodev
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3000/healthz').then((response) => { if (!response.ok) process.exit(1); }).catch(() => process.exit(1));
+      interval: 30s
+      timeout: 3s
+      start_period: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 128M

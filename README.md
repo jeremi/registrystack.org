@@ -107,14 +107,28 @@ Use a compatible catalogue export from the owning starters repository;
 `scripts/sync-starters.mjs` defines the required input files.
 `src/upstream/starters.json` records the upstream release, revision and catalogue
 digest. Until that release is publicly downloadable, starter
-pages offer an email request, not a working-download claim. Do not regenerate
-the catalogue just to change website prose.
+pages offer a request with an email fallback, not a working-download claim. Do
+not regenerate the catalogue just to change website prose.
 
 A starter is a starting configuration, not a complete service or evidence of
 readiness. Summaries come from the upstream `display.description`; technical
 identifiers belong in expandable details. Public source registers are modelling
 references and do not imply adoption or endorsement. The shared starter wording
-and request emails are covered by unit tests.
+and request journeys are covered by tests.
+
+### Professional licensing starter requests
+
+The inline request form is enabled only for the `professional-licensing`
+starter. Set this public build variable to the HTTPS request-service route:
+
+```sh
+PUBLIC_STARTER_REQUEST_ENDPOINT=https://requests.example.org/starter-request
+```
+
+When the variable is unset, the site keeps the existing email request links.
+The browser submits only to this request service; it does not contact Mautic or
+load Mautic scripts. See [server/README.md](server/README.md) for the service,
+Mautic form, deployment, and verification setup.
 
 All general contact links use `src/data/contact.ts`. `describeServiceHref`
 invites the service, its users and the result needed. `askQuestionHref` supports

@@ -1,0 +1,25 @@
+# Traefik dynamic configuration example.
+# Replace the host and entry point before loading this file.
+# The starter-request relay must reach Mautic on a private Docker network and
+# must not use this public host as MAUTIC_BASE_URL.
+http:
+  routers:
+    deny-public-mautic-forms:
+      rule: "Host(`mautic.example.org`) && (PathPrefix(`/form`) || PathPrefix(`/index.php/form`))"
+      entryPoints:
+        - websecure-replace-me
+      priority: 10000
+      middlewares:
+        - deny-public-mautic-form-clients
+      service: noop@internal
+      tls: {}
+
+  middlewares:
+    deny-public-mautic-form-clients:
+      ipAllowList:
+        # 0.0.0.0 is the unspecified address and cannot be a routable client.
+        # With no routable address allowed, Traefik returns 403 before calling
+        # noop@internal. Do not add a public or proxy address to this list.
+        sourceRange:
+          - 0.0.0.0/32
+        rejectStatusCode: 403
