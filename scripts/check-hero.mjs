@@ -97,16 +97,19 @@ for (const options of [
   // The register-day sequence keeps all four steps readable: the highlight
   // moves, the text never changes. The pause control only exists when the
   // script is allowed to move the highlight.
-  const daySteps = page.locator('.register-day .day-step');
-  if (await daySteps.count() !== 4 || !(await daySteps.evaluateAll((steps) => steps.every((step) => step.getBoundingClientRect().height > 0)))) {
-    fail('the register-day sequence must show four visible steps');
-  }
-  if (await page.locator('.register-day .day-step.is-active').count() !== 1) {
-    fail('exactly one register-day step is highlighted');
-  }
-  if (await page.locator('.register-day .day-pause').count() !== 0) {
-    fail('the register-day pause control must not appear without JavaScript or with reduced motion');
-  }
+  const checkWeek = async (label) => {
+    const daySteps = page.locator('.register-week .day-step');
+    if (await daySteps.count() !== 4 || !(await daySteps.evaluateAll((steps) => steps.every((step) => step.getBoundingClientRect().height > 0)))) {
+      fail(`${label}: the working-week sequence must show four visible steps`);
+    }
+    if (await page.locator('.register-week .day-step.is-active').count() !== 1) {
+      fail(`${label}: exactly one working-week step is highlighted`);
+    }
+    if (await page.locator('.register-week .day-pause').count() !== 0) {
+      fail(`${label}: the working-week pause control must not appear without JavaScript or with reduced motion`);
+    }
+  };
+  await checkWeek('home');
   // The light contact action opens a prefilled question, not a scoping brief.
   const isQuestionMailto = (href) => {
     if (!href?.startsWith('mailto:contact@registrystack.org?')) return false;
@@ -117,6 +120,12 @@ for (const options of [
   if (!isQuestionMailto(await heroQuestion.getAttribute('href')) || !await heroQuestion.isVisible()) {
     fail('hero secondary action must be a visible "Ask a question" email');
   }
+  // A register family page tells the same kind of story for its own record,
+  // and its hero leads to that figure.
+  await page.goto(`${url}solutions/licensing/`);
+  await followAnchor(page.locator('.hero .hero-actions a').first(), '#example', 'licensing hero primary action');
+  await checkWeek('licensing');
+  await page.goto(url);
   const navQuestion = page.locator('.top-nav > a[href^="mailto:"]');
   if (await navQuestion.count() !== 1 || !isQuestionMailto(await navQuestion.getAttribute('href')) || !await navQuestion.isVisible()) {
     fail('main navigation must offer one visible "Ask a question" email');

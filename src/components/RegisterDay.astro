@@ -1,146 +1,58 @@
 ---
-// One licence over one working week: the four moments every register shares.
-// All four steps are always visible, so the figure reads the same without
-// JavaScript and with reduced motion. When the script may move, the highlight
-// walks through the steps and a button pauses it; otherwise the first step
-// stays highlighted. The same story is the brief for the home page video.
-import RecordCard from './RecordCard.astro';
-import SignedAnswer from './SignedAnswer.astro';
+// The home page's story: one licence correction, from request to a
+// signed answer. The same story is the brief for the home page video. The
+// figure itself is RegisterWeek, which every register family page also uses.
+import RegisterWeek from './RegisterWeek.astro';
+import type { WeekStep } from '../data/register-week';
 
-const requestFields = [
-  { label: 'Licence', value: 'LIC-4471' },
-  { label: 'Requested change', value: 'Scope of practice' },
-  { label: 'Submitted by', value: 'Licence holder' },
-];
-const licenceFields = [
-  { label: 'Scope of practice', value: 'Corrected' },
-  { label: 'Changed by', value: 'R. Adeyemi' },
-  { label: 'Revision', value: '12' },
+const steps: WeekStep[] = [
+  {
+    when: 'Tuesday 09:14',
+    product: 'Your application',
+    title: 'A request arrives',
+    text: 'A licence holder asks the board to correct the scope of practice on their licence. The register does not change until an officer decides.',
+    card: { kind: 'record', recordType: 'Correction request', recordId: 'REQ-3106', icon: 'data', fields: [
+      { label: 'Licence', value: 'LIC-4471' },
+      { label: 'Requested change', value: 'Scope of practice' },
+      { label: 'Submitted by', value: 'Licence holder' },
+    ] },
+  },
+  {
+    when: 'Tuesday to Wednesday',
+    product: 'Registry Casework',
+    title: 'An officer decides',
+    text: 'The request lands in the licence corrections queue. R. Adeyemi takes it, asks for the missing certificate, and approves the correction inside the board&rsquo;s 48-hour target.',
+    card: { kind: 'history', items: [
+      { state: 'Received', note: 'Routed to Licence corrections' },
+      { state: 'Claimed', note: 'Held by R. Adeyemi' },
+      { state: 'Waiting', note: 'Certificate requested from the applicant' },
+      { state: 'Approved', note: 'Wednesday 10:02' },
+    ] },
+  },
+  {
+    when: 'Wednesday 10:02',
+    product: 'Base Registry Engine',
+    title: 'The record changes and keeps its history',
+    text: 'The officer applies the approved change under their own account. The register records revision 12 against their name, and revision 11 stays readable.',
+    card: { kind: 'record', recordType: 'Licence record', recordId: 'LIC-4471', icon: 'person', fields: [
+      { label: 'Scope of practice', value: 'Corrected' },
+      { label: 'Changed by', value: 'R. Adeyemi' },
+      { label: 'Revision', value: '12' },
+    ] },
+  },
+  {
+    when: 'Wednesday 10:20',
+    product: 'Evidence Gateway',
+    title: 'Another service asks, and gets a signed answer',
+    text: 'Twenty minutes later a procurement service asks whether the licence is in good standing. It receives a signed yes. The licence file, the correction, and the holder&rsquo;s details stay in the register.',
+    card: { kind: 'answer', fieldLabel: 'Licence in good standing', value: 'Yes', recipient: 'Procurement service', issuer: 'Licensing board' },
+  },
 ];
 ---
 
-<figure class="register-day" aria-labelledby="register-day-title" data-register-day>
-  <div class="day-intro">
-    <div>
-      <p class="day-kicker">One licence, one working week</p>
-      <h3 id="register-day-title">A correction arrives on Tuesday. By Thursday another service can rely on it.</h3>
-    </div>
-  </div>
-
-  <ol class="day-steps">
-    <li class="day-step is-active" data-day-step>
-      <p class="step-when"><span class="step-count" aria-hidden="true">1</span> Tuesday 09:14</p>
-      <p class="step-product">Your application</p>
-      <h4>A request arrives</h4>
-      <p class="step-text">A licence holder asks the board to correct the scope of practice on their licence. The register does not change until an officer decides.</p>
-      <RecordCard recordType="Correction request" recordId="REQ-3106" icon="data" fields={requestFields} />
-    </li>
-    <li class="day-step" data-day-step>
-      <p class="step-when"><span class="step-count" aria-hidden="true">2</span> Tuesday to Wednesday</p>
-      <p class="step-product">Registry Casework</p>
-      <h4>An officer decides</h4>
-      <p class="step-text">The request lands in the licence corrections queue. R. Adeyemi takes it, asks for the missing certificate, and approves the correction inside the board&rsquo;s 48-hour target.</p>
-      <ol class="step-history">
-        <li><strong>Received</strong><span>Routed to Licence corrections</span></li>
-        <li><strong>Claimed</strong><span>Held by R. Adeyemi</span></li>
-        <li><strong>Waiting</strong><span>Certificate requested from the applicant</span></li>
-        <li><strong>Approved</strong><span>Wednesday 10:02</span></li>
-      </ol>
-    </li>
-    <li class="day-step" data-day-step>
-      <p class="step-when"><span class="step-count" aria-hidden="true">3</span> Wednesday 10:02</p>
-      <p class="step-product">Base Registry Engine</p>
-      <h4>The record changes and keeps its history</h4>
-      <p class="step-text">The officer applies the approved change under their own account. The register records revision 12 against their name, and revision 11 stays readable.</p>
-      <RecordCard recordType="Licence record" recordId="LIC-4471" icon="person" fields={licenceFields} />
-    </li>
-    <li class="day-step" data-day-step>
-      <p class="step-when"><span class="step-count" aria-hidden="true">4</span> Thursday 14:30</p>
-      <p class="step-product">Evidence Gateway</p>
-      <h4>Another service asks, and gets a signed answer</h4>
-      <p class="step-text">A procurement service asks whether the licence is in good standing. It receives a signed yes. The licence file, the correction, and the holder&rsquo;s details stay in the register.</p>
-      <SignedAnswer fieldLabel="Licence in good standing" value="Yes" recipient="Procurement service" issuer="Licensing board" />
-    </li>
-  </ol>
-
-  <figcaption>Fictional licence data. Each step names the product that does it; each product runs on its own, and the screens your staff use come from your own application.</figcaption>
-</figure>
-
-<style>
-  .register-day { margin: clamp(24px, 4vw, 36px) 0 0; max-width: var(--registry-max); }
-  .day-intro { align-items: start; border-bottom: 1px solid var(--registry-paper-rule); display: flex; gap: 20px; justify-content: space-between; margin-bottom: 24px; padding-bottom: 18px; }
-  .day-intro h3 { font-size: var(--type-subhead); line-height: 1.4; margin: 7px 0 0; max-width: 640px; }
-  .day-kicker, .step-product { color: var(--registry-blue); font: var(--type-2xs)/1.5 var(--registry-mono); margin: 0; text-transform: uppercase; }
-  .day-pause { background: var(--registry-white); border: 1px solid var(--registry-slate-rule); color: var(--registry-body); cursor: pointer; flex: none; font: 600 var(--type-sm)/1.2 inherit; min-height: 36px; padding: 8px 14px; }
-  .day-pause:hover, .day-pause:focus-visible { border-color: var(--registry-blue); color: var(--registry-blue); }
-  .day-steps { display: grid; gap: 20px; grid-template-columns: repeat(4, minmax(0, 1fr)); list-style: none; margin: 0; padding: 0; }
-  .day-step { background: var(--registry-white); border: 1px solid var(--registry-slate-rule); border-top: 3px solid var(--registry-slate-rule); display: grid; gap: 10px; min-width: 0; padding: 18px 18px 20px; transition: border-top-color 0.4s ease, background-color 0.4s ease; }
-  .day-step.is-active { background: var(--registry-blue-tint); border-top-color: var(--registry-blue); }
-  .step-when { align-items: center; color: var(--registry-body); display: flex; font-size: var(--type-sm); gap: 8px; line-height: 1.4; margin: 0; }
-  .step-count { align-items: center; background: var(--registry-blue); border-radius: 50%; color: var(--registry-white); display: inline-flex; flex: none; font-size: var(--type-xs); font-weight: 700; height: 22px; justify-content: center; width: 22px; }
-  .day-step h4 { font-size: var(--type-subhead); line-height: 1.3; margin: 0; }
-  .step-text { color: var(--registry-body); font-size: var(--type-sm); line-height: 1.5; margin: 0 0 4px; }
-  .step-history { display: grid; gap: 10px; list-style: none; margin: 0; padding: 0; }
-  .step-history li { border-left: 2px solid var(--registry-blue); display: grid; gap: 2px; padding-left: 10px; }
-  .step-history strong { color: var(--registry-ink); font-size: var(--type-sm); line-height: 1.4; }
-  .step-history span { color: var(--registry-body); font-size: var(--type-xs); line-height: 1.5; }
-  .register-day figcaption { color: var(--registry-muted); font-size: var(--type-xs); line-height: 1.5; margin-top: 16px; }
-  @media (max-width: 1000px) { .day-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 620px) {
-    .day-steps { grid-template-columns: 1fr; }
-    .day-intro { flex-direction: column; }
-  }
-</style>
-
-<script>
-  // Walk the highlight through the steps. Progressive enhancement: the markup
-  // already highlights the first step, so with no JavaScript or a reduced-motion
-  // preference nothing moves and no pause control is added.
-  const STEP_MS = 3200;
-
-  const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  for (const figure of document.querySelectorAll<HTMLElement>('[data-register-day]')) {
-    const steps = Array.from(figure.querySelectorAll<HTMLElement>('[data-day-step]'));
-    const intro = figure.querySelector<HTMLElement>('.day-intro');
-    if (steps.length < 2 || !intro || prefersReducedMotion()) continue;
-
-    let index = Math.max(0, steps.findIndex((step) => step.classList.contains('is-active')));
-    let timer = 0;
-    let paused = false;
-
-    const advance = () => {
-      steps[index].classList.remove('is-active');
-      index = (index + 1) % steps.length;
-      steps[index].classList.add('is-active');
-    };
-    const start = () => {
-      if (!timer && !paused) timer = window.setInterval(advance, STEP_MS);
-    };
-    const stop = () => {
-      if (timer) {
-        clearInterval(timer);
-        timer = 0;
-      }
-    };
-
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'day-pause';
-    button.textContent = 'Pause';
-    button.setAttribute('aria-pressed', 'false');
-    button.addEventListener('click', () => {
-      paused = !paused;
-      button.textContent = paused ? 'Play' : 'Pause';
-      button.setAttribute('aria-pressed', String(paused));
-      if (paused) stop();
-      else start();
-    });
-    intro.appendChild(button);
-
-    // Hold the highlight while a visitor reads a step.
-    figure.addEventListener('mouseenter', stop);
-    figure.addEventListener('mouseleave', start);
-    start();
-  }
-</script>
+<RegisterWeek
+  id="register-day"
+  kicker="One licence, one request"
+  heading="A correction arrives on Tuesday. An officer decides on Wednesday, and twenty minutes later another service can rely on it."
+  steps={steps}
+/>

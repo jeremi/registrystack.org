@@ -35,3 +35,30 @@ export const products = [
     firstResult: 'See what runs where, how work reaches the inbox, and which guide to open next for your role.',
   },
 ] as const;
+
+// The released parts around the three products. Each has docs, not a product
+// page: the home page names them once under the product cards, and a
+// register family's working week labels the step a service does. `job` is
+// the one line the home page prints, in the office's words.
+export const companionServices = [
+  {
+    key: 'render', name: 'Registry Render',
+    job: 'prints a certificate, extract or letter from the register, identical every time',
+    href: 'https://docs.registrystack.org/start/registry-render/',
+  },
+  {
+    key: 'messaging', name: 'Registry Messaging',
+    job: 'sends the email or SMS notice an officer’s decision calls for',
+    href: 'https://docs.registrystack.org/start/messaging/',
+  },
+  {
+    key: 'scheduling', name: 'Registry Scheduling',
+    job: 'books counter slots and appointments',
+    href: 'https://docs.registrystack.org/reference/scheduling-configuration/',
+  },
+  {
+    key: 'manifest', name: 'Registry Manifest',
+    job: 'publishes what the register holds as a catalogue other services can read',
+    href: 'https://docs.registrystack.org/products/registry-manifest/',
+  },
+] as const;

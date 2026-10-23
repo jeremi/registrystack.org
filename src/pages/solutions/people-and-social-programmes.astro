@@ -1,42 +1,91 @@
 ---
+// Reader: the head of a population or social registry, asking "what would a
+// week with this look like for my register?" Sections follow their next
+// questions: show me a week, what changes for my office, where do we start,
+// the doubts, who to ask.
 import Solution from '../../layouts/Solution.astro';
-import SolutionExample from '../../components/SolutionExample.astro';
+import RegisterWeek from '../../components/RegisterWeek.astro';
 import SolutionStarters from '../../components/SolutionStarters.astro';
-import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
 import { askQuestionHref, contactEmail } from '../../data/contact';
+import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')!;
+
+const steps: WeekStep[] = [
+  {
+    when: 'Monday 10:20',
+    product: 'Your intake application',
+    title: 'A household applies',
+    text: 'A household applies for enrollment at the district office. The register does not change until an officer decides.',
+    card: { kind: 'record', recordType: 'Application', recordId: 'APP-5120', icon: 'household', fields: [
+      { label: 'Household', value: 'HH-30944' },
+      { label: 'Programme', value: 'Social protection' },
+      { label: 'Submitted at', value: 'District office' },
+    ] },
+  },
+  {
+    when: 'Monday to Thursday',
+    ...weekProduct('casework'),
+    title: 'An officer decides',
+    text: 'The application lands in the enrollment queue. A. Haddad takes it, waits for the home visit report, and approves it.',
+    card: { kind: 'history', items: [
+      { state: 'Received', note: 'Routed to Enrollment' },
+      { state: 'Claimed', note: 'Held by A. Haddad' },
+      { state: 'Waiting', note: 'Home visit report requested' },
+      { state: 'Approved', note: 'Thursday 15:10' },
+    ] },
+  },
+  {
+    when: 'Thursday 15:10',
+    ...weekProduct('base-registry'),
+    title: 'The household record changes and keeps its history',
+    text: 'The officer records the enrollment under their own name. Revision 4 holds the status; revision 3 stays readable.',
+    card: { kind: 'record', recordType: 'Household record', recordId: 'HH-30944', icon: 'household', fields: [
+      { label: 'Status', value: 'Enrolled' },
+      { label: 'Changed by', value: 'A. Haddad' },
+      { label: 'Revision', value: '4' },
+    ] },
+  },
+  {
+    when: 'Thursday 15:30',
+    ...weekProduct('evidence-gateway'),
+    title: 'A programme asks, and gets a signed yes',
+    text: 'Twenty minutes later the school meal programme asks whether the household is enrolled and receives a signed yes. Income and case notes stay in your register.',
+    card: { kind: 'answer', fieldLabel: 'Household enrolled', value: 'Yes', recipient: 'School meal programme', issuer: 'Social registry' },
+  },
+];
 ---
 <Solution
   area={area}
   heading="Keep records about people current, and let programmes check them."
   description="The same household is registered in three programmes under three spellings, a correction made in one never reaches the others, and each programme asks your office for the file when it needs one answer. Registry Stack gives your office one register of people and households, and lets a programme check the one fact it needs without seeing the person’s file."
 >
-  <SolutionExample
-    eyebrow="One example: a school meal programme checks enrollment"
-    heading="Tell a school meal programme whether a household is enrolled."
-    intro="A school meal programme needs to know whether a household is enrolled in social protection. The social registry team agrees what “enrolled” means and which programmes may ask."
-    items={[
-      { term: 'Who asks', body: 'The school meal programme, for the household named on the application.' },
-      { term: 'What the office wants', body: 'The programme learns whether the household is enrolled, as your social registry defines it, in an answer it can check came from your register, and learns nothing else.' },
-      { term: 'What happens', body: 'The programme asks Evidence Gateway. The gateway confirms your office has agreed this programme may ask, for this reason, reads the status from your register, and returns the answer. The programme decides what it means for the application.' },
-      { term: 'What stays with your office', body: 'The household’s case file, income details, and payment history stay in your register.' },
-    ]}
-    note="The same register can support a local authority’s own work on residents: staff register people, link them to households, and update details as circumstances change."
-    link={{ href: '/products/base-registry/#product-example', label: 'See resident and household records' }}
-  />
-  <section class="section" aria-labelledby="people-change-title">
+  <section class="section" id="example" aria-labelledby="people-week-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">One request, start to finish</p>
+        <h2 id="people-week-title">A household applies on Monday. Enrolled on Thursday, and a programme can rely on it twenty minutes later.</h2>
+      </div>
+      <RegisterWeek
+        id="people-week"
+        kicker="Household HH-30944, one request"
+        heading="Each step names the product that does it."
+        steps={steps}
+      />
+    </div>
+  </section>
+  <section class="section section-muted" id="what-changes" aria-labelledby="people-change-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
         <h2 id="people-change-title">One entry per person, and the file never leaves your office.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Each person is entered once and linked to their household</h3><p>A person is one entry, linked to the household they live in. When someone moves out, your team changes the link and the earlier household stays in the history. A citizenship already recognized and the person’s identifiers in other sectors are recorded with them in one step.</p></article>
-        <article><h3>Nobody pages through the list of people</h3><p>Records about people are personal data. A service your office allows to look someone up finds a person it already knows; it cannot list the register. For voter rolls, learner records, and criminal records, that is how the register works from the start.</p></article>
-        <article><h3>Every change shows who decided it and when</h3><p>Your register records what the responsible authority has decided, such as an enrollment or a final conviction. Each later change is kept in the person’s history with who made it.</p></article>
+        <article><h3>Each person is entered once and linked to their household</h3><p>When someone moves out, your team changes the link and the earlier household stays in the history.</p><a class="inline-cta" href="/products/base-registry/">How the register holds people and households <span aria-hidden="true">→</span></a></article>
+        <article><h3>Nobody pages through the list of people</h3><p>A programme your office allows finds a person it already knows; it cannot list the register. Every look-up is kept with who asked and when.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
+        <article><h3>A person can carry the answer</h3><p>Where your office chooses, an answer such as “enrolled” is issued to the person’s digital wallet, to show a service that accepts it.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/evidence-oid4vci/">How wallet delivery is set up <span aria-hidden="true">↗</span></a></article>
       </div>
       <p class="product-note">If your office keeps a social registry of assessed households as well as the list of who is enrolled, start from the enrollment starter and add the household record your intake process needs.</p>
     </div>
@@ -47,21 +96,6 @@ const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')
     intro="A starter sets out what a register of this kind holds and who may change it. This family has no single starter to open first: offices that keep a population register start from Population register; offices that run a benefit programme start from Social registry and programme enrollment. Take the closest one and adapt it."
     featuredNote="The enrollment starter records the enrollment; the question a programme asks is set up in Evidence Gateway, which the starter does not include."
   />
-  <SolutionFit
-    area={area}
-    heading="Keep the records with the authority that is responsible for them."
-    jobs={{
-      'base-registry': 'Holds the register of people and households, under your rules for who may record, change, or look up each entry.',
-      'evidence-gateway': 'Answers a programme’s question, such as whether a household is enrolled or a person is an adult, without giving out a date of birth or an address.',
-      casework: 'Gives the officers who review corrections to a person’s record one queue, with a due date on each item and a record of who decided.',
-    }}
-    extra={[
-      { term: 'Programmes keep their own decisions', body: 'A programme that receives an answer decides what it means for its applicant, under its own rules. Registry Stack does not assess eligibility or calculate benefits.' },
-    ]}
-    muted
-  >
-    <p>Each product runs on its own. An office that already runs a population or social registry usually starts by letting programmes check facts from it; an office building a register starts with the register itself.</p>
-  </SolutionFit>
   <SolutionFaq
     items={[
       {
@@ -73,6 +107,10 @@ const area = solutionAreas.find((a) => a.key === 'people-and-social-programmes')
         q: 'Can a programme check a fact without seeing the person’s file?',
         a: 'Yes. The programme asks a question your office has agreed to answer, such as whether a household is enrolled, and gets that answer and nothing else. Your office decides which programmes may ask, which questions, and for what reason.',
         link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
+      },
+      {
+        q: 'Does it assess eligibility or calculate benefits?',
+        a: 'No. A programme that receives an answer decides what it means for its applicant, under its own rules. The register records what the responsible authority has decided.',
       },
       {
         q: 'Who can see a person’s record?',

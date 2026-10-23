@@ -1,41 +1,90 @@
 ---
+// Reader: the head of a farm, food or environmental register, asking "what
+// would a week with this look like for my register?" Sections follow their
+// next questions: show me a week, what changes for my office, where do we
+// start, the doubts, who to ask.
 import Solution from '../../layouts/Solution.astro';
-import SolutionExample from '../../components/SolutionExample.astro';
+import RegisterWeek from '../../components/RegisterWeek.astro';
 import SolutionStarters from '../../components/SolutionStarters.astro';
-import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
 import { askQuestionHref, contactEmail } from '../../data/contact';
+import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environment')!;
+
+const steps: WeekStep[] = [
+  {
+    when: 'Monday 08:30',
+    product: 'Your registration drive',
+    title: 'A farmer registers a holding',
+    text: 'A farmer registers a holding at the district office. The register does not change until an officer decides.',
+    card: { kind: 'record', recordType: 'Registration request', recordId: 'REG-2290', icon: 'data', fields: [
+      { label: 'Holding', value: 'Plot 14, Northern district' },
+      { label: 'Crops', value: 'Maize, beans' },
+      { label: 'Submitted at', value: 'District office' },
+    ] },
+  },
+  {
+    when: 'Monday to Tuesday',
+    ...weekProduct('casework'),
+    title: 'An officer decides',
+    text: 'The request lands in the registrations queue. D. Mwangi takes it, checks the holding is not already registered under another name, and approves it.',
+    card: { kind: 'history', items: [
+      { state: 'Received', note: 'Routed to Registrations' },
+      { state: 'Claimed', note: 'Held by D. Mwangi' },
+      { state: 'Approved', note: 'Tuesday 16:00' },
+    ] },
+  },
+  {
+    when: 'Tuesday 16:00',
+    ...weekProduct('base-registry'),
+    title: 'The holding is recorded and keeps its history',
+    text: 'The officer records the holding under their own name. Each later change of status is added beside it, never over it.',
+    card: { kind: 'record', recordType: 'Holding record', recordId: 'HLD-5582', icon: 'data', fields: [
+      { label: 'Status', value: 'Registered' },
+      { label: 'District', value: 'Northern' },
+      { label: 'Changed by', value: 'D. Mwangi' },
+    ] },
+  },
+  {
+    when: 'Tuesday 16:20',
+    ...weekProduct('evidence-gateway'),
+    title: 'A subsidy programme asks, and gets only the district',
+    text: 'Twenty minutes later the subsidy programme asks which district the holding is registered in and receives that one value, signed. Plot coordinates and household details stay in your register.',
+    card: { kind: 'answer', fieldLabel: 'Registered in district', value: 'Northern', recipient: 'Subsidy programme', issuer: 'Farm register' },
+  },
+];
 ---
 <Solution
   area={area}
   heading="Keep the registers of farms, animals, food businesses, and permits current."
   description="Subsidy season brings a registration drive, the same holding appears under two names, and the programme cannot tell which farmer is registered for which farm without asking your office. Registry Stack gives your office one register of the holdings, establishments, and permits it has recorded, and lets other services get the answer they need without seeing the rest of the file."
 >
-  <SolutionExample
-    eyebrow="One example: a subsidy programme checks a farm"
-    heading="Tell a subsidy programme whether a farmer is registered, and for which farm."
-    intro="A subsidy programme needs to know whether the farmer named on a claim is registered for the farm on the claim before it can process it. Your office agrees to answer that question and nothing else."
-    items={[
-      { term: 'Who asks', body: 'The subsidy programme, for the farmer named on a claim.' },
-      { term: 'What the office wants', body: 'A yes or no to that question, from the register your office keeps, and no more.' },
-      { term: 'What happens', body: 'The programme asks your register and gets the answer, signed, so it can check where the answer came from. A question your office has not agreed to is refused, and every request is kept with who asked and when.' },
-      { term: 'What stays with your office', body: 'Plot coordinates, household members, crop history, and financial records stay in your register and are not sent unless your office agrees to share them.' },
-    ]}
-    link={{ href: '/products/evidence-gateway/', label: 'See how Evidence Gateway answers an agreed question' }}
-  />
-  <section class="section" aria-labelledby="agriculture-change-title">
+  <section class="section" id="example" aria-labelledby="agriculture-week-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">One request, start to finish</p>
+        <h2 id="agriculture-week-title">A holding is registered on Monday, recorded on Tuesday, and relied on by a programme twenty minutes later.</h2>
+      </div>
+      <RegisterWeek
+        id="agriculture-week"
+        kicker="Holding HLD-5582, one request"
+        heading="Each step names the product that does it."
+        steps={steps}
+      />
+    </div>
+  </section>
+  <section class="section section-muted" id="what-changes" aria-labelledby="agriculture-change-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
         <h2 id="agriculture-change-title">One entry per holding, and a status history nobody has to rebuild.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Every permit is tied to the site it covers</h3><p>Each farm, food establishment, or site is recorded once, and every registration or permit your office issues is linked to it. When one food business runs two establishments, each has its own registration, and an inspector can see which one is current.</p></article>
-        <article><h3>Assessments stay with the officers who made them</h3><p>Your office decides who may record a registration, who may inspect, and who may only look one up. A herd’s animal-health assessment stays with the veterinary officers, while colleagues who need it can see the certificate it supports.</p></article>
-        <article><h3>A change of status never erases the earlier one</h3><p>When a permit is suspended or a product authorization withdrawn, the new status is added on its own, with who recorded it and when. The earlier status stays in the history, so the register shows what was valid on the day of an inspection.</p></article>
+        <article><h3>Every permit is tied to the site it covers</h3><p>Each farm, establishment or site is recorded once, and every registration or permit is linked to it. One food business with two establishments has two registrations, and an inspector sees which is current.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
+        <article><h3>A change of status never erases the earlier one</h3><p>A suspended permit or a withdrawn authorization is added as its own entry, with who recorded it and when. The register shows what was valid on the day of an inspection.</p><a class="inline-cta" href="/solutions/review-changes/">How a decision reaches the register <span aria-hidden="true">→</span></a></article>
+        <article><h3>Counts for the season, without the farmers’ details</h3><p>The register publishes counts, such as registered holdings per district, with small counts suppressed and no individual records.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/">How statistical releases work <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
@@ -45,20 +94,6 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
     intro="A starter sets out what a register of this kind holds and who may change it, for one common register of holdings, animals, establishments, or permits. Your team takes the closest one and adapts it to its own agriculture, food, or environmental law."
     featuredNote="The farmer registry starter records the farm and the registration; the question a programme asks is set up in Evidence Gateway, which the starter does not include."
   />
-  <SolutionFit
-    area={area}
-    heading="Keep inspections and decisions in your own process."
-    jobs={{
-      'base-registry': 'Holds the register of farms, animals, establishments, or permits, and every later change of status, under your rules for who may record what.',
-      'evidence-gateway': 'Answers a yes-or-no question, such as whether a farmer is registered, without sending plot or household details.',
-    }}
-    extra={[
-      { term: 'Your office keeps deciding', body: 'Inspections, assessments, and the decision to register a farm or grant a permit stay in your own process. The register records the result; it does not decide who qualifies for a subsidy or who owns the land.' },
-    ]}
-    muted
-  >
-    <p>Each product runs on its own. Evidence Gateway can answer from the register you run today, through a connection your technical team sets up, so an office can start there and use the Base Registry Engine when it builds or moves its register.</p>
-  </SolutionFit>
   <SolutionFaq
     items={[
       {

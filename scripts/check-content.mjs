@@ -120,6 +120,12 @@ const homeSectionIndexes = homeSectionOrder.map((id) => homeSource.indexOf(`id="
 if (homeSectionIndexes.some((index, position) => index < 0 || (position > 0 && index < homeSectionIndexes[position - 1]))) {
   failures.push(`homepage sections must run in this order: ${homeSectionOrder.join(', ')}`);
 }
+// The parts around the three products are named once, under the product
+// cards, from the shared data, so the home page and the solution stories
+// agree on what else ships.
+if (!homeSource.includes('companionServices.map') || homeSource.indexOf('companionServices.map') < homeSource.indexOf('id="products"')) {
+  failures.push('homepage must list the companion services from products.ts under the product cards');
+}
 if (!homeSource.includes('home-solution-grid') || !homeSource.includes('developer-tutorial')) {
   failures.push('homepage is missing its product choices or developer tutorials');
 }
@@ -315,6 +321,20 @@ for (const { area, file } of solutionPageFiles) {
     if (pattern.test(body)) failures.push(`solution page ${file} uses the term "${term}"; keep implementation vocabulary on starter and product pages`);
   }
   if (source.includes('SolutionDevelopers')) failures.push(`solution page ${file} renders a developer section; developer next steps live in its FAQ`);
+  // A register family tells one request, start to finish, for its own kind of record,
+  // then what changes for the office; the product-by-product fit section
+  // and the prose example belong to the cross-cutting pages only.
+  if (area.kind === 'register-family') {
+    if (!source.includes('<RegisterWeek')) failures.push(`solution page ${file} must tell its register's working week with <RegisterWeek>`);
+    for (const retired of ['<SolutionExample', '<SolutionFit']) {
+      if (source.includes(retired)) failures.push(`solution page ${file} still renders ${retired}>; the request figure and the what-changes section replace it`);
+    }
+    if (!source.includes('id="what-changes"')) failures.push(`solution page ${file} is missing its what-changes section`);
+    const order = ['<RegisterWeek', 'id="what-changes"', '<SolutionStarters', '<SolutionFaq', '<DocsHandoff'].map((marker) => source.indexOf(marker));
+    if (order.some((index, position) => index < 0 || (position > 0 && index < order[position - 1]))) {
+      failures.push(`solution page ${file} sections must run: the request figure, what changes, starters, questions, work with us`);
+    }
+  }
 }
 
 // The starters catalogue: every starter belongs to exactly one register

@@ -80,7 +80,7 @@ const html = `<!doctype html>
     </div>
     <div>
       <p class="kicker">Open-source software for public registers</p>
-      <h1>Run your register. Decide the changes.<br>Answer the services that rely on it.</h1>
+      <h1>Run your register. Decide every change.<br>Answer the services that rely on it.</h1>
     </div>
     <div class="foot">
       <span class="url">registrystack.org</span>

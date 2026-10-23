@@ -1,0 +1,38 @@
+---
+// One counter slot or appointment as the person who booked it sees it.
+interface Props {
+  service: string;
+  place: string;
+  slot: string;
+  status: string;
+}
+const { service, place, slot, status } = Astro.props;
+---
+
+<section class="booking-card" aria-label={`Booking: ${service}, ${slot}`}>
+  <p class="booking-kind">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="16" rx="1" /><path d="M3 10h18M8 3v4M16 3v4M8 14h3v3H8z" />
+    </svg>
+    Booking
+  </p>
+  <p class="booking-slot">{slot}</p>
+  <dl class="booking-fields">
+    <div><dt>Service</dt><dd>{service}</dd></div>
+    <div><dt>Where</dt><dd>{place}</dd></div>
+  </dl>
+  <p class="booking-status"><span class="booking-dot" aria-hidden="true"></span>{status}</p>
+</section>
+
+<style>
+  .booking-card { min-width: 0; background: var(--registry-white); color: var(--registry-ink); border: 1px solid var(--registry-slate-rule); border-left: 3px solid var(--registry-blue); }
+  .booking-kind { display: flex; align-items: center; gap: 8px; margin: 0; padding: 14px 16px 10px; color: var(--registry-blue); font: var(--type-2xs)/1.4 var(--registry-mono); text-transform: uppercase; }
+  .booking-kind svg { flex-shrink: 0; }
+  .booking-slot { font-size: var(--type-subhead); font-weight: 700; line-height: 1.3; margin: 0; padding: 0 16px 14px; }
+  .booking-fields { margin: 0; }
+  .booking-fields > div { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.5fr); align-items: baseline; gap: 8px 16px; border-top: 1px solid var(--registry-slate-rule-light); padding: 11px 16px; font-size: var(--type-sm); line-height: 1.45; }
+  .booking-fields dt { margin: 0; color: var(--registry-muted); }
+  .booking-fields dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+  .booking-status { display: flex; align-items: center; gap: 8px; margin: 0; padding: 11px 16px; border-top: 1px solid var(--registry-slate-rule-light); font-size: var(--type-xs); font-weight: 700; line-height: 1.4; }
+  .booking-dot { background: var(--registry-blue); border-radius: 50%; display: inline-block; flex: none; height: 8px; width: 8px; }
+</style>

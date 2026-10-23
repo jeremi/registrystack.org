@@ -1,41 +1,94 @@
 ---
+// Reader: the team that maintains a code list, directory or catalogue other
+// registers rely on, asking "what would a week with this look like for our
+// list?" Sections follow their next questions: show me a week, what changes
+// for my office, where do we start, the doubts, who to ask.
 import Solution from '../../layouts/Solution.astro';
-import SolutionExample from '../../components/SolutionExample.astro';
+import RegisterWeek from '../../components/RegisterWeek.astro';
 import SolutionStarters from '../../components/SolutionStarters.astro';
-import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
 import { askQuestionHref, contactEmail } from '../../data/contact';
+import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
+
+const steps: WeekStep[] = [
+  {
+    when: 'Monday 09:30',
+    product: 'Your intake application',
+    title: 'A change is proposed',
+    text: 'The ministry notifies your office that two districts merge on 1 January. The list does not change until your team decides.',
+    card: { kind: 'record', recordType: 'Change proposal', recordId: 'CHG-118', icon: 'data', fields: [
+      { label: 'Entry', value: 'District NR-07' },
+      { label: 'Change', value: 'Merge into NR-05' },
+      { label: 'Applies from', value: '1 January' },
+    ] },
+  },
+  {
+    when: 'Monday to Tuesday',
+    ...weekProduct('casework'),
+    title: 'Your team decides',
+    text: 'The proposal lands in the code list queue. E. Lindqvist takes it, confirms the gazette notice, and approves it.',
+    card: { kind: 'history', items: [
+      { state: 'Received', note: 'Routed to Code list changes' },
+      { state: 'Claimed', note: 'Held by E. Lindqvist' },
+      { state: 'Approved', note: 'Tuesday 10:15' },
+    ] },
+  },
+  {
+    when: 'Tuesday 10:15',
+    ...weekProduct('base-registry'),
+    title: 'The list changes and keeps the old entry',
+    text: 'The officer closes NR-07 with its end date and names its successor, under their own name. A record that pointed to NR-07 still finds it.',
+    card: { kind: 'record', recordType: 'Code list entry', recordId: 'NR-07', icon: 'data', fields: [
+      { label: 'Status', value: 'Closed from 1 January' },
+      { label: 'Successor', value: 'NR-05' },
+      { label: 'Changed by', value: 'E. Lindqvist' },
+    ] },
+  },
+  {
+    when: 'Tuesday 10:30',
+    ...weekProduct('manifest'),
+    title: 'The catalogue is published',
+    text: 'The catalogue describes the list and its new version, so every register and service that reads it picks up the change from one place.',
+    card: { kind: 'document', documentType: 'Published catalogue', format: 'DCAT', title: 'Administrative areas, version 2027-01', fields: [
+      { label: 'Entries', value: '312' },
+      { label: 'Changed', value: 'NR-07 closed, NR-05 extended' },
+      { label: 'Published', value: 'Tuesday 10:30' },
+    ], footnote: 'Readable by any service that follows the catalogue standard' },
+  },
+];
 ---
 <Solution
   area={area}
   heading="Publish the lists other registers rely on, from one maintained source."
   description="Other registers and services keep their own copies of your codes and names, so when your office renames a territory or withdraws a tax regime, each copy drifts out of date on its own schedule. Registry Stack gives your office one maintained list that every register reads from, with the history of each entry."
 >
-  <SolutionExample
-    eyebrow="One example: official codes for administrative areas"
-    heading="Give every register the same list of administrative areas."
-    intro="An address register and a statistics office both need the official code and name of each administrative area. Today each keeps its own copy, updated from a spreadsheet sent by email."
-    items={[
-      { term: 'Who asks', body: 'The address register team and the statistics office, each for the areas it uses.' },
-      { term: 'What the office wants', body: 'One list with each area’s code, level, parent area, and the dates it applies, so neither team keeps its own copy.' },
-      { term: 'What happens', body: 'Your office keeps the list in its register. Each service gets the details it has agreed with you and reads the current list instead of waiting for the next spreadsheet.' },
-      { term: 'What stays with your office', body: 'Your office decides when a name or boundary changes. The boundary maps stay in the mapping system the list refers to.' },
-    ]}
-    link={{ href: '/products/base-registry/', label: 'See how Base Registry Engine serves other services' }}
-  />
-  <section class="section" aria-labelledby="reference-change-title">
+  <section class="section" id="example" aria-labelledby="reference-week-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">One request, start to finish</p>
+        <h2 id="reference-week-title">A merger is notified on Monday. Your team decides on Tuesday, and every register reads the new list fifteen minutes later.</h2>
+      </div>
+      <RegisterWeek
+        id="reference-week"
+        kicker="District code NR-07, one request"
+        heading="Each step names the product that does it."
+        steps={steps}
+      />
+    </div>
+  </section>
+  <section class="section section-muted" id="what-changes" aria-labelledby="reference-change-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
         <h2 id="reference-change-title">One list to maintain, and no copies drifting apart.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Every register uses the same code for the same place</h3><p>Each entry carries its official code, its parent where there is one, and the dates it applies. The address register and the statistics office read the same list, so a district has one code and one name in both.</p></article>
-        <article><h3>Only your team changes the list</h3><p>Your staff record every change, whether a new district, a renamed ministry, or a withdrawn tax regime. Other teams read the entries your office lets them see; the directory of public bodies is kept by your staff, not edited by each body listed in it.</p></article>
-        <article><h3>A renamed territory keeps its old entry</h3><p>When a territory is renamed or a tax regime withdrawn, the earlier entry stays, with the dates it applied. A record that pointed to the old name years ago still makes sense today.</p></article>
+        <article><h3>Every register uses the same code for the same place</h3><p>Each entry carries its official code, its parent where there is one, and the dates it applies. The address register and the statistics office read the same list.</p><a class="inline-cta" href="/products/base-registry/">How the register serves other services <span aria-hidden="true">→</span></a></article>
+        <article><h3>Only your team changes the list</h3><p>Your staff record every change, whether a new district, a renamed ministry or a withdrawn tax regime. Other teams read; they do not edit.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
+        <article><h3>The list is published as a catalogue others can read</h3><p>A catalogue describes what the list holds and its current version, in the open formats public data portals use, from one maintained source.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/publishing-pipeline/">How publication works <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
@@ -44,20 +97,6 @@ const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
     heading="Start from a reference register like yours."
     intro="A starter sets out what a list of this kind holds and who may change it, for one common directory, code list, or catalogue. Your team takes the closest one and adapts it to the list it maintains."
   />
-  <SolutionFit
-    area={area}
-    heading="Give other registers one source to refer to."
-    jobs={{
-      'base-registry': 'Holds the list and the history of every entry, under your rules for who may record a change, and serves the current list to the registers and services your office lets read it.',
-    }}
-    extra={[
-      { term: 'Other registers refer to the list by code', body: 'Registers of businesses, land, licences, and people refer to territories, public bodies, and products by code. A maintained list gives those codes one source.' },
-      { term: 'Your office keeps deciding', body: 'The decision to create a district, rename a ministry, or change a tax regime is taken where it is taken today. The list records the result once it is decided.' },
-    ]}
-    muted
-  >
-    <p>An office that already keeps its list in a database or a spreadsheet moves it into the Base Registry Engine, a small migration for a code list, and the registers and services that use it read it from there.</p>
-  </SolutionFit>
   <SolutionFaq
     items={[
       {
@@ -68,6 +107,10 @@ const area = solutionAreas.find((a) => a.key === 'reference-registers')!;
       {
         q: 'What happens to records that point to an old code?',
         a: 'They keep working. A renamed or withdrawn entry stays in the list with the dates it applied, so a record that used it still points to a real entry, and anyone reading it can see when it stopped applying.',
+      },
+      {
+        q: 'Does the list hold the district boundaries too?',
+        a: 'No. The list holds the codes, names and dates; boundary maps stay in the mapping system the list refers to.',
       },
       {
         q: 'Who can change the list?',

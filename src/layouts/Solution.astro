@@ -22,12 +22,13 @@ interface Props {
 }
 
 const { area, heading, description } = Astro.props;
-// A register family leads to its starters; a cross-cutting area has none and
-// leads to its example instead.
-const primary = Astro.props.primary ?? (area.kind === 'register-family'
+// Every area leads to its example first. A register family then offers its
+// starters; a cross-cutting area has none and offers how it fits instead.
+const isFamily = area.kind === 'register-family';
+const primary = Astro.props.primary ?? { href: '#example', label: isFamily ? 'See one request' : 'See the example' };
+const secondary = Astro.props.secondary ?? (isFamily
   ? { href: '#starters', label: 'See the starters' }
-  : { href: '#example', label: 'See the example' });
-const secondary = Astro.props.secondary ?? { href: '#fit', label: 'How it fits' };
+  : { href: '#fit', label: 'How it fits' });
 ---
 <Base title={area.pageTitle + ' | Registry Stack'} description={area.description ?? description}>
   <SiteHeader current={area.key} />
@@ -56,6 +57,7 @@ const secondary = Astro.props.secondary ?? { href: '#fit', label: 'How it fits' 
   .solution-page :global(.product-facts) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
   .solution-page :global(.product-facts article) { border-top: 2px solid var(--registry-blue); padding-top: 20px; }
   .solution-page :global(.product-facts p) { margin-bottom: 0; }
+  .solution-page :global(.product-facts .inline-cta) { display: inline-block; margin-top: 12px; }
   .solution-page :global(.product-fit) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
   .solution-page :global(.product-fit dl) { margin: 0; }
   .solution-page :global(.product-fit dt) { font-weight: 700; color: var(--registry-ink); margin-bottom: 5px; }

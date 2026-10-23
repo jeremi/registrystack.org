@@ -147,7 +147,7 @@ mailto on the site is built with `src/data/contact.ts` (`contactEmail`,
 
 ## Pages
 
-- `/`: how a register runs (one licence over a week, with the two pages every register shares), what stays under the organization's control, the register families and the starters, the three products as equal cards, the developer paths, where the project stands, and the closing band.
+- `/`: how a register runs (one licence from request to answer, with the two pages every register shares), what stays under the organization's control, the register families and the starters, the three products as equal cards, the developer paths, where the project stands, and the closing band.
 - `/solutions/` and `/solutions/<area>/`: one page per solution area in `src/data/solutions.ts`.
 - `/starters/` and `/starters/<id>/`: the starters catalogue, one page per starter.
 - `/products/base-registry/`: build and maintain a registry.

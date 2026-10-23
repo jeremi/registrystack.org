@@ -1,41 +1,85 @@
 ---
+// Reader: the head of a licensing office, asking "what would a week with this
+// look like for my register?" Sections follow their next questions: show me a
+// week, what changes for my office, where do we start, the doubts, who to ask.
 import Solution from '../../layouts/Solution.astro';
-import SolutionExample from '../../components/SolutionExample.astro';
+import RegisterWeek from '../../components/RegisterWeek.astro';
 import SolutionStarters from '../../components/SolutionStarters.astro';
-import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
 import { askQuestionHref, contactEmail } from '../../data/contact';
+import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'licensing')!;
+
+const steps: WeekStep[] = [
+  {
+    when: 'Monday 08:40',
+    ...weekProduct('scheduling'),
+    title: 'A holder books a counter slot',
+    text: 'A licence holder due for renewal books a slot at your counter. Nothing in the register changes yet.',
+    card: { kind: 'booking', service: 'Licence renewal', place: 'Counter 3, licensing office', slot: 'Wednesday 10:30', status: 'Confirmed' },
+  },
+  {
+    when: 'Wednesday 10:30',
+    ...weekProduct('casework'),
+    title: 'An officer reviews the renewal',
+    text: 'The renewal lands in the renewals queue. M. Okafor takes it at the counter, checks the certificate, and approves it.',
+    card: { kind: 'history', items: [
+      { state: 'Received', note: 'Routed to Renewals' },
+      { state: 'Claimed', note: 'Held by M. Okafor' },
+      { state: 'Approved', note: 'Wednesday 11:20' },
+    ] },
+  },
+  {
+    when: 'Wednesday 11:22',
+    ...weekProduct('base-registry'),
+    title: 'The licence changes and keeps its history',
+    text: 'The officer records the renewal under their own name. Revision 7 holds the new expiry; revision 6 stays readable.',
+    card: { kind: 'record', recordType: 'Licence record', recordId: 'LIC-2093', icon: 'person', fields: [
+      { label: 'Valid until', value: '2029-10-31' },
+      { label: 'Changed by', value: 'M. Okafor' },
+      { label: 'Revision', value: '7' },
+    ] },
+  },
+  {
+    when: 'Wednesday 11:40',
+    ...weekProduct('evidence-gateway'),
+    title: 'An employer asks, and gets a signed yes',
+    text: 'Twenty minutes later an employer asks whether the licence is in good standing and receives a signed yes. The holder’s file stays in your register.',
+    card: { kind: 'answer', fieldLabel: 'Licence in good standing', value: 'Yes', recipient: 'Employer’s HR service', issuer: 'Licensing board' },
+  },
+];
 ---
 <Solution
   area={area}
   heading="Know who holds each licence, on what terms, and what changed."
-  description="Employers, inspectors and other services ask your licensing office whether a licence is valid, and every correction waits for someone to find the file. Registry Stack gives your office one register of the licences it has issued. Other services check a licence without seeing the file. Each change an officer has to decide waits in one queue."
+  description="Employers, inspectors and other services ask your licensing office whether a licence is valid, and every correction waits for someone to find the file. Registry Stack gives your office one register of the licences it has issued: other services check a licence without seeing the file, and each change an officer must decide waits in one queue."
 >
-  <SolutionExample
-    eyebrow="One example: a licence scope correction"
-    heading="A correction with one officer accountable from request to decision."
-    intro="A professional register receives a request to correct the scope of a licence. The office wants an officer to review each correction before it takes effect, a first response within 48 hours, and a clear record of who decided."
-    items={[
-      { term: 'Who asks', body: 'The licence holder, or a service that spotted the wrong scope, sends a correction request to the register.' },
-      { term: 'What the office wants', body: 'One officer holds the request, the 48-hour clock is visible to the team, and nothing changes in the register until that officer approves.' },
-      { term: 'What happens', body: 'The request lands in the licensing team’s queue. An officer takes it, asks the holder for a missing document if needed, and approves it. The officer then applies the correction in the register under their own name.' },
-      { term: 'What stays with your office', body: 'The licence, its terms, and its history stay in your register, which keeps the earlier scope and shows who changed it.' },
-    ]}
-    link={{ href: '/solutions/review-changes/#what-your-office-calls-it', label: 'See how the review queue works for any register' }}
-  />
-  <section class="section" aria-labelledby="licensing-change-title">
+  <section class="section" id="example" aria-labelledby="licensing-week-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">One request, start to finish</p>
+        <h2 id="licensing-week-title">Booked on Monday, renewed at the counter on Wednesday, and relied on by an employer twenty minutes later.</h2>
+      </div>
+      <RegisterWeek
+        id="licensing-week"
+        kicker="Licence LIC-2093, one request"
+        heading="Each step names the product that does it."
+        steps={steps}
+      />
+    </div>
+  </section>
+  <section class="section section-muted" id="what-changes" aria-labelledby="licensing-change-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
         <h2 id="licensing-change-title">Fewer calls about the file, and a register that explains itself.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Services you connect stop asking for the file</h3><p>An employer or inspector asks whether a licence is active for a category and gets that answer, with your register’s name on it. They do not see the holder’s address, the complaint history, or anything else in the file.</p></article>
-        <article><h3>A suspension never overwrites the licence it suspends</h3><p>Each renewal, suspension, or revocation is added as its own entry, with who recorded it and when. When a suspension is later lifted, the register shows both decisions in order, so nobody reconstructs the history from emails.</p></article>
-        <article><h3>Every correction has one owner and a due date</h3><p>Correction requests and disputes go into one queue. One officer holds each item, the response clock is visible to the whole team, and the register does not change until that officer says so.</p></article>
+        <article><h3>Services you connect stop asking for the file</h3><p>An employer or inspector gets a yes or no with your register’s name on it, and nothing from the holder’s file.</p><a class="inline-cta" href="/solutions/check-a-fact/">How a service checks a fact <span aria-hidden="true">→</span></a></article>
+        <article><h3>A suspension never overwrites the licence it suspends</h3><p>Each renewal, suspension or revocation is its own entry, with who recorded it and when. Lift a suspension and both decisions stay in order.</p><a class="inline-cta" href="/products/base-registry/">How the register keeps its history <span aria-hidden="true">→</span></a></article>
+        <article><h3>Every correction has one owner and a due date</h3><p>Corrections and disputes wait in one queue. One officer holds each, the clock is visible to the team, and the register changes only when that officer says so.</p><a class="inline-cta" href="https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/">See a change reviewed before it is applied <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
@@ -44,21 +88,6 @@ const area = solutionAreas.find((a) => a.key === 'licensing')!;
     heading="Start from a licence register like yours."
     intro="A starter sets out what a register of this kind holds and who may change it, for one common kind of licence. Your team takes the closest one and adapts it to its own licensing law."
   />
-  <SolutionFit
-    area={area}
-    heading="Keep deciding licences where you decide them today."
-    jobs={{
-      'base-registry': 'Holds the register: who holds each licence, on what terms, and every later decision, under your rules for who may record what.',
-      'evidence-gateway': 'Answers an employer’s or inspector’s question about a licence, and nothing more.',
-      casework: 'Gives the officers who handle corrections and disputes one queue, with a due date on each item and a record of who decided.',
-    }}
-    extra={[
-      { term: 'Your licensing process keeps deciding', body: 'Applications, fees, and the decision to grant a licence stay in the systems that handle them today. The register records a licence once it is issued; it does not take applications or decide who qualifies.' },
-    ]}
-    muted
-  >
-    <p>Each product runs on its own. Most offices start with the register, and add the others when a service needs to check a licence or a correction needs an officer.</p>
-  </SolutionFit>
   <SolutionFaq
     items={[
       {

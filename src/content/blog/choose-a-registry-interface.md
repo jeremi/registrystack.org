@@ -82,7 +82,7 @@ should ask that.
 An answer can also be returned as a verifiable credential a person can carry and
 show elsewhere. Evidence Gateway produces it; the apps that hold it, the parties
 that check it and its withdrawal are a separate programme. The
-[birth certificate tutorial](https://docs.registrystack.org/tutorials/issue-a-birth-certificate-vc-from-opencrvs/)
+[credential tutorial](https://docs.registrystack.org/tutorials/request-evidence-as-sd-jwt-vc/)
 shows the boundary.
 
 **So the test for an answer: it contains what the service needs to act, and

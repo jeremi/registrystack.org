@@ -1,0 +1,57 @@
+---
+// A printed document as the civic-print figure shows it: what it is, what it
+// says, and the hash the office stores beside the record it was printed from.
+interface Props {
+  documentType?: string;
+  format?: string;
+  title: string;
+  fields: Array<{ label: string; value: string }>;
+  footnote?: string;
+  // The stored fingerprint of a printed document; a published catalogue has none.
+  hash?: string;
+}
+const { documentType = 'Printed document', format = 'PDF', title, fields, footnote = 'Same bytes on every reprint', hash } = Astro.props;
+---
+
+<section class="document-card" aria-label={`${documentType}: ${title}`}>
+  <div class="document-heading">
+    <span class="document-type">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2M6 14h12v7H6z" />
+      </svg>
+      {documentType}
+    </span>
+    <span class="document-format">{format}</span>
+  </div>
+  <p class="document-title">{title}</p>
+  <dl class="document-fields">
+    {fields.map((field) => (
+      <div class="document-field"><dt>{field.label}</dt><dd>{field.value}</dd></div>
+    ))}
+  </dl>
+  <div class="document-footer">
+    {hash && <svg class="document-qr" viewBox="0 0 7 7" width="28" height="28" aria-hidden="true" shape-rendering="crispEdges">
+      <path fill="currentColor" d="M0 0h3v3H0zM4 0h3v3H4zM0 4h3v3H0zM1 1h1v1H1zM5 1h1v1H5zM1 5h1v1H1zM4 4h1v1H4zM6 4h1v1H6zM5 5h1v1H5zM4 6h1v1H4zM6 6h1v1H6z" />
+      <path fill="var(--registry-white)" d="M1 1h1v1H1zM5 1h1v1H5zM1 5h1v1H1z" />
+    </svg>}
+    <span><strong>{footnote}</strong>{hash && <span class="document-hash">sha256 {hash}</span>}</span>
+  </div>
+</section>
+
+<style>
+  .document-card { min-width: 0; background: var(--registry-white); color: var(--registry-ink); border: 1px solid var(--registry-slate-rule); border-left: 3px solid var(--registry-blue); }
+  .document-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px 12px; }
+  .document-type { display: flex; align-items: center; gap: 8px; color: var(--registry-blue); font: var(--type-2xs)/1.4 var(--registry-mono); text-transform: uppercase; }
+  .document-type svg { flex-shrink: 0; }
+  .document-format { color: var(--registry-body); background: var(--registry-code-bg); border: 1px solid var(--registry-slate-rule-light); padding: 3px 6px; font: var(--type-2xs)/1.3 var(--registry-mono); }
+  .document-title { font-size: var(--type-subhead); font-weight: 700; line-height: 1.3; margin: 0; padding: 0 16px 14px; }
+  .document-fields { margin: 0; }
+  .document-field { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: baseline; gap: 8px 16px; border-top: 1px solid var(--registry-slate-rule-light); padding: 11px 16px; font-size: var(--type-sm); line-height: 1.45; }
+  .document-field dt { margin: 0; color: var(--registry-muted); }
+  .document-field dd { margin: 0; text-align: right; font-weight: 600; overflow-wrap: anywhere; }
+  .document-footer { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-top: 1px solid var(--registry-slate-rule-light); color: var(--registry-ink); }
+  .document-qr { flex: 0 0 28px; }
+  .document-footer > span { display: grid; gap: 2px; min-width: 0; }
+  .document-footer strong { font-size: var(--type-xs); line-height: 1.4; }
+  .document-hash { color: var(--registry-muted); font: var(--type-2xs)/1.4 var(--registry-mono); overflow-wrap: anywhere; }
+</style>
