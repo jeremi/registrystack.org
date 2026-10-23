@@ -149,7 +149,7 @@ layouts that work from mobile through desktop.
 - `/products/base-registry/`, `/products/evidence-gateway/` and
   `/products/casework/`: component capabilities, boundaries and tutorials.
 - `/pricing/`: implementation and support prices, responsibilities, inquiry and
-  provider details.
+  the open-source self-service option.
 - `/security/` and `/faq/`: questions that affect evaluation and adoption.
 - `/blog/`: published field guides, with historical notices on retired product
   material and an RSS feed at `/rss.xml`.

@@ -92,7 +92,14 @@ for (const viewport of viewports) {
   const label = `${route.name} ${viewport.name}`;
   const page = await browser.newPage({ viewport });
   await page.goto(`http://127.0.0.1:${port}${route.path}`);
+  // Include an expanded answer in the FAQ layout and clipping checks.
+  if (route.name === 'faq') {
+    await page.locator('.faq-item summary').first().click();
+  }
   await page.screenshot({ path: resolve(outputDir, `${route.name}-${viewport.name}.png`), fullPage: true });
+  if (route.name === 'faq') {
+    await page.locator('main > section').nth(1).screenshot({ path: resolve(outputDir, `faq-answers-${viewport.name}.png`) });
+  }
   if (route.name === 'solutions') {
     await page.locator('#services').screenshot({ path: resolve(outputDir, `solutions-services-${viewport.name}.png`) });
   }
