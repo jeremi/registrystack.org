@@ -441,13 +441,59 @@ for (const options of [
   }
 
   // A representative catalogue detail stays honest about availability: the
-  // page is inspectable, while the unpublished file is requested by email.
+  // page is inspectable, while the unpublished file has a complete request
+  // journey whether the inline form is configured or email remains primary.
   await page.goto(`${url}starters/professional-licensing/`);
   if (!await page.locator('main h1').isVisible()) fail('representative professional-licensing starter is missing');
   const starterRequest = page.locator('main .hero a[data-journey="starter-request"]');
-  if (await starterRequest.count() !== 1 || !await starterRequest.isVisible() ||
-      !(await starterRequest.getAttribute('href'))?.startsWith('mailto:contact@registrystack.org?')) {
-    fail('representative starter must offer a visible email request near its introduction');
+  if (await starterRequest.count() !== 1 || !await starterRequest.isVisible()) {
+    fail('representative starter must offer a visible request near its introduction');
+  } else {
+    const requestHref = await starterRequest.getAttribute('href');
+    if (requestHref?.startsWith('mailto:contact@registrystack.org?')) {
+      if (await page.locator('#starter-request-form').count() !== 0) {
+        fail('unconfigured representative starter must keep the email-only request journey');
+      }
+    } else if (requestHref === '#starter-request-form') {
+      await starterRequest.click();
+      const requestPanel = page.locator('#starter-request-form');
+      if (new URL(page.url()).hash !== '#starter-request-form' ||
+          await requestPanel.count() !== 1 || !await requestPanel.isVisible()) {
+        fail('configured representative starter request did not reach its visible form');
+      } else {
+        const form = requestPanel.locator('form[data-starter-request-form]');
+        const email = form.locator('input[name="email"]');
+        const submit = form.locator('button[type="submit"]');
+        const fallback = requestPanel.locator('.starter-request-fallback a[href^="mailto:contact@registrystack.org?"]');
+        const completeForm = await form.count() === 1 && await email.count() === 1 && await submit.count() === 1;
+        if (!completeForm) {
+          fail('configured representative starter must render a complete inline request form');
+        }
+        if (await fallback.count() !== 1 || !await fallback.isVisible()) {
+          fail('configured representative starter must keep a visible email fallback');
+        }
+        if (completeForm) {
+          if (options.javaScriptEnabled === false) {
+            if (!await submit.isDisabled()) {
+              fail('configured representative starter must keep submission disabled without JavaScript');
+            }
+          } else {
+            if (await submit.isDisabled()) {
+              fail('configured representative starter must enable submission after enhancement');
+            }
+            if (await form.evaluate((element) => element.checkValidity())) {
+              fail('configured representative starter must require an email address');
+            }
+            await email.fill('hero-check@example.invalid');
+            if (!await form.evaluate((element) => element.checkValidity())) {
+              fail('configured representative starter must accept valid inline request fields');
+            }
+          }
+        }
+      }
+    } else {
+      fail('representative starter request must use the email or inline form journey');
+    }
   }
   if (await page.locator('main a[download], main a[href$=".zip"]').count()) {
     fail('representative starter must not offer an unpublished zip download');
