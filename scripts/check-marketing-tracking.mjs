@@ -25,6 +25,7 @@ const mainOrigin = 'https://registrystack.org';
 const docsOrigin = 'https://docs.registrystack.org';
 const trackerOrigin = 'https://mautic.example.test';
 const formsOrigin = 'https://forms.example.test';
+const bridgeLoadBlockerUrl = 'https://bridge-load.example.invalid/hold.gif';
 const kioskEndpoint = `${formsOrigin}/form/submit?formId=1&privacy=kiosk`;
 const trackedEndpoint = `${formsOrigin}/form/submit?formId=2&privacy=consented`;
 const desktopViewport = { width: 1280, height: 900 };
@@ -269,6 +270,17 @@ async function configureContext(context, records, {
     const request = route.request();
     const url = new URL(request.url());
 
+    if (url.href === bridgeLoadBlockerUrl && bridgeControl?.loadBlockerGate) {
+      bridgeControl.loadBlockerStarted = true;
+      await bridgeControl.loadBlockerGate.promise;
+      await route.fulfill({
+        status: 200,
+        contentType: 'image/gif',
+        body: Buffer.from('R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=', 'base64'),
+      });
+      return;
+    }
+
     if (url.origin === mainOrigin) {
       if (url.pathname === '/__acceptance/bridge-request') {
         records.bridgeRequests.push(url.searchParams.get('type'));
@@ -320,6 +332,12 @@ async function configureContext(context, records, {
       }
       if (bridgeControl?.instrument && url.pathname === '/tracking-bridge/' && asset) {
         asset.body = asset.body.toString().replace('<head>', `<head>${bridgeRequestProbeScript}`);
+      }
+      if (bridgeControl?.holdBridgeLoad && url.pathname === '/tracking-bridge/' && asset) {
+        asset.body = asset.body.toString().replace(
+          '</body>',
+          `<img src="${bridgeLoadBlockerUrl}" alt="" hidden></body>`,
+        );
       }
       await route.fulfill(asset ? { status: 200, ...asset } : { status: 404, body: 'Not found' });
       return;
@@ -417,6 +435,15 @@ async function waitFor(predicate, message, timeoutMs = 10_000) {
     await new Promise(resolvePromise => setTimeout(resolvePromise, 25));
   }
   assert.fail(message);
+}
+
+async function observeWithin(predicate, timeoutMs = 3_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (await predicate()) return true;
+    await delay(25);
+  }
+  return false;
 }
 
 async function submitForm(page, { email, message = '' }) {
@@ -687,6 +714,114 @@ async function runBridgeRecoveryScenario(browser, engine) {
     await panel.waitFor({ state: 'hidden' });
     assert.deepEqual(records.errors, [], `${engine}: bridge recovery raised a page error.`);
   } finally {
+    await context.close();
+  }
+}
+
+const expectedBrokerReadyBeforeLoadState = Object.freeze({
+  bridgeLoads: 1,
+  bridgeFrames: 1,
+  readRequests: 1,
+  confirmedReadResponses: 1,
+  panelHidden: true,
+  errorHidden: true,
+  loadBlockerPending: true,
+  nativeRequests: 0,
+  pageviews: 0,
+  formSubmissions: 0,
+  pageErrors: 0,
+  blockedRequests: 0,
+});
+
+async function runBrokerReadyBeforeLoadScenario(browser, engine, surface) {
+  console.log(`${engine}: checking ${surface} broker readiness before frame load.`);
+  const records = createRecords(`${engine}-${surface}-broker-ready-before-load`);
+  const loadBlockerGate = deferred();
+  const bridgeControl = {
+    holdBridgeLoad: true,
+    instrument: true,
+    loadBlockerGate,
+    loadBlockerStarted: false,
+    loadBlockerReleased: false,
+  };
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const seededAt = Date.now();
+  const rejected = {
+    version: 2,
+    choice: 'rejected',
+    generation: '00000000-0000-4000-8000-000000000005',
+    expiresAt: seededAt + 300_000,
+    revision: seededAt,
+  };
+  try {
+    await context.addInitScript(({ bridgeOrigin, expectedGeneration }) => {
+      if (window.top !== window) return;
+      window.__acceptanceConfirmedRejectedReads = 0;
+      window.addEventListener('message', event => {
+        const bridgeFrame = document.querySelector(`iframe[src="${bridgeOrigin}/tracking-bridge/"]`);
+        const message = event.data;
+        const state = message?.state;
+        if (
+          event.origin !== bridgeOrigin ||
+          event.source !== bridgeFrame?.contentWindow ||
+          message?.protocol !== 'registrystack-tracking' ||
+          message?.version !== 2 ||
+          message?.ok !== true ||
+          Object.keys(message).sort().join(',') !== 'id,ok,protocol,state,version' ||
+          state?.choice !== 'rejected' ||
+          state?.generation !== expectedGeneration ||
+          Object.keys(state).sort().join(',') !== 'choice,expiresAt,generation,revision'
+        ) return;
+        window.__acceptanceConfirmedRejectedReads += 1;
+      }, true);
+    }, { bridgeOrigin: mainOrigin, expectedGeneration: rejected.generation });
+    await configureContext(context, records, { bridgeControl });
+    const sharedStorage = await context.newPage();
+    await sharedStorage.goto(`${mainOrigin}/__acceptance/storage-seed`);
+    await sharedStorage.evaluate(([key, value]) => {
+      localStorage.setItem(key, JSON.stringify(value));
+    }, [consentKey, rejected]);
+    await sharedStorage.close();
+
+    const page = await context.newPage();
+    const pageUrl = surface === 'main'
+      ? `${mainOrigin}/solutions/licensing/`
+      : `${docsOrigin}/start/concepts/`;
+    const panel = page.locator(surface === 'main'
+      ? '[data-tracking-preferences]'
+      : '[data-registry-shared-tracking]');
+    const errorMessage = panel.locator('[data-tracking-error]');
+    await page.goto(pageUrl, { waitUntil: 'domcontentloaded' });
+    await waitFor(
+      () => bridgeControl.loadBlockerStarted,
+      `${engine}: ${surface} bridge did not request its load blocker.`,
+    );
+    const readObserved = await observeWithin(
+      async () => records.bridgeRequests.includes('read') && await page.evaluate(
+        () => window.__acceptanceConfirmedRejectedReads === 1,
+      ),
+    );
+    if (readObserved) await panel.waitFor({ state: 'hidden', timeout: 5_000 });
+
+    return {
+      bridgeLoads: records.bridgeLoads,
+      bridgeFrames: await page.locator(`iframe[src="${mainOrigin}/tracking-bridge/"]`).count(),
+      readRequests: records.bridgeRequests.filter(type => type === 'read').length,
+      confirmedReadResponses: await page.evaluate(
+        () => window.__acceptanceConfirmedRejectedReads,
+      ),
+      panelHidden: await panel.evaluate(element => element.hidden),
+      errorHidden: await errorMessage.evaluate(element => element.hidden),
+      loadBlockerPending: !bridgeControl.loadBlockerReleased,
+      nativeRequests: records.nativeRequests.length,
+      pageviews: records.pageviews.length,
+      formSubmissions: records.formSubmissions.length,
+      pageErrors: records.errors.length,
+      blockedRequests: records.blocked.length,
+    };
+  } finally {
+    bridgeControl.loadBlockerReleased = true;
+    loadBlockerGate.release();
     await context.close();
   }
 }
@@ -1349,6 +1484,18 @@ async function runEngine(engine, browserType) {
   const browser = await browserType.launch();
   const records = createRecords(engine);
   try {
+    const brokerReadyBeforeLoadResults = {
+      main: await runBrokerReadyBeforeLoadScenario(browser, engine, 'main'),
+      docs: await runBrokerReadyBeforeLoadScenario(browser, engine, 'docs'),
+    };
+    assert.deepEqual(
+      brokerReadyBeforeLoadResults,
+      {
+        main: expectedBrokerReadyBeforeLoadState,
+        docs: expectedBrokerReadyBeforeLoadState,
+      },
+      `${engine}: broker readiness waited for the frame load event.`,
+    );
     if (engine === 'chromium') {
       const pendingBridgeModuleResults = {
         main: await runPendingBridgeModuleScenario(browser, engine, 'main'),
