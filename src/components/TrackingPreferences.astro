@@ -16,17 +16,17 @@ const { mauticUrl, canonicalUrl } = Astro.props;
   hidden
 >
   <div class="tracking-preferences-copy">
-    <h2 id="tracking-preferences-title" tabindex="-1">Cookies on this website</h2>
+    <h2 id="tracking-preferences-title" tabindex="-1">Cookies on Registry Stack</h2>
     <p>
-      We use optional cookies to understand how you use our website and which services interest
-      you. If you contact us, we may link this activity to your enquiry. You can change your choice at any time.
+      We use optional cookies to understand how you use our website and documentation.
+      If you contact us, we may link this activity to your enquiry. You can change your choice at any time.
       <a href="/privacy/">Privacy policy</a>.
     </p>
     <p data-tracking-signal hidden>
       Your browser is asking sites not to track you, so tracking stays off.
     </p>
     <p class="tracking-preferences-error" data-tracking-error role="alert" hidden>
-      We could not save that choice. Tracking remains off.
+      Shared tracking is unavailable. Tracking remains off on this page. You can still send a request.
     </p>
   </div>
   <div class="tracking-preferences-actions">
@@ -37,15 +37,10 @@ const { mauticUrl, canonicalUrl } = Astro.props;
 
 <script>
   import {
-    CONSENT_STORAGE_KEY,
     buildMauticPageview,
-    readTrackingPreference,
-    rejectMauticTracking,
-    revokeMauticTracking,
-    saveTrackingPreference,
-    startMauticTracking,
+    getSharedTrackingClient,
     trackingDeniedByBrowser,
-  } from '../lib/marketing-tracking';
+  } from '../lib/shared-tracking-client.mjs';
 
   const panel = document.querySelector<HTMLElement>('[data-tracking-preferences]');
   const acceptButton = panel?.querySelector<HTMLButtonElement>('[data-tracking-accept]');
@@ -66,19 +61,7 @@ const { mauticUrl, canonicalUrl } = Astro.props;
       referrer: document.referrer,
     });
     const browserDeniesTracking = trackingDeniedByBrowser();
-    let trackingStarted = false;
-
-    const startTracking = () => {
-      const started = startMauticTracking(mauticUrl, pageview);
-      trackingStarted ||= started;
-      return started;
-    };
-
-    const showError = () => {
-      errorMessage.hidden = false;
-    };
     const openPreferences = (moveFocus = false) => {
-      errorMessage.hidden = true;
       signalMessage.hidden = !browserDeniesTracking;
       acceptButton.disabled = browserDeniesTracking;
       panel.hidden = false;
@@ -87,6 +70,36 @@ const { mauticUrl, canonicalUrl } = Astro.props;
     const closePreferences = () => {
       panel.hidden = true;
     };
+    const showError = () => {
+      openPreferences();
+      errorMessage.hidden = false;
+    };
+    let sentGeneration: string | null = null;
+    let pendingGeneration: string | null = null;
+    const client = getSharedTrackingClient({ onFailure: showError });
+    const renderState = (state: typeof client.state) => {
+      if (state.choice === 'accepted' && !browserDeniesTracking) {
+        closePreferences();
+        if (state.generation !== sentGeneration && state.generation !== pendingGeneration) {
+          const generation = state.generation;
+          pendingGeneration = generation;
+          void client.pageview(pageview).then(() => {
+            if (client.state.choice === 'accepted' && client.state.generation === generation) {
+              sentGeneration = generation;
+            }
+          }).catch(() => {
+            if (client.state.choice === 'accepted' && client.state.generation === generation) showError();
+          }).finally(() => {
+            if (pendingGeneration === generation) pendingGeneration = null;
+          });
+        }
+      } else if (state.choice === null && !browserDeniesTracking) {
+        openPreferences();
+      } else {
+        closePreferences();
+      }
+    };
+    client.subscribe(renderState);
 
     for (const control of document.querySelectorAll<HTMLElement>('[data-tracking-preferences-open]')) {
       const container = control.closest<HTMLElement>('[data-tracking-preferences-control]');
@@ -94,50 +107,30 @@ const { mauticUrl, canonicalUrl } = Astro.props;
       control.addEventListener('click', () => openPreferences(true));
     }
 
-    acceptButton.addEventListener('click', () => {
+    acceptButton.addEventListener('click', async () => {
       errorMessage.hidden = true;
-      if (browserDeniesTracking || !saveTrackingPreference('accepted')) {
+      if (browserDeniesTracking) {
         showError();
         return;
       }
-      if (!startTracking()) {
-        saveTrackingPreference('rejected');
-        revokeMauticTracking();
+      try {
+        renderState(await client.choose('accepted'));
+      } catch {
         showError();
         return;
       }
-      closePreferences();
     });
 
-    rejectButton.addEventListener('click', () => {
+    rejectButton.addEventListener('click', async () => {
       errorMessage.hidden = true;
-      const rejection = rejectMauticTracking();
-      if (rejection === 'failed') {
+      try {
+        renderState(await client.choose('rejected'));
+      } catch {
         showError();
         return;
       }
-      if (rejection === 'reload') {
-        window.location.reload();
-        return;
-      }
-      closePreferences();
     });
-
-    window.addEventListener('storage', (event) => {
-      if (event.key !== CONSENT_STORAGE_KEY || !trackingStarted) return;
-      if (readTrackingPreference() === 'accepted') return;
-      revokeMauticTracking();
-      window.location.reload();
-    });
-
-    const currentPreference = readTrackingPreference();
-    if (currentPreference === 'accepted') {
-      if (!startTracking()) openPreferences();
-    } else {
-      // This also clears an expired or denied Mautic identity before any new choice.
-      startTracking();
-      if (!currentPreference && !browserDeniesTracking) openPreferences();
-    }
+    void client.read().then(renderState).catch(showError);
   }
 </script>
 

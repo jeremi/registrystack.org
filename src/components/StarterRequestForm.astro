@@ -150,7 +150,8 @@ const recoveryHref = requestHref ?? (requestFromUrl
     submitStarterRequest,
   } from '../lib/starter-request';
   import { contactRecoveryHref } from '../data/contact';
-  import { getConsentedDeviceId } from '../lib/marketing-tracking';
+  import { getConsentedTrackingAssociation } from '../lib/marketing-tracking';
+  import { getSharedTrackingClient } from '../lib/shared-tracking-client.mjs';
 
   for (const panel of document.querySelectorAll<HTMLElement>('[data-request-panel]')) {
     const form = panel.querySelector<HTMLFormElement>('[data-starter-request-form]');
@@ -222,10 +223,23 @@ const recoveryHref = requestHref ?? (requestFromUrl
       submitting.hidden = false;
       success.hidden = true;
       error.hidden = true;
+      const controller = new AbortController();
+      let unsubscribe: (() => void) | undefined;
 
       try {
         const type = isContactRequestType(form.dataset.requestType) ? form.dataset.requestType : undefined;
         const sourcePage = requestSourcePage(form.dataset.sourcePage) ?? '/contact/';
+        const association = type !== 'privacy' && trackedEndpoint && import.meta.env.PUBLIC_MAUTIC_URL?.trim()
+          ? await getConsentedTrackingAssociation()
+          : undefined;
+        if (association) {
+          const client = getSharedTrackingClient();
+          const checkConsent = (state: typeof client.state) => {
+            if (state.choice !== 'accepted' || state.generation !== association.generation) controller.abort();
+          };
+          unsubscribe = client.subscribe(checkConsent);
+          checkConsent(client.state);
+        }
         await submitStarterRequest(endpoint, {
           email: String(data.get('email') ?? '').trim(),
           organization: String(data.get('organization') ?? '').trim(),
@@ -236,7 +250,7 @@ const recoveryHref = requestHref ?? (requestFromUrl
           sourcePage,
           requestType: type,
           requestContext: form.dataset.requestContext,
-        }, import.meta.env.PUBLIC_MAUTIC_URL?.trim() ? getConsentedDeviceId() : undefined, trackedEndpoint);
+        }, association?.deviceId, trackedEndpoint, { signal: controller.signal });
         submitting.hidden = true;
         success.hidden = false;
         recovery?.classList.remove('show-recovery');
@@ -248,6 +262,7 @@ const recoveryHref = requestHref ?? (requestFromUrl
         recovery?.classList.add('show-recovery');
         error.focus();
       } finally {
+        unsubscribe?.();
         submissionInProgress = false;
         form.removeAttribute('aria-busy');
       }

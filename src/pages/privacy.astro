@@ -20,8 +20,10 @@ const pageDescription =
           <h1 id="privacy-hero-title">Privacy policy</h1>
           <p class="hero-lead">
             This page explains what registrystack.org collects, why, and what it does not do. It
-            covers this website only. The hosted lab at lab.registrystack.org and the docs site at
-            docs.registrystack.org are separate services with their own policies.
+            covers this website and the optional visit tracking shared with docs.registrystack.org.
+            The <a href="https://docs.registrystack.org/privacy/">documentation privacy policy</a>
+            describes its other processing. The hosted lab at lab.registrystack.org is a separate
+            service with its own policy and is outside this shared tracking choice.
           </p>
         </div>
       </div>
@@ -57,7 +59,8 @@ const pageDescription =
           <h3>Optional visit tracking</h3>
           <p>
             When optional tracking is enabled, we ask before loading our self-hosted Mautic
-            tracker. If you accept tracking, it records the pages you visit on this website,
+            tracker. If you accept tracking, it records the public pages you visit on this website
+            and the canonical documentation at docs.registrystack.org,
             referring sites, campaign labels, visit times, and browser and device information.
             We use this history to understand interest in our services. If you then submit a
             non-privacy website enquiry or starter access request, we can link your current visits to the
@@ -70,16 +73,26 @@ const pageDescription =
             Tracking preferences in the footer to withdraw your consent or change your choice.
             We also respect browser Do Not Track and Global Privacy Control signals. We
             remember your choice in this browser for six months. Withdrawing stops further
-            tracking and removes this website&rsquo;s tracking identifiers; it does not itself
+            tracking across the website and documentation and removes the shared browser
+            identifier; it does not itself
             erase information already received. Use our <a href={contactHref('privacy', 'delete tracked information')}>privacy contact form</a> if you want that information deleted.
           </p>
           <p>
-            Mautic uses cookies and browser storage to recognize a consenting browser. We remove
+            Your choice applies to the main website and documentation in this browser. A small
+            frame hosted at registrystack.org checks and stores that shared choice. It loads no
+            Mautic tracker before consent. After acceptance, the same frame uses cookies and
+            browser storage to recognize the consenting browser across both sites. We remove
             these identifiers when tracking is rejected, or on your next visit after the
             remembered choice expires.
             Page URLs sent to Mautic exclude fragments and query parameters except for a limited
             set of campaign labels. We do not send form contents or email addresses in tracking
             URLs, and we do not share this history with advertising networks.
+          </p>
+          <p>
+            The expanded shared choice requires a fresh acceptance, even if you previously
+            accepted website-only tracking. Documentation development pages and versioned
+            archives do not participate. If your browser blocks the shared preference service,
+            optional tracking stays off and forms remain available without visit-history linking.
           </p>
           <h3>Website enquiries</h3>
           <p>

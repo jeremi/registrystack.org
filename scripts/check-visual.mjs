@@ -117,9 +117,10 @@ for (const viewport of viewports) {
   const metrics = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     clientWidth: document.documentElement.clientWidth,
-    // Closed navigation links and email recovery before a form error are
-    // intentionally hidden, not clipped.
+    // Hidden preference controls, closed navigation links, and email recovery
+    // before a form error do not participate in the visible layout.
     clippedButtons: [...document.querySelectorAll('a, button')].filter((element) => {
+      if (element.closest('[hidden]')) return false;
       if (element.closest('details:not([open])')) return false;
       if (element.closest('[data-form-enhanced] .starter-request-fallback:not(.show-recovery)')) return false;
       const rect = element.getBoundingClientRect();

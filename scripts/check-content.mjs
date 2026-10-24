@@ -425,7 +425,7 @@ if (!productClosing || !productClosing[0].includes('href="/pricing/"') || produc
 }
 
 // 4. Every non-home marketing page hands off to the docs for the "how".
-// Legal and error pages end on their own terms, not a marketing handoff.
+// Legal, error, and tracking service documents have no marketing handoff.
 const handoffExempt = new Set([
   'src/pages/index.astro',
   'src/pages/pricing.astro',
@@ -435,6 +435,7 @@ const handoffExempt = new Set([
   'src/pages/terms.astro',
   'src/pages/imprint.astro',
   'src/pages/404.astro',
+  'src/pages/tracking-bridge.astro',
 ]);
 for (const relativePath of sweptFiles) {
   if (!relativePath.startsWith('src/pages/') || handoffExempt.has(relativePath)) continue;
