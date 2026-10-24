@@ -119,16 +119,17 @@ and request journeys are covered by tests.
 ### Professional licensing starter requests
 
 The inline request form is enabled only for the `professional-licensing`
-starter. Set this public build variable to the HTTPS request-service route:
+starter. Set this public build variable to the exact HTTPS route for the
+unlinked native Mautic form:
 
 ```sh
-PUBLIC_STARTER_REQUEST_ENDPOINT=https://requests.example.org/starter-request
+PUBLIC_STARTER_REQUEST_ENDPOINT='https://mautic.example.org/form/submit?formId=1&privacy=kiosk'
 ```
 
 When the variable is unset, the site keeps the existing email request links.
-The browser submits only to this request service; it does not contact Mautic or
-load Mautic scripts. See [server/README.md](server/README.md) for the service,
-Mautic form, deployment, and verification setup.
+The form works without accepting visit tracking. See
+[server/README.md](server/README.md) for the two Mautic forms, narrow proxy
+routes, deployment, and verification setup.
 
 All general contact links use `src/data/contact.ts`. `describeServiceHref`
 invites the service, its users and the result needed. `askQuestionHref` supports
@@ -196,8 +197,12 @@ not proof of tutorial completion or a submitted, qualified inquiry.
 ## Optional request capture and visit tracking
 
 `PUBLIC_STARTER_REQUEST_ENDPOINT` enables the professional licensing request
-form. Its separate service stores requests in Mautic while preserving the
-email fallback. See [submission service setup](server/README.md).
+form through the unlinked native Mautic form while preserving the email
+fallback. `PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT` optionally names a second,
+same-origin native form that links an opted-in visitor's existing Mautic device
+to the request. Both variables contain a full HTTPS
+`/form/submit?formId=...&privacy=...` URL. See [native form and proxy
+setup](server/README.md).
 
 `PUBLIC_MAUTIC_URL` enables an optional website tracking choice. Leave it unset
 to omit the tracker and preference UI. With it configured as an HTTPS origin,
@@ -214,8 +219,8 @@ analytics and covers outbound links to documentation, demos and GitHub.
 
 Follow [Mautic tracking operations](server/mautic-tracking.md) before activation,
 including exact-origin CORS, the tracking-cookie proxy boundary and disabled
-email. The workflow reads both public settings from repository variables.
-This source change does not activate either service by itself.
+email. The workflow reads all three public settings from repository variables.
+This source change does not publish the forms or load the proxy configuration.
 
 `npm run check:marketing-tracking` verifies the configured browser flow with a
 deterministic tracking server. The optional real-Mautic acceptance command in

@@ -2,26 +2,53 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { submitStarterRequest, starterRequestEndpoint } from '../src/lib/starter-request.ts';
 
-const endpoint = 'https://forms.example.org/starter-request';
+const kioskEndpoint = 'https://forms.example.org/form/submit?formId=1&privacy=kiosk';
+const trackedEndpoint = 'https://forms.example.org/form/submit?formId=2&privacy=consented';
 const input = { email: ' reader@example.org ', organization: ' Office ', role: ' Steward ', message: ' A licence register. ' };
-const result = { ok: true };
 
-test('only an explicit HTTPS submission service endpoint is accepted', () => {
-  assert.equal(starterRequestEndpoint(''), undefined);
-  assert.equal(starterRequestEndpoint(` ${endpoint} `), endpoint);
-  for (const value of ['http://forms.example.org/starter-request', 'https://user:password@forms.example.org/starter-request', 'https://forms.example.org/form/submit?formId=7', 'https://forms.example.org/other', `${endpoint}?email=someone@example.org`, `${endpoint}#fragment`]) {
-    assert.throws(() => starterRequestEndpoint(value), /form endpoint/i);
-  }
+function nativeSuccess(body, overrides = {}) {
+  return Response.json({
+    success: 1,
+    results: {
+      email: body.get('mauticform[email]'),
+      organization: body.get('mauticform[organization]'),
+      role: body.get('mauticform[role]'),
+      message: body.get('mauticform[message]'),
+      starter_id: body.get('mauticform[starter_id]'),
+      source_page: body.get('mauticform[source_page]'),
+      request_token: body.get('mauticform[request_token]'),
+      ...overrides,
+    },
+  });
+}
+
+test('accepts only an exact HTTPS native form endpoint for its mode', () => {
+  assert.equal(starterRequestEndpoint('', 'kiosk'), undefined);
+  assert.equal(starterRequestEndpoint(` ${kioskEndpoint} `), kioskEndpoint);
+  assert.equal(starterRequestEndpoint(trackedEndpoint, 'consented'), trackedEndpoint);
+  for (const value of [
+    'http://forms.example.org/form/submit?formId=1&privacy=kiosk',
+    'https://user:password@forms.example.org/form/submit?formId=1&privacy=kiosk',
+    'https://forms.example.org/form/submit?formId=0&privacy=kiosk',
+    'https://forms.example.org/form/submit?formId=1.5&privacy=kiosk',
+    'https://forms.example.org/form/submit?formId=1&privacy=consented',
+    'https://forms.example.org/form/submit?formId=1&privacy=kiosk&extra=1',
+    'https://forms.example.org/form/submit?formId=1&formId=2&privacy=kiosk',
+    'https://forms.example.org/form/submit?formId=1&privacy=kiosk&privacy=kiosk',
+    'https://forms.example.org/form/submit?privacy=kiosk',
+    'https://forms.example.org/other?formId=1&privacy=kiosk',
+    `${kioskEndpoint}#fragment`,
+  ]) assert.throws(() => starterRequestEndpoint(value), /form endpoint/i, value);
 });
 
-test('sends only request fields with no cookies, referrer, redirect or tracking identity', async (t) => {
+test('posts native Mautic fields with fixed provenance and no browser credentials or referrer', async (t) => {
   let sent;
   t.mock.method(globalThis, 'fetch', async (url, options) => {
     sent = { url, options };
-    return Response.json(result);
+    return nativeSuccess(options.body);
   });
-  await submitStarterRequest(endpoint, input);
-  assert.equal(sent.url, endpoint);
+  await submitStarterRequest(kioskEndpoint, input);
+  assert.equal(sent.url, `${kioskEndpoint}&ajax=1`);
   assert.equal(sent.options.method, 'POST');
   assert.equal(sent.options.credentials, 'omit');
   assert.equal(sent.options.mode, 'cors');
@@ -29,13 +56,61 @@ test('sends only request fields with no cookies, referrer, redirect or tracking 
   assert.equal(sent.options.referrerPolicy, 'no-referrer');
   assert.equal(sent.options.cache, 'no-store');
   assert.ok(sent.options.signal instanceof AbortSignal);
-  assert.deepEqual(Object.fromEntries(sent.options.body), {
-    email: 'reader@example.org',
-    organization: 'Office',
-    role: 'Steward',
-    message: 'A licence register.',
-    website: '',
+  assert.deepEqual(sent.options.headers, {
+    Accept: 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
   });
+  assert.deepEqual(Object.fromEntries(sent.options.body), {
+    'mauticform[email]': 'reader@example.org',
+    'mauticform[organization]': 'Office',
+    'mauticform[role]': 'Steward',
+    'mauticform[message]': 'A licence register.',
+    'mauticform[starter_id]': 'professional-licensing',
+    'mauticform[source_page]': '/starters/professional-licensing/',
+    'mauticform[request_token]': sent.options.body.get('mauticform[request_token]'),
+    'mauticform[website]': '',
+    'mauticform[formId]': '1',
+  });
+  assert.match(sent.options.body.get('mauticform[request_token]'), /^[0-9a-f-]{36}$/);
+});
+
+test('uses consented form only for a configured same-origin distinct form and valid device', async (t) => {
+  const sent = [];
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    sent.push({ url, body: options.body });
+    return nativeSuccess(options.body);
+  });
+  const device = 'abcdefghij0123456789abc';
+  await submitStarterRequest(kioskEndpoint, input, device, trackedEndpoint);
+  assert.equal(sent[0].url, `${trackedEndpoint}&ajax=1`);
+  assert.equal(sent[0].body.get('mauticform[formId]'), '2');
+  assert.equal(sent[0].body.get('mautic_device_id'), device);
+  assert.equal(sent[0].body.has('tracking_consent'), false);
+});
+
+test('missing tracked configuration or unusable identity safely falls back to kiosk', async (t) => {
+  const sent = [];
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    sent.push({ url, body: options.body });
+    return nativeSuccess(options.body);
+  });
+  for (const [device, tracked] of [
+    [undefined, trackedEndpoint], ['', trackedEndpoint], ['not-a-device', trackedEndpoint],
+    ['A'.repeat(23), trackedEndpoint], ['abcdefghij0123456789abc', undefined],
+  ]) await submitStarterRequest(kioskEndpoint, input, device, tracked);
+  assert.equal(sent.length, 5);
+  assert.ok(sent.every(request => request.url === `${kioskEndpoint}&ajax=1`));
+  assert.ok(sent.every(request => request.body.get('mauticform[formId]') === '1' && !request.body.has('mautic_device_id')));
+});
+
+test('rejects inconsistent native form configuration before validation or network access', async (t) => {
+  const fetch = t.mock.method(globalThis, 'fetch', async () => { throw new Error('unexpected network request'); });
+  for (const tracked of [
+    'https://other.example.org/form/submit?formId=2&privacy=consented',
+    'https://forms.example.org/form/submit?formId=1&privacy=consented',
+    'https://forms.example.org/form/submit?formId=2&privacy=kiosk',
+  ]) await assert.rejects(submitStarterRequest(kioskEndpoint, { ...input, email: '' }, 'abcdefghij0123456789abc', tracked), /form endpoint|configuration/i);
+  assert.equal(fetch.mock.calls.length, 0);
 });
 
 test('invalid or oversized details and a filled honeypot never reach Mautic', async (t) => {
@@ -45,58 +120,38 @@ test('invalid or oversized details and a filled honeypot never reach Mautic', as
     { ...input, email: `${'x'.repeat(245)}@example.org` },
     { ...input, organization: 'x'.repeat(201) }, { ...input, role: 'x'.repeat(201) },
     { ...input, message: 'x'.repeat(2001) }, { ...input, website: 'https://spam.example.org' },
-  ]) await assert.rejects(submitStarterRequest(endpoint, bad));
+  ]) await assert.rejects(submitStarterRequest(kioskEndpoint, bad));
   assert.equal(fetch.mock.calls.length, 0);
 });
 
-test('a currently consented device is sent only in the request body', async (t) => {
-  let sent;
-  t.mock.method(globalThis, 'fetch', async (url, options) => {
-    sent = { url, options };
-    return Response.json(result);
-  });
-  const device = 'abcdefghij0123456789abc';
-  await submitStarterRequest(endpoint, input, device);
-  assert.equal(sent.url, endpoint);
-  assert.equal(sent.options.body.get('tracking_consent'), 'granted');
-  assert.equal(sent.options.body.get('mautic_device_id'), device);
-  assert.equal(sent.options.credentials, 'omit');
-  assert.equal(sent.options.referrerPolicy, 'no-referrer');
-});
-
-test('missing or unusable tracking identity never prevents a request', async (t) => {
-  const sent = [];
-  t.mock.method(globalThis, 'fetch', async (_url, options) => {
-    sent.push(options.body);
-    return Response.json(result);
-  });
-  for (const device of [undefined, '', 'not-a-device', 'A'.repeat(23)]) {
-    await submitStarterRequest(endpoint, input, device);
-  }
-  assert.equal(sent.length, 4);
-  assert.ok(sent.every(body => !body.has('tracking_consent') && !body.has('mautic_device_id')));
-});
-
-test('only a saved matching submission is success, not an arbitrary HTTP 200', async (t) => {
+test('requires exact saved native results and never retries a possibly saved request', async (t) => {
   const failures = [
-    () => Response.json({ ok: false }),
-    () => Response.json({ success: 1 }),
-    () => Response.json({ ok: 'true' }),
-    () => Response.json(result, { status: 503 }),
+    () => Response.json({ success: 0, results: {} }),
+    () => Response.json({ success: '1', results: {} }),
+    body => nativeSuccess(body, { email: 'other@example.org' }),
+    body => nativeSuccess(body, { organization: undefined }),
+    body => nativeSuccess(body, { request_token: 'different' }),
+    () => Response.json({ success: 1, results: {}, validationErrors: ['bad'] }),
+    () => Response.json({ success: 1, results: {}, errorMessage: 'bad' }),
+    body => new Response(JSON.stringify({ success: 1, results: { email: body.get('mauticform[email]') } }), { status: 503, headers: { 'content-type': 'application/json' } }),
     () => new Response('<html>Sign in</html>', { headers: { 'content-type': 'text/html' } }),
     () => new Response('{', { headers: { 'content-type': 'application/json' } }),
     () => { throw new TypeError('Failed to fetch'); },
   ];
   for (const failure of failures) {
-    const mock = t.mock.method(globalThis, 'fetch', failure);
-    await assert.rejects(submitStarterRequest(endpoint, input));
+    const mock = t.mock.method(globalThis, 'fetch', async (_url, options) => failure(options.body));
+    await assert.rejects(submitStarterRequest(kioskEndpoint, input));
     assert.equal(mock.mock.calls.length, 1, 'must not retry a possibly saved request');
     mock.mock.restore();
   }
 });
 
-test('a valid response does not render server markup or follow a supplied redirect', async (t) => {
-  const fetch = t.mock.method(globalThis, 'fetch', async () => Response.json({ ...result, successMessage: '<script>bad()</script>', redirect: 'https://unexpected.example.org/' }));
-  assert.equal(await submitStarterRequest(endpoint, input), undefined);
+test('ignores native success markup and redirects after exact result verification', async (t) => {
+  const fetch = t.mock.method(globalThis, 'fetch', async (_url, options) => {
+    const response = nativeSuccess(options.body);
+    const payload = await response.json();
+    return Response.json({ ...payload, successMessage: '<script>bad()</script>', redirect: 'https://unexpected.example.org/' });
+  });
+  assert.equal(await submitStarterRequest(kioskEndpoint, input), undefined);
   assert.equal(fetch.mock.calls.length, 1);
 });

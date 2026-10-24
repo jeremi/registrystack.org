@@ -1,11 +1,12 @@
 ---
 interface Props {
   endpoint: string;
+  trackedEndpoint?: string;
   requestHref: string;
   contactEmail: string;
 }
 
-const { endpoint, requestHref, contactEmail } = Astro.props;
+const { endpoint, trackedEndpoint, requestHref, contactEmail } = Astro.props;
 ---
 
 {endpoint && (
@@ -16,7 +17,7 @@ const { endpoint, requestHref, contactEmail } = Astro.props;
       <p>Tell us where to send the configuration. You can also add context so our team can understand what you are planning.</p>
     </div>
 
-    <form data-starter-request-form data-endpoint={endpoint} aria-describedby="starter-request-privacy">
+    <form data-starter-request-form data-endpoint={endpoint} data-tracked-endpoint={trackedEndpoint} aria-describedby="starter-request-privacy">
       <fieldset disabled data-starter-request-fields>
         <div class="starter-request-fields">
           <label>
@@ -74,6 +75,7 @@ const { endpoint, requestHref, contactEmail } = Astro.props;
     const success = form.querySelector<HTMLElement>('[data-starter-request-success]');
     const error = form.querySelector<HTMLElement>('[data-starter-request-error]');
     const endpoint = form.dataset.endpoint;
+    const trackedEndpoint = form.dataset.trackedEndpoint;
 
     if (!fieldset || !submitting || !success || !error || !endpoint) continue;
 
@@ -100,7 +102,7 @@ const { endpoint, requestHref, contactEmail } = Astro.props;
           role: String(data.get('role') ?? '').trim(),
           message: String(data.get('message') ?? '').trim(),
           website: String(data.get('website') ?? '').trim(),
-        }, import.meta.env.PUBLIC_MAUTIC_URL?.trim() ? getConsentedDeviceId() : undefined);
+        }, import.meta.env.PUBLIC_MAUTIC_URL?.trim() ? getConsentedDeviceId() : undefined, trackedEndpoint);
         submitting.hidden = true;
         success.hidden = false;
         success.focus();

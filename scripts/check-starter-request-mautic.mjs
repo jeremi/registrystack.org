@@ -9,7 +9,6 @@ import { dirname, extname, join, resolve, sep } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { createStarterRequestServer } from '../server/starter-request.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const container = process.env.MAUTIC_TEST_CONTAINER;
@@ -108,12 +107,15 @@ const trackingRequests = [];
 const trackingProxy = createHttpsServer(tls, async (request, response) => {
   try {
     const incomingUrl = new URL(request.url, 'https://127.0.0.1');
+    const privacyMode = incomingUrl.searchParams.get('privacy');
     const body = request.method === 'GET' || request.method === 'HEAD' ? undefined : await requestBody(request);
     const recordedRequest = {
       method: request.method,
       path: `${incomingUrl.pathname}${incomingUrl.search}`,
       body: body?.toString('utf8') ?? '',
       hadCookie: Boolean(request.headers.cookie),
+      privacyMode,
+      dnt: request.headers.dnt ?? null,
       status: null,
     };
     trackingRequests.push(recordedRequest);
@@ -123,6 +125,8 @@ const trackingProxy = createHttpsServer(tls, async (request, response) => {
       for (const item of Array.isArray(value) ? value : [value]) headers.append(name, item);
     }
     headers.set('x-forwarded-proto', 'https');
+    if (incomingUrl.pathname === '/form/submit' && privacyMode === 'kiosk') headers.set('dnt', '1');
+    recordedRequest.forwardedDnt = headers.get('dnt');
     const upstream = await fetch(new URL(request.url, mauticUrl), {
       method: request.method,
       headers,
@@ -136,7 +140,25 @@ const trackingProxy = createHttpsServer(tls, async (request, response) => {
         responseHeaders[name] = value;
       }
     });
+    if (request.headers.origin === origin) {
+      responseHeaders['access-control-allow-origin'] = origin;
+      responseHeaders.vary = responseHeaders.vary ? `${responseHeaders.vary}, Origin` : 'Origin';
+    }
     let responseBody = Buffer.from(await upstream.arrayBuffer());
+    recordedRequest.responseContentType = upstream.headers.get('content-type');
+    if (incomingUrl.pathname === '/form/submit' && responseHeaders['content-type']?.includes('application/json')) {
+      try {
+        const payload = JSON.parse(responseBody.toString('utf8'));
+        recordedRequest.responseShape = {
+          success: payload?.success,
+          resultKeys: payload?.results && typeof payload.results === 'object' ? Object.keys(payload.results).sort() : [],
+          hasValidationErrors: payload?.validationErrors !== undefined,
+          hasErrorMessage: payload?.errorMessage !== undefined,
+        };
+      } catch {
+        recordedRequest.responseShape = { malformedJson: true };
+      }
+    }
     if (incomingUrl.pathname === '/mtc.js') {
       // Mautic builds tracking URLs without a port. Production uses standard HTTPS/443;
       // retain this fixture's ephemeral loopback port without changing its event data.
@@ -160,35 +182,8 @@ assert.equal(hitQueueCount(), 0, 'The isolated Mautic hit queue must be empty be
 const before = stats();
 assert.equal(before.formId, configured.formId);
 assert.equal(before.trackedFormId, configured.trackedFormId);
-const upstreamCookies = [];
-const relaySubmissions = [];
-const relay = createStarterRequestServer({
-  mauticBaseUrl: mauticUrl.origin,
-  mauticFormId: before.formId,
-  mauticTrackedFormId: before.trackedFormId,
-  websiteOrigin: origin, allowLoopbackWebsiteOrigin: true,
-  fetch: async (url, options) => {
-    const body = new URLSearchParams(options.body);
-    const tracked = body.get('mauticform[formId]') === String(before.trackedFormId);
-    assert.equal(options.headers.DNT, tracked ? undefined : '1');
-    assert.deepEqual(Object.keys(options.headers).sort(), tracked
-      ? ['Accept', 'Content-Type', 'User-Agent']
-      : ['Accept', 'Content-Type', 'DNT', 'User-Agent']);
-    assert.equal(options.headers['User-Agent'], tracked ? browserUserAgent : 'RegistryStack-Starter-Request/1.0');
-    assert.equal(body.has('mautic_device_id'), tracked);
-    relaySubmissions.push({
-      formId: body.get('mauticform[formId]'),
-      deviceId: body.get('mautic_device_id'),
-      email: body.get('mauticform[email]'),
-    });
-    const result = await fetch(url, options);
-    upstreamCookies.push(...result.headers.getSetCookie());
-    return result;
-  },
-});
-const secureRelay = createHttpsServer(tls, relay.listeners('request')[0]);
-await new Promise(resolve => secureRelay.listen(0, '127.0.0.1', resolve));
-const endpoint = `https://127.0.0.1:${secureRelay.address().port}/starter-request`;
+const kioskEndpoint = `${publicMauticOrigin}/form/submit?formId=${before.formId}&privacy=kiosk`;
+const trackedEndpoint = `${publicMauticOrigin}/form/submit?formId=${before.trackedFormId}&privacy=consented`;
 let browser;
 try {
   const build = spawnSync('npm', ['run', 'build', '--', '--outDir', dist], {
@@ -196,7 +191,8 @@ try {
     encoding: 'utf8',
     env: {
       ...process.env,
-      PUBLIC_STARTER_REQUEST_ENDPOINT: endpoint,
+      PUBLIC_STARTER_REQUEST_ENDPOINT: kioskEndpoint,
+      PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: trackedEndpoint,
       PUBLIC_MAUTIC_URL: publicMauticOrigin,
       PUBLIC_UMAMI_WEBSITE_ID: '',
     },
@@ -237,7 +233,14 @@ try {
     await form.getByRole('textbox', { name: 'Your role' }).fill('Service owner');
     await form.getByRole('textbox', { name: 'What are you trying to do?' }).fill(message);
     await form.getByRole('button', { name: 'Send request' }).click();
-    await form.locator('[data-starter-request-success]').waitFor({ state: 'visible' });
+    await Promise.race([
+      form.locator('[data-starter-request-success]').waitFor({ state: 'visible' }),
+      form.locator('[data-starter-request-error]').waitFor({ state: 'visible' }),
+    ]);
+    if (await form.locator('[data-starter-request-success]').isHidden()) {
+      const request = trackingRequests.findLast(item => new URL(item.path, publicMauticOrigin).pathname === '/form/submit');
+      assert.fail(`Native form was not confirmed: ${JSON.stringify({ status: request?.status, privacyMode: request?.privacyMode, responseContentType: request?.responseContentType, responseShape: request?.responseShape, pageErrors: errors.length })}`);
+    }
   }
   async function assertNoBrowserIdentity(context, page) {
     assert.deepEqual(await page.evaluate(() => [
@@ -262,7 +265,9 @@ try {
   const main = await newBrowserPage();
   const testUrl = `${origin}/starters/professional-licensing/?utm_source=acceptance&utm_medium=web&utm_campaign=starter_test&utm_term=not%20valid%21&email=not-forwarded%40example.invalid`;
   await main.page.goto(testUrl, { referer: `${origin}/private-path/?email=not-forwarded%40example.invalid` });
-  assert.equal(trackingRequests.length, 0, 'tracking must not load before consent');
+  assert.equal(trackingRequests.filter(
+    request => new URL(request.path, publicMauticOrigin).pathname !== '/form/submit',
+  ).length, 0, 'tracking must not load before consent');
   await main.context.addCookies([
     { name: 'mtc_id', value: 'preexisting-cookie', domain: '127.0.0.1', path: '/' },
     { name: 'mautic_device_id', value: 'preexisting-device', domain: '127.0.0.1', path: '/' },
@@ -304,7 +309,7 @@ try {
 
   const cookiesBeforeForm = await main.context.cookies();
   await submitRequest(main.page, trackedEmail, 'Tracked starter request');
-  assert.deepEqual(await main.context.cookies(), cookiesBeforeForm, 'relay submission must not change browser cookies');
+  assert.deepEqual(await main.context.cookies(), cookiesBeforeForm, 'native form submission must not change browser cookies');
   const afterTrackedForm = await waitForStats(
     snapshot => snapshot.submissions.some(row => row.email === trackedEmail),
     'Tracked starter request was not saved.',
@@ -388,7 +393,9 @@ try {
   consumeHitQueue({ limit: 1 });
   const afterReaccept = stats();
   assert.equal(afterReaccept.pageHits, afterSecondForm.pageHits + 1);
-  const trackingRequestCountBeforePrivacyScenarios = trackingRequests.length;
+  const trackingRequestCountBeforePrivacyScenarios = trackingRequests.filter(
+    request => new URL(request.path, publicMauticOrigin).pathname !== '/form/submit',
+  ).length;
 
   const scenarios = [
     ['rejected', {}, 'reject'],
@@ -418,7 +425,9 @@ try {
     'One or more privacy-preserving starter requests were not saved.',
   );
   assert.equal(after.pageHits, before.pageHits + 3, 'only the three consented page views may be tracked');
-  assert.equal(trackingRequests.length, trackingRequestCountBeforePrivacyScenarios, 'reject, unset, DNT and GPC scenarios must not contact Mautic tracking');
+  assert.equal(trackingRequests.filter(
+    request => new URL(request.path, publicMauticOrigin).pathname !== '/form/submit',
+  ).length, trackingRequestCountBeforePrivacyScenarios, 'reject, unset, DNT and GPC scenarios must not contact Mautic tracking');
   assert.equal(after.emailStats, before.emailStats, 'acceptance must not send email');
   assert.equal(after.contacts, before.contacts + 6);
   const requests = after.submissions.filter(row => row.email?.endsWith(`-${unique}@example.invalid`));
@@ -428,8 +437,14 @@ try {
   const kioskRequests = requests.filter(row => Number(row.form_id) === before.formId);
   assert.equal(kioskRequests.length, 5);
   assert.ok(kioskRequests.every(row => !row.tracking_id));
-  assert.equal(relaySubmissions.length, 7);
-  assert.equal(relaySubmissions.filter(row => row.deviceId).length, 2);
+  const nativeSubmissions = trackingRequests.filter(
+    request => request.method === 'POST' && new URL(request.path, publicMauticOrigin).pathname === '/form/submit',
+  );
+  assert.equal(nativeSubmissions.length, 7);
+  assert.equal(nativeSubmissions.filter(request => new URLSearchParams(request.body).has('mautic_device_id')).length, 2);
+  assert.ok(nativeSubmissions.every(request => !request.hadCookie));
+  assert.ok(nativeSubmissions.filter(request => request.privacyMode === 'kiosk').every(request => request.forwardedDnt === '1'));
+  assert.ok(nativeSubmissions.filter(request => request.privacyMode === 'consented').every(request => request.forwardedDnt === null));
   assert.ok(externalUrls.every(url => !url.includes('@') && !url.includes('not-forwarded')));
   assert.deepEqual(errors, []);
 
@@ -440,11 +455,9 @@ try {
   await Promise.all(contexts.map(context => context.close()));
 } finally {
   await browser?.close();
-  secureRelay.closeAllConnections();
   trackingProxy.closeAllConnections();
   website.closeAllConnections();
   await Promise.all([
-    new Promise(resolve => secureRelay.close(resolve)),
     new Promise(resolve => trackingProxy.close(resolve)),
     new Promise(resolve => website.close(resolve)),
   ]);

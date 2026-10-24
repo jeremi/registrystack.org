@@ -35,7 +35,19 @@ const baseRegistry = products.find((p) => p.key === 'base-registry')!;
 // release remain private.
 const requestHref = starterRequestHref(starter.title);
 const discussHref = describeServiceHref(starter.title);
-const starterRequestEndpoint = parseStarterRequestEndpoint(import.meta.env.PUBLIC_STARTER_REQUEST_ENDPOINT);
+const starterRequestEndpoint = parseStarterRequestEndpoint(import.meta.env.PUBLIC_STARTER_REQUEST_ENDPOINT, 'kiosk');
+const starterRequestTrackedEndpoint = parseStarterRequestEndpoint(import.meta.env.PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT, 'consented');
+if (starterRequestTrackedEndpoint && !starterRequestEndpoint) {
+  throw new Error('A tracked starter form endpoint requires the kiosk endpoint.');
+}
+if (starterRequestEndpoint && starterRequestTrackedEndpoint) {
+  const kioskUrl = new URL(starterRequestEndpoint);
+  const trackedUrl = new URL(starterRequestTrackedEndpoint);
+  if (kioskUrl.origin !== trackedUrl.origin ||
+      kioskUrl.searchParams.get('formId') === trackedUrl.searchParams.get('formId')) {
+    throw new Error('Starter form endpoints must share an origin and use distinct form IDs.');
+  }
+}
 const requestFormEnabled = starter.id === 'professional-licensing' && Boolean(starterRequestEndpoint);
 const requestActionHref = requestFormEnabled ? '#starter-request-form' : requestHref;
 
@@ -219,6 +231,7 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
         {requestFormEnabled && starterRequestEndpoint && (
           <StarterRequestForm
             endpoint={starterRequestEndpoint}
+            trackedEndpoint={starterRequestTrackedEndpoint}
             requestHref={requestHref}
             contactEmail={contactEmail}
           />

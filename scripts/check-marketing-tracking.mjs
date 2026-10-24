@@ -15,10 +15,20 @@ await mkdir(cache, { recursive: true });
 const scratch = await mkdtemp(join(cache, 'marketing-tracking-'));
 const dist = join(scratch, 'dist');
 const tracker = 'https://mautic.example.test';
-const endpoint = 'https://forms.example.test/starter-request';
+const endpoint = 'https://forms.example.test/form/submit?formId=1&privacy=kiosk';
+const trackedEndpoint = 'https://forms.example.test/form/submit?formId=2&privacy=consented';
+const networkEndpoint = `${endpoint}&ajax=1`;
+const trackedNetworkEndpoint = `${trackedEndpoint}&ajax=1`;
+const resultAliases = ['email', 'organization', 'role', 'message', 'starter_id', 'source_page', 'request_token'];
+function successfulMauticResponse(data) {
+  return {
+    success: 1,
+    results: Object.fromEntries(resultAliases.map(alias => [alias, data[`mauticform[${alias}]`]])),
+  };
+}
 const build = spawnSync('npm', ['run', 'build', '--', '--outDir', dist], {
   cwd: root, encoding: 'utf8',
-  env: { ...process.env, PUBLIC_STARTER_REQUEST_ENDPOINT: endpoint, PUBLIC_MAUTIC_URL: tracker, PUBLIC_UMAMI_WEBSITE_ID: '' },
+  env: { ...process.env, PUBLIC_STARTER_REQUEST_ENDPOINT: endpoint, PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: trackedEndpoint, PUBLIC_MAUTIC_URL: tracker, PUBLIC_UMAMI_WEBSITE_ID: '' },
 });
 assert.equal(build.status, 0, build.stderr || build.stdout);
 const website = createServer(async (request, response) => {
@@ -77,10 +87,13 @@ async function configure(context) {
       headers: { 'access-control-allow-origin': origin, 'access-control-allow-credentials': 'true' },
     });
   });
-  await context.route(endpoint, route => {
-    submissions.push(Object.fromEntries(new URLSearchParams(route.request().postData())));
-    return route.fulfill({ json: { ok: true }, headers: { 'access-control-allow-origin': origin } });
-  });
+  for (const submissionEndpoint of [networkEndpoint, trackedNetworkEndpoint]) {
+    await context.route(submissionEndpoint, route => {
+      const data = Object.fromEntries(new URLSearchParams(route.request().postData()));
+      submissions.push({ endpoint: route.request().url(), ...data });
+      return route.fulfill({ json: successfulMauticResponse(data), headers: { 'access-control-allow-origin': origin } });
+    });
+  }
 }
 
 async function submit(page, email) {
@@ -112,6 +125,8 @@ try {
   await page.screenshot({ path: join(scratch, 'tracking-mobile.png') });
   await panel.getByRole('button', { name: 'Reject optional cookies' }).click();
   await submit(page, 'untracked@example.invalid');
+  assert.equal(submissions.at(-1).endpoint, networkEndpoint);
+  assert.equal(submissions.at(-1)['mauticform[formId]'], '1');
   assert.equal(submissions.at(-1).tracking_consent, undefined);
   assert.equal(submissions.at(-1).mautic_device_id, undefined);
   assert.equal(requests.length, 0);
@@ -134,7 +149,9 @@ try {
   await page.goto(`${origin}/starters/professional-licensing/`);
   assert.equal(await deviceId(page), firstDevice);
   await submit(page, 'consented@example.invalid');
-  assert.equal(submissions.at(-1).tracking_consent, 'granted');
+  assert.equal(submissions.at(-1).endpoint, trackedNetworkEndpoint);
+  assert.equal(submissions.at(-1)['mauticform[formId]'], '2');
+  assert.equal(submissions.at(-1).tracking_consent, undefined);
   assert.equal(submissions.at(-1).mautic_device_id, firstDevice);
   assert.equal(pageviews.length, 3, 'one pageview per page');
   assert.ok(!JSON.stringify(pageviews).includes('@'), 'no lead email enters tracking data');
@@ -150,6 +167,8 @@ try {
   assert.ok((await context.cookies()).every(cookie => !identityKeys.includes(cookie.name)));
   await secondTab.waitForFunction(() => !document.querySelector('script[data-registry-mautic]'));
   await submit(page, 'withdrawn@example.invalid');
+  assert.equal(submissions.at(-1).endpoint, networkEndpoint);
+  assert.equal(submissions.at(-1)['mauticform[formId]'], '1');
   assert.equal(submissions.at(-1).mautic_device_id, undefined);
   await page.locator('[data-tracking-preferences-open]').click();
   await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
@@ -180,6 +199,8 @@ try {
     assert.equal(await deniedPage.getByRole('button', { name: 'Accept optional cookies' }).isDisabled(), true);
     await deniedPage.getByRole('button', { name: 'Reject optional cookies' }).click();
     await submit(deniedPage, 'signal@example.invalid');
+    assert.equal(submissions.at(-1).endpoint, networkEndpoint);
+    assert.equal(submissions.at(-1)['mauticform[formId]'], '1');
     assert.equal(submissions.at(-1).mautic_device_id, undefined);
     assert.equal(requests.length, before);
     await denied.close();
@@ -189,17 +210,21 @@ try {
   await configure(sameDocument);
   const sameDocumentPage = await sameDocument.newPage();
   const pageviewsBeforeSameDocumentChoice = pageviews.length;
-  await sameDocumentPage.goto(`${origin}/pricing/`);
+  await sameDocumentPage.goto(`${origin}/starters/professional-licensing/`);
   const sameDocumentPanel = sameDocumentPage.locator('[data-tracking-preferences]');
   await sameDocumentPanel.getByRole('button', { name: 'Reject optional cookies' }).click();
   await sameDocumentPage.locator('[data-tracking-preferences-open]').click();
   await sameDocumentPanel.getByRole('button', { name: 'Accept optional cookies' }).click();
-  await deviceId(sameDocumentPage);
+  const sameDocumentDevice = await deviceId(sameDocumentPage);
   assert.equal(
     pageviews.length,
     pageviewsBeforeSameDocumentChoice + 1,
     'accepting after initial rejection in the same document sends one pageview',
   );
+  await submit(sameDocumentPage, 'same-document@example.invalid');
+  assert.equal(submissions.at(-1).endpoint, trackedNetworkEndpoint);
+  assert.equal(submissions.at(-1)['mauticform[formId]'], '2');
+  assert.equal(submissions.at(-1).mautic_device_id, sameDocumentDevice);
   await sameDocument.close();
 
   assert.deepEqual(errors, []);

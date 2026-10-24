@@ -23,8 +23,13 @@ test('professional licensing wires the inline request form without changing othe
     /starter\.id === 'professional-licensing' && Boolean\(starterRequestEndpoint\)/,
   );
   assert.match(page, /requestFormEnabled \? '#starter-request-form' : requestHref/);
-  assert.match(page, /parseStarterRequestEndpoint\(import\.meta\.env\.PUBLIC_STARTER_REQUEST_ENDPOINT\)/);
+  assert.match(page, /parseStarterRequestEndpoint\(import\.meta\.env\.PUBLIC_STARTER_REQUEST_ENDPOINT, 'kiosk'\)/);
+  assert.match(page, /parseStarterRequestEndpoint\(import\.meta\.env\.PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT, 'consented'\)/);
+  assert.match(page, /starterRequestTrackedEndpoint && !starterRequestEndpoint/);
+  assert.match(page, /kioskUrl\.origin !== trackedUrl\.origin/);
+  assert.match(page, /searchParams\.get\('formId'\) === trackedUrl\.searchParams\.get\('formId'\)/);
   assert.match(page, /requestFormEnabled && starterRequestEndpoint && \(\s*<StarterRequestForm/);
+  assert.match(page, /trackedEndpoint=\{starterRequestTrackedEndpoint\}/);
   assert.equal(
     page.match(/href=\{requestActionHref\}[^>]*data-journey="starter-request"/g)?.length,
     2,
@@ -47,6 +52,8 @@ test('professional licensing wires the inline request form without changing othe
   assert.match(form.slice(form.indexOf('</form>')), /href=\{requestHref\}/);
 
   assert.match(form, /submitStarterRequest\(endpoint,/);
+  assert.match(form, /data-tracked-endpoint=\{trackedEndpoint\}/);
+  assert.match(form, /getConsentedDeviceId\(\) : undefined, trackedEndpoint/);
   assert.match(form, /Request received\. Our team will review it\./);
   assert.match(form, /We could not confirm your request\./);
   assert.doesNotMatch(form, /\.reset\(\)/);
@@ -59,8 +66,9 @@ test('privacy policy explains starter request handling while preserving Umami di
   assert.match(privacy, /self-hosted Mautic/i);
   assert.match(privacy, /email[^<]*organization[^<]*role[^<]*request details/i);
   assert.match(privacy, /starter[^<]*time[^<]*source/i);
-  assert.match(privacy, /network address[^<]*temporary rate-limit counters/i);
-  assert.match(privacy, /does not forward your network address\s+to Mautic/i);
+  assert.match(privacy, /network address[^<]*temporary\s+rate-limit counters/i);
+  assert.match(privacy, /Mautic is configured to anonymize IP addresses/i);
+  assert.doesNotMatch(privacy, /does not forward your network address/i);
   assert.match(privacy, /not\s+linked to your website visit history/i);
   assert.match(privacy, /accept tracking/i);
   assert.match(privacy, /withdraw[^<]*consent/i);

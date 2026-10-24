@@ -12,10 +12,18 @@ const cache = join(root, 'node_modules/.cache');
 await mkdir(cache, { recursive: true });
 const scratch = await mkdtemp(join(cache, 'starter-request-'));
 const dist = join(scratch, 'dist');
-const endpoint = 'https://starter-requests.example.test/starter-request';
+const endpoint = 'https://starter-requests.example.test/form/submit?formId=1&privacy=kiosk';
+const networkEndpoint = `${endpoint}&ajax=1`;
+const resultAliases = ['email', 'organization', 'role', 'message', 'starter_id', 'source_page', 'request_token'];
+function successfulMauticResponse(data) {
+  return {
+    success: 1,
+    results: Object.fromEntries(resultAliases.map(alias => [alias, data[`mauticform[${alias}]`]])),
+  };
+}
 const build = spawnSync('npm', ['run', 'build', '--', '--outDir', dist], {
   cwd: root, encoding: 'utf8',
-  env: { ...process.env, PUBLIC_STARTER_REQUEST_ENDPOINT: endpoint, PUBLIC_UMAMI_WEBSITE_ID: '', PUBLIC_MAUTIC_URL: '' },
+  env: { ...process.env, PUBLIC_STARTER_REQUEST_ENDPOINT: endpoint, PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: '', PUBLIC_UMAMI_WEBSITE_ID: '', PUBLIC_MAUTIC_URL: '' },
 });
 assert.equal(build.status, 0, build.stderr || build.stdout);
 const server = createServer(async (request, response) => {
@@ -41,10 +49,10 @@ try {
     if (!request.url().startsWith(origin)) outbound.push(request);
   });
   let submissions = [];
-  await page.route(endpoint, async route => {
+  await page.route(networkEndpoint, async route => {
     const data = Object.fromEntries(new URLSearchParams(route.request().postData()));
     submissions.push(data);
-    await route.fulfill({ json: { ok: true }, headers: { 'access-control-allow-origin': origin } });
+    await route.fulfill({ json: successfulMauticResponse(data), headers: { 'access-control-allow-origin': origin } });
   });
   await page.goto(`${origin}${path}?utm_source=example&email=never-forward@example.invalid`);
   await page.locator('.hero-actions [data-journey="starter-request"]').click();
@@ -55,7 +63,19 @@ try {
   await form.getByRole('textbox', { name: 'What are you trying to do?' }).fill('Record professional licences.');
   await form.getByRole('button', { name: 'Send request' }).click();
   await form.locator('[data-starter-request-success]').waitFor({ state: 'visible' });
-  assert.deepEqual(submissions, [{ email: 'visitor@example.invalid', organization: 'Licensing office', role: 'Service owner', message: 'Record professional licences.', website: '' }]);
+  assert.equal(submissions.length, 1);
+  assert.match(submissions[0]['mauticform[request_token]'], /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+  assert.deepEqual({ ...submissions[0], 'mauticform[request_token]': '<uuid>' }, {
+    'mauticform[email]': 'visitor@example.invalid',
+    'mauticform[organization]': 'Licensing office',
+    'mauticform[role]': 'Service owner',
+    'mauticform[message]': 'Record professional licences.',
+    'mauticform[starter_id]': 'professional-licensing',
+    'mauticform[source_page]': '/starters/professional-licensing/',
+    'mauticform[request_token]': '<uuid>',
+    'mauticform[website]': '',
+    'mauticform[formId]': '1',
+  });
   assert.equal(outbound.length, 1, 'only the submission endpoint is contacted');
   assert.equal(outbound[0].headers()['referer'], undefined);
   assert.equal(outbound[0].headers()['cookie'], undefined);
@@ -68,8 +88,8 @@ try {
   assert.deepEqual(accessibility.violations, []);
 
   // Failures retain the visitor's details and never pretend a request was saved.
-  await page.unroute(endpoint);
-  await page.route(endpoint, route => route.fulfill({ json: { ok: false }, status: 502, headers: { 'access-control-allow-origin': origin } }));
+  await page.unroute(networkEndpoint);
+  await page.route(networkEndpoint, route => route.fulfill({ json: { success: 0 }, headers: { 'access-control-allow-origin': origin } }));
   await page.reload();
   await form.getByRole('textbox', { name: 'Email address' }).fill('retry@example.invalid');
   await form.getByRole('textbox', { name: 'What are you trying to do?' }).fill('Keep this text.');
@@ -95,9 +115,9 @@ try {
     localStorage.setItem('mautic_device_id', 'a'.repeat(23));
   });
   let disabledSubmission;
-  await disabledTracking.route(endpoint, route => {
+  await disabledTracking.route(networkEndpoint, route => {
     disabledSubmission = Object.fromEntries(new URLSearchParams(route.request().postData()));
-    return route.fulfill({ json: { ok: true }, headers: { 'access-control-allow-origin': origin } });
+    return route.fulfill({ json: successfulMauticResponse(disabledSubmission), headers: { 'access-control-allow-origin': origin } });
   });
   const disabledPage = await disabledTracking.newPage();
   await disabledPage.goto(`${origin}${path}`);
@@ -106,6 +126,7 @@ try {
   await disabledPage.locator('[data-starter-request-success]').waitFor({ state: 'visible' });
   assert.equal(disabledSubmission.mautic_device_id, undefined);
   assert.equal(disabledSubmission.tracking_consent, undefined);
+  assert.equal(disabledSubmission['mauticform[formId]'], '1');
   assert.equal(await disabledPage.locator('[data-tracking-preferences]').count(), 0);
   await disabledTracking.close();
 

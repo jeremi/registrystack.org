@@ -1,9 +1,53 @@
-# Traefik dynamic configuration example.
-# Replace the host and entry point before loading this file.
-# The starter-request relay must reach Mautic on a private Docker network and
-# must not use this public host as MAUTIC_BASE_URL.
+# Traefik dynamic configuration example for Mautic 7.2.1.
+# Replace the host, website origin, entry point, form IDs, and backend service.
+# Load this file through Traefik's file provider only after both forms match the
+# reviewed field contract. Keep the forms in draft until this boundary is live.
 http:
   routers:
+    mautic-starter-consented-privacy-signal:
+      rule: "Host(`mautic.example.org`) && Path(`/form/submit`) && Method(`POST`) && Header(`Origin`, `https://www.example.org`) && Query(`formId`, `2`) && Query(`privacy`, `consented`) && Query(`ajax`, `1`) && (Header(`DNT`, `1`) || Header(`Sec-GPC`, `1`))"
+      entryPoints:
+        - websecure-replace-me
+      priority: 13000
+      middlewares:
+        - deny-public-mautic-form-clients
+      service: noop@internal
+      tls: {}
+
+    mautic-starter-form-preflight:
+      rule: "Host(`mautic.example.org`) && Path(`/form/submit`) && Method(`OPTIONS`) && Header(`Origin`, `https://www.example.org`) && Query(`ajax`, `1`) && ((Query(`formId`, `1`) && Query(`privacy`, `kiosk`)) || (Query(`formId`, `2`) && Query(`privacy`, `consented`)))"
+      entryPoints:
+        - websecure-replace-me
+      priority: 12500
+      middlewares:
+        - mautic-starter-form-preflight-boundary
+      service: replace-with-mautic-backend@docker
+      tls: {}
+
+    mautic-starter-kiosk-form:
+      rule: "Host(`mautic.example.org`) && Path(`/form/submit`) && Method(`POST`) && Header(`Origin`, `https://www.example.org`) && Query(`formId`, `1`) && Query(`privacy`, `kiosk`) && Query(`ajax`, `1`)"
+      entryPoints:
+        - websecure-replace-me
+      priority: 12000
+      middlewares:
+        - mautic-starter-request-body-limit
+        - mautic-starter-request-rate-limit
+        - mautic-starter-kiosk-boundary
+      service: replace-with-mautic-backend@docker
+      tls: {}
+
+    mautic-starter-consented-form:
+      rule: "Host(`mautic.example.org`) && Path(`/form/submit`) && Method(`POST`) && Header(`Origin`, `https://www.example.org`) && Query(`formId`, `2`) && Query(`privacy`, `consented`) && Query(`ajax`, `1`)"
+      entryPoints:
+        - websecure-replace-me
+      priority: 12000
+      middlewares:
+        - mautic-starter-request-body-limit
+        - mautic-starter-request-rate-limit
+        - mautic-starter-consented-boundary
+      service: replace-with-mautic-backend@docker
+      tls: {}
+
     deny-public-mautic-forms:
       rule: "Host(`mautic.example.org`) && (PathPrefix(`/form`) || PathPrefix(`/index.php/form`))"
       entryPoints:
@@ -21,11 +65,73 @@ http:
       priority: 9000
       middlewares:
         - mautic-tracking-cookie-boundary
-      # Use the existing Mautic backend service from your proxy configuration.
       service: replace-with-mautic-backend@docker
       tls: {}
 
   middlewares:
+    mautic-starter-request-body-limit:
+      buffering:
+        maxRequestBodyBytes: 16384
+        memRequestBodyBytes: 16384
+
+    mautic-starter-request-rate-limit:
+      rateLimit:
+        average: 100
+        period: 15m
+        burst: 100
+
+    mautic-starter-kiosk-boundary:
+      headers:
+        accessControlAllowMethods:
+          - POST
+          - OPTIONS
+        accessControlAllowHeaders:
+          - Content-Type
+        accessControlAllowOriginList:
+          - https://www.example.org
+        accessControlMaxAge: 600
+        addVaryHeader: true
+        customRequestHeaders:
+          Cookie: ""
+          DNT: "1"
+        customResponseHeaders:
+          Set-Cookie: ""
+          Cache-Control: no-store
+
+    mautic-starter-consented-boundary:
+      headers:
+        accessControlAllowMethods:
+          - POST
+          - OPTIONS
+        accessControlAllowHeaders:
+          - Content-Type
+        accessControlAllowOriginList:
+          - https://www.example.org
+        accessControlMaxAge: 600
+        addVaryHeader: true
+        customRequestHeaders:
+          Cookie: ""
+        customResponseHeaders:
+          Set-Cookie: ""
+          Cache-Control: no-store
+
+    mautic-starter-form-preflight-boundary:
+      headers:
+        accessControlAllowMethods:
+          - POST
+          - OPTIONS
+        accessControlAllowHeaders:
+          - Content-Type
+        accessControlAllowOriginList:
+          - https://www.example.org
+        accessControlMaxAge: 600
+        addVaryHeader: true
+        customRequestHeaders:
+          Cookie: ""
+        customResponseHeaders:
+          Set-Cookie: ""
+          Cache-Control: no-store
+
     mautic-tracking-cookie-boundary:
       headers:
         # Tracking uses the explicitly consented website device ID. Ignore old

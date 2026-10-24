@@ -27,9 +27,8 @@ requests.
 
 The website integration adds the consent boundary: it loads the complete
 `/mtc.js` tracker only after consent because the website needs no Mautic browser
-feature before consent. Associating a consented request with its existing
-device activity is an activation test target until the runtime check below
-passes; this guide does not claim that the live path is already verified.
+feature before consent. The separate kiosk and consented form routes preserve
+that choice when a visitor submits a request.
 
 Online documentation can describe behavior added after this installed build.
 Use the pinned 7.2.1 source for implementation contracts and the activation
@@ -110,10 +109,10 @@ blocking, correct property attribution, and absence of sensitive route data.
 Until shared identity passes those checks, label reporting as activity per
 property rather than a continuous anonymous journey.
 
-## Configure the two private forms
+## Configure the two native forms
 
-Create two published Mautic forms with the exact field aliases, types, defaults,
-and mappings in [the request-service guide](README.md#configure-the-mautic-forms).
+Create two Mautic forms with the exact field aliases, types, defaults,
+and mappings in [the native-form guide](README.md#configure-the-mautic-forms).
 Keep auto-fill off. Neither form sends mail, adds Campaign membership, or runs
 another submit action.
 
@@ -121,12 +120,23 @@ Configure their behavior as follows:
 
 | Form | Kiosk mode | Browser association | Use |
 | --- | --- | --- | --- |
-| Unlinked starter request | Yes | None; the relay sends `DNT: 1` and no device ID | Every request without valid tracking consent and a valid device |
-| Consented starter request | No | The relay sends the validated device ID as top-level `mautic_device_id` | Only a request with current tracking consent and a valid device |
+| Unlinked starter request | Yes | None; the proxy injects `DNT: 1` and the website sends no device ID | Every request without valid tracking consent and a valid device |
+| Consented starter request | No | The website sends the validated device ID as top-level `mautic_device_id` | Only a request with current tracking consent and a valid device |
 
-The public browser never posts directly to either form. Keep both form IDs and
-the Mautic base URL in the private request service. Continue blocking native
-public Mautic form routes at the reverse proxy.
+Publish exactly one POST route for each form at the reverse proxy. Match the
+exact path, form ID, privacy value, `ajax=1`, method, and website Origin. The
+configured endpoint omits `ajax`; the browser adapter adds it for Mautic. Deny
+every other public `/form...` and `/index.php/form...` request so a caller
+cannot bypass the reviewed variants.
+
+These query values select the intended adapter routes; they do not bind the
+submitted form. Mautic selects the form from URL-encoded
+`mauticform[formId]`, and Traefik does not inspect or remove body fields. The
+adapter sends the matching body ID and omits `mautic_device_id` for the kiosk
+request. Only forms 1 and 2 may be published, both with no actions, so a direct
+caller cannot select another active form through the allowed route. Treat all
+body values as untrusted. Self-asserted identity is not an authorization
+boundary.
 
 For the consented form, `mautic_device_id` is a sibling of `mauticform`, not a
 field inside it:
@@ -137,10 +147,13 @@ mauticform[email]=<submitted email>
 mauticform[...]=...
 ```
 
-Only this valid consent-plus-device path forwards the original browser user
-agent so Mautic does not create an artificial second device for the relay. The
-unlinked path sends `DNT: 1` with the relay's fixed user agent and forwards no
-browser IP address, cookies, or referrer.
+Only this valid consent-plus-device path includes a device ID. The browser
+chooses the unlinked form whenever consent or a usable device is absent. The
+proxy injects `DNT: 1` on that route and removes request cookies. It also injects
+The proxy returns `403` before Mautic if a consented-route request carries
+`DNT: 1` or `Sec-GPC: 1`. The normal website selects the kiosk route when
+either signal is active. The consented route preserves the browser User-Agent
+and device value required by Mautic's device signature.
 
 Never put an email address in a tracking URL, tracking query, device value, or
 publicly editable Contact field. The email in either request form is asserted
@@ -149,20 +162,27 @@ not authentication and does not prove that the submitter controls the mailbox.
 
 ## Website and proxy boundary
 
-Publish only the tracking routes required by the generated tracker. On these
-public tracking paths, strip the incoming `Cookie` header before proxying and
-strip `Set-Cookie` from every response. This prevents an old Mautic source
-cookie from overriding the website-provided device ID after withdrawal and
-re-consent. Keep admin, API, and native form routes outside this public
-tracking surface.
+Publish only the two exact native form variants and tracking routes required by
+the generated tracker. On both surfaces, strip the incoming `Cookie` header
+before proxying and strip `Set-Cookie` from every response. This prevents an old
+Mautic source cookie from overriding the website-provided device ID after
+withdrawal and re-consent. Keep admin and API routes outside this public
+surface.
+
+For the form routes, restrict CORS to the exact website Origin, cap the encoded
+body at 16 KiB, and rate-limit each client to 100 requests per 15 minutes. CORS
+is a browser control, not caller authentication. The website's `maxlength`
+checks, Mautic's Email validation and honeypot, and the proxy body cap are
+sufficient for this manually reviewed request inbox, but they are weaker than
+server-side field-by-field validation. Treat every saved field as untrusted.
 
 Before consent, the page must not request `/mtc.js`, a tracking pixel, or a
 Mautic event endpoint. After consent, load the complete tracker and allow it to
 record the current and later page views. The tracker must not receive Email or
 another asserted identity in its URL or page-view parameters.
 
-The request form does not wait for the tracker. At submission time, the request
-service uses the consent and device state already available:
+The request form does not wait for the tracker. At submission time, the website
+uses the consent and device state already available:
 
 1. With current consent and a valid device, submit to the consented form with
    top-level `mautic_device_id`.
@@ -290,28 +310,33 @@ coverage.
 
 Activate tracking only after all of these checks pass:
 
-1. The two forms have identical fields and the required kiosk modes.
+1. The two forms have identical fields, the required kiosk modes, and no
+   actions. No form outside IDs 1 and 2 is published.
 2. Email transport is still `null://null`.
-3. Public form submission is blocked while the private relay can reach both
-   forms.
-4. Public tracking requests reach Mautic without a `Cookie` header, and public
+3. The proxy accepts only the two exact POST routes and their exact-origin
+   preflight requests. All other public `/form...` and `/index.php/form...`
+   requests are blocked.
+4. A forced consented-route request with `DNT: 1` or `Sec-GPC: 1` receives
+   `403` and does not reach Mautic. The normal website uses the kiosk route for
+   both signals.
+5. Public tracking requests reach Mautic without a `Cookie` header, and public
    tracking responses contain no `Set-Cookie` header.
-5. Without consent, a page creates no Mautic request or website identifier and
+6. Without consent, a page creates no Mautic request or website identifier and
    a starter request appears only in the unlinked form.
-6. The `hit` consumer processes a consented page hit into a row with its URL,
+7. The `hit` consumer processes a consented page hit into a row with its URL,
    title, referrer, Contact, and supplied UTM values before the Segment update
    runs.
-7. With consent, page hits appear on the device Contact and a starter request
+8. With consent, page hits appear on the device Contact and a starter request
    through the consented form associates with that same device activity.
-8. Withdrawing consent clears the website identifiers, a hard reload sends no
+9. Withdrawing consent clears the website identifiers, a hard reload sends no
    further tracking request, and the starter form still succeeds through the
    unlinked form.
-9. Granting consent again produces a new website device ID and does not relink
+10. Granting consent again produces a new website device ID and does not relink
    the browser to the withdrawn profile through an old Mautic cookie.
-10. Both per-form Results screens show their complete saved request fields, and
+11. Both per-form Results screens show their complete saved request fields, and
    the combined Form Submissions Report counts successful requests from both
    form IDs without treating Contact count as submission count.
-11. The public privacy notice accurately describes consented Mautic tracking,
+12. The public privacy notice accurately describes consented Mautic tracking,
    storage, attribution, withdrawal, and the independent no-consent form path.
 
 Use an incognito browser and a new address or test alias for each identity-flow

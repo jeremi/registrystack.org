@@ -6,8 +6,12 @@ export interface StarterRequestInput {
   website?: string;
 }
 
-// This points to the submission service, never directly to a Mautic form.
-export function starterRequestEndpoint(value: string | undefined): string | undefined {
+type StarterRequestMode = 'kiosk' | 'consented';
+
+export function starterRequestEndpoint(
+  value: string | undefined,
+  mode: StarterRequestMode = 'kiosk',
+): string | undefined {
   if (!value?.trim()) return undefined;
   let url: URL;
   try {
@@ -15,16 +19,46 @@ export function starterRequestEndpoint(value: string | undefined): string | unde
   } catch {
     throw new Error('Invalid starter form endpoint.');
   }
+  const formIds = url.searchParams.getAll('formId');
+  const privacy = url.searchParams.getAll('privacy');
+  const formId = formIds[0] ?? '';
   if (url.protocol !== 'https:' || url.username || url.password || url.hash ||
-      url.pathname !== '/starter-request' || url.search) {
+      url.pathname !== '/form/submit' || [...url.searchParams].length !== 2 ||
+      formIds.length !== 1 || privacy.length !== 1 || privacy[0] !== mode ||
+      !/^[1-9]\d*$/.test(formId) || !Number.isSafeInteger(Number(formId))) {
     throw new Error('Invalid starter form endpoint.');
   }
   return url.href;
 }
 
-export async function submitStarterRequest(endpoint: string, input: StarterRequestInput, consentedDeviceId?: string): Promise<void> {
-  const configuredEndpoint = starterRequestEndpoint(endpoint);
-  if (!configuredEndpoint) throw new Error('Starter request form is unavailable.');
+function endpointFormId(endpoint: string): string {
+  return new URL(endpoint).searchParams.get('formId') as string;
+}
+
+function nativeSubmissionUrl(endpoint: string): string {
+  const url = new URL(endpoint);
+  url.searchParams.set('ajax', '1');
+  return url.href;
+}
+
+export async function submitStarterRequest(
+  kioskEndpoint: string,
+  input: StarterRequestInput,
+  consentedDeviceId?: string,
+  trackedEndpoint?: string,
+): Promise<void> {
+  const configuredKioskEndpoint = starterRequestEndpoint(kioskEndpoint);
+  if (!configuredKioskEndpoint) throw new Error('Starter request form is unavailable.');
+  const configuredTrackedEndpoint = starterRequestEndpoint(trackedEndpoint, 'consented');
+  if (configuredTrackedEndpoint) {
+    const kioskUrl = new URL(configuredKioskEndpoint);
+    const trackedUrl = new URL(configuredTrackedEndpoint);
+    if (trackedUrl.origin !== kioskUrl.origin ||
+        endpointFormId(configuredTrackedEndpoint) === endpointFormId(configuredKioskEndpoint)) {
+      throw new Error('Invalid starter form configuration.');
+    }
+  }
+
   const email = input.email.trim();
   const organization = input.organization.trim();
   const role = input.role.trim();
@@ -33,34 +67,70 @@ export async function submitStarterRequest(endpoint: string, input: StarterReque
       organization.length > 200 || role.length > 200 || message.length > 2000 || input.website?.trim()) {
     throw new Error('Check the request details.');
   }
+
+  const hasConsentedDevice = Boolean(consentedDeviceId && /^[a-z0-9]{23}$/.test(consentedDeviceId));
+  const endpoint = hasConsentedDevice && configuredTrackedEndpoint
+    ? configuredTrackedEndpoint
+    : configuredKioskEndpoint;
+  const requestToken = crypto.randomUUID();
+  const savedFields = {
+    email,
+    organization,
+    role,
+    message,
+    starter_id: 'professional-licensing',
+    source_page: '/starters/professional-licensing/',
+    request_token: requestToken,
+  };
   const body = new URLSearchParams({
-    email, organization, role, message, website: '',
+    'mauticform[email]': savedFields.email,
+    'mauticform[organization]': savedFields.organization,
+    'mauticform[role]': savedFields.role,
+    'mauticform[message]': savedFields.message,
+    'mauticform[starter_id]': savedFields.starter_id,
+    'mauticform[source_page]': savedFields.source_page,
+    'mauticform[request_token]': savedFields.request_token,
+    'mauticform[website]': '',
+    'mauticform[formId]': endpointFormId(endpoint),
   });
-  // Consent is checked by the caller at submission time. An unavailable tracker
-  // must never prevent a request, so an absent or malformed identity is omitted.
-  if (consentedDeviceId && /^[a-z0-9]{23}$/.test(consentedDeviceId)) {
-    body.set('tracking_consent', 'granted');
-    body.set('mautic_device_id', consentedDeviceId);
+  if (hasConsentedDevice && configuredTrackedEndpoint) {
+    body.set('mautic_device_id', consentedDeviceId as string);
   }
-  // The service selects the private Mautic form. Browser cookies, network
-  // address and referrer are never forwarded with a starter request.
-  const response = await fetch(configuredEndpoint, {
+
+  const response = await fetch(nativeSubmissionUrl(endpoint), {
     method: 'POST',
     mode: 'cors',
     credentials: 'omit',
     redirect: 'error',
     referrerPolicy: 'no-referrer',
     cache: 'no-store',
-    headers: { Accept: 'application/json' },
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+    },
     body,
     signal: AbortSignal.timeout(20000),
   });
   if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
     throw new Error('Could not confirm the starter request.');
   }
-  const result = await response.json();
-  // The service verifies the matching saved Mautic result before confirming.
-  if (result?.ok !== true) {
+
+  let result: unknown;
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error('Could not confirm the starter request.');
+  }
+  if (!result || typeof result !== 'object') throw new Error('Could not confirm the starter request.');
+  const nativeResult = result as {
+    success?: unknown;
+    results?: Record<string, unknown>;
+    validationErrors?: unknown;
+    errorMessage?: unknown;
+  };
+  if (nativeResult.success !== 1 || nativeResult.validationErrors !== undefined ||
+      nativeResult.errorMessage !== undefined || !nativeResult.results ||
+      Object.entries(savedFields).some(([field, expected]) => nativeResult.results?.[field] !== expected)) {
     throw new Error('Could not confirm the starter request.');
   }
 }
