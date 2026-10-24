@@ -26,10 +26,10 @@ reuse or merge Contacts with the same submitted email address. Contact count
 is therefore not request count. Count Form Submissions when measuring
 requests.
 
-The website integration adds the consent boundary: it loads the complete
-`/mtc.js` tracker only after consent because the website needs no Mautic browser
-feature before consent. The separate kiosk and consented form routes preserve
-that choice when a visitor submits a request.
+The main website and canonical documentation use a shared consent bridge.
+Only its main-origin frame loads `/mtc.js`, after consent. Parent pages send
+minimized page views through a strictly validated message protocol. The
+separate kiosk and consented form routes preserve the choice on submission.
 
 Online documentation can describe behavior added after this installed build.
 Use the pinned 7.2.1 source for implementation contracts and the activation
@@ -62,7 +62,7 @@ The website consent layer is the authority for whether tracking runs. Do not
 depend on a browser header or a Mautic-side filter as a substitute for the
 website's consent decision.
 
-## Adding documentation and demo properties
+## Shared website and documentation journey
 
 Use this Mautic instance for all enrolled Registry Stack properties. The full
 canonical page URL identifies the property for Reports and Segments; keep the
@@ -70,18 +70,46 @@ origin in that URL instead of reducing every property to a relative path.
 Enrollment is explicit for each reviewed HTTPS origin. Do not use wildcard
 CORS entries for all subdomains or all demo deployments.
 
-The current integration grants consent and stores anonymous device identity
-on one origin. It does not yet provide a continuous anonymous journey across
-the main website, documentation, and demos. Mautic can combine activity on a
-Contact after an explicitly consented identification flow, but that is not
-automatic anonymous cross-property recognition.
+The exact main website and documentation origins in `tracking-protocol.mjs`
+share version-2 consent through `/tracking-bridge/` on the main website.
+Website-only acceptance does not authorize the expanded scope. The bridge
+stores the choice for 180 days and binds the native server-issued device to a
+random consent generation. Rejection, expiry, and browser privacy signals
+invalidate that identity. Other open frames observe storage changes, and
+suspended pages refresh their state on return.
 
-Before enabling cross-property anonymous attribution, add and verify a shared
-consent and identity mechanism for the exact enrolled origins. It must support
-withdrawal across those properties, invalidate stale local identifiers, and
-check consent before loading the tracker on each property. Update the notice
-and consent version to cover the expanded scope. Do not pass email addresses,
-Contact IDs, device IDs, or consent tokens through navigation URLs.
+Only the bridge loads the native tracker and stores its identity. Documentation
+does not receive or persist a device identifier. The main website can request
+one for an immediate form submission with the expected consent generation.
+The form waits at most 750 milliseconds for this optional association, then
+falls back to the kiosk form. Privacy requests always use the kiosk form.
+Changing consent aborts a tracked fetch that is still pending; withdrawal
+cannot recall a request already accepted by Mautic.
+
+Every message checks the exact sender origin, parent window, protocol version,
+request ID, operation, field set, and bounded values. Choice updates carry the
+observed revision so a delayed acceptance cannot override a later refusal.
+Pageviews and form associations carry the expected consent generation, so a
+delayed request cannot cross withdrawal and re-consent.
+No identity is placed in navigation URLs. Internal navigation adds no
+acquisition UTMs; earlier internal handoff tuples are ignored by Mautic.
+
+Mautic CORS stays restricted to the main website: all native tracker requests
+execute inside that origin's bridge. The existing cookie-stripping proxy
+boundary remains in place. GitHub Pages does not supply a path-specific
+`frame-ancestors` header, so arbitrary embedding is not blocked by this static
+page. Message validation enforces the data boundary. Scripts on both enrolled
+origins are trusted to request the shared choice; only main may request an ID.
+
+The canonical docs integration is part of the pinned release source. Its
+released root includes tracking preferences; `/dev/`, versioned archives, and
+404 do not. Existing archive bytes are unchanged. Activation needs a new
+docs-bearing release and the acceptance checks in both repositories.
+
+Demos remain outside the shared choice. Enrolling one requires revised
+notices, a new consent version, a reviewed exact origin, and verification of
+its safe route templates and consent behavior. Unrelated registrable domains
+also require separate browser-storage verification.
 
 Do not solve continuity by setting a broad parent-domain cookie or removing
 the proxy cookie boundary. In Mautic 7.2.1, the tracker writes host-only cookies
@@ -95,8 +123,8 @@ Each property's page-data adapter must follow this contract:
 
 | Property | Permitted page data | Identification and consent |
 | --- | --- | --- |
-| Main website | Canonical static paths and public titles; reviewed inbound campaign labels | Current local consent and optional request association |
-| Documentation | Public documentation routes and titles; no search text or private query values | Enroll its exact origin and implement the agreed consent and identity mechanism |
+| Main website | Canonical static paths and public titles; reviewed inbound campaign labels | Current shared consent and optional request association |
+| Documentation | Public canonical routes and titles; no search text or private query values | Shared bridge consent and identity; no device disclosure to documentation |
 | Demos | Explicitly allowlisted public screens or route templates, such as `/records/:recordId`; fixed, nonidentifying titles | Separate demo application accounts from marketing identity; require tracking consent |
 
 Do not copy the website helper unchanged into a demo. It removes query strings
@@ -110,8 +138,8 @@ titles, tracking parameters, or marketing Contact fields.
 Acceptance for each enrollment must cover navigation between properties,
 consent refusal on arrival, withdrawal and re-consent, storage or tracker
 blocking, correct property attribution, and absence of sensitive route data.
-Until shared identity passes those checks, label reporting as activity per
-property rather than a continuous anonymous journey.
+Do not claim a continuous journey on a newly enrolled property until those
+checks pass against its deployed configuration.
 
 ## Configure the two native forms
 
@@ -187,13 +215,14 @@ checks, Mautic's Email validation and honeypot, and the proxy body cap are
 sufficient for this manually reviewed request inbox, but they are weaker than
 server-side field-by-field validation. Treat every saved field as untrusted.
 
-Before consent, the page must not request `/mtc.js`, a tracking pixel, or a
+Before consent, neither the parent nor its bridge may request `/mtc.js`, a tracking pixel, or a
 Mautic event endpoint. After consent, load the complete tracker and allow it to
 record the current and later page views. The tracker must not receive Email or
 another asserted identity in its URL or page-view parameters.
 
-The request form does not wait for the tracker. At submission time, the website
-uses the consent and device state already available:
+The request form never waits for a tracker to bootstrap. At submission time,
+the website requests a fresh association from the bridge, allowing at most
+750 milliseconds for an already available device:
 
 1. With current consent and a valid device, submit to the consented form with
    top-level `mautic_device_id`.
@@ -203,9 +232,8 @@ uses the consent and device state already available:
 This fallback keeps the form usable when tracking is declined, blocked, still
 loading, or unavailable.
 
-When consent is withdrawn, stop loading or calling the tracker, clear the
-Mautic website device and Contact identifiers stored by the client, and hard
-reload the page. A later form request must then use the unlinked kiosk form
+When consent is withdrawn, stop further tracking, rotate its generation, and
+clear the bridge's native identity. A later form request uses the unlinked kiosk form
 unless the visitor grants consent again and receives a new valid device.
 
 ### Process queued page hits
@@ -252,7 +280,9 @@ views. Add these behavior filters:
 
 These are observed page-interest views. They do not establish procurement
 intent, organizational authority, qualification, or readiness. Anonymous
-and aggregate traffic plus outbound-link counts remain in Umami. Request
+visitors are also available in **Contacts** using `is:anonymous`; expand a
+**Page hit** in their history to inspect its URL and device data. Aggregate
+traffic and outbound-link counts remain in Umami. Request
 counts come from Mautic's native form submissions; this guide does not add an
 Umami form-success event or claim an Umami conversion funnel.
 
@@ -308,10 +338,10 @@ operator view; do not treat it as anonymous traffic coverage. Use Mautic's
 **UTM Codes** Report for `utm_source`, `utm_medium`, `utm_campaign`,
 `utm_content`, and `utm_term`.
 
-Do not add UTM parameters to internal Registry Stack links. Internal UTMs would
-replace the inbound source that attribution is meant to preserve. Outbound
-documentation and demo links may keep their existing UTMs for the destination
-site and their existing Umami click event.
+Do not add UTM parameters to links between the main website and documentation.
+Internal UTMs would replace the inbound source that attribution is meant to
+preserve. Those links retain their Umami click events. Demo links keep their
+existing destination UTMs until demos are enrolled in the shared journey.
 
 The form's required `source_page` is available for every request. Earlier page
 history and UTM attribution are available on the request Contact only when the
@@ -345,10 +375,10 @@ Activate tracking only after all of these checks pass:
    runs.
 8. With consent, page hits appear on the device Contact and a website enquiry
    through the consented form associates with that same device activity.
-9. Withdrawing consent clears the website identifiers, a hard reload sends no
-   further tracking request, and the enquiry form still succeeds through the
-   unlinked form.
-10. Granting consent again produces a new website device ID and does not relink
+9. Withdrawing consent on either property clears the shared identifiers and
+   stops further tracking on both properties, including open tabs. The enquiry
+   form still succeeds through the unlinked form.
+10. Granting consent again produces a new shared device ID and does not relink
    the browser to the withdrawn profile through an old Mautic cookie.
 11. Both per-form Results screens show their complete saved request fields,
    including request type and context, and the combined Form Submissions Report
@@ -356,6 +386,17 @@ Activate tracking only after all of these checks pass:
    as submission count.
 12. The public privacy notice accurately describes consented Mautic tracking,
    storage, attribution, withdrawal, and the independent no-consent form path.
+13. A main website to documentation to starter request journey retains one
+    permitted device and Contact, with correct public page URLs and external
+    acquisition labels. Test Chromium, Firefox, and WebKit before rollout.
+14. Documentation cannot request a device identifier. Unexpected origins,
+    frames, fields, and replayed request IDs cannot read or change shared state.
+15. Blocked storage, frames, locks, or trackers leave optional tracking off and
+    the unlinked enquiry available. Expired and previous-version acceptance do
+    not authorize the shared scope.
+16. Development docs, versioned archives, and error pages produce no optional
+    tracking. Publish through a new immutable docs release; existing archive
+    bytes must remain unchanged.
 
 Use an incognito browser and a new address or test alias for each identity-flow
 case. Delete test records only through the agreed operational procedure.

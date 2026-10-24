@@ -58,7 +58,8 @@ test('every starter page uses the native request form when its endpoint is confi
 
   assert.match(form, /submitStarterRequest\(endpoint,/);
   assert.match(form, /data-tracked-endpoint=\{trackedEndpoint\}/);
-  assert.match(form, /getConsentedDeviceId\(\) : undefined, trackedEndpoint/);
+  assert.match(form, /await getConsentedTrackingAssociation\(\)/);
+  assert.match(form, /association\?\.deviceId, trackedEndpoint/);
   assert.match(form, /data-request-success-copy>\{displayedSuccessMessage\}/);
   assert.match(form, /We could not confirm your request\./);
   assert.doesNotMatch(form, /\.reset\(\)/);

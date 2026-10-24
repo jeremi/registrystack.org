@@ -29,5 +29,5 @@ export default defineConfig({
     '/manifest/': 'https://docs.registrystack.org/products/registry-manifest/',
   },
   // The compatibility page redirects visitors and should not be indexed.
-  integrations: [sitemap({ filter: (page) => new URL(page).pathname !== '/pilot/' })],
+  integrations: [sitemap({ filter: (page) => !['/pilot/', '/tracking-bridge/'].includes(new URL(page).pathname) })],
 });

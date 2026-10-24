@@ -147,7 +147,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
 
       const journeyUrl = (anchor, targetSite) => {
         const url = new URL(anchor.href);
-        if (targetSite === 'docs' || targetSite === 'lab') {
+        if (targetSite === 'lab') {
           url.searchParams.set('utm_source', 'registrystack');
           url.searchParams.set('utm_medium', 'site');
           url.searchParams.set('utm_campaign', 'cross_site');

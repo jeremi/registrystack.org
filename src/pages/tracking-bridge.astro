@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Tracking preference bridge</title>
+  </head>
+  <body aria-hidden="true">
+    <script>
+      import { createTrackingBroker } from '../lib/tracking-broker.mjs';
+
+      const mauticUrl = import.meta.env.PUBLIC_MAUTIC_URL?.trim();
+      createTrackingBroker({
+        mauticUrl,
+        onInvalidated: () => window.location.reload(),
+      });
+    </script>
+  </body>
+</html>

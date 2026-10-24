@@ -117,6 +117,7 @@ export async function submitStarterRequest(
   input: StarterRequestInput,
   consentedDeviceId?: string,
   trackedEndpoint?: string,
+  options: { signal?: AbortSignal } = {},
 ): Promise<void> {
   const configuredKioskEndpoint = starterRequestEndpoint(kioskEndpoint);
   if (!configuredKioskEndpoint) throw new Error('Starter request form is unavailable.');
@@ -191,7 +192,9 @@ export async function submitStarterRequest(
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     },
     body,
-    signal: AbortSignal.timeout(20000),
+    signal: options.signal
+      ? AbortSignal.any([options.signal, AbortSignal.timeout(20000)])
+      : AbortSignal.timeout(20000),
   });
   if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
     throw new Error('Could not confirm the starter request.');

@@ -7,6 +7,28 @@ import {
   starterRequestEndpoint,
 } from '../src/lib/starter-request.ts';
 
+test('a withdrawn consent signal cancels a pending request without an automatic retry', async (t) => {
+  const controller = new AbortController();
+  let calls = 0;
+  t.mock.method(globalThis, 'fetch', async (_url, options) => {
+    calls += 1;
+    assert.ok(options.signal instanceof AbortSignal);
+    controller.abort();
+    options.signal.throwIfAborted();
+    throw new Error('A withdrawn request must not continue.');
+  });
+  await assert.rejects(submitStarterRequest(
+    'https://metrics.example.org/form/submit?formId=1&privacy=kiosk',
+    { email: 'synthetic@example.invalid', organization: '', role: '', message: '',
+      sourcePage: '/starters/professional-licensing/', starterId: 'professional-licensing',
+      requestType: 'starter', requestContext: 'Professional licensing' },
+    'a'.repeat(23),
+    'https://metrics.example.org/form/submit?formId=2&privacy=consented',
+    { signal: controller.signal },
+  ), { name: 'AbortError' });
+  assert.equal(calls, 1);
+});
+
 const kioskEndpoint = 'https://forms.example.org/form/submit?formId=1&privacy=kiosk';
 const trackedEndpoint = 'https://forms.example.org/form/submit?formId=2&privacy=consented';
 const input = {

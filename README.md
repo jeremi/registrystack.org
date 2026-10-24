@@ -208,20 +208,37 @@ request. Both variables contain a full HTTPS
 `/form/submit?formId=...&privacy=...` URL. See [native form and proxy
 setup](server/README.md).
 
-`PUBLIC_MAUTIC_URL` enables an optional website tracking choice. Leave it unset
-to omit the tracker and preference UI. With it configured as an HTTPS origin,
-Mautic loads only after explicit consent. Refusing tracking does not prevent an
-enquiry. An opted-in browser's history can attach to the submitted email through
-the separately configured consented form; the email is self-asserted, never an
+`PUBLIC_MAUTIC_URL` enables an optional shared website and documentation tracking choice. Leave it unset
+to omit the tracker and preference UI. Configure it as an HTTPS origin.
+The native Mautic tracker runs only inside the main-origin `/tracking-bridge/`
+frame after explicit consent. The main site and canonical documentation exchange
+strictly validated messages with that frame. It holds the shared version-2
+preference and server-issued device identity; neither property places identity
+in navigation URLs or a parent-domain cookie. Earlier website-only acceptance
+does not authorize this expanded scope. Refusing tracking does not prevent an
+enquiry. A fresh, main-site-only association can attach the opted-in browser's
+history to the submitted email through the consented form; the email is self-asserted, never an
 authentication credential. An unlinked submission adds no new browser-device
 association, but matching an existing Contact by email does not erase that
 Contact's previously associated history.
 
 The website records canonical page URLs, titles, referring site origins,
 and bounded campaign labels. Tracking preferences are remembered for 180 days;
-withdrawal clears the website identifiers and reloads the page. Browser DNT
+withdrawal rotates the shared consent generation and clears the shared identifiers.
+Other frames observe the change, and suspended pages check again on return. Browser DNT
 and GPC signals keep Mautic tracking off. Umami remains separate aggregate
-analytics and covers outbound links to documentation, demos and GitHub.
+analytics and covers outbound links to documentation, demos and GitHub. Internal
+website/documentation handoffs do not add acquisition UTMs. The bridge also
+ignores the earlier internal handoff tuple in links from released pages.
+
+The bridge trusts exactly the main website and documentation origins. Only the
+main website can request an identifier, immediately before a form submission.
+Iframe, storage, lock, or tracker failures keep attribution off and select the
+unlinked form. A tracked request is aborted if consent changes while it is
+pending; a request already accepted by Mautic cannot be recalled by withdrawal.
+The bridge is noindex and excluded from the sitemap. GitHub Pages does not set
+a path-specific frame-ancestors header; origin and window-source validation
+enforce the message boundary.
 
 Follow [Mautic tracking operations](server/mautic-tracking.md) before activation,
 including exact-origin CORS, the tracking-cookie proxy boundary, zero form
@@ -230,8 +247,20 @@ settings from repository variables. This source change does not publish the
 forms or load the proxy configuration.
 
 `npm run check:marketing-tracking` verifies the configured browser flow with a
-deterministic tracking server. The optional real-Mautic acceptance command in
-the service README verifies native device association and stored page hits.
+deterministic tracking server. Set `DOCS_TRACKING_DIST` to the canonical docs
+build directory and `TRACKING_BROWSERS=chromium,firefox,webkit` to verify both
+actual sites across the complete browser matrix. The website and docs copies
+of `shared-tracking-client.mjs` and `tracking-protocol.mjs` must stay identical.
+
+`node scripts/check-shared-tracking-mautic.mjs` provides optional native
+acceptance against fresh, disposable `mautic/mautic:7.2.1-apache` and
+`mysql:8.4.13` containers. It requires Docker, OpenSSL, Playwright Chromium,
+an installed loopback-only Mautic instance with `null://null` mail, no
+campaigns or form actions, and empty email queues. Set `MAUTIC_TEST_CONTAINER`,
+`MAUTIC_TEST_MYSQL_CONTAINER`, and `MAUTIC_TEST_URL=http://127.0.0.1:<port>`.
+`SHARED_TRACKING_TEST_SCRATCH` selects where browser artifacts are retained.
+The fixture creates synthetic forms and contacts and consumes only the hit
+queue. Never use production or a restored production database for this check.
 
 ## GitHub Pages
 
