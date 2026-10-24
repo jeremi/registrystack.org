@@ -10,6 +10,7 @@ import {
   SHARED_TRACKING_BRIDGE_URL,
   createTrackingRequest,
   parseTrackingChanged,
+  parseTrackingReady,
   parseTrackingRequest,
   parseTrackingResponse,
   trackingRequestId,
@@ -24,6 +25,20 @@ const state = {
   expiresAt: Date.UTC(2027, 3, 22),
   revision: Date.UTC(2026, 9, 24),
 };
+
+test('readiness contains no consent, identity, request, or surplus data', () => {
+  const ready = { protocol: TRACKING_PROTOCOL, version: TRACKING_PROTOCOL_VERSION, type: 'ready' };
+  assert.deepEqual(parseTrackingReady(ready), ready);
+  for (const invalid of [
+    null,
+    { ...ready, version: 1 },
+    { ...ready, protocol: 'other' },
+    { ...ready, type: 'changed' },
+    { ...ready, id },
+    { ...ready, state },
+    { ...ready, deviceId: 'a'.repeat(23) },
+  ]) assert.equal(parseTrackingReady(invalid), null);
+});
 
 test('publishes the two exact enrolled origins and main-only association origin', () => {
   assert.deepEqual(TRACKING_ALLOWED_ORIGINS, [

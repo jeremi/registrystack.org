@@ -10,12 +10,22 @@
   <body aria-hidden="true">
     <script>
       import { createTrackingBroker } from '../lib/tracking-broker.mjs';
+      import { TRACKING_PROTOCOL, TRACKING_PROTOCOL_VERSION } from '../lib/tracking-protocol.mjs';
 
       const mauticUrl = import.meta.env.PUBLIC_MAUTIC_URL?.trim();
       createTrackingBroker({
         mauticUrl,
         onInvalidated: () => window.location.reload(),
       });
+      if (window.parent !== window) {
+        // This inert signal contains no consent or identity. Requests still
+        // require the broker's exact parent and origin checks.
+        window.parent.postMessage({
+          protocol: TRACKING_PROTOCOL,
+          version: TRACKING_PROTOCOL_VERSION,
+          type: 'ready',
+        }, '*');
+      }
     </script>
   </body>
 </html>
