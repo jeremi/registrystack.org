@@ -270,6 +270,15 @@ async function configureContext(context, records, {
         await route.fulfill({ status: 204, body: '' });
         return;
       }
+      if (
+        bridgeControl?.moduleDelayGate &&
+        /^\/_astro\/tracking-bridge\.astro_astro_type_script_index_0_lang\.[^/]+\.js$/.test(url.pathname)
+      ) {
+        bridgeControl.moduleRequests += 1;
+        bridgeControl.moduleDelayStarted = true;
+        bridgeControl.moduleDelayStartedAt ??= Date.now();
+        await bridgeControl.moduleDelayGate.promise;
+      }
       if (url.pathname === '/tracking-bridge/') {
         records.bridgeLoads += 1;
       }
@@ -646,6 +655,110 @@ async function runBridgeRecoveryScenario(browser, engine) {
     await panel.waitFor({ state: 'hidden' });
     assert.deepEqual(records.errors, [], `${engine}: bridge recovery raised a page error.`);
   } finally {
+    await context.close();
+  }
+}
+
+const expectedPendingBridgeModuleState = Object.freeze({
+  bridgeLoads: 1,
+  bridgeFrames: 1,
+  moduleRequests: 1,
+  errorHidden: true,
+  readRetry: null,
+  nativeRequests: 0,
+  pageviews: 0,
+  formSubmissions: 0,
+  pageErrors: 0,
+});
+
+async function runPendingBridgeModuleScenario(browser, engine, surface) {
+  console.log(`${engine}: checking ${surface} pending bridge module startup budget.`);
+  const records = createRecords(`${engine}-${surface}-pending-bridge-module`);
+  const moduleDelayGate = deferred();
+  const bridgeControl = {
+    instrument: true,
+    moduleDelayGate,
+    moduleDelayStarted: false,
+    moduleDelayStartedAt: undefined,
+    moduleRequests: 0,
+  };
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    await configureContext(context, records, { bridgeControl });
+    const seededAt = Date.now();
+    const rejected = {
+      version: 2,
+      choice: 'rejected',
+      generation: '00000000-0000-4000-8000-000000000004',
+      expiresAt: seededAt + 300_000,
+      revision: seededAt,
+    };
+    const sharedStorage = await context.newPage();
+    await sharedStorage.goto(`${mainOrigin}/__acceptance/storage-seed`);
+    await sharedStorage.evaluate(([key, value]) => {
+      localStorage.setItem(key, JSON.stringify(value));
+    }, [consentKey, rejected]);
+    await sharedStorage.close();
+
+    const page = await context.newPage();
+    const pageUrl = surface === 'main'
+      ? `${mainOrigin}/starters/professional-licensing/`
+      : `${docsOrigin}/start/concepts/`;
+    const panel = page.locator(surface === 'main'
+      ? '[data-tracking-preferences]'
+      : '[data-registry-shared-tracking]');
+    const errorMessage = panel.locator('[data-tracking-error]');
+    await page.goto(pageUrl, { waitUntil: 'domcontentloaded' });
+    await waitFor(
+      () => bridgeControl.moduleDelayStarted,
+      `${engine}: ${surface} did not request the bridge module.`,
+    );
+
+    const preferencesControl = page.locator('[data-tracking-preferences-open]');
+    await preferencesControl.waitFor({ state: 'visible' });
+    assert.equal(await preferencesControl.isEnabled(), true);
+    await preferencesControl.click();
+    await panel.waitFor({ state: 'visible' });
+    if (surface === 'main') {
+      const email = page.locator('[data-starter-request-form]')
+        .getByRole('textbox', { name: 'Email address' });
+      await email.waitFor({ state: 'visible' });
+      await email.fill('pending-bridge@example.invalid');
+      assert.equal(await email.inputValue(), 'pending-bridge@example.invalid');
+    }
+
+    await delay(Math.max(0, bridgeControl.moduleDelayStartedAt + 14_000 - Date.now()));
+    const pendingState = {
+      bridgeLoads: records.bridgeLoads,
+      bridgeFrames: await page.locator(`iframe[src="${mainOrigin}/tracking-bridge/"]`).count(),
+      moduleRequests: bridgeControl.moduleRequests,
+      errorHidden: await errorMessage.evaluate(element => element.hidden),
+      readRetry: await panel.getAttribute('data-tracking-read-retry'),
+      nativeRequests: records.nativeRequests.length,
+      pageviews: records.pageviews.length,
+      formSubmissions: records.formSubmissions.length,
+      pageErrors: records.errors.length,
+    };
+    moduleDelayGate.release();
+    if (JSON.stringify(pendingState) !== JSON.stringify(expectedPendingBridgeModuleState)) {
+      return pendingState;
+    }
+
+    await waitFor(
+      () => records.bridgeRequests.includes('read'),
+      `${engine}: ${surface} did not complete its delayed consent read.`,
+      10_000,
+    );
+    await panel.waitFor({ state: 'hidden', timeout: 10_000 });
+    assert.equal(await errorMessage.evaluate(element => element.hidden), true);
+    assert.equal(records.nativeRequests.length, 0, `${engine}: ${surface} rejection loaded Mautic.`);
+    assert.equal(records.pageviews.length, 0, `${engine}: ${surface} rejection sent a pageview.`);
+    assert.equal(records.formSubmissions.length, 0, `${engine}: ${surface} submitted the starter form.`);
+    assert.deepEqual(records.errors, [], `${engine}: ${surface} delayed bridge raised a page error.`);
+    assert.deepEqual(records.blocked, [], `${engine}: ${surface} made an unexpected request.`);
+    return pendingState;
+  } finally {
+    moduleDelayGate.release();
     await context.close();
   }
 }
@@ -1196,6 +1309,22 @@ async function runEngine(engine, browserType) {
   const browser = await browserType.launch();
   const records = createRecords(engine);
   try {
+    if (engine === 'chromium') {
+      const pendingBridgeModuleResults = {
+        main: await runPendingBridgeModuleScenario(browser, engine, 'main'),
+      };
+      if (docsDist) {
+        pendingBridgeModuleResults.docs = await runPendingBridgeModuleScenario(browser, engine, 'docs');
+      }
+      assert.deepEqual(
+        pendingBridgeModuleResults,
+        Object.fromEntries(
+          Object.keys(pendingBridgeModuleResults)
+            .map(surface => [surface, expectedPendingBridgeModuleState]),
+        ),
+        `${engine}: bridge module startup exceeded the single-frame load budget.`,
+      );
+    }
     const ambiguousPageviewResults = [[
       'main',
       await runAmbiguousPageviewRecoveryScenario(browser, engine, 'main'),
