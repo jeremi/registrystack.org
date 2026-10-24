@@ -66,7 +66,7 @@ function fixture(options = {}) {
     onStateChange: state => changes.push(state), ...clientOptions,
   });
   const message = (data, overrides = {}) => listeners.get('message')?.({
-    origin: 'https://registrystack.org', source: frame.contentWindow, data, ...overrides,
+    origin: 'https://registrystack.org', source: overrides.source ?? frame.contentWindow, data, ...overrides,
   });
   const reply = (state, extra = {}) => {
     const request = sent.at(-1).data;
@@ -289,6 +289,28 @@ test('a timed-out initial bridge is removed and the next request can recover', a
   f.client.close();
 });
 
+test('iframe startup does not consume the broker response timeout', async (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const f = fixture({ autoLoad: false, timeoutMs: 80 });
+  t.after(() => f.client.close());
+  const pending = f.client.read();
+  const outcome = pending.then(value => ({ value }), error => ({ error }));
+  const requestFrame = f.frame;
+
+  t.mock.timers.tick(50);
+  requestFrame.fireLoad();
+  await new Promise(resolve => setImmediate(resolve));
+  const request = f.sent.at(-1).data;
+
+  t.mock.timers.tick(50);
+  f.message({ ...envelope, id: request.id, ok: true, state: unknown }, {
+    source: requestFrame.contentWindow,
+  });
+  const result = await outcome;
+  assert.equal(result.error, undefined);
+  assert.deepEqual(result.value, unknown);
+});
+
 test('an unresponsive loaded bridge is discarded so the next request can recover', async () => {
   const f = fixture({ timeoutMs: 5 });
   const first = await nextRequest(() => f.client.read());
@@ -325,6 +347,32 @@ test('association timeout bounds frame readiness and prevents a late identifier 
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(f.sent.some(({ data }) => data.type === 'associate'), false);
   await assert.rejects(association, /tracking/i);
+  assert.deepEqual(f.client.state, renewed);
+  assert.equal(f.failures.length, 0);
+  f.client.close();
+});
+
+test('an unavailable association falls back without suspending accepted consent', async () => {
+  const f = fixture();
+  const initial = await nextRequest(() => f.client.read());
+  f.reply(accepted);
+  await initial.promise;
+
+  const association = await nextRequest(() => f.client.associate(generation));
+  const associationRequest = f.sent.at(-1).data;
+  assert.equal(associationRequest.type, 'associate');
+  f.message({
+    ...envelope,
+    id: associationRequest.id,
+    ok: false,
+    error: 'unavailable',
+  });
+
+  await assert.rejects(association.promise, /tracking/i);
+  assert.deepEqual(f.client.state, accepted);
+  assert.equal(f.failures.length, 0);
+  assert.equal('deviceId' in f.client.state, false);
+  assert.equal(f.values.has('mautic_device_id'), false);
   f.client.close();
 });
 
