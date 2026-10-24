@@ -251,6 +251,11 @@ function delay(milliseconds) {
   return new Promise(resolvePromise => setTimeout(resolvePromise, milliseconds));
 }
 
+async function advanceOutageClock(page) {
+  await page.clock.fastForward(31_000);
+  await delay(100);
+}
+
 async function configureContext(context, records, {
   blockBridge = false,
   blockStorage = false,
@@ -562,9 +567,14 @@ async function runKioskScenario(browser, engine, records, mode) {
     blockStorage: mode === 'storage',
   });
   const page = await context.newPage();
+  if (mode === 'bridge') await page.clock.install();
   const pageviewsBefore = records.pageviews.length;
   const submissionsBefore = records.formSubmissions.length;
-  await page.goto(`${mainOrigin}/starters/professional-licensing/`);
+  const blockedBefore = records.blocked.length;
+  await page.goto(
+    `${mainOrigin}/starters/professional-licensing/`,
+    mode === 'bridge' ? { waitUntil: 'domcontentloaded' } : undefined,
+  );
   const panel = page.locator('[data-tracking-preferences]');
 
   if (mode === 'dnt' || mode === 'gpc') {
@@ -592,6 +602,16 @@ async function runKioskScenario(browser, engine, records, mode) {
       })}`);
     }
   } else if (mode === 'bridge') {
+    await waitFor(
+      () => records.blocked.length >= blockedBefore + 1,
+      `${engine}: blocked bridge did not start its first read attempt.`,
+    );
+    await advanceOutageClock(page);
+    await waitFor(
+      () => records.blocked.length >= blockedBefore + 2,
+      `${engine}: blocked bridge did not start its retry.`,
+    );
+    await advanceOutageClock(page);
     try {
       await panel.locator('[data-tracking-error]').waitFor({ state: 'visible', timeout: 15_000 });
     } catch (error) {
@@ -606,6 +626,11 @@ async function runKioskScenario(browser, engine, records, mode) {
         cause: error.message,
       })}`);
     }
+    assert.equal(
+      records.blocked.length,
+      blockedBefore + 2,
+      `${engine}: blocked bridge exceeded its two read attempts.`,
+    );
   } else {
     await panel.waitFor({ state: 'visible' });
   }
@@ -625,12 +650,19 @@ async function runBridgeRecoveryScenario(browser, engine) {
   try {
     await configureContext(context, records, { bridgeControl });
     const page = await context.newPage();
-    await page.goto(`${mainOrigin}/solutions/licensing/`);
+    await page.clock.install();
+    await page.goto(`${mainOrigin}/solutions/licensing/`, { waitUntil: 'domcontentloaded' });
     const documentToken = await page.evaluate(() => {
       window.__trackingRecoveryDocument = crypto.randomUUID();
       return window.__trackingRecoveryDocument;
     });
     const panel = page.locator('[data-tracking-preferences]');
+    await waitFor(
+      () => records.bridgeLoads >= 1,
+      `${engine}: initial failed bridge load did not start.`,
+    );
+    await delay(100);
+    if (!records.bridgeRequests.includes('read')) await advanceOutageClock(page);
     await waitFor(
       () => records.bridgeRequests.includes('read'),
       `${engine}: initial bridge failure did not recover its consent read.`,
@@ -787,6 +819,7 @@ async function runValidatedReadRecoveryScenario(browser, engine, surface) {
 
     bridgeControl.failLoads = 2;
     const page = await context.newPage();
+    await page.clock.install();
     const pageUrl = surface === 'main'
       ? `${mainOrigin}/solutions/licensing/`
       : `${docsOrigin}/start/concepts/`;
@@ -794,7 +827,14 @@ async function runValidatedReadRecoveryScenario(browser, engine, surface) {
       ? '[data-tracking-preferences]'
       : '[data-registry-shared-tracking]');
     const errorMessage = panel.locator('[data-tracking-error]');
-    await page.goto(pageUrl);
+    await page.goto(pageUrl, { waitUntil: 'domcontentloaded' });
+    for (const expectedLoads of [1, 2]) {
+      await waitFor(
+        () => records.bridgeLoads >= expectedLoads,
+        `${engine}: ${surface} did not start failed bridge load ${expectedLoads}.`,
+      );
+      await advanceOutageClock(page);
+    }
     await errorMessage.waitFor({ state: 'visible', timeout: 15_000 });
 
     assert.equal(bridgeControl.failLoads, 0, `${engine}: ${surface} did not retry the failed read.`);
