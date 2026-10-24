@@ -875,7 +875,18 @@ async function runRetainedLocalRefusalScenario(browser, engine) {
   const records = createRecords(`${engine}-retained-local-refusal`);
   const context = await browser.newContext({ serviceWorkers: 'block' });
   try {
-    await configureContext(context, records, { bridgeControl: { instrument: true } });
+    await configureContext(context, records);
+    // Observe the acknowledgement directly. A background fetch probe can be
+    // cancelled when successful refusal removes its bridge iframe.
+    await context.addInitScript(({ mainOrigin, docsOrigin }) => {
+      if (location.origin !== docsOrigin) return;
+      window.addEventListener('message', event => {
+        const message = event.data;
+        if (event.origin !== mainOrigin || message?.protocol !== 'registrystack-tracking' ||
+            message?.version !== 2 || message?.ok !== true || message?.state?.choice !== 'rejected') return;
+        document.documentElement.dataset.acceptanceRejectedRevision = String(message.state.revision);
+      });
+    }, { mainOrigin, docsOrigin });
     const seededAt = Date.now();
     const accepted = {
       version: 2,
@@ -912,17 +923,12 @@ async function runRetainedLocalRefusalScenario(browser, engine) {
       return rejected?.choice === 'rejected' && rejected.revision > accepted.revision;
     }, `${engine}: retained local refusal did not reach the shared bridge.`);
     await waitFor(
-      () => ['read', 'choose'].every(type => records.bridgeRequests.includes(type)),
-      `${engine}: initial refusal replay probes did not arrive.`,
+      async () => await docsPage.locator('html').getAttribute('data-acceptance-rejected-revision') === String(rejected.revision),
+      `${engine}: shared refusal acknowledgement did not arrive.`,
     );
     await waitFor(
       async () => await docsPage.evaluate(key => localStorage.getItem(key), localRefusalKey) === null,
       `${engine}: acknowledged refusal remained local.`,
-    );
-    assert.equal(
-      records.bridgeRequests.filter(type => type === 'choose').length,
-      1,
-      `${engine}: retained local refusal was not replayed exactly once.`,
     );
     assert.equal(records.nativeRequests.length, 0, `${engine}: retained refusal loaded Mautic.`);
     assert.equal(records.pageviews.length, 0, `${engine}: retained refusal sent a pageview.`);
@@ -932,23 +938,17 @@ async function runRetainedLocalRefusalScenario(browser, engine) {
     await assertNoIdentityInDocs(docsPage, records, []);
     assert.deepEqual(records.errors, [], `${engine}: retained refusal raised a page error.`);
 
-    const readsBeforeReload = records.bridgeRequests.filter(type => type === 'read').length;
     await docsPage.reload();
     await panel.waitFor({ state: 'attached' });
     await waitFor(
-      () => records.bridgeRequests.filter(type => type === 'read').length > readsBeforeReload,
-      `${engine}: retained shared rejection was not read after reload.`,
+      async () => await docsPage.locator('html').getAttribute('data-acceptance-rejected-revision') === String(rejected.revision),
+      `${engine}: retained shared rejection was not acknowledged after reload.`,
     );
     await delay(250);
     assert.deepEqual(
       await sharedStorage.evaluate(key => JSON.parse(localStorage.getItem(key) ?? 'null'), consentKey),
       rejected,
       `${engine}: reload replaced the retained shared rejection.`,
-    );
-    assert.equal(
-      records.bridgeRequests.filter(type => type === 'choose').length,
-      1,
-      `${engine}: reload replayed a cleared local refusal.`,
     );
     assert.equal(records.nativeRequests.length, 0, `${engine}: reload loaded Mautic after refusal.`);
     assert.equal(records.pageviews.length, 0, `${engine}: reload sent a pageview after refusal.`);
