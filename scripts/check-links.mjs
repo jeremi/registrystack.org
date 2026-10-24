@@ -73,6 +73,7 @@ const siteOrigin = "https://registrystack.org";
 const externalLinks = new Set();
 const mailtoLinks = new Set();
 const mailtoAddresses = new Set();
+const contactTypes = new Set();
 
 const resolveInternal = (pathname, file) => {
   const target = pathname.endsWith("/")
@@ -100,10 +101,35 @@ for (const file of htmlFiles) {
       continue;
     }
     if (href.startsWith("/")) {
-      const { pathname } = new URL(href, siteOrigin);
+      const normalizedHref = href.replaceAll("&amp;", "&");
+      const target = new URL(normalizedHref, siteOrigin);
+      const { pathname } = target;
       resolveInternal(pathname, file);
+      if (pathname === "/contact/") {
+        const allowedParams = new Set(["type", "context", "source"]);
+        const types = target.searchParams.getAll("type");
+        const contexts = target.searchParams.getAll("context");
+        if ([...target.searchParams.keys()].some((key) => !allowedParams.has(key)) ||
+            types.length > 1 || contexts.length > 1) {
+          failures.push(`invalid contact route ${normalizedHref} from ${file}`);
+          continue;
+        }
+        const type = types[0];
+        if (type) contactTypes.add(type);
+        if (type && !["question", "service", "proposal", "starter", "privacy", "terms"].includes(type)) {
+          failures.push(`unknown contact request type ${type} from ${file}`);
+        }
+        if (["question", "service", "starter", "privacy", "terms"].includes(type) &&
+            (!contexts[0]?.trim() || contexts[0].length > 200)) {
+          failures.push(`contact route ${normalizedHref} loses its bounded context from ${file}`);
+        }
+      }
     }
   }
+}
+
+for (const type of ["question", "service", "proposal", "starter", "privacy", "terms"]) {
+  if (!contactTypes.has(type)) failures.push(`missing contextual contact route for request type ${type}`);
 }
 
 const requiredExternal = [

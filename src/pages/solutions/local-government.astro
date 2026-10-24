@@ -4,7 +4,7 @@ import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
-import { describeServiceHref, contactEmail } from '../../data/contact';
+import { describeServiceHref } from '../../data/contact';
 
 const pageTitle = 'Local government services | Registry Stack';
 const pageDescription = 'Run local permit and registration services, from applications and staff review to record updates, notices and renewals.';
@@ -118,7 +118,6 @@ const pageDescription = 'Run local permit and registration services, from applic
       primaryLabel="Discuss a local service"
       primaryHref={describeServiceHref('a local government service')}
       emphasis="docs"
-      note={`Or write to ${contactEmail}.`}
     />
   </main>
   <SiteFooter />

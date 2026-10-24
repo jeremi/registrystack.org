@@ -5,7 +5,7 @@ import SolutionFit from '../../components/SolutionFit.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas } from '../../data/solutions';
-import { describeServiceHref, contactEmail } from '../../data/contact';
+import { describeServiceHref } from '../../data/contact';
 import { products } from '../../data/products';
 const area = solutionAreas.find((a) => a.key === 'review-changes')!;
 const casework = products.find((p) => p.key === 'casework')!;
@@ -90,6 +90,5 @@ const casework = products.find((p) => p.key === 'casework')!;
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
-    note={`Or write to ${contactEmail}.`}
   />
 </Solution>

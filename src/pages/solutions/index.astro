@@ -6,7 +6,7 @@ import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, registerFamilies } from '../../data/solutions';
 import { products } from '../../data/products';
 import { startersForArea, starterCount } from '../../data/starters';
-import { describeServiceHref, contactEmail } from '../../data/contact';
+import { describeServiceHref } from '../../data/contact';
 
 const pageTitle = 'Solutions | Registry Stack';
 const pageDescription = 'Find a public service or register close to your institution’s work, see what applicants and staff can do, and choose a next step.';
@@ -101,7 +101,6 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       body="Tell us what people need to do, what your staff must decide and which systems you already use. We can help identify a suitable starting point and the work needed to deliver it."
       primaryLabel="Discuss your service"
       primaryHref={describeServiceHref()}
-      note={`Or write to ${contactEmail}.`}
     />
   </main>
   <SiteFooter />

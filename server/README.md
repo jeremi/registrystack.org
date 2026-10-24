@@ -1,14 +1,15 @@
-# Professional licensing starter requests
+# Website enquiries
 
-The professional licensing page submits directly to two native Mautic 7.2.1
-forms through a narrow Traefik boundary. There is no request relay or separate
-application service. The email link remains the no-JavaScript fallback and the
-fallback when `PUBLIC_STARTER_REQUEST_ENDPOINT` is unset.
+Website contact invitations and starter pages submit directly to two native
+Mautic 7.2.1 forms through a narrow Traefik boundary. There is no request relay
+or separate application service. The contact and starter flows retain email
+recovery for no-JavaScript use, an unavailable form, or an unset
+`PUBLIC_STARTER_REQUEST_ENDPOINT`.
 
 The default form works without tracking consent. A second form may associate a
 request with an existing Mautic device after consent. Both forms only capture a
-request for manual review. They do not send mail, start a Campaign, score a
-Contact, or deliver a starter.
+request for manual review. They have no submit actions and do not send mail,
+start a Campaign, score a Contact, or deliver a starter.
 
 ## Configure the Mautic forms
 
@@ -20,14 +21,17 @@ Create the unlinked form in kiosk mode with these case-sensitive aliases:
 | `organization` | Organization | Text | No | No Contact mapping | Yes |
 | `role` | Your role | Text | No | No Contact mapping | Yes |
 | `message` | What are you trying to do? | Textarea | No | No Contact mapping | Yes |
-| `starter_id` | Starter | Hidden | Yes | `professional-licensing` | Yes |
-| `source_page` | Source page | Hidden | Yes | `/starters/professional-licensing/` | Yes |
+| `starter_id` | Starter | Hidden | No | Empty; a starter page supplies its ID | Yes |
+| `source_page` | Source page | Hidden | Yes | Empty; the website supplies its canonical path | Yes |
 | `request_token` | Request reference | Hidden | Yes | No default; the website supplies it | Yes |
+| `request_type` | Request type | Hidden | No | Empty; the website supplies `question`, `service`, `proposal`, `starter`, `privacy`, or `terms` | Yes |
+| `request_context` | Request context | Hidden | No | Empty; the website supplies a short page-specific label | Yes |
 | `website` | Leave this empty | Captcha | No | Correct answer is empty | No |
 
 Turn auto-fill off for every field. Add no form actions. Set the post action to
-the message `Request received.` Keep Mautic's mailer set to `null://null`, and
-keep **Publicly updatable** off for the Contact Email field.
+the message `Request received.` Keep **Publicly updatable** off for the Contact
+Email field. SMTP may be configured separately for controlled operator use,
+but these forms must have no actions and no Campaign may send from them.
 
 Create the consented form with the same fields, order, mappings, result-saving
 settings, post action, and no actions. Keep kiosk mode off for this form. The
@@ -35,10 +39,24 @@ website sends a valid Mautic device ID as the top-level `mautic_device_id` POST
 value when current consent and a usable device are present. This field is not
 inside `mauticform` and is not saved as a form result.
 
+The website always sends a `privacy` request through the unlinked kiosk form,
+even when the browser has accepted tracking and has a usable device ID. A
+starter request made directly from a starter page supplies `starter_id`; a
+catalogue or general contact invitation may classify the request as `starter`
+and preserve its public context while leaving `starter_id` empty.
+
 The email and device ID are self-asserted marketing identity. Their association
 supports attribution; it does not authenticate the submitter or prove control
 of the mailbox. Repeated submissions can reuse one Contact, so use Form
 Submissions or each form's Results screen for request counts.
+An unlinked kiosk submission has no new tracking ID, but email matching can
+reuse a Contact that already has devices or page history. Kiosk mode does not
+erase or detach that pre-existing history.
+
+Keep the existing form aliases when broadening a starter-only deployment to
+sitewide enquiries. Rename only their display names to **Website request
+(unlinked)** and **Website request (consented)**. Preserving the aliases keeps
+the existing result-table names and historical submissions intact.
 
 ## Publish only the two submission variants
 
@@ -88,8 +106,10 @@ and Role, and 2,000-character Message limits before submission. The proxy caps
 the complete encoded body, while Mautic supplies Email validation and the
 `website` honeypot. A caller can bypass browser `maxlength`, so operators must
 treat saved text as untrusted input and review it before replying. This is
-appropriate for a manually reviewed inbox; it is not a general public form
-platform.
+appropriate for this manually reviewed website inbox; it is not a general
+public form platform. The `request_type` and `request_context` values organize
+the inbox but remain untrusted text rather than authorization or workflow
+state.
 
 The same proxy file preserves the tracking-cookie boundary: on `/mtc...` and
 `/mtracking.gif` routes it strips incoming `Cookie` and outgoing `Set-Cookie`.
@@ -116,7 +136,7 @@ PUBLIC_MAUTIC_URL='https://mautic.example.org' \
 npm run build
 ```
 
-Leaving the unlinked endpoint unset preserves the email request journey.
+Leaving the unlinked endpoint unset preserves the email invitation journeys.
 Leaving only the tracked endpoint unset keeps native request capture but sends
 every request through the unlinked form. An invalid scheme, path, query,
 fragment, credentials, duplicate form ID, or mismatched endpoint origin fails
@@ -149,8 +169,9 @@ Keep both forms in draft until the proxy boundary is loaded. Then:
 8. Confirm allowed form and tracking responses have no `Set-Cookie`, and form
    and tracking requests reach Mautic without an incoming `Cookie`.
 9. Confirm the saved result contains the expected Email, Organization, Role,
-   Message, starter ID, source page, and request token. Confirm no Email stat,
-   notification, Campaign membership, or outbound message is created.
+   Message, optional starter ID, source page, request token, request type, and
+   request context. Confirm no Email stat, notification, Campaign membership,
+   or outbound message is created by the form.
 
 The browser deliberately does not retry. A timeout can occur after Mautic has
 saved a row, so check recent Results in both forms before asking a submitter to
@@ -161,7 +182,9 @@ parsing, fixed native fields, browser validation, consented-device selection,
 fallback to the kiosk form, exact result verification, and no automatic retry.
 
 The optional Mautic acceptance check requires a disposable Mautic 7.2.1
-installation with a loopback site URL and `null://null` mailer:
+installation with a loopback site URL and `null://null` mailer. This restriction
+belongs to the isolated synthetic test fixture, not the production mail
+configuration:
 
 ```sh
 MAUTIC_TEST_CONTAINER=mautic-web-test \

@@ -8,7 +8,7 @@ import ServiceOutline from '../components/ServiceOutline.astro';
 import RegisterDay from '../components/RegisterDay.astro';
 import { products } from '../data/products';
 import { registerFamilies, solutionAreas } from '../data/solutions';
-import { contactEmail, describeServiceHref } from '../data/contact';
+import { describeServiceHref } from '../data/contact';
 
 const featured = registerFamilies.filter((area) => ['licensing', 'business-and-tax', 'health-and-safety'].includes(area.key));
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
@@ -27,7 +27,7 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
               <a class="button button-primary" href="/solutions/">Explore solutions</a>
               <a class="button button-secondary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a>
             </div>
-            <p class="hero-note">Start with an implementation pilot, with AI-assisted customization and support from our team. <a href={`mailto:${contactEmail}`}>{contactEmail}</a></p>
+            <p class="hero-note">Start with an implementation pilot, with AI-assisted customization and support from our team.</p>
           </div>
           <div class="hero-figure"><ServiceOutline /></div>
         </div>
@@ -140,7 +140,7 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
       </div>
     </section>
 
-    <section class="final-cta" aria-labelledby="pilot-title"><div class="section-inner"><p class="eyebrow">Your next service</p><h2 id="pilot-title">Tell us what your institution needs.</h2><p>Describe the service, its users and the change you want to make. We can help assess the fit and scope the work.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="/pricing/">View implementation options</a></div><p class="final-cta-note">You can also email {contactEmail}.</p></div></section>
+    <section class="final-cta" aria-labelledby="pilot-title"><div class="section-inner"><p class="eyebrow">Your next service</p><h2 id="pilot-title">Tell us what your institution needs.</h2><p>Describe the service, its users and the change you want to make. We can help assess the fit and scope the work.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="/pricing/">View implementation options</a></div></div></section>
   </main>
   <SiteFooter />
 </Base>

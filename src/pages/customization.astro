@@ -3,7 +3,7 @@
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { contactEmail, describeServiceHref } from '../data/contact';
+import { describeServiceHref } from '../data/contact';
 ---
 <Base title="AI-assisted customization | Registry Stack" description="Describe the public service you need. Get AI-assisted implementation with our team, adapt reusable software and review the result before deployment.">
   <SiteHeader current="customization" />
@@ -13,7 +13,7 @@ import { contactEmail, describeServiceHref } from '../data/contact';
       <h1 id="customize-title">Describe your service. We help build it around your rules.</h1>
       <p class="hero-lead">Describe your requirements and current process. Our team uses AI tools and reusable software to help adapt the records, forms and review steps with you.</p>
       <div class="hero-actions"><a class="button button-primary" href={describeServiceHref('customization')} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="#how-customization-works">See the process</a></div>
-      <p class="hero-note">Available through a scoped implementation pilot. We agree the screens, integrations and handover with you. You can also email {contactEmail}.</p>
+      <p class="hero-note">Available through a scoped implementation pilot. We agree the screens, integrations and handover with you.</p>
     </div></div></section>
 
     <section class="section" id="how-customization-works" aria-labelledby="process-title"><div class="section-inner">
@@ -39,7 +39,7 @@ import { contactEmail, describeServiceHref } from '../data/contact';
 
     <section class="section" id="studio" aria-labelledby="studio-title"><div class="section-inner approach-split">
       <div class="section-heading"><p class="eyebrow">Registry Studio · In development</p><h2 id="studio-title">Direct AI-assisted customization is the next step.</h2><p>We are developing Registry Studio so teams can describe a change, inspect the proposed configuration and review its effect before applying it.</p><p>The self-service AI assistant is planned. Current AI-assisted implementation is delivered with our team.</p></div>
-      <div class="editorial-callout"><h3>Help shape it around your service</h3><p>Tell us which changes take the most effort today: adapting forms, updating review steps, changing the information you collect, or maintaining several related registers.</p><a class="inline-cta" href={describeServiceHref('Registry Studio')} data-journey="service-inquiry">Discuss your customization needs <span aria-hidden="true">→</span></a><p class="contact-note">{contactEmail}</p></div>
+      <div class="editorial-callout"><h3>Help shape it around your service</h3><p>Tell us which changes take the most effort today: adapting forms, updating review steps, changing the information you collect, or maintaining several related registers.</p><a class="inline-cta" href={describeServiceHref('Registry Studio')} data-journey="service-inquiry">Discuss your customization needs <span aria-hidden="true">→</span></a></div>
     </div></section>
 
     <section class="final-cta" aria-labelledby="next-title"><div class="section-inner"><p class="eyebrow">Implementation and support</p><h2 id="next-title">Define one service to work on together.</h2><p>Agree the outcome, responsibilities and fee before implementation begins.</p><a class="button button-primary" href="/pricing/">View implementation options</a></div></section>

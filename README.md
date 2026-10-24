@@ -116,18 +116,22 @@ identifiers belong in expandable details. Public source registers are modelling
 references and do not imply adoption or endorsement. The shared starter wording
 and request journeys are covered by tests.
 
-### Professional licensing starter requests
+### Website enquiries
 
-The inline request form is enabled only for the `professional-licensing`
-starter. Set this public build variable to the exact HTTPS route for the
-unlinked native Mautic form:
+The shared inline form covers website contact invitations and every starter
+page. Set this public build variable to the exact HTTPS route for the unlinked
+native Mautic form:
 
 ```sh
 PUBLIC_STARTER_REQUEST_ENDPOINT='https://mautic.example.org/form/submit?formId=1&privacy=kiosk'
 ```
 
-When the variable is unset, the site keeps the existing email request links.
-The form works without accepting visit tracking. See
+When the variable is unset, the contact and starter flows show their email
+recovery instead. The form works without accepting visit tracking. It records
+the canonical source page, a bounded request type, a short page-specific
+context, and the starter ID when the enquiry comes from a specific starter
+page. A catalogue invitation can carry starter context without claiming a
+specific starter ID. See
 [server/README.md](server/README.md) for the two Mautic forms, narrow proxy
 routes, deployment, and verification setup.
 
@@ -196,20 +200,22 @@ not proof of tutorial completion or a submitted, qualified inquiry.
 
 ## Optional request capture and visit tracking
 
-`PUBLIC_STARTER_REQUEST_ENDPOINT` enables the professional licensing request
-form through the unlinked native Mautic form while preserving the email
-fallback. `PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT` optionally names a second,
-same-origin native form that links an opted-in visitor's existing Mautic device
-to the request. Both variables contain a full HTTPS
+`PUBLIC_STARTER_REQUEST_ENDPOINT` enables sitewide enquiry forms through the
+unlinked native Mautic form while preserving each email fallback.
+`PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT` optionally names a second, same-origin
+native form that links an opted-in visitor's existing Mautic device to the
+request. Both variables contain a full HTTPS
 `/form/submit?formId=...&privacy=...` URL. See [native form and proxy
 setup](server/README.md).
 
 `PUBLIC_MAUTIC_URL` enables an optional website tracking choice. Leave it unset
 to omit the tracker and preference UI. With it configured as an HTTPS origin,
-Mautic loads only after explicit consent. Refusing tracking does not prevent a
-starter request. An opted-in browser's history can attach to the submitted
-email through the separately configured consented form; the email is
-self-asserted, never an authentication credential.
+Mautic loads only after explicit consent. Refusing tracking does not prevent an
+enquiry. An opted-in browser's history can attach to the submitted email through
+the separately configured consented form; the email is self-asserted, never an
+authentication credential. An unlinked submission adds no new browser-device
+association, but matching an existing Contact by email does not erase that
+Contact's previously associated history.
 
 The website records canonical page URLs, titles, referring site origins,
 and bounded campaign labels. Tracking preferences are remembered for 180 days;
@@ -218,9 +224,10 @@ and GPC signals keep Mautic tracking off. Umami remains separate aggregate
 analytics and covers outbound links to documentation, demos and GitHub.
 
 Follow [Mautic tracking operations](server/mautic-tracking.md) before activation,
-including exact-origin CORS, the tracking-cookie proxy boundary and disabled
-email. The workflow reads all three public settings from repository variables.
-This source change does not publish the forms or load the proxy configuration.
+including exact-origin CORS, the tracking-cookie proxy boundary, zero form
+actions, and absence of sending Campaigns. The workflow reads all three public
+settings from repository variables. This source change does not publish the
+forms or load the proxy configuration.
 
 `npm run check:marketing-tracking` verifies the configured browser flow with a
 deterministic tracking server. The optional real-Mautic acceptance command in

@@ -136,7 +136,7 @@ const trackingProxy = createHttpsServer(tls, async (request, response) => {
     recordedRequest.status = upstream.status;
     const responseHeaders = {};
     upstream.headers.forEach((value, name) => {
-      if (!['set-cookie', 'content-length', 'content-encoding'].includes(name.toLowerCase())) {
+      if (!['set-cookie', 'content-length', 'content-encoding', 'transfer-encoding'].includes(name.toLowerCase())) {
         responseHeaders[name] = value;
       }
     });
@@ -231,8 +231,8 @@ try {
     await form.getByRole('textbox', { name: 'Email address' }).fill(email);
     await form.getByRole('textbox', { name: 'Organization' }).fill('Example licensing office');
     await form.getByRole('textbox', { name: 'Your role' }).fill('Service owner');
-    await form.getByRole('textbox', { name: 'What are you trying to do?' }).fill(message);
-    await form.getByRole('button', { name: 'Send request' }).click();
+    await form.locator('textarea[name="message"]').fill(message);
+    await form.locator('[data-starter-request-submit]').click();
     await Promise.race([
       form.locator('[data-starter-request-success]').waitFor({ state: 'visible' }),
       form.locator('[data-starter-request-error]').waitFor({ state: 'visible' }),
@@ -433,7 +433,9 @@ try {
   const requests = after.submissions.filter(row => row.email?.endsWith(`-${unique}@example.invalid`));
   assert.equal(requests.length, 7);
   assert.equal(new Set(requests.map(row => row.request_token)).size, 7);
-  assert.ok(requests.every(row => row.starter_id === 'professional-licensing' && row.source_page === '/starters/professional-licensing/'));
+  assert.ok(requests.every(row => row.starter_id === 'professional-licensing' &&
+    row.source_page === '/starters/professional-licensing/' &&
+    row.request_type === 'starter' && row.request_context === 'Professional licensing'));
   const kioskRequests = requests.filter(row => Number(row.form_id) === before.formId);
   assert.equal(kioskRequests.length, 5);
   assert.ok(kioskRequests.every(row => !row.tracking_id));
@@ -448,10 +450,108 @@ try {
   assert.ok(externalUrls.every(url => !url.includes('@') && !url.includes('not-forwarded')));
   assert.deepEqual(errors, []);
 
+  const generalEmail = `sitewide-question-${unique}@example.invalid`;
+  const general = await newBrowserPage();
+  await general.page.goto(`${origin}/contact/?type=question&context=Native%20acceptance`);
+  await submitRequest(general.page, generalEmail, 'How can Registry Stack fit our service?');
+
+  const anotherStarterEmail = `sitewide-starter-${unique}@example.invalid`;
+  const anotherStarter = await newBrowserPage();
+  await anotherStarter.page.goto(`${origin}/starters/animal-health-status/`);
+  await submitRequest(anotherStarter.page, anotherStarterEmail, 'Another starter request');
+
+  const privacyTokenCountBefore = new Set(stats().submissions.map(row => row.request_token)).size;
+  await main.page.goto(`${origin}/privacy/`);
+  await main.page.getByRole('link', { name: 'privacy contact form' }).first().click();
+  assert.equal(new URL(main.page.url()).searchParams.get('source'), '/privacy/');
+  await waitForHitQueueCount(2);
+  await submitRequest(main.page, trackedEmail, 'Please review my stored visit history');
+  consumeHitQueue();
+  assert.equal(hitQueueCount(), 0, 'The privacy and contact page hits were not processed.');
+
+  const legacyEmail = `sitewide-legacy-${unique}@example.invalid`;
+  const legacyToken = randomUUID();
+  const legacyBody = new URLSearchParams({
+    'mauticform[email]': legacyEmail,
+    'mauticform[organization]': 'Legacy fixture organization',
+    'mauticform[role]': 'Legacy fixture role',
+    'mauticform[message]': 'Legacy payload without classification fields',
+    'mauticform[starter_id]': 'professional-licensing',
+    'mauticform[source_page]': '/starters/professional-licensing/',
+    'mauticform[request_token]': legacyToken,
+    'mauticform[website]': '',
+    'mauticform[formId]': String(before.formId),
+  });
+  const legacyBrowser = await newBrowserPage({ dnt: true });
+  const legacyResponse = await legacyBrowser.context.request.post(`${kioskEndpoint}&ajax=1`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+      DNT: '1',
+      Origin: origin,
+    },
+    data: legacyBody.toString(),
+  });
+  assert.equal(legacyResponse.status(), 200);
+  assert.equal((await legacyResponse.json()).success, 1);
+
+  const sitewide = await waitForStats(
+    snapshot => [generalEmail, anotherStarterEmail, legacyEmail].every(
+      email => snapshot.submissions.some(row => row.email === email),
+    ) && snapshot.submissions.filter(row => row.email === trackedEmail).length === 3,
+    'One or more sitewide native requests were not saved.',
+  );
+  const generalRequest = sitewide.submissions.find(row => row.email === generalEmail);
+  assert.deepEqual({
+    starter: generalRequest.starter_id,
+    source: generalRequest.source_page,
+    type: generalRequest.request_type,
+    context: generalRequest.request_context,
+  }, { starter: '', source: '/contact/', type: 'question', context: 'Native acceptance' });
+  const anotherStarterRequest = sitewide.submissions.find(row => row.email === anotherStarterEmail);
+  assert.deepEqual({
+    starter: anotherStarterRequest.starter_id,
+    source: anotherStarterRequest.source_page,
+    type: anotherStarterRequest.request_type,
+    context: anotherStarterRequest.request_context,
+  }, {
+    starter: 'animal-health-status',
+    source: '/starters/animal-health-status/',
+    type: 'starter',
+    context: 'Animal-health status register',
+  });
+  const privacyRequests = sitewide.submissions.filter(row => row.email === trackedEmail);
+  const privacyRequest = privacyRequests.find(row => row.request_type === 'privacy');
+  assert.ok(privacyRequest, 'The privacy request was not saved.');
+  assert.equal(Number(privacyRequest.form_id), before.formId);
+  assert.equal(privacyRequest.tracking_id, null);
+  assert.equal(String(privacyRequest.lead_id), String(trackedRequest.lead_id));
+  assert.equal(privacyRequest.source_page, '/privacy/');
+  assert.equal(privacyRequest.request_context, 'website privacy question');
+  assert.equal(new Set(sitewide.submissions.map(row => row.request_token)).size, privacyTokenCountBefore + 2);
+  const legacyRequest = sitewide.submissions.find(row => row.request_token === legacyToken);
+  assert.ok(legacyRequest, 'The legacy request was not saved.');
+  assert.equal(legacyRequest.request_type ?? '', '');
+  assert.equal(legacyRequest.request_context ?? '', '');
+  assert.equal(legacyRequest.starter_id, 'professional-licensing');
+  assert.equal(legacyRequest.source_page, '/starters/professional-licensing/');
+  assert.equal(sitewide.emailStats, before.emailStats, 'sitewide acceptance must not send email');
+  const sitewideNativeSubmissions = trackingRequests.filter(
+    request => request.method === 'POST' && new URL(request.path, publicMauticOrigin).pathname === '/form/submit',
+  ).slice(-4);
+  assert.equal(sitewideNativeSubmissions.length, 4);
+  const privacyNativeRequest = sitewideNativeSubmissions.find(request => request.body.includes('mauticform%5Brequest_type%5D=privacy'));
+  assert.ok(privacyNativeRequest, 'The browser did not submit the privacy request.');
+  assert.equal(privacyNativeRequest.privacyMode, 'kiosk');
+  assert.equal(new URLSearchParams(privacyNativeRequest.body).has('mautic_device_id'), false);
+  assert.ok(externalUrls.every(url => !url.includes('@') && !url.includes('not-forwarded')));
+  assert.deepEqual(errors, []);
+
   console.log(configured.emailWasPubliclyUpdatable
     ? 'Fixture disabled public updates on Mautic Contact email before acceptance.'
     : 'Mautic Contact email was already not publicly updatable.');
-  console.log('Real Mautic acceptance passed: consented page history linked once; reject, unset, DNT and GPC requests stayed untracked; withdrawal and reacceptance started a different device.');
+  console.log('Real Mautic acceptance passed: consented page history linked once; reject, unset, DNT and GPC requests stayed untracked; withdrawal and reacceptance started a different device; sitewide request fields and legacy payload compatibility persisted exactly.');
   await Promise.all(contexts.map(context => context.close()));
 } finally {
   await browser?.close();

@@ -209,14 +209,16 @@ for (const route of ['/starters/', '/#developers', 'https://docs.registrystack.o
 for (const route of ['/customization/', '/pricing/']) {
   if (!headerSource.includes(`href: '${route}'`)) failures.push(`header is missing its direct ${route} route`);
 }
-if (!headerSource.includes('href="/pricing/#inquiry"') || !headerSource.includes('>Contact</a>')) {
-  failures.push('header Contact action must lead to /pricing/#inquiry');
+if (!headerSource.includes('href={contactHref()}') || !headerSource.includes('>Contact</a>')) {
+  failures.push('header Contact action must lead to the general contact form');
 }
-// The footer prints the address itself, not only a button that opens it.
-if (!/label: contactEmail\b|>contact@registrystack\.org</.test(footerSource)) {
-  failures.push('footer does not print the contact address in text');
+if (!footerSource.includes('href: describeServiceHref()') || !footerSource.includes('href: askQuestionHref()')) {
+  failures.push('footer must route service discussions and questions through the contact form');
 }
-for (const route of ['/solutions/', '/customization/', '/digital-public-infrastructure/', '/starters/', '/blog/', '/security/', '/faq/', '/pricing/#inquiry']) {
+if (/mailto:|contactEmail/.test(footerSource)) {
+  failures.push('footer must not bypass the contact form with a direct email link');
+}
+for (const route of ['/solutions/', '/customization/', '/digital-public-infrastructure/', '/starters/', '/blog/', '/security/', '/faq/']) {
   if (!footerSource.includes(`href: '${route}'`)) failures.push(`footer is missing ${route}`);
 }
 
@@ -388,13 +390,20 @@ for (const starter of catalogueStarters) {
   }
 }
 // Until the catalogue is published for download, a starter page asks for a
-// request by email and never links the zip.
+// request through the native form or shared contact route and never links the zip.
 const starterPageSource = readSource('src/pages/starters/[id].astro');
 if (starterPageSource.includes('href={starter.download.path}')) failures.push('starter page links the zip; starters are sent on request');
 if (!starterPageSource.includes('data-journey="starter-request"')) failures.push('starter page is missing the starter request action');
+if (!starterPageSource.includes('const requestFormEnabled = Boolean(starterRequestEndpoint)') ||
+    starterPageSource.includes("starter.id === 'professional-licensing'") ||
+    !starterPageSource.includes('starterId={starter.id}') ||
+    !starterPageSource.includes('starterTitle={starter.title}') ||
+    !starterPageSource.includes('sourcePage={`/starters/${starter.id}/`}')) {
+  failures.push('every starter page must use the configured native form with its actual identity and source route');
+}
 const startersIndexSource = readSource('src/pages/starters/index.astro');
-if (!/not public yet[\s\S]*email request|email request[\s\S]*not public yet/i.test(startersIndexSource)) {
-  failures.push('starters catalogue must state that unpublished starter files are available by email request');
+if (!/not public yet[\s\S]*provided on request/i.test(startersIndexSource)) {
+  failures.push('starters catalogue must state that unpublished starter files are provided on request');
 }
 const startersUpstream = JSON.parse(readSource('src/upstream/starters.json') || '{}');
 if (startersUpstream.starterCount !== catalogueStarters.length) {
@@ -420,6 +429,7 @@ if (!productClosing || !productClosing[0].includes('href="/pricing/"') || produc
 const handoffExempt = new Set([
   'src/pages/index.astro',
   'src/pages/pricing.astro',
+  'src/pages/contact.astro',
   'src/pages/pilot.astro',
   'src/pages/privacy.astro',
   'src/pages/terms.astro',
@@ -461,7 +471,7 @@ for (const relativePath of [
 
 const pricingSource = readSource('src/pages/pricing.astro');
 if (!pricingSource.includes('US$20,000') || !pricingSource.includes('US$7,500') ||
-    !pricingSource.includes('data-journey="implementation-support-inquiry"') || !pricingSource.includes('href={contactHref}')) {
+    !pricingSource.includes('data-journey="implementation-support-inquiry"') || !pricingSource.includes('href={proposalRoute}')) {
   failures.push('pricing page is missing a pilot/support starting price or inquiry action');
 }
 // The light tier asks for nothing but a question; the brief marks budget and
@@ -504,14 +514,22 @@ if (!pricingSource.includes('/#developers')) {
   failures.push('pricing page is missing the self-service developer path');
 }
 
-// Inquiry mailtos use encoded real line breaks, and the service path asks for
-// the need, users and desired improvement before a buyer chooses a product.
+// Public calls to action preserve the request type and context in the contact
+// route. Direct mail is reserved for recovery inside the form and the imprint.
 const contactSource = readSource('src/data/contact.ts');
-if (!contactSource.includes("bodyLines.join('\\n')") || contactSource.includes("bodyLines.join('\\\\n')")) {
-  failures.push('contact mailtos must join fields with real newline characters');
+for (const mapping of [
+  ["contactHref('question', about)", 'question'],
+  ["contactHref('service', about)", 'service'],
+  ["contactHref('proposal')", 'proposal'],
+]) {
+  if (!contactSource.includes(mapping[0])) failures.push(`contact route helper is missing its ${mapping[1]} type`);
 }
-for (const field of ['The service you need: ', 'Who will use it: ', 'What should improve: ']) {
-  if (!contactSource.includes(`'${field}'`)) failures.push(`service inquiry email is missing field: ${field.trim()}`);
+for (const relativePath of listAstroFiles('src/pages')) {
+  if (['src/pages/contact.astro', 'src/pages/imprint.astro'].includes(relativePath)) continue;
+  const source = readSource(relativePath);
+  if (/mailto:contact@registrystack\.org|\bcontactEmail\b/.test(source)) {
+    failures.push(`${relativePath} bypasses the contextual contact form`);
+  }
 }
 
 // Planned product and standards work stays clearly distinguished from what a

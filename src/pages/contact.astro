@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import StarterRequestForm from '../components/StarterRequestForm.astro';
+import { starterRequestEndpoint as parseStarterRequestEndpoint } from '../lib/starter-request';
+
+const pageTitle = 'Contact Registry Stack';
+const pageDescription =
+  'Ask about a public registry service, implementation, support, request a proposal, request a starting configuration, or contact us about privacy or the website terms.';
+const endpoint = parseStarterRequestEndpoint(import.meta.env.PUBLIC_STARTER_REQUEST_ENDPOINT, 'kiosk');
+const trackedEndpoint = parseStarterRequestEndpoint(import.meta.env.PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT, 'consented');
+if (trackedEndpoint && !endpoint) {
+  throw new Error('A tracked contact form endpoint requires the kiosk endpoint.');
+}
+if (endpoint && trackedEndpoint) {
+  const kioskUrl = new URL(endpoint);
+  const trackedUrl = new URL(trackedEndpoint);
+  if (kioskUrl.origin !== trackedUrl.origin ||
+      kioskUrl.searchParams.get('formId') === trackedUrl.searchParams.get('formId')) {
+    throw new Error('Contact form endpoints must share an origin and use distinct form IDs.');
+  }
+}
+---
+
+<Base title={`${pageTitle} | Registry Stack`} description={pageDescription}>
+  <SiteHeader current="contact" />
+  <main>
+    <section class="hero" aria-labelledby="contact-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Contact</p>
+          <h1 id="contact-title">Tell us what you need.</h1>
+          <p class="hero-lead">
+            Ask a question, describe a service, request a proposal, or request a starting
+            configuration. Do not include confidential records or personal case information.
+          </p>
+          <p class="hero-note" data-contact-context hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-label="Contact form">
+      <div class="section-inner contact-form-wrap">
+        <StarterRequestForm
+          endpoint={endpoint}
+          trackedEndpoint={trackedEndpoint}
+          requestType="question"
+          requestContext=""
+          requestFromUrl
+          headingLevel={2}
+          eyebrow="Contact Registry Stack"
+          heading="Send an enquiry"
+          intro="Tell us what you need. If the form is unavailable, the email recovery includes prompts for the request type and relevant page."
+          messageLabel="Your message"
+          submitLabel="Send message"
+          successMessage="Message received. Our team will review it and reply."
+        />
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Base>
+
+<script>
+  import { requestContext } from '../lib/starter-request';
+
+  const context = requestContext(new URLSearchParams(window.location.search).get('context') ?? undefined);
+  const note = document.querySelector<HTMLElement>('[data-contact-context]');
+  if (context && note) {
+    note.textContent = `About: ${context}`;
+    note.hidden = false;
+  }
+</script>
+
+<style>
+  .contact-form-wrap {
+    max-width: 1040px;
+  }
+</style>

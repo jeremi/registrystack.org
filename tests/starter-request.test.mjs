@@ -1,10 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { submitStarterRequest, starterRequestEndpoint } from '../src/lib/starter-request.ts';
+import {
+  contactRequestPresentation,
+  requestSourcePage,
+  submitStarterRequest,
+  starterRequestEndpoint,
+} from '../src/lib/starter-request.ts';
 
 const kioskEndpoint = 'https://forms.example.org/form/submit?formId=1&privacy=kiosk';
 const trackedEndpoint = 'https://forms.example.org/form/submit?formId=2&privacy=consented';
-const input = { email: ' reader@example.org ', organization: ' Office ', role: ' Steward ', message: ' A licence register. ' };
+const input = {
+  email: ' reader@example.org ',
+  organization: ' Office ',
+  role: ' Steward ',
+  message: ' A licence register. ',
+  starterId: 'professional-licensing',
+  sourcePage: '/starters/professional-licensing/',
+  requestType: 'starter',
+  requestContext: ' Professional licensing ',
+};
 
 function nativeSuccess(body, overrides = {}) {
   return Response.json({
@@ -17,6 +31,8 @@ function nativeSuccess(body, overrides = {}) {
       starter_id: body.get('mauticform[starter_id]'),
       source_page: body.get('mauticform[source_page]'),
       request_token: body.get('mauticform[request_token]'),
+      request_type: body.get('mauticform[request_type]'),
+      request_context: body.get('mauticform[request_context]'),
       ...overrides,
     },
   });
@@ -68,6 +84,8 @@ test('posts native Mautic fields with fixed provenance and no browser credential
     'mauticform[starter_id]': 'professional-licensing',
     'mauticform[source_page]': '/starters/professional-licensing/',
     'mauticform[request_token]': sent.options.body.get('mauticform[request_token]'),
+    'mauticform[request_type]': 'starter',
+    'mauticform[request_context]': 'Professional licensing',
     'mauticform[website]': '',
     'mauticform[formId]': '1',
   });
@@ -120,8 +138,63 @@ test('invalid or oversized details and a filled honeypot never reach Mautic', as
     { ...input, email: `${'x'.repeat(245)}@example.org` },
     { ...input, organization: 'x'.repeat(201) }, { ...input, role: 'x'.repeat(201) },
     { ...input, message: 'x'.repeat(2001) }, { ...input, website: 'https://spam.example.org' },
+    { ...input, starterId: 'NOT A SLUG' }, { ...input, sourcePage: 'https://other.example.org/' },
+    { ...input, sourcePage: '/contact/?email=never@example.org' },
+    { ...input, requestType: 'sales' }, { ...input, requestContext: 'x'.repeat(201) },
+    { ...input, requestType: 'question', message: '' },
   ]) await assert.rejects(submitStarterRequest(kioskEndpoint, bad));
   assert.equal(fetch.mock.calls.length, 0);
+});
+
+test('starter messages are optional and generic request messages are required', async (t) => {
+  const sent = [];
+  t.mock.method(globalThis, 'fetch', async (_url, options) => {
+    sent.push(options.body);
+    return nativeSuccess(options.body);
+  });
+  await submitStarterRequest(kioskEndpoint, { ...input, message: '' });
+  await submitStarterRequest(kioskEndpoint, {
+    ...input,
+    message: 'Please explain the implementation scope.',
+    starterId: '',
+    sourcePage: '/contact/',
+    requestType: 'question',
+    requestContext: 'Implementation scope',
+  });
+  assert.equal(sent[0].get('mauticform[message]'), '');
+  assert.equal(sent[1].get('mauticform[starter_id]'), '');
+});
+
+test('privacy requests always use the kiosk form', async (t) => {
+  let sent;
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    sent = { url, body: options.body };
+    return nativeSuccess(options.body);
+  });
+  await submitStarterRequest(kioskEndpoint, {
+    ...input,
+    starterId: '',
+    sourcePage: '/contact/',
+    requestType: 'privacy',
+    requestContext: 'Delete my data',
+  }, 'abcdefghij0123456789abc', trackedEndpoint);
+  assert.equal(sent.url, `${kioskEndpoint}&ajax=1`);
+  assert.equal(sent.body.has('mautic_device_id'), false);
+});
+
+test('source pages are path-only and never forward sensitive queries', () => {
+  assert.equal(requestSourcePage('/solutions/licensing/'), '/solutions/licensing/');
+  assert.equal(requestSourcePage('/contact/?email=secret@example.org'), undefined);
+  assert.equal(requestSourcePage('//other.example.org/path'), undefined);
+  assert.equal(requestSourcePage('/safe/#private'), undefined);
+});
+
+test('request presentation matches privacy, proposal, and starter behavior', () => {
+  assert.match(contactRequestPresentation('privacy').privacyCopy, /do not use this request to link your current browser/i);
+  assert.equal(contactRequestPresentation('privacy').submitLabel, 'Send privacy request');
+  assert.equal(contactRequestPresentation('proposal').heading, 'Request a proposal');
+  assert.equal(contactRequestPresentation('proposal').submitLabel, 'Request a proposal');
+  assert.equal(contactRequestPresentation('starter').messageLabel, 'What are you trying to do?');
 });
 
 test('requires exact saved native results and never retries a possibly saved request', async (t) => {

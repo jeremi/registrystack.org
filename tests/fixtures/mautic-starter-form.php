@@ -33,26 +33,37 @@ $fields = [
     ['organization', 'Organization', 'text', false, null, null],
     ['role', 'Your role', 'text', false, null, null],
     ['message', 'What are you trying to do?', 'textarea', false, null, null],
-    ['starter_id', 'Starter', 'hidden', true, null, 'professional-licensing'],
-    ['source_page', 'Source page', 'hidden', true, null, '/starters/professional-licensing/'],
+    ['starter_id', 'Starter', 'hidden', false, null, ''],
+    ['source_page', 'Source page', 'hidden', true, null, ''],
     ['request_token', 'Request reference', 'hidden', true, null, null],
+    ['request_type', 'Request type', 'hidden', false, null, ''],
+    ['request_context', 'Request context', 'hidden', false, null, ''],
     ['website', 'Leave this empty', 'captcha', false, null, null],
 ];
 $ensureForm = function ($alias, $name, $kiosk) use ($model, $fields) {
     $form = $model->getRepository()->findOneBy(['alias' => $alias]);
-    if ($form) {
-        return $form;
+    if (!$form) {
+        $form = new Mautic\FormBundle\Entity\Form();
+        $form->setAlias($alias);
     }
-    $form = new Mautic\FormBundle\Entity\Form();
     $form->setName($name);
-    $form->setAlias($alias);
     $form->setIsPublished(true);
     $form->setInKioskMode($kiosk);
     $form->setPostAction('message');
     $form->setPostActionProperty('Request received.');
     $form->setNoIndex(true);
+    if (count($form->getActions()) !== 0) {
+        throw new RuntimeException('Fixture forms must not have actions.');
+    }
+    $actual = [];
+    foreach ($form->getFields() as $field) {
+        $actual[$field->getAlias()] = $field;
+    }
+    if (array_diff(array_keys($actual), array_column($fields, 0)) !== []) {
+        throw new RuntimeException('Fixture form contains an unmanaged field.');
+    }
     foreach ($fields as $index => [$name, $label, $type, $required, $contactField, $default]) {
-        $field = new Mautic\FormBundle\Entity\Field();
+        $field = $actual[$name] ?? new Mautic\FormBundle\Entity\Field();
         $field->setAlias($name)->setLabel($label)->setType($type)->setIsRequired($required)->setOrder($index + 1)->setForm($form);
         $field->setSaveResult($name !== 'website');
         $field->setIsAutoFill(false);
@@ -60,15 +71,20 @@ $ensureForm = function ($alias, $name, $kiosk) use ($model, $fields) {
         if ($contactField) {
             $field->setMappedObject('contact');
             $field->setMappedField($contactField);
+        } else {
+            $field->setMappedObject(null);
+            $field->setMappedField(null);
         }
-        if ($type === 'captcha') $field->setProperties(['captcha' => '']);
-        $form->addField($index, $field);
+        $field->setProperties($type === 'captcha' ? ['captcha' => ''] : []);
+        if (!isset($actual[$name])) {
+            $form->addField($index, $field);
+        }
     }
     $model->saveEntity($form);
     return $form;
 };
-$form = $ensureForm('professionallicensingrequestrelaytest', 'Professional licensing starter request test', true);
-$trackedForm = $ensureForm('professionallicensingrequesttrackedtest', 'Professional licensing tracked starter request test', false);
+$form = $ensureForm('professionallicensingrequestrelaytest', 'Website request (unlinked) test', true);
+$trackedForm = $ensureForm('professionallicensingrequesttrackedtest', 'Website request (consented) test', false);
 $validateForm = function ($candidate, $expectedKiosk) use ($fields) {
     if ((bool) $candidate->getInKioskMode() !== $expectedKiosk || count($candidate->getActions()) !== 0) {
         throw new RuntimeException('Fixture forms must use the expected kiosk mode with no actions.');
@@ -77,6 +93,7 @@ $validateForm = function ($candidate, $expectedKiosk) use ($fields) {
     foreach ($candidate->getFields() as $field) {
         $actual[$field->getAlias()] = $field;
     }
+    uasort($actual, fn ($left, $right) => $left->getOrder() <=> $right->getOrder());
     if (array_keys($actual) !== array_column($fields, 0)) {
         throw new RuntimeException('Fixture forms must have identical ordered fields.');
     }

@@ -7,7 +7,7 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
-import { describeServiceHref, contactEmail } from '../../data/contact';
+import { describeServiceHref } from '../../data/contact';
 import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'licensing')!;
 
@@ -133,6 +133,5 @@ const steps: WeekStep[] = [
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
-    note={`Or write to ${contactEmail}.`}
   />
 </Solution>

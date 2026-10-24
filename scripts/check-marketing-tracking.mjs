@@ -19,7 +19,7 @@ const endpoint = 'https://forms.example.test/form/submit?formId=1&privacy=kiosk'
 const trackedEndpoint = 'https://forms.example.test/form/submit?formId=2&privacy=consented';
 const networkEndpoint = `${endpoint}&ajax=1`;
 const trackedNetworkEndpoint = `${trackedEndpoint}&ajax=1`;
-const resultAliases = ['email', 'organization', 'role', 'message', 'starter_id', 'source_page', 'request_token'];
+const resultAliases = ['email', 'organization', 'role', 'message', 'starter_id', 'source_page', 'request_token', 'request_type', 'request_context'];
 function successfulMauticResponse(data) {
   return {
     success: 1,

@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import DocsHandoff from '../components/DocsHandoff.astro';
-import { askQuestionHref, contactEmail } from '../data/contact';
+import { askQuestionHref } from '../data/contact';
 
 const pageTitle = 'Security | Registry Stack';
 const pageDescription =
@@ -196,7 +196,6 @@ const evidence = [
         </div>
         <div class="security-contact">
           <a class="button button-secondary" href={askQuestionHref('Registry Stack security and governance')}>Ask about your requirements</a>
-          <p>Or write to {contactEmail}.</p>
         </div>
       </div>
     </section>

@@ -5,8 +5,9 @@ uses Mautic for consented, person-level website activity and request records.
 Umami remains the separate source for aggregate, cookie-free website traffic
 and outbound-link counts.
 
-Email delivery must remain disabled in Mautic. Starter fulfillment and replies
-are manual.
+Website enquiries are reviewed and answered manually. Production SMTP may be
+configured separately for controlled operator use, but the two public forms
+have no actions and no Campaign or other automation sends from this journey.
 
 ## Mautic 7.2.1 contracts and activation target
 
@@ -37,8 +38,11 @@ association.
 
 ## Required Mautic configuration
 
-Keep the mailer DSN set to `null://null`. Do not create Email, SMS, push,
-notification, Campaign, scoring, or Stage automation for this journey.
+Do not create Email, SMS, push, notification, Campaign, scoring, or Stage
+automation for this journey. A configured SMTP transport does not itself send
+mail; form actions, Campaigns, broadcasts, and other send triggers remain off.
+Use `null://null` only in the isolated synthetic acceptance fixture described
+in the native-form guide.
 
 Before activation, apply these tracking controls in
 **Settings > Configuration**:
@@ -120,8 +124,8 @@ Configure their behavior as follows:
 
 | Form | Kiosk mode | Browser association | Use |
 | --- | --- | --- | --- |
-| Unlinked starter request | Yes | None; the proxy injects `DNT: 1` and the website sends no device ID | Every request without valid tracking consent and a valid device |
-| Consented starter request | No | The website sends the validated device ID as top-level `mautic_device_id` | Only a request with current tracking consent and a valid device |
+| Website request (unlinked) | Yes | No new browser association; the proxy injects `DNT: 1` and the website sends no device ID | Every request without valid tracking consent and a valid device |
+| Website request (consented) | No | The website sends the validated device ID as top-level `mautic_device_id` | Only a request with current tracking consent and a valid device |
 
 Publish exactly one POST route for each form at the reverse proxy. Match the
 exact path, form ID, privacy value, `ajax=1`, method, and website Origin. The
@@ -150,6 +154,10 @@ mauticform[...]=...
 Only this valid consent-plus-device path includes a device ID. The browser
 chooses the unlinked form whenever consent or a usable device is absent. The
 proxy injects `DNT: 1` on that route and removes request cookies.
+The website also always chooses the unlinked form for a `privacy` request,
+even when consent and a usable device are present. A catalogue invitation may
+use request type `starter` with public request context but no `starter_id`; a
+specific starter page supplies both its ID and title.
 The proxy returns `403` before Mautic if a consented-route request carries
 `DNT: 1` or `Sec-GPC: 1`. The normal website selects the kiosk route when
 either signal is active. The consented route preserves the browser User-Agent
@@ -159,6 +167,9 @@ Never put an email address in a tracking URL, tracking query, device value, or
 publicly editable Contact field. The email in either request form is asserted
 by the submitter. Linking activity to that address supports attribution; it is
 not authentication and does not prove that the submitter controls the mailbox.
+Kiosk mode prevents a new browser-device association for that submission, but
+Mautic can still match the asserted email to an existing Contact. It does not
+erase or detach page history and devices already associated with that Contact.
 
 ## Website and proxy boundary
 
@@ -214,11 +225,11 @@ supervisor that restarts it after each bounded run:
 php bin/console messenger:consume hit --time-limit=3600 --memory-limit=256M --no-interaction
 ```
 
-Consume only `hit` when testing this tracking workflow. Keep email delivery
-disabled with the null mail transport, and do not configure outreach Campaigns
-or run broadcast commands. An existing `email` worker does not enable delivery
-while that null transport is enforced. Monitor failed hit messages separately;
-do not silently discard them.
+Consume only `hit` when testing this tracking workflow. Do not test the
+`email` queue as part of tracking acceptance, configure outreach Campaigns, or
+run broadcast commands. A configured transport or an idle `email` worker does
+not send without a form action, Campaign, broadcast, or another explicit send
+trigger. Monitor failed hit messages separately; do not silently discard them.
 
 ## Native operating views
 
@@ -249,18 +260,19 @@ Run `mautic:segments:update` on the normal Mautic schedule after the hit
 consumer is operating so dynamic Segment membership stays current. No Campaign
 cron is required by this guide.
 
-### Starter requests
+### Website enquiries
 
 Mautic 7.2.1 cannot provide one native report containing the saved custom
 results from both forms. The shared **Form Submissions** report can filter both
 form IDs, but the saved custom values live in a separate result table for each
 form.
 
-Use the two per-form Results screens as the fulfillment queues:
+Use the two per-form Results screens as the manual operator queues:
 
 1. In **Components > Forms**, open **Results** for the unlinked form.
-2. Review the saved email, organization, role, message, `starter_id`,
-   `source_page`, and `request_token`, and fulfill each request manually.
+2. Review the saved email, organization, role, message, optional `starter_id`,
+   `source_page`, `request_token`, `request_type`, and `request_context`, and
+   handle each enquiry manually.
 3. Repeat the same review for the consented form. Each Results screen can
    export its own rows when an offline working copy is required.
 
@@ -269,10 +281,10 @@ Form Settings > Use the form result as report data sources**, then create two
 **Form Results** Reports, one for each form. Do not combine them: each source
 reads only that form's result table.
 
-Create one additional **Form Submissions** Report filtered to both request form
-IDs only for combined request counts and shared metadata. Add **Form ID equals
-the unlinked form ID**, followed by an **OR Form ID equals the consented form
-ID** filter. Include:
+Use the **Registry Stack website enquiries** Form Submissions Report, filtered
+to both request form IDs, for combined request counts and shared metadata. Its
+filters are **Form ID equals the unlinked form ID**, followed by **OR Form ID
+equals the consented form ID**. Include:
 
 - form name or ID;
 - submission date;
@@ -280,9 +292,10 @@ ID** filter. Include:
 - Contact ID or other shared Contact metadata needed to follow attribution.
 
 Because only email is mapped to the Contact, this combined report cannot show
-organization, role, message, `starter_id`, `source_page`, or `request_token`.
-Its Contact email is the Contact's current value; use the per-form Results
-screen for the exact email saved with that submission.
+organization, role, message, `starter_id`, `source_page`, `request_token`,
+`request_type`, or `request_context`. Its Contact email is the Contact's
+current value; use the per-form Results screen for the exact values saved with
+that submission.
 Repeated submissions remain separate rows even when Mautic associates them
 with one Contact.
 
@@ -300,7 +313,7 @@ replace the inbound source that attribution is meant to preserve. Outbound
 documentation and demo links may keep their existing UTMs for the destination
 site and their existing Umami click event.
 
-The form's fixed `source_page` is available for every request. Earlier page
+The form's required `source_page` is available for every request. Earlier page
 history and UTM attribution are available on the request Contact only when the
 consented device association succeeds. Report the unlinked and linked paths
 together for request volume, and distinguish them when evaluating attribution
@@ -312,7 +325,9 @@ Activate tracking only after all of these checks pass:
 
 1. The two forms have identical fields, the required kiosk modes, and no
    actions. No form outside IDs 1 and 2 is published.
-2. Email transport is still `null://null`.
+2. Both forms have no actions, and no Campaign, Email asset, broadcast, or
+   other automation sends from an enquiry submission. SMTP configuration is
+   verified separately from this form journey.
 3. The proxy accepts only the two exact POST routes and their exact-origin
    preflight requests. All other public `/form...` and `/index.php/form...`
    requests are blocked.
@@ -321,21 +336,24 @@ Activate tracking only after all of these checks pass:
    both signals.
 5. Public tracking requests reach Mautic without a `Cookie` header, and public
    tracking responses contain no `Set-Cookie` header.
-6. Without consent, a page creates no Mautic request or website identifier and
-   a starter request appears only in the unlinked form.
+6. Without consent, a page creates no Mautic tracking request or website
+   identifier and a website enquiry appears only in the unlinked form. If its
+   asserted email matches an existing Contact, verify the submission has no new
+   tracking ID while recognizing that the Contact's older history remains.
 7. The `hit` consumer processes a consented page hit into a row with its URL,
    title, referrer, Contact, and supplied UTM values before the Segment update
    runs.
-8. With consent, page hits appear on the device Contact and a starter request
+8. With consent, page hits appear on the device Contact and a website enquiry
    through the consented form associates with that same device activity.
 9. Withdrawing consent clears the website identifiers, a hard reload sends no
-   further tracking request, and the starter form still succeeds through the
+   further tracking request, and the enquiry form still succeeds through the
    unlinked form.
 10. Granting consent again produces a new website device ID and does not relink
    the browser to the withdrawn profile through an old Mautic cookie.
-11. Both per-form Results screens show their complete saved request fields, and
-   the combined Form Submissions Report counts successful requests from both
-   form IDs without treating Contact count as submission count.
+11. Both per-form Results screens show their complete saved request fields,
+   including request type and context, and the combined Form Submissions Report
+   counts successful requests from both form IDs without treating Contact count
+   as submission count.
 12. The public privacy notice accurately describes consented Mautic tracking,
    storage, attribution, withdrawal, and the independent no-consent form path.
 
