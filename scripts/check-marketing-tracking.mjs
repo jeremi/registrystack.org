@@ -911,6 +911,14 @@ async function runRetainedLocalRefusalScenario(browser, engine) {
       }, consentKey);
       return rejected?.choice === 'rejected' && rejected.revision > accepted.revision;
     }, `${engine}: retained local refusal did not reach the shared bridge.`);
+    await waitFor(
+      () => ['read', 'choose'].every(type => records.bridgeRequests.includes(type)),
+      `${engine}: initial refusal replay probes did not arrive.`,
+    );
+    await waitFor(
+      async () => await docsPage.evaluate(key => localStorage.getItem(key), localRefusalKey) === null,
+      `${engine}: acknowledged refusal remained local.`,
+    );
     assert.equal(
       records.bridgeRequests.filter(type => type === 'choose').length,
       1,
