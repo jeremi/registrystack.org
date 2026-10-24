@@ -147,7 +147,7 @@ function defaultNativePageviewSender({ window, document, mauticUrl }) {
     return window.mt;
   }
 
-  return ({ pageview }) => new Promise((resolve, reject) => {
+  return ({ pageview, deviceId }) => new Promise((resolve, reject) => {
     let tracker;
     try {
       tracker = ensureTracker();
@@ -156,7 +156,9 @@ function defaultNativePageviewSender({ window, document, mauticUrl }) {
       return;
     }
     waiters.add(reject);
-    tracker('send', 'pageview', pageview, {
+    tracker('send', 'pageview', {
+      ...pageview, ...(deviceId ? { mautic_device_id: deviceId } : {}),
+    }, {
       onload: () => {
         waiters.delete(reject);
         resolve();
@@ -167,14 +169,6 @@ function defaultNativePageviewSender({ window, document, mauticUrl }) {
       },
     });
   });
-}
-
-async function boundedNativeResult(promise, timeoutMs, setTimer, clearTimer) {
-  let timer;
-  const timeout = new Promise((_, reject) => {
-    timer = setTimer(() => reject(new Error('Mautic tracking timed out.')), timeoutMs);
-  });
-  return Promise.race([promise, timeout]).finally(() => clearTimer(timer));
 }
 
 function sanitizedPageview(pageview, senderOrigin, allowedOrigins) {
@@ -266,8 +260,7 @@ export function createTrackingBroker({
     }
   }
 
-  function clearNativeIdentity() {
-    safeRemove(TRACKING_IDENTITY_STORAGE_KEY);
+  function clearNativeIdentifiers() {
     for (const key of NATIVE_IDENTITY_KEYS) {
       safeRemove(key);
       try {
@@ -278,6 +271,11 @@ export function createTrackingBroker({
         reportFailure('Native tracking cookies could not be cleared. Tracking remains off.');
       }
     }
+  }
+
+  function clearNativeIdentity() {
+    safeRemove(TRACKING_IDENTITY_STORAGE_KEY);
+    clearNativeIdentifiers();
   }
 
   function browserDeniesTracking() {
@@ -378,7 +376,11 @@ export function createTrackingBroker({
       previous.choice === 'accepted' &&
       (state.choice !== 'accepted' || state.generation !== previous.generation)
     ) {
-      clearNativeIdentity();
+      // Another bridge may already have started the current generation. Its
+      // shared record outlives this realm, which is about to be invalidated.
+      if (state.choice !== 'accepted' || identityRecord()?.generation !== state.generation) {
+        clearNativeIdentity();
+      }
       markNativeRuntimeInvalid();
     }
     return state;
@@ -398,7 +400,7 @@ export function createTrackingBroker({
       return null;
     }
     clearNativeIdentity();
-    if (previous.choice === 'accepted' && choice !== 'accepted') markNativeRuntimeInvalid();
+    if (previous.choice === 'accepted') markNativeRuntimeInvalid();
     const state = publicState(record);
     notifyChanged(state);
     return state;
@@ -419,6 +421,36 @@ export function createTrackingBroker({
     ) return identity.deviceId;
     if (identity?.status === 'ready' || (rawDevice && identity?.status !== 'pending')) clearNativeIdentity();
     return null;
+  }
+
+  function discardStaleNativeResult(state, generation, attemptId) {
+    const identity = identityRecord();
+    if (state.choice === 'accepted' && identity &&
+        identity.generation === state.generation &&
+        (identity.generation !== generation || (attemptId && identity.attemptId !== attemptId))) {
+      if (identity.status === 'ready') {
+        // A stale SDK response can overwrite raw storage after the current
+        // attempt completed. Its validated shared record remains authoritative.
+        try {
+          clearNativeIdentifiers();
+          storage.setItem('mautic_device_id', identity.deviceId);
+          if (storage.getItem('mautic_device_id') !== identity.deviceId) throw new Error('Storage unavailable.');
+          if (currentDocument) {
+            currentDocument.cookie = `mautic_device_id=${identity.deviceId}; Path=/; SameSite=Lax; Secure`;
+          }
+        } catch (_error) {
+          reportFailure('Native tracking identity could not be restored. Tracking remains off.');
+          clearNativeIdentity();
+        }
+      } else {
+        // Remove the stale raw ID, preserving the newer pending attempt that
+        // will receive its own response.
+        clearNativeIdentifiers();
+      }
+      return;
+    }
+    if (readyDevice(state)) return;
+    clearNativeIdentity();
   }
 
   async function finalizeBootstrap(generation, attemptId) {
@@ -442,7 +474,7 @@ export function createTrackingBroker({
       });
     }
 
-    if (!readyDevice(state)) clearNativeIdentity();
+    discardStaleNativeResult(state, generation, attemptId);
     return false;
   }
 
@@ -457,52 +489,83 @@ export function createTrackingBroker({
       identity.generation === generation &&
       identity.deviceId === rawDevice
     );
-    if (!remainsReady) clearNativeIdentity();
+    if (!remainsReady) discardStaleNativeResult(latest, generation);
     return delivered && remainsReady;
   }
 
   async function bootstrapPageview(pageview, generation) {
     if (!locks?.request || !nativePageview) return false;
-    return locks.request(BOOTSTRAP_LOCK_NAME, { mode: 'exclusive' }, async () => {
-      const current = effectiveState();
-      if (current.choice !== 'accepted' || current.generation !== generation) return false;
-      if (readyDevice(current)) {
-        const nativeResult = Promise.resolve().then(() => nativePageview({ pageview, generation }));
-        const guarded = nativeResult.then(
-          () => finalizeReadyPageview(generation, true),
-          () => finalizeReadyPageview(generation, false),
-        );
-        try {
-          await boundedNativeResult(nativeResult, bootstrapTimeoutMs, setTimer, clearTimer);
-          return await guarded;
-        } catch (_error) {
-          return false;
-        }
-      }
-
-      const existing = identityRecord();
-      if (existing?.generation === generation && existing.status === 'pending') return false;
-      clearNativeIdentity();
-      const attemptId = randomUUID();
-      if (!safeSet(TRACKING_IDENTITY_STORAGE_KEY, {
-        version: IDENTITY_RECORD_VERSION,
-        generation,
-        status: 'pending',
-        attemptId,
-      })) return false;
-
-      const nativeResult = Promise.resolve().then(() => nativePageview({ pageview, generation }));
-      const finalized = nativeResult.then(
-        () => finalizeBootstrap(generation, attemptId),
-        () => false,
-      );
-      try {
-        await boundedNativeResult(nativeResult, bootstrapTimeoutMs, setTimer, clearTimer);
-        return await finalized;
-      } catch (_error) {
-        return false;
-      }
+    const cancellation = new AbortController();
+    let expired = false;
+    let timer;
+    // One deadline covers waiting for another bridge as well as native I/O.
+    // Aborting a queued lock prevents a timed-out event from being sent later.
+    const timeout = new Promise(resolve => {
+      timer = setTimer(() => {
+        expired = true;
+        cancellation.abort();
+        resolve(false);
+      }, bootstrapTimeoutMs);
     });
+    try {
+      const locked = locks.request(BOOTSTRAP_LOCK_NAME, {
+        mode: 'exclusive', signal: cancellation.signal,
+      }, async () => {
+        if (expired || stopped) return false;
+        const current = effectiveState();
+        if (current.choice !== 'accepted' || current.generation !== generation) return false;
+
+        const existing = identityRecord();
+        if (existing?.generation === generation && existing.status === 'pending') {
+          // The native SDK can persist its server-issued ID before its callback
+          // completes. Reuse that attempt instead of stranding it or bootstrapping
+          // a second identity. A missing ID still requires explicit recovery.
+          if (!DEVICE_ID_PATTERN.test(safeGet('mautic_device_id') ?? '') ||
+              !await finalizeBootstrap(generation, existing.attemptId)) return false;
+        }
+        const deviceId = readyDevice(current);
+        if (deviceId) {
+          const nativeResult = Promise.resolve().then(() => nativePageview({ pageview, generation, deviceId }));
+          const guarded = nativeResult.then(
+            () => finalizeReadyPageview(generation, true),
+            () => finalizeReadyPageview(generation, false),
+          );
+          return Promise.race([guarded, timeout]);
+        }
+
+        clearNativeIdentity();
+        const attemptId = randomUUID();
+        if (!safeSet(TRACKING_IDENTITY_STORAGE_KEY, {
+          version: IDENTITY_RECORD_VERSION,
+          generation,
+          status: 'pending',
+          attemptId,
+        })) return false;
+
+        const nativeResult = Promise.resolve().then(() => nativePageview({ pageview, generation }));
+        const finalized = nativeResult.then(
+          async () => {
+            const latest = effectiveState();
+            const identity = identityRecord();
+            // Mautic deliberately omits identities for excluded visitors,
+            // including logged-in administrators. Delivery still succeeded;
+            // consent is saved and any form remains unlinked.
+            const excluded = latest.choice === 'accepted' && latest.generation === generation &&
+              identity?.status === 'pending' && identity.generation === generation &&
+              identity.attemptId === attemptId && safeGet('mautic_device_id') === null;
+            const ready = await finalizeBootstrap(generation, attemptId);
+            return ready || excluded;
+          },
+          () => false,
+        );
+        return Promise.race([finalized, timeout]);
+      });
+      return await Promise.race([locked, timeout]);
+    } catch (_error) {
+      return false;
+    } finally {
+      clearTimer(timer);
+    }
   }
 
   function success(id, state, deviceId) {
@@ -537,7 +600,15 @@ export function createTrackingBroker({
         }
         return failure(request.id, 'unavailable');
       }
-      if (current.choice === request.choice) return success(request.id, current);
+      if (current.choice === request.choice) {
+        const identity = identityRecord();
+        const interrupted = current.choice === 'accepted' &&
+          identity?.generation === current.generation && identity.status === 'pending' &&
+          !DEVICE_ID_PATTERN.test(safeGet('mautic_device_id') ?? '');
+        if (!interrupted) return success(request.id, current);
+        // An explicit retry can replace an interrupted native realm. The
+        // revision check above still prevents stale acceptance after refusal.
+      }
       const saved = saveChoice(request.choice, current);
       return saved ? success(request.id, saved) : failure(request.id, 'unavailable');
     }

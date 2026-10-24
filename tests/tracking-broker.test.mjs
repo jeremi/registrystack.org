@@ -44,11 +44,37 @@ class MemoryStorage {
 }
 
 class SerialLocks {
-  tail = Promise.resolve();
+  tails = new Map();
 
-  request(_name, _options, callback) {
-    const result = this.tail.then(callback);
-    this.tail = result.catch(() => undefined);
+  request(name, options, callback) {
+    const tail = this.tails.get(name) ?? Promise.resolve();
+    const signal = options?.signal;
+    let queued;
+    const result = new Promise((resolve, reject) => {
+      let started = false;
+      const onAbort = () => {
+        if (!started) reject(signal.reason ?? new Error('Lock request aborted.'));
+      };
+      if (signal?.aborted) {
+        onAbort();
+        return;
+      }
+      signal?.addEventListener('abort', onAbort, { once: true });
+      queued = tail.then(async () => {
+        if (signal?.aborted) {
+          signal.removeEventListener('abort', onAbort);
+          return;
+        }
+        started = true;
+        signal?.removeEventListener('abort', onAbort);
+        try {
+          resolve(await callback());
+        } catch (error) {
+          reject(error);
+        }
+      });
+    });
+    this.tails.set(name, (queued ?? tail).catch(() => undefined));
     return result;
   }
 }
@@ -122,7 +148,7 @@ function harness(overrides = {}) {
       ? overrides.mauticUrl
       : 'https://mautic.example.org',
     now: overrides.now ?? (() => now),
-    randomUUID: () => ids.shift(),
+    randomUUID: overrides.randomUUID ?? (() => ids.shift()),
     sendNativePageview,
     onInvalidated: overrides.onInvalidated,
     bootstrapTimeoutMs: overrides.bootstrapTimeoutMs ?? 100,
@@ -272,6 +298,21 @@ test('the configured native sender loads mtc.js only for an accepted pageview', 
   storage.setItem('mautic_device_id', deviceId);
   currentWindow.mt.q[0][3].onload();
   assert.equal((await pending).ok, true);
+
+  const later = send(request(
+    'pageview',
+    pageviewPayload(),
+    '00000000-0000-4000-8000-000000000106',
+  ));
+  await Promise.resolve();
+  await Promise.resolve();
+  assert.deepEqual(currentWindow.mt.q[1].slice(0, 3), [
+    'send',
+    'pageview',
+    { ...pageview(), mautic_device_id: deviceId },
+  ]);
+  currentWindow.mt.q[1][3].onload();
+  assert.equal((await later).ok, true);
 });
 
 test('tracking remains unavailable when the public Mautic origin is unset', async () => {
@@ -284,6 +325,34 @@ test('tracking remains unavailable when the public Mautic origin is unset', asyn
     ok: false,
     error: 'unavailable',
   });
+});
+
+test('a delivered pageview without a native ID remains accepted but unavailable for association', async () => {
+  const storage = new MemoryStorage();
+  const { send } = harness({
+    storage,
+    sendNativePageview: async () => {},
+  });
+  const accepted = await send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+
+  const tracked = await send(request(
+    'pageview',
+    pageviewPayload(),
+    '00000000-0000-4000-8000-000000000097',
+  ));
+  assert.equal(tracked.ok, true);
+  assert.deepEqual(tracked.state, accepted.state);
+  assert.equal(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY), null);
+  assert.equal(storage.getItem('mautic_device_id'), null);
+
+  const association = await send(request(
+    'associate',
+    { expectedGeneration: accepted.state.generation },
+    '00000000-0000-4000-8000-000000000098',
+  ));
+  assert.equal(association.ok, false);
+  assert.equal(association.error, 'unavailable');
+  assert.equal('deviceId' in association, false);
 });
 
 test('the first native event is serialized and a pending generation is never retried', async () => {
@@ -306,6 +375,370 @@ test('the first native event is serialized and a pending generation is never ret
   assert.equal((await firstRequest).ok, false);
   assert.equal((await secondRequest).ok, false);
   assert.equal(nativeCount, 1);
+});
+
+test('a timed-out bootstrap promotes an existing native device without creating another identity', async () => {
+  const first = deferred();
+  let nativeCount = 0;
+  const storage = new MemoryStorage();
+  const { send } = harness({
+    storage,
+    bootstrapTimeoutMs: 5,
+    sendNativePageview: async () => {
+      nativeCount += 1;
+      storage.setItem('mautic_device_id', deviceId);
+      if (nativeCount === 1) await first.promise;
+    },
+  });
+  await send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+
+  const initial = await send(request(
+    'pageview',
+    pageviewPayload(),
+    '00000000-0000-4000-8000-000000000081',
+  ));
+  assert.equal(initial.ok, false);
+  assert.equal(nativeCount, 1);
+
+  const recovered = await send(request(
+    'pageview',
+    pageviewPayload(),
+    '00000000-0000-4000-8000-000000000082',
+  ));
+  assert.equal(recovered.ok, true);
+  assert.equal(nativeCount, 2);
+  assert.deepEqual(JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY)), {
+    version: 2,
+    generation: firstGeneration,
+    status: 'ready',
+    deviceId,
+  });
+});
+
+test('a timed-out queued Web Lock callback never performs native side effects', async () => {
+  const locks = new SerialLocks();
+  const holder = deferred();
+  const acquired = deferred();
+  const held = locks.request('registrystack-mautic-device-v2', {}, async () => {
+    acquired.resolve();
+    await holder.promise;
+  });
+  await acquired.promise;
+  let nativeCount = 0;
+  const storage = new MemoryStorage();
+  const { send } = harness({
+    locks,
+    storage,
+    bootstrapTimeoutMs: 5,
+    sendNativePageview: async () => { nativeCount += 1; },
+  });
+  await send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+
+  const pending = send(request(
+    'pageview',
+    pageviewPayload(),
+    '00000000-0000-4000-8000-000000000083',
+  ));
+  const atDeadline = await Promise.race([
+    pending,
+    new Promise(resolve => setTimeout(() => resolve('still-waiting'), 20)),
+  ]);
+  holder.resolve();
+  await held;
+  const response = await pending;
+
+  assert.deepEqual({
+    completedBeforeRelease: atDeadline !== 'still-waiting',
+    nativeCount,
+    identity: storage.getItem(TRACKING_IDENTITY_STORAGE_KEY),
+    rawDevice: storage.getItem('mautic_device_id'),
+  }, {
+    completedBeforeRelease: true,
+    nativeCount: 0,
+    identity: null,
+    rawDevice: null,
+  });
+  assert.equal(response.ok, false);
+  assert.equal(response.error, 'unavailable');
+});
+
+test('an explicit acceptance retry rotates a stranded generation and invalidates after responding', async () => {
+  const events = [];
+  const source = new MessageSource();
+  const originalPost = source.postMessage.bind(source);
+  source.postMessage = (message, origin) => {
+    originalPost(message, origin);
+    if (message.id) events.push(`response:${message.id}:${message.ok}`);
+  };
+  const { send, storage } = harness({
+    source,
+    sendNativePageview: async () => { throw new Error('native bootstrap failed'); },
+    onInvalidated: () => events.push('invalidated'),
+  });
+  const accepted = await send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+  const failed = await send(request('pageview', pageviewPayload()));
+  assert.equal(failed.ok, false);
+  assert.deepEqual(JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY)), {
+    version: 2,
+    generation: firstGeneration,
+    status: 'pending',
+    attemptId: firstAttempt,
+  });
+  assert.equal(storage.getItem('mautic_device_id'), null);
+
+  events.length = 0;
+  const retryId = '00000000-0000-4000-8000-000000000084';
+  const retried = await send(request('choose', {
+    choice: 'accepted',
+    expectedRevision: accepted.state.revision,
+  }, retryId));
+  assert.equal(retried.ok, true);
+  assert.equal(retried.state.choice, 'accepted');
+  assert.equal(retried.state.generation, secondGeneration);
+  assert.equal(retried.state.revision, accepted.state.revision + 1);
+  assert.equal(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY), null);
+  await new Promise(resolve => setTimeout(resolve, 0));
+  assert.ok(events.indexOf(`response:${retryId}:true`) < events.indexOf('invalidated'));
+  assert.equal(events.filter(event => event === 'invalidated').length, 1);
+});
+
+test('a stale bootstrap callback cannot erase a newer pending generation', async () => {
+  const stale = deferred();
+  const staleReturned = deferred();
+  const current = deferred();
+  const currentStarted = deferred();
+  const storage = new MemoryStorage();
+  let nativeCount = 0;
+  const { send } = harness({
+    storage,
+    bootstrapTimeoutMs: 30,
+    onInvalidated() {},
+    sendNativePageview: async () => {
+      nativeCount += 1;
+      if (nativeCount === 1) {
+        await stale.promise;
+        storage.setItem('mautic_device_id', deviceId);
+        staleReturned.resolve();
+        return;
+      }
+      currentStarted.resolve();
+      await current.promise;
+      storage.setItem('mautic_device_id', deviceId);
+    },
+  });
+  const accepted = await send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+  assert.equal((await send(request(
+    'pageview',
+    pageviewPayload(),
+    '00000000-0000-4000-8000-000000000090',
+  ))).ok, false);
+
+  const retried = await send(request('choose', {
+    choice: 'accepted',
+    expectedRevision: accepted.state.revision,
+  }, '00000000-0000-4000-8000-000000000091'));
+  const currentPageview = send(request(
+    'pageview',
+    pageviewPayload(pageview(), retried.state.generation),
+    '00000000-0000-4000-8000-000000000092',
+  ));
+  await currentStarted.promise;
+  const currentPending = JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY));
+
+  stale.resolve();
+  await staleReturned.promise;
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY)), currentPending);
+  assert.equal(storage.getItem('mautic_device_id'), null);
+
+  current.resolve();
+  assert.equal((await currentPageview).ok, true);
+  assert.deepEqual(JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY)), {
+    version: 2,
+    generation: retried.state.generation,
+    status: 'ready',
+    deviceId,
+  });
+});
+
+test('a stale bootstrap callback cannot replace a newer ready identity', async () => {
+  const stale = deferred();
+  const staleReturned = deferred();
+  const storage = new MemoryStorage();
+  const replacementDeviceId = 'zyxwvutsrq9876543210abc';
+  const staleContactId = '41';
+  const replacementContactId = '42';
+  let nativeCount = 0;
+  const { send } = harness({
+    storage,
+    bootstrapTimeoutMs: 30,
+    onInvalidated() {},
+    sendNativePageview: async () => {
+      nativeCount += 1;
+      if (nativeCount === 1) {
+        await stale.promise;
+        storage.setItem('mtc_id', staleContactId);
+        storage.setItem('mautic_device_id', deviceId);
+        staleReturned.resolve();
+        return;
+      }
+      storage.setItem('mtc_id', replacementContactId);
+      storage.setItem('mautic_device_id', replacementDeviceId);
+    },
+  });
+  const accepted = await send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+  assert.equal((await send(request(
+    'pageview',
+    pageviewPayload(),
+    '00000000-0000-4000-8000-000000000103',
+  ))).ok, false);
+
+  const retried = await send(request('choose', {
+    choice: 'accepted',
+    expectedRevision: accepted.state.revision,
+  }, '00000000-0000-4000-8000-000000000104'));
+  assert.equal((await send(request(
+    'pageview',
+    pageviewPayload(pageview(), retried.state.generation),
+    '00000000-0000-4000-8000-000000000105',
+  ))).ok, true);
+  const currentReady = JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY));
+  assert.equal(currentReady.deviceId, replacementDeviceId);
+  assert.equal(storage.getItem('mtc_id'), replacementContactId);
+
+  stale.resolve();
+  await staleReturned.promise;
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY)), currentReady);
+  assert.equal(storage.getItem('mautic_device_id'), replacementDeviceId);
+  assert.equal(storage.getItem('mtc_id'), null);
+});
+
+test('a stale ready-pageview callback cannot erase a newer pending generation', async () => {
+  const stale = deferred();
+  const staleReturned = deferred();
+  const current = deferred();
+  const currentStarted = deferred();
+  const storage = new MemoryStorage();
+  const replacementDeviceId = 'zyxwvutsrq9876543210abc';
+  let nativeCount = 0;
+  const { send } = harness({
+    storage,
+    bootstrapTimeoutMs: 30,
+    onInvalidated() {},
+    sendNativePageview: async () => {
+      nativeCount += 1;
+      if (nativeCount === 1) {
+        storage.setItem('mautic_device_id', deviceId);
+        return;
+      }
+      if (nativeCount === 2) {
+        await stale.promise;
+        storage.setItem('mautic_device_id', deviceId);
+        staleReturned.resolve();
+        return;
+      }
+      currentStarted.resolve();
+      await current.promise;
+      storage.setItem('mautic_device_id', replacementDeviceId);
+    },
+  });
+  const accepted = await send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+  assert.equal((await send(request('pageview', pageviewPayload()))).ok, true);
+  assert.equal((await send(request(
+    'pageview',
+    pageviewPayload(),
+    '00000000-0000-4000-8000-000000000093',
+  ))).ok, false);
+
+  const rejected = await send(request('choose', {
+    choice: 'rejected',
+    expectedRevision: accepted.state.revision,
+  }, '00000000-0000-4000-8000-000000000094'));
+  const reaccepted = await send(request('choose', {
+    choice: 'accepted',
+    expectedRevision: rejected.state.revision,
+  }, '00000000-0000-4000-8000-000000000095'));
+  const currentPageview = send(request(
+    'pageview',
+    pageviewPayload(pageview(), reaccepted.state.generation),
+    '00000000-0000-4000-8000-000000000096',
+  ));
+  await currentStarted.promise;
+  const currentPending = JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY));
+
+  stale.resolve();
+  await staleReturned.promise;
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY)), currentPending);
+  assert.equal(storage.getItem('mautic_device_id'), null);
+
+  current.resolve();
+  assert.equal((await currentPageview).ok, true);
+  assert.deepEqual(JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY)), {
+    version: 2,
+    generation: reaccepted.state.generation,
+    status: 'ready',
+    deviceId: replacementDeviceId,
+  });
+});
+
+test('a stale acceptance retry cannot override a newer rejection', async () => {
+  const storage = new MemoryStorage();
+  const { send } = harness({
+    storage,
+    sendNativePageview: async () => { throw new Error('native bootstrap failed'); },
+  });
+  const accepted = await send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+  assert.equal((await send(request('pageview', pageviewPayload()))).ok, false);
+  const rejected = await send(request('choose', {
+    choice: 'rejected',
+    expectedRevision: accepted.state.revision,
+  }, '00000000-0000-4000-8000-000000000085'));
+
+  const staleRetry = await send(request('choose', {
+    choice: 'accepted',
+    expectedRevision: accepted.state.revision,
+  }, '00000000-0000-4000-8000-000000000086'));
+  assert.equal(staleRetry.ok, false);
+  assert.equal(staleRetry.error, 'unavailable');
+  const current = await send(request('read', {}, '00000000-0000-4000-8000-000000000087'));
+  assert.deepEqual(current.state, rejected.state);
+  assert.equal(current.state.choice, 'rejected');
+  assert.equal(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY), null);
+  assert.equal(storage.getItem('mautic_device_id'), null);
+});
+
+test('DNT and GPC prevent a stranded accepted generation from being retried', async () => {
+  for (const privacySignal of ['doNotTrack', 'globalPrivacyControl']) {
+    const navigator = { doNotTrack: '0', globalPrivacyControl: false };
+    const storage = new MemoryStorage();
+    const { send } = harness({
+      navigator,
+      storage,
+      sendNativePageview: async () => { throw new Error('native bootstrap failed'); },
+    });
+    const accepted = await send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+    assert.equal((await send(request('pageview', pageviewPayload()))).ok, false);
+    if (privacySignal === 'doNotTrack') navigator.doNotTrack = '1';
+    else navigator.globalPrivacyControl = true;
+
+    const retry = await send(request('choose', {
+      choice: 'accepted',
+      expectedRevision: accepted.state.revision,
+    }, '00000000-0000-4000-8000-000000000088'));
+    assert.equal(retry.ok, false);
+    assert.equal(retry.error, 'not-allowed');
+    const persisted = JSON.parse(storage.getItem(TRACKING_CONSENT_STORAGE_KEY));
+    assert.equal(persisted.choice, 'accepted');
+    assert.equal(persisted.generation, firstGeneration);
+
+    const current = await send(request('read', {}, '00000000-0000-4000-8000-000000000089'));
+    assert.equal(current.state.choice, 'rejected');
+    assert.notEqual(current.state.generation, firstGeneration);
+    assert.equal(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY), null);
+    assert.equal(storage.getItem('mautic_device_id'), null);
+  }
 });
 
 test('later native pageviews release the Web Lock after the bounded timeout', async () => {
@@ -482,6 +915,56 @@ test('a read invalidates an older native runtime even before its storage event r
   assert.equal(storage.getItem('mautic_device_id'), null);
   assert.equal(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY), null);
   assert.equal(invalidations, 1);
+});
+
+test('an older broker invalidates its realm without clearing a newer broker identity', async () => {
+  const storage = new MemoryStorage();
+  const locks = new SerialLocks();
+  let olderInvalidations = 0;
+  const older = harness({
+    storage,
+    locks,
+    onInvalidated: () => { olderInvalidations += 1; },
+  });
+  const firstAccepted = await older.send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+  assert.equal((await older.send(request('pageview', pageviewPayload()))).ok, true);
+
+  const newerIds = [secondGeneration, thirdGeneration, secondAttempt];
+  const replacementDeviceId = 'zyxwvutsrq9876543210abc';
+  const newer = harness({
+    storage,
+    locks,
+    randomUUID: () => newerIds.shift(),
+    onInvalidated() {},
+    sendNativePageview: async () => {
+      storage.setItem('mautic_device_id', replacementDeviceId);
+    },
+  });
+  const rejected = await newer.send(request('choose', {
+    choice: 'rejected',
+    expectedRevision: firstAccepted.state.revision,
+  }, '00000000-0000-4000-8000-000000000099'));
+  const current = await newer.send(request('choose', {
+    choice: 'accepted',
+    expectedRevision: rejected.state.revision,
+  }, '00000000-0000-4000-8000-000000000100'));
+  assert.equal((await newer.send(request(
+    'pageview',
+    pageviewPayload(pageview(), current.state.generation),
+    '00000000-0000-4000-8000-000000000101',
+  ))).ok, true);
+  const currentIdentity = JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY));
+
+  const reconciled = await older.send(request(
+    'read',
+    {},
+    '00000000-0000-4000-8000-000000000102',
+  ));
+  await new Promise(resolve => setTimeout(resolve, 0));
+  assert.deepEqual(reconciled.state, current.state);
+  assert.equal(olderInvalidations, 1);
+  assert.deepEqual(JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY)), currentIdentity);
+  assert.equal(storage.getItem('mautic_device_id'), replacementDeviceId);
 });
 
 test('expiry invalidates consent and identity and notifies the connected parent', async () => {

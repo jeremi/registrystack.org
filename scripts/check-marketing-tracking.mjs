@@ -198,7 +198,7 @@ const trackerScript = `(() => {
   const deliver = (command, event, data, callbacks = {}) => {
     if (command !== 'send' || event !== 'pageview') return;
     const body = new URLSearchParams(data);
-    const device = localStorage.getItem('mautic_device_id');
+    const device = localStorage.getItem('mtc_id') && localStorage.getItem('mautic_device_id');
     if (device) body.set('mautic_device_id', device);
     fetch(${JSON.stringify(`${trackerOrigin}/mtc/event`)}, {
       method: 'POST',
@@ -206,10 +206,12 @@ const trackerScript = `(() => {
       body,
       credentials: 'include',
     }).then(response => response.json()).then(response => {
-      localStorage.setItem('mtc_id', response.id);
-      localStorage.setItem('mautic_device_id', response.device_id);
-      document.cookie = 'mtc_id=' + response.id + '; Path=/; SameSite=Lax';
-      document.cookie = 'mautic_device_id=' + response.device_id + '; Path=/; SameSite=Lax';
+      if (response.id) {
+        localStorage.setItem('mtc_id', response.id);
+        localStorage.setItem('mautic_device_id', response.device_id);
+        document.cookie = 'mtc_id=' + response.id + '; Path=/; SameSite=Lax';
+        document.cookie = 'mautic_device_id=' + response.device_id + '; Path=/; SameSite=Lax';
+      }
       document.dispatchEvent(new CustomEvent('mauticPageEventDelivered', {
         detail: { response },
       }));
@@ -231,6 +233,7 @@ function createRecords(engine) {
     bridgeRequests: [],
     docsCookieHeaders: [],
     nativeRequests: [],
+    nativeEventRequests: 0,
     nextDevice: 0,
     nextContact: 0,
     contacts: new Map(),
@@ -243,9 +246,14 @@ function deferred() {
   return { promise, release };
 }
 
+function delay(milliseconds) {
+  return new Promise(resolvePromise => setTimeout(resolvePromise, milliseconds));
+}
+
 async function configureContext(context, records, {
   blockBridge = false,
   blockStorage = false,
+  excludeNativeVisitors = false,
   bridgeControl,
 } = {}) {
   context.on('page', page => {
@@ -284,7 +292,12 @@ async function configureContext(context, records, {
         url.pathname === '/tracking-bridge/'
       ) {
         bridgeControl.delayStarted = true;
-        await bridgeControl.delayGate.promise;
+        bridgeControl.delayStartedAt = Date.now();
+        if (bridgeControl.delayLoadMs !== undefined) {
+          await delay(bridgeControl.delayLoadMs);
+        } else {
+          await bridgeControl.delayGate.promise;
+        }
       }
       const asset = await staticAsset(websiteDist, url.pathname);
       if (blockStorage && url.pathname === '/tracking-bridge/' && asset) {
@@ -318,6 +331,31 @@ async function configureContext(context, records, {
         return;
       }
       assert.equal(url.pathname, '/mtc/event');
+      records.nativeEventRequests += 1;
+      if (excludeNativeVisitors) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          headers: {
+            'access-control-allow-origin': mainOrigin,
+            'access-control-allow-credentials': 'true',
+          },
+          json: { success: 1, id: null, device_id: null, events: [false] },
+        });
+        return;
+      }
+      if (bridgeControl?.failNativeEvents > 0) {
+        bridgeControl.failNativeEvents -= 1;
+        records.blocked.push(url.href);
+        await route.abort('failed');
+        return;
+      }
+      if (bridgeControl?.delayNativeEventNumber === records.nativeEventRequests) {
+        bridgeControl.nativeDelayStarted = true;
+        bridgeControl.nativeDelayStartedAt = Date.now();
+        await delay(bridgeControl.delayNativeEventMs);
+        bridgeControl.nativeDelayCompletedAt = Date.now();
+      }
       const data = Object.fromEntries(new URLSearchParams(request.postData() ?? ''));
       let deviceId = data.mautic_device_id;
       if (!deviceId) deviceId = `a${String(++records.nextDevice).padStart(22, '0')}`;
@@ -682,6 +720,155 @@ async function runSlowReplacementAssociationScenario(browser, engine) {
   }
 }
 
+async function runSplitStartupBudgetScenario(browser, engine) {
+  console.log(`${engine}: checking independent bridge and native startup budgets.`);
+  const records = createRecords(`${engine}-split-startup-budget`);
+  const bridgeControl = {
+    delayLoadNumber: 3,
+    delayLoadMs: 3_500,
+    delayStarted: false,
+    delayStartedAt: 0,
+    delayNativeEventNumber: 2,
+    delayNativeEventMs: 3_500,
+    nativeDelayStarted: false,
+    nativeDelayStartedAt: 0,
+    nativeDelayCompletedAt: 0,
+    instrument: true,
+  };
+  assert.ok(bridgeControl.delayLoadMs < 6_500);
+  assert.ok(bridgeControl.delayNativeEventMs < 4_000);
+  assert.ok(bridgeControl.delayLoadMs + bridgeControl.delayNativeEventMs > 6_500);
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    await configureContext(context, records, { bridgeControl });
+    const page = await context.newPage();
+    await page.goto(`${mainOrigin}/solutions/licensing/`);
+    const panel = page.locator('[data-tracking-preferences]');
+    await panel.waitFor({ state: 'visible' });
+    await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await waitFor(() => records.pageviews.length === 1, `${engine}: initial startup pageview was not sent.`);
+
+    await page.locator('[data-tracking-preferences-open]').click();
+    await panel.getByRole('button', { name: 'Reject optional cookies' }).click();
+    await panel.waitFor({ state: 'hidden' });
+    await page.locator('[data-tracking-preferences-open]').click();
+    await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await panel.waitFor({ state: 'hidden' });
+
+    await waitFor(
+      () => bridgeControl.delayStarted && bridgeControl.nativeDelayStarted,
+      `${engine}: split startup delays were not both exercised.`,
+      10_000,
+    );
+    await waitFor(
+      () => records.pageviews.length === 2,
+      `${engine}: tracking did not survive independent startup delays.`,
+      12_000,
+    );
+    assert.ok(
+      bridgeControl.nativeDelayCompletedAt - bridgeControl.delayStartedAt > 6_500,
+      `${engine}: split startup did not exceed the original combined client deadline.`,
+    );
+    assert.equal(await panel.locator('[data-tracking-error]').isVisible(), false);
+    assert.equal(await panel.isVisible(), false);
+    const state = await page.evaluate(key => JSON.parse(localStorage.getItem(key) ?? 'null'), consentKey);
+    assert.equal(state.choice, 'accepted');
+    const resumed = records.pageviews.at(-1);
+    await waitFor(async () => await page.evaluate(
+      expected => localStorage.getItem('mautic_device_id') === expected,
+      resumed.deviceId,
+    ), `${engine}: split startup did not retain the recovered native device.`);
+    assert.deepEqual(records.errors, [], `${engine}: split startup raised a page error.`);
+  } finally {
+    await context.close();
+  }
+}
+
+async function runExplicitBootstrapRecoveryScenario(browser, engine) {
+  console.log(`${engine}: checking explicit recovery from a failed first native request.`);
+  const records = createRecords(`${engine}-explicit-bootstrap-recovery`);
+  const bridgeControl = { failNativeEvents: 1, instrument: true };
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    await configureContext(context, records, { bridgeControl });
+    const page = await context.newPage();
+    await page.goto(`${mainOrigin}/starters/professional-licensing/`);
+    const panel = page.locator('[data-tracking-preferences]');
+    await panel.waitFor({ state: 'visible' });
+    await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await panel.locator('[data-tracking-error]').waitFor({ state: 'visible' });
+    assert.equal(records.nativeEventRequests, 1);
+    assert.equal(records.pageviews.length, 0);
+    assert.equal(records.nextDevice, 0);
+
+    const stranded = await page.frames()
+      .find(frame => frame.url() === `${mainOrigin}/tracking-bridge/`)
+      ?.evaluate(key => JSON.parse(localStorage.getItem(key) ?? 'null'), identityKey);
+    assert.equal(stranded?.status, 'pending');
+    assert.equal(await page.evaluate(() => localStorage.getItem('mautic_device_id')), null);
+
+    await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await waitFor(
+      () => records.pageviews.length === 1,
+      `${engine}: explicit same-choice retry did not recover tracking.`,
+      10_000,
+    );
+    await panel.waitFor({ state: 'hidden' });
+    assert.equal(await panel.locator('[data-tracking-error]').isVisible(), false);
+    assert.equal(records.nativeEventRequests, 2);
+    assert.equal(records.nextDevice, 1);
+    assert.equal(new Set(records.pageviews.map(view => view.deviceId)).size, 1);
+    const recoveredDevice = records.pageviews[0].deviceId;
+
+    await waitFor(async () => {
+      for (const frame of page.frames()) {
+        if (frame.url() !== `${mainOrigin}/tracking-bridge/`) continue;
+        if (await frame.evaluate(key => {
+          const identity = JSON.parse(localStorage.getItem(key) ?? 'null');
+          return identity?.status === 'ready';
+        }, identityKey)) return true;
+      }
+      return false;
+    }, `${engine}: recovered bridge identity did not become ready.`);
+    await submitForm(page, { email: `explicit-recovery-${engine}@example.invalid` });
+    const submission = latestSubmission(records);
+    assert.equal(new URL(submission.url).searchParams.get('privacy'), 'consented');
+    assert.equal(submission.data.mautic_device_id, recoveredDevice);
+    assert.deepEqual(records.errors, [], `${engine}: explicit bootstrap recovery raised a page error.`);
+  } finally {
+    await context.close();
+  }
+}
+
+async function runExcludedVisitorScenario(browser, engine) {
+  console.log(`${engine}: checking delivered tracking excluded by Mautic.`);
+  const records = createRecords(`${engine}-excluded-visitor`);
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    await configureContext(context, records, { excludeNativeVisitors: true });
+    const page = await context.newPage();
+    await page.goto(`${mainOrigin}/starters/professional-licensing/`);
+    const panel = page.locator('[data-tracking-preferences]');
+    await panel.waitFor({ state: 'visible' });
+    await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await waitFor(() => records.nativeEventRequests === 1, `${engine}: excluded event was not delivered.`);
+    await panel.waitFor({ state: 'hidden' });
+    await submitForm(page, { email: `excluded-${engine}@example.invalid` });
+    assertKioskSubmission(latestSubmission(records));
+    assert.equal(await panel.locator('[data-tracking-error]').isVisible(), false);
+    assert.equal(await panel.isVisible(), false);
+    const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), consentKey);
+    assert.equal(saved.choice, 'accepted');
+    const identity = await page.evaluate(key => localStorage.getItem(key), identityKey);
+    assert.equal(identity, null);
+    assert.equal(records.nextDevice, 0);
+    assert.equal(records.pageviews.length, 0);
+    assert.deepEqual(records.errors, [], `${engine}: excluded visitor raised a page error.`);
+  } finally {
+    await context.close();
+  }
+}
+
 async function runEngine(engine, browserType) {
   console.log(`${engine}: checking shared main/docs journey.`);
   const browser = await browserType.launch();
@@ -920,6 +1107,9 @@ async function runEngine(engine, browserType) {
 
     await runBridgeRecoveryScenario(browser, engine);
     await runSlowReplacementAssociationScenario(browser, engine);
+    await runSplitStartupBudgetScenario(browser, engine);
+    await runExplicitBootstrapRecoveryScenario(browser, engine);
+    await runExcludedVisitorScenario(browser, engine);
 
     for (const mode of ['legacy', 'bridge', 'storage', 'dnt', 'gpc']) {
       await runKioskScenario(browser, engine, records, mode);
