@@ -724,6 +724,101 @@ async function runValidatedReadRecoveryScenario(browser, engine, surface) {
   }
 }
 
+async function runAmbiguousPageviewRecoveryScenario(browser, engine, surface) {
+  console.log(`${engine}: checking ${surface} ambiguous pageview acknowledgement recovery.`);
+  const records = createRecords(`${engine}-${surface}-ambiguous-pageview-recovery`);
+  const bridgeControl = { instrument: true };
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    await context.addInitScript(bridgeOrigin => {
+      if (window.top !== window) return;
+      window.__acceptanceBridgeOkResponses = 0;
+      window.__acceptanceDroppedBridgeResponses = 0;
+      window.addEventListener('message', event => {
+        const bridgeFrame = document.querySelector(`iframe[src="${bridgeOrigin}/tracking-bridge/"]`);
+        const message = event.data;
+        if (
+          event.origin !== bridgeOrigin ||
+          event.source !== bridgeFrame?.contentWindow ||
+          message?.protocol !== 'registrystack-tracking' ||
+          message?.version !== 2 ||
+          message?.ok !== true
+        ) return;
+        window.__acceptanceBridgeOkResponses += 1;
+        if (window.__acceptanceBridgeOkResponses !== 2) return;
+        window.__acceptanceDroppedBridgeResponses += 1;
+        event.stopImmediatePropagation();
+      }, true);
+    }, mainOrigin);
+    await configureContext(context, records, { bridgeControl });
+
+    const seededAt = Date.now();
+    const accepted = {
+      version: 2,
+      choice: 'accepted',
+      generation: '00000000-0000-4000-8000-000000000003',
+      expiresAt: seededAt + 300_000,
+      revision: seededAt,
+    };
+    const sharedStorage = await context.newPage();
+    await sharedStorage.goto(`${mainOrigin}/__acceptance/storage-seed`);
+    await sharedStorage.evaluate(([key, value]) => {
+      localStorage.setItem(key, JSON.stringify(value));
+    }, [consentKey, accepted]);
+    await sharedStorage.close();
+
+    const page = await context.newPage();
+    const pageUrl = surface === 'main'
+      ? `${mainOrigin}/solutions/licensing/`
+      : `${docsOrigin}/start/concepts/`;
+    const panel = page.locator(surface === 'main'
+      ? '[data-tracking-preferences]'
+      : '[data-registry-shared-tracking]');
+    const errorMessage = panel.locator('[data-tracking-error]');
+    await page.goto(pageUrl);
+    await waitFor(
+      () => records.pageviews.length === 1,
+      `${engine}: ${surface} initial accepted pageview was not delivered.`,
+    );
+    await errorMessage.waitFor({ state: 'visible', timeout: 10_000 });
+    assert.equal(
+      await errorMessage.getAttribute('data-tracking-failure'),
+      'response-timeout',
+      `${engine}: ${surface} did not surface the dropped pageview acknowledgement as a timeout.`,
+    );
+    assert.equal(records.pageviews.length, 1, `${engine}: ${surface} retried before resume.`);
+    assert.deepEqual(
+      await page.evaluate(() => ({
+        dropped: window.__acceptanceDroppedBridgeResponses,
+        okResponses: window.__acceptanceBridgeOkResponses,
+      })),
+      { dropped: 1, okResponses: 2 },
+      `${engine}: ${surface} did not drop exactly the pageview acknowledgement.`,
+    );
+
+    await page.evaluate(() => {
+      window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await waitFor(
+      () => records.bridgeRequests.filter(type => type === 'read').length >= 2,
+      `${engine}: ${surface} resume did not complete a fresh consent read.`,
+    );
+    await panel.waitFor({ state: 'hidden', timeout: 10_000 });
+    await waitFor(
+      async () => await errorMessage.evaluate(element => element.hidden),
+      `${engine}: ${surface} resume did not clear the pageview timeout.`,
+    );
+    await delay(250);
+    assert.equal(records.formSubmissions.length, 0, `${engine}: ${surface} submitted a form.`);
+    assert.deepEqual(records.errors, [], `${engine}: ${surface} recovery raised a page error.`);
+    assert.deepEqual(records.blocked, [], `${engine}: ${surface} made an unexpected request.`);
+    return records.pageviews.length;
+  } finally {
+    await context.close();
+  }
+}
+
 async function runSlowReplacementAssociationScenario(browser, engine) {
   console.log(`${engine}: checking slow replacement bridge association budget.`);
   const records = createRecords(`${engine}-slow-association`);
@@ -1101,6 +1196,26 @@ async function runEngine(engine, browserType) {
   const browser = await browserType.launch();
   const records = createRecords(engine);
   try {
+    const ambiguousPageviewResults = [[
+      'main',
+      await runAmbiguousPageviewRecoveryScenario(browser, engine, 'main'),
+    ]];
+    if (docsDist) {
+      ambiguousPageviewResults.push([
+        'docs',
+        await runAmbiguousPageviewRecoveryScenario(browser, engine, 'docs'),
+      ]);
+    } else {
+      console.log(
+        `${engine}: skipping canonical docs ambiguous pageview recovery; ` +
+        'DOCS_TRACKING_DIST is not configured.',
+      );
+    }
+    assert.deepEqual(
+      Object.fromEntries(ambiguousPageviewResults),
+      Object.fromEntries(ambiguousPageviewResults.map(([surface]) => [surface, 1])),
+      `${engine}: ambiguously delivered pageviews were retried after resume.`,
+    );
     await runValidatedReadRecoveryScenario(browser, engine, 'main');
     if (docsDist) {
       await runValidatedReadRecoveryScenario(browser, engine, 'docs');

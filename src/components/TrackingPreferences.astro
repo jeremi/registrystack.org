@@ -77,8 +77,8 @@ const { mauticUrl, canonicalUrl } = Astro.props;
       errorMessage.dataset.trackingFailure = trackingFailureReason(error);
       if (client.readRetryReason) panel.dataset.trackingReadRetry = client.readRetryReason;
     };
-    let sentGeneration: string | null = null;
-    let pendingGeneration: string | null = null;
+    // Retain attempts after ambiguous delivery so recovery cannot count a visit twice.
+    let attemptedGeneration: string | null = null;
     const client = getSharedTrackingClient({ onFailure: showError });
     const renderState = (state: typeof client.state, confirmed = false) => {
       if (client.readRetryReason) panel.dataset.trackingReadRetry = client.readRetryReason;
@@ -88,17 +88,11 @@ const { mauticUrl, canonicalUrl } = Astro.props;
       }
       if (state.choice === 'accepted' && !browserDeniesTracking) {
         closePreferences();
-        if (state.generation !== sentGeneration && state.generation !== pendingGeneration) {
+        if (state.generation !== attemptedGeneration) {
           const generation = state.generation;
-          pendingGeneration = generation;
-          void client.pageview(pageview).then(() => {
-            if (client.state.choice === 'accepted' && client.state.generation === generation) {
-              sentGeneration = generation;
-            }
-          }).catch((error: unknown) => {
+          attemptedGeneration = generation;
+          void client.pageview(pageview).catch((error: unknown) => {
             if (client.state.choice === 'accepted' && client.state.generation === generation) showError(error);
-          }).finally(() => {
-            if (pendingGeneration === generation) pendingGeneration = null;
           });
         }
       } else if (state.choice === null && !browserDeniesTracking) {
