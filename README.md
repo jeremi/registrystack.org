@@ -264,6 +264,7 @@ queue. Never use production or a restored production database for this check.
 
 ## GitHub Pages
 
-The deployment workflow installs locked dependencies and Chromium, runs
-`npm run check`, and deploys `dist/` when `main` changes. The Pages source is
-GitHub Actions and `public/CNAME` preserves the custom domain.
+The workflow installs locked dependencies and Chromium and runs `npm run check`
+for pull requests and changes to `main`. The build uses read permissions;
+publication permissions belong only to the deploy job, which runs on `main`.
+The Pages source is GitHub Actions and `public/CNAME` preserves the custom domain.

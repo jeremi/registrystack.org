@@ -41,6 +41,16 @@ const blockedStorageScript = `<script>
     });
   }
 </script>`;
+const bridgeRequestProbeScript = `<script>
+  window.addEventListener('message', event => {
+    const type = event.data?.type;
+    if (!['read', 'choose', 'pageview', 'associate'].includes(type)) return;
+    void fetch('/__acceptance/bridge-request?type=' + encodeURIComponent(type), {
+      method: 'POST',
+      keepalive: true,
+    });
+  });
+</script>`;
 const resultAliases = [
   'email', 'organization', 'role', 'message', 'starter_id', 'source_page',
   'request_token', 'request_type', 'request_context',
@@ -217,6 +227,8 @@ function createRecords(engine) {
     formSubmissions: [],
     pageviews: [],
     blocked: [],
+    bridgeLoads: 0,
+    bridgeRequests: [],
     docsCookieHeaders: [],
     nativeRequests: [],
     nextDevice: 0,
@@ -225,7 +237,17 @@ function createRecords(engine) {
   };
 }
 
-async function configureContext(context, records, { blockBridge = false, blockStorage = false } = {}) {
+function deferred() {
+  let release;
+  const promise = new Promise(resolvePromise => { release = resolvePromise; });
+  return { promise, release };
+}
+
+async function configureContext(context, records, {
+  blockBridge = false,
+  blockStorage = false,
+  bridgeControl,
+} = {}) {
   context.on('page', page => {
     page.on('pageerror', error => records.errors.push(`${page.url()}: ${error.message}`));
   });
@@ -234,6 +256,20 @@ async function configureContext(context, records, { blockBridge = false, blockSt
     const url = new URL(request.url());
 
     if (url.origin === mainOrigin) {
+      if (url.pathname === '/__acceptance/bridge-request') {
+        records.bridgeRequests.push(url.searchParams.get('type'));
+        await route.fulfill({ status: 204, body: '' });
+        return;
+      }
+      if (url.pathname === '/tracking-bridge/') {
+        records.bridgeLoads += 1;
+      }
+      if (bridgeControl?.failLoads > 0 && url.pathname === '/tracking-bridge/') {
+        bridgeControl.failLoads -= 1;
+        records.blocked.push(url.href);
+        await route.abort('failed');
+        return;
+      }
       if (blockBridge && url.pathname === '/tracking-bridge/') {
         records.blocked.push(url.href);
         await route.fulfill({
@@ -243,9 +279,19 @@ async function configureContext(context, records, { blockBridge = false, blockSt
         });
         return;
       }
+      if (
+        bridgeControl?.delayLoadNumber === records.bridgeLoads &&
+        url.pathname === '/tracking-bridge/'
+      ) {
+        bridgeControl.delayStarted = true;
+        await bridgeControl.delayGate.promise;
+      }
       const asset = await staticAsset(websiteDist, url.pathname);
       if (blockStorage && url.pathname === '/tracking-bridge/' && asset) {
         asset.body = asset.body.toString().replace('<head>', `<head>${blockedStorageScript}`);
+      }
+      if (bridgeControl?.instrument && url.pathname === '/tracking-bridge/' && asset) {
+        asset.body = asset.body.toString().replace('<head>', `<head>${bridgeRequestProbeScript}`);
       }
       await route.fulfill(asset ? { status: 200, ...asset } : { status: 404, body: 'Not found' });
       return;
@@ -296,7 +342,7 @@ async function configureContext(context, records, { blockBridge = false, blockSt
     if (url.origin === formsOrigin) {
       assert.equal(url.pathname, '/form/submit');
       const data = Object.fromEntries(new URLSearchParams(request.postData() ?? ''));
-      records.formSubmissions.push({ url: url.href, data });
+      records.formSubmissions.push({ url: url.href, data, receivedAt: Date.now() });
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -314,7 +360,7 @@ async function configureContext(context, records, { blockBridge = false, blockSt
 async function waitFor(predicate, message, timeoutMs = 10_000) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
-    if (predicate()) return;
+    if (await predicate()) return;
     await new Promise(resolvePromise => setTimeout(resolvePromise, 25));
   }
   assert.fail(message);
@@ -523,6 +569,119 @@ async function runKioskScenario(browser, engine, records, mode) {
   await context.close();
 }
 
+async function runBridgeRecoveryScenario(browser, engine) {
+  console.log(`${engine}: checking bridge recovery without reload.`);
+  const records = createRecords(`${engine}-bridge-recovery`);
+  const bridgeControl = { failLoads: 1, instrument: true };
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    await configureContext(context, records, { bridgeControl });
+    const page = await context.newPage();
+    await page.goto(`${mainOrigin}/solutions/licensing/`);
+    const documentToken = await page.evaluate(() => {
+      window.__trackingRecoveryDocument = crypto.randomUUID();
+      return window.__trackingRecoveryDocument;
+    });
+    const panel = page.locator('[data-tracking-preferences]');
+    await panel.locator('[data-tracking-error]').waitFor({ state: 'visible', timeout: 9_000 });
+    assert.equal(records.bridgeLoads, 1, `${engine}: initial bridge failure retried before user action.`);
+
+    await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await waitFor(
+      () => records.pageviews.length === 1,
+      `${engine}: consent did not recover after the initial bridge load failure.`,
+      10_000,
+    );
+    assert.ok(records.bridgeLoads >= 2, `${engine}: recovery did not replace the failed bridge frame.`);
+    assert.equal(
+      await page.evaluate(() => window.__trackingRecoveryDocument),
+      documentToken,
+      `${engine}: bridge recovery reloaded the parent document.`,
+    );
+    await panel.waitFor({ state: 'hidden' });
+    assert.deepEqual(records.errors, [], `${engine}: bridge recovery raised a page error.`);
+  } finally {
+    await context.close();
+  }
+}
+
+async function runSlowReplacementAssociationScenario(browser, engine) {
+  console.log(`${engine}: checking slow replacement bridge association budget.`);
+  const records = createRecords(`${engine}-slow-association`);
+  const delayGate = deferred();
+  const bridgeControl = {
+    delayGate,
+    delayLoadNumber: 3,
+    delayStarted: false,
+    instrument: true,
+  };
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    await configureContext(context, records, { bridgeControl });
+    const page = await context.newPage();
+    await page.goto(`${mainOrigin}/starters/professional-licensing/`);
+    const panel = page.locator('[data-tracking-preferences]');
+    await panel.waitFor({ state: 'visible' });
+    await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await waitFor(() => records.pageviews.length === 1, `${engine}: initial consent pageview was not sent.`);
+
+    await page.locator('[data-tracking-preferences-open]').click();
+    await panel.getByRole('button', { name: 'Reject optional cookies' }).click();
+    await panel.waitFor({ state: 'hidden' });
+    await page.locator('[data-tracking-preferences-open]').click();
+    await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await panel.waitFor({ state: 'hidden' });
+    await waitFor(
+      () => bridgeControl.delayStarted,
+      `${engine}: post-consent replacement bridge did not start loading.`,
+    );
+
+    const submissionsBefore = records.formSubmissions.length;
+    const associationsBefore = records.bridgeRequests.filter(type => type === 'associate').length;
+    const form = page.locator('[data-starter-request-form]');
+    await form.getByRole('textbox', { name: 'Email address' })
+      .fill(`slow-replacement-${engine}@example.invalid`);
+    await form.evaluate(element => {
+      element.addEventListener('submit', () => {
+        window.__trackingSubmitStartedAt = Date.now();
+      }, { capture: true, once: true });
+    });
+    await form.locator('button[type="submit"]').click();
+    await waitFor(
+      () => records.formSubmissions.length === submissionsBefore + 1,
+      `${engine}: optional association waited beyond its 750ms budget for a replacement bridge.`,
+      1_500,
+    );
+    const submission = latestSubmission(records);
+    const submitStartedAt = await page.evaluate(() => window.__trackingSubmitStartedAt);
+    assert.equal(typeof submitStartedAt, 'number', `${engine}: submit start was not recorded.`);
+    const submissionElapsedMs = submission.receivedAt - submitStartedAt;
+    assert.ok(submissionElapsedMs < 1_250, `${engine}: kiosk request took ${submissionElapsedMs}ms.`);
+    assertKioskSubmission(submission);
+    assert.equal(
+      records.bridgeRequests.filter(type => type === 'associate').length,
+      associationsBefore,
+      `${engine}: association reached the broker while its replacement frame was blocked.`,
+    );
+
+    delayGate.release();
+    await waitFor(
+      () => records.bridgeRequests.filter(type => type === 'pageview').length >= 2,
+      `${engine}: delayed replacement bridge did not resume the consented pageview.`,
+    );
+    await new Promise(resolvePromise => setTimeout(resolvePromise, 250));
+    assert.equal(
+      records.bridgeRequests.filter(type => type === 'associate').length,
+      associationsBefore,
+      `${engine}: timed-out association was posted after the replacement bridge loaded.`,
+    );
+    assert.deepEqual(records.errors, [], `${engine}: slow replacement scenario raised a page error.`);
+  } finally {
+    delayGate.release();
+    await context.close();
+  }
+}
+
 async function runEngine(engine, browserType) {
   console.log(`${engine}: checking shared main/docs journey.`);
   const browser = await browserType.launch();
@@ -664,6 +823,12 @@ async function runEngine(engine, browserType) {
       `${engine}: accepted journey did not retain one server-side device.`,
     );
 
+    const retainedDocsDocumentToken = await docsPage.evaluate(() => {
+      window.__retainedTrackingDocument = crypto.randomUUID();
+      return window.__retainedTrackingDocument;
+    });
+    const docsBridge = docsPage.locator(`iframe[src="${mainOrigin}/tracking-bridge/"]`);
+    assert.equal(await docsBridge.count(), 1, `${engine}: retained docs page has no consent bridge.`);
     await docsPage.locator('[data-tracking-preferences-open]').click();
     await docsPage.locator('[data-registry-shared-tracking]')
       .getByRole('button', { name: 'Reject optional cookies' }).click();
@@ -675,14 +840,20 @@ async function runEngine(engine, browserType) {
         return false;
       }
     }, consentKey);
+    await waitFor(
+      async () => await docsBridge.count() === 0,
+      `${engine}: retained docs page kept its native bridge after withdrawal.`,
+    );
     const pageviewsBeforeRejectionNavigation = records.pageviews.length;
-    await docsPage.goto(`${docsOrigin}/accessibility/`);
+    const rejectedDocsPage = await context.newPage();
+    await rejectedDocsPage.goto(`${docsOrigin}/accessibility/`);
     await new Promise(resolvePromise => setTimeout(resolvePromise, 250));
     assert.equal(
       records.pageviews.length,
       pageviewsBeforeRejectionNavigation,
       `${engine}: rejection did not stop Registry Docs.`,
     );
+    await rejectedDocsPage.close();
     await mainPage.goto(`${mainOrigin}/starters/professional-licensing/`);
     await new Promise(resolvePromise => setTimeout(resolvePromise, 250));
     assert.equal(
@@ -712,10 +883,43 @@ async function runEngine(engine, browserType) {
     const [secondDevice] = resumedDevices;
     assert.notEqual(secondDevice, firstDevice, `${engine}: re-consent reused the withdrawn device.`);
 
+    const pageviewsBeforeDocsResume = records.pageviews.length;
+    await docsPage.bringToFront();
+    await docsPage.evaluate(() => {
+      window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await waitFor(
+      () => records.pageviews.length === pageviewsBeforeDocsResume + 1,
+      `${engine}: retained docs page did not recover after re-consent.`,
+    );
+    await new Promise(resolvePromise => setTimeout(resolvePromise, 250));
+    assert.equal(
+      records.pageviews.length,
+      pageviewsBeforeDocsResume + 1,
+      `${engine}: retained docs page sent more than one pageview after re-consent.`,
+    );
+    const resumedDocsView = records.pageviews.at(-1);
+    assert.equal(resumedDocsView.page_url, `${docsOrigin}/privacy/`);
+    assert.equal(
+      await docsPage.evaluate(() => window.__retainedTrackingDocument),
+      retainedDocsDocumentToken,
+      `${engine}: retained docs page reloaded before recovery.`,
+    );
+    assert.equal(
+      resumedDocsView.deviceId,
+      secondDevice,
+      `${engine}: retained docs page resumed with a stale identity.`,
+    );
+    assert.equal(await docsBridge.count(), 1, `${engine}: retained docs page did not replace its bridge.`);
+
     await assertNoIdentityInDocs(docsPage, records, [firstDevice, secondDevice]);
     await assertCleanUrls([mainPage, docsPage, starterPage], [firstDevice, secondDevice]);
     assert.deepEqual(records.errors, [], `${engine}: uncaught page errors were observed.`);
     await context.close();
+
+    await runBridgeRecoveryScenario(browser, engine);
+    await runSlowReplacementAssociationScenario(browser, engine);
 
     for (const mode of ['legacy', 'bridge', 'storage', 'dnt', 'gpc']) {
       await runKioskScenario(browser, engine, records, mode);

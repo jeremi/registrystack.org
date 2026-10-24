@@ -17,7 +17,9 @@ const envelope = { protocol: 'registrystack-tracking', version: 2 };
 function fixture(options = {}) {
   const { factory = createSharedTrackingClient, ...clientOptions } = options;
   const listeners = new Map();
+  const documentListeners = new Map();
   const sent = [];
+  const frames = [];
   const values = new Map();
   const storage = {
     getItem: key => values.get(key) ?? null,
@@ -25,6 +27,7 @@ function fixture(options = {}) {
     removeItem: key => values.delete(key),
   };
   let frame;
+  let autoLoad = options.autoLoad !== false;
   const window = {
     location: { origin: 'https://docs.registrystack.org' },
     localStorage: storage,
@@ -44,13 +47,15 @@ function fixture(options = {}) {
         setAttribute() {},
         addEventListener: (type, listener) => frameListeners.set(type, listener),
         fireLoad: () => frameListeners.get('load')?.(),
+        fireError: () => frameListeners.get('error')?.(),
         remove() { this.removed = true; },
       };
+      frames.push(frame);
       return frame;
     },
-    body: { append: element => queueMicrotask(() => element.fireLoad()) },
-    addEventListener() {},
-    removeEventListener() {},
+    body: { append: element => { if (autoLoad) queueMicrotask(() => element.fireLoad()); } },
+    addEventListener: (type, listener) => documentListeners.set(type, listener),
+    removeEventListener: type => documentListeners.delete(type),
     visibilityState: 'visible',
   };
   const failures = [];
@@ -67,8 +72,21 @@ function fixture(options = {}) {
     const request = sent.at(-1).data;
     message({ ...envelope, id: request.id, ok: true, state, ...extra });
   };
-  return { client, get frame() { return frame; }, sent, message, reply, failures, changes, values,
-    storageEvent: event => listeners.get('storage')?.(event) };
+  return {
+    client,
+    get frame() { return frame; },
+    frames,
+    sent,
+    message,
+    reply,
+    failures,
+    changes,
+    values,
+    setAutoLoad(value) { autoLoad = value; },
+    pageshow: () => listeners.get('pageshow')?.(),
+    visibilitychange: () => documentListeners.get('visibilitychange')?.(),
+    storageEvent: event => listeners.get('storage')?.(event),
+  };
 }
 
 async function nextRequest(run) {
@@ -155,6 +173,158 @@ test('an authoritative newer push acknowledges its matching choice before the ol
   assert.deepEqual(await refusal.promise, rejected);
   assert.equal(oldFrame.removed, true);
   assert.equal(f.failures.length, 0);
+  f.client.close();
+});
+
+test('a visible rejected tab recreates its essential bridge and observes another tab reaccepting', async () => {
+  const f = fixture();
+  const initial = await nextRequest(() => f.client.read());
+  f.reply(accepted);
+  await initial.promise;
+  const oldFrame = f.frame;
+  f.message({ ...envelope, type: 'changed', state: rejected });
+  assert.equal(oldFrame.removed, true);
+
+  f.pageshow();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.notEqual(f.frame, oldFrame);
+  assert.equal(f.sent.at(-1).data.type, 'read');
+  const renewed = { ...accepted, generation: 'ffffffff-ffff-4fff-8fff-ffffffffffff', revision: 12 };
+  f.reply(renewed);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(f.client.state, renewed);
+  f.client.close();
+});
+
+test('accept never overrides a newer rejection without another explicit click', async () => {
+  const f = fixture();
+  const initial = await nextRequest(() => f.client.read());
+  f.reply(accepted);
+  await initial.promise;
+  f.message({ ...envelope, type: 'changed', state: rejected });
+
+  const choice = f.client.choose('accepted');
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.sent.at(-1).data.expectedRevision, rejected.revision);
+  f.message({ ...envelope, id: f.sent.at(-1).data.id, ok: false, error: 'unavailable' });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.sent.at(-1).data.type, 'read');
+  const newerRejection = { ...rejected, generation: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc', revision: 12 };
+  f.reply(newerRejection);
+  await assert.rejects(choice, /tracking/i);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.sent.filter(({ data }) => data.type === 'choose').length, 1);
+  assert.equal(f.client.state.choice, null);
+  assert.equal(f.client.state.revision, newerRejection.revision);
+  assert.equal(f.failures.length, 1);
+
+  const explicitRetry = f.client.choose('accepted');
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.sent.at(-1).data.type, 'choose');
+  assert.equal(f.sent.at(-1).data.expectedRevision, newerRejection.revision);
+  const renewed = { ...accepted, generation: 'ffffffff-ffff-4fff-8fff-ffffffffffff', revision: 13 };
+  f.reply(renewed);
+  assert.deepEqual(await explicitRetry, renewed);
+  f.client.close();
+});
+
+test('accept reconciles remote acceptance without sending another mutation', async () => {
+  const f = fixture();
+  const initial = await nextRequest(() => f.client.read());
+  f.reply(accepted);
+  await initial.promise;
+  f.message({ ...envelope, type: 'changed', state: rejected });
+
+  const choice = f.client.choose('accepted');
+  await new Promise(resolve => setImmediate(resolve));
+  f.message({ ...envelope, id: f.sent.at(-1).data.id, ok: false, error: 'unavailable' });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.sent.at(-1).data.type, 'read');
+  const renewed = { ...accepted, generation: 'ffffffff-ffff-4fff-8fff-ffffffffffff', revision: 12 };
+  f.reply(renewed);
+
+  assert.deepEqual(await choice, renewed);
+  assert.equal(f.sent.filter(({ data }) => data.type === 'choose').length, 1);
+  assert.equal(f.failures.length, 0);
+  f.client.close();
+});
+
+test('a failed initial bridge can be retried and a late old load cannot win', async () => {
+  const f = fixture({ autoLoad: false });
+  const first = f.client.read();
+  const oldFrame = f.frame;
+  oldFrame.fireError();
+  await assert.rejects(first, /tracking/i);
+  assert.equal(oldFrame.removed, true);
+
+  const retry = f.client.read();
+  const currentFrame = f.frame;
+  assert.notEqual(currentFrame, oldFrame);
+  oldFrame.fireLoad();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.sent.length, 0);
+  currentFrame.fireLoad();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.sent.at(-1).data.type, 'read');
+  f.reply(unknown);
+  assert.deepEqual(await retry, unknown);
+  f.client.close();
+});
+
+test('a timed-out initial bridge is removed and the next request can recover', async () => {
+  const f = fixture({ autoLoad: false, timeoutMs: 5 });
+  const first = f.client.read();
+  const oldFrame = f.frame;
+  await assert.rejects(first, /tracking/i);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(oldFrame.removed, true);
+
+  f.setAutoLoad(true);
+  const retry = await nextRequest(() => f.client.read());
+  assert.notEqual(f.frame, oldFrame);
+  assert.equal(f.sent.at(-1).data.type, 'read');
+  f.reply(unknown);
+  assert.deepEqual(await retry.promise, unknown);
+  assert.equal(f.failures.length, 1);
+  f.client.close();
+});
+
+test('an unresponsive loaded bridge is discarded so the next request can recover', async () => {
+  const f = fixture({ timeoutMs: 5 });
+  const first = await nextRequest(() => f.client.read());
+  const oldFrame = f.frame;
+  assert.equal(f.sent.at(-1).data.type, 'read');
+  await assert.rejects(first.promise, /tracking/i);
+  assert.equal(oldFrame.removed, true);
+
+  const retry = await nextRequest(() => f.client.read());
+  assert.notEqual(f.frame, oldFrame);
+  assert.equal(f.sent.at(-1).data.type, 'read');
+  f.reply(unknown);
+  assert.deepEqual(await retry.promise, unknown);
+  assert.equal(f.failures.length, 1);
+  f.client.close();
+});
+
+test('association timeout bounds frame readiness and prevents a late identifier request', async () => {
+  const f = fixture({ timeoutMs: 100 });
+  const initial = await nextRequest(() => f.client.read());
+  f.reply(accepted);
+  await initial.promise;
+  f.setAutoLoad(false);
+  const renewed = { ...accepted, generation: 'ffffffff-ffff-4fff-8fff-ffffffffffff', revision: 11 };
+  f.message({ ...envelope, type: 'changed', state: renewed });
+
+  let outcome = 'pending';
+  const association = f.client.associate(renewed.generation, { timeoutMs: 5 });
+  association.then(() => { outcome = 'resolved'; }, () => { outcome = 'rejected'; });
+  await new Promise(resolve => setTimeout(resolve, 20));
+  assert.equal(outcome, 'rejected');
+  const lateFrame = f.frame;
+  lateFrame.fireLoad();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.sent.some(({ data }) => data.type === 'associate'), false);
+  await assert.rejects(association, /tracking/i);
   f.client.close();
 });
 
