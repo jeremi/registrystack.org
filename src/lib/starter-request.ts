@@ -40,12 +40,12 @@ export function contactRequestPresentation(type: ContactRequestType): {
     case 'starter':
       return {
         eyebrow: 'Free of charge',
-        heading: 'Request this starter',
-        intro: 'Tell us where to send the configuration. You can also add context so our team can understand what you are planning.',
+        heading: 'Request access to this starter',
+        intro: 'Leave your contact details to request access to the configuration. You can also add context so our team can understand what you are planning.',
         messageLabel: 'What are you trying to do?',
-        submitLabel: 'Send request',
-        successMessage: 'Request received. Our team will review it.',
-        privacyCopy: 'We use these details to review your request and reply. You can request the starter without accepting tracking. If you accept tracking, we may link your visits to this request. There is no marketing signup.',
+        submitLabel: 'Request access',
+        successMessage: 'Access request received. Our team will review it.',
+        privacyCopy: 'We use these details to review your request and reply. You can request access without accepting tracking. If you accept tracking, we may link your visits to this request. There is no marketing signup.',
       };
     case 'service':
       return { eyebrow: 'Service enquiry', heading: 'Discuss your service', intro: 'Describe the service, its users, and what should improve. Our team will review your message and reply.', messageLabel: 'Your service and what you need', submitLabel: 'Send message', successMessage: 'Message received. Our team will review it and reply.', privacyCopy: sharedPrivacy };

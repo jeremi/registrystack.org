@@ -81,7 +81,7 @@ try {
   await form.getByRole('textbox', { name: 'Organization' }).fill('Licensing office');
   await form.getByRole('textbox', { name: 'Your role' }).fill('Service owner');
   await form.getByRole('textbox', { name: 'What are you trying to do?' }).fill('Record professional licences.');
-  await form.getByRole('button', { name: 'Send request' }).click();
+  await form.getByRole('button', { name: 'Request access' }).click();
   await form.locator('[data-starter-request-success]').waitFor({ state: 'visible' });
   assert.equal(submissions.length, 1);
   assert.match(submissions[0]['mauticform[request_token]'], /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
@@ -104,7 +104,7 @@ try {
   assert.deepEqual(await context.cookies(), []);
   assert.equal(await page.evaluate(() => localStorage.length + sessionStorage.length), 0);
   assert.equal(await form.getByRole('checkbox').count(), 0, 'no tracking consent required');
-  assert.equal(await form.getByRole('button', { name: 'Send request' }).isDisabled(), true);
+  assert.equal(await form.getByRole('button', { name: 'Request access' }).isDisabled(), true);
   assert.deepEqual(browserErrors, []);
   const accessibility = await new AxeBuilder({ page }).include('#starter-request-form').analyze();
   assert.deepEqual(accessibility.violations, []);
@@ -115,11 +115,11 @@ try {
   await page.reload();
   await form.getByRole('textbox', { name: 'Email address' }).fill('retry@example.invalid');
   await form.getByRole('textbox', { name: 'What are you trying to do?' }).fill('Keep this text.');
-  await form.getByRole('button', { name: 'Send request' }).click();
+  await form.getByRole('button', { name: 'Request access' }).click();
   await form.locator('[data-starter-request-error]').waitFor({ state: 'visible' });
   assert.equal(await form.getByRole('textbox', { name: 'Email address' }).inputValue(), 'retry@example.invalid');
   assert.equal(await form.getByRole('textbox', { name: 'What are you trying to do?' }).inputValue(), 'Keep this text.');
-  assert.equal(await form.getByRole('button', { name: 'Send request' }).isEnabled(), true);
+  assert.equal(await form.getByRole('button', { name: 'Request access' }).isEnabled(), true);
   assert.equal(await page.locator('.starter-request-fallback').isVisible(), true);
 
   // A confirmed retry clears the recovery prompt along with the error.
@@ -128,7 +128,7 @@ try {
     const data = Object.fromEntries(new URLSearchParams(route.request().postData()));
     await route.fulfill({ json: successfulMauticResponse(data), headers: { 'access-control-allow-origin': origin } });
   });
-  await form.getByRole('button', { name: 'Send request' }).click();
+  await form.getByRole('button', { name: 'Request access' }).click();
   await form.locator('[data-starter-request-success]').waitFor({ state: 'visible' });
   assert.equal(await form.locator('[data-starter-request-error]').isVisible(), false);
   assert.equal(await page.locator('.starter-request-fallback').isVisible(), false);
@@ -205,7 +205,7 @@ try {
   assert.equal(await page.locator('.starter-request-fallback').isVisible(), false);
 
   await page.goto(`${origin}/contact/?type=starter&context=Professional+licensing`);
-  assert.equal(await page.getByRole('heading', { level: 2, name: 'Request this starter' }).count(), 1);
+  assert.equal(await page.getByRole('heading', { level: 2, name: 'Request access to this starter' }).count(), 1);
   assert.equal(await page.getByRole('textbox', { name: 'What are you trying to do?' }).getAttribute('required'), null);
   await context.close();
 
@@ -223,7 +223,7 @@ try {
   const disabledPage = await disabledTracking.newPage();
   await disabledPage.goto(`${origin}${path}`);
   await disabledPage.getByRole('textbox', { name: 'Email address' }).fill('disabled@example.invalid');
-  await disabledPage.getByRole('button', { name: 'Send request' }).click();
+  await disabledPage.getByRole('button', { name: 'Request access' }).click();
   await disabledPage.locator('[data-starter-request-success]').waitFor({ state: 'visible' });
   assert.equal(disabledSubmission.mautic_device_id, undefined);
   assert.equal(disabledSubmission.tracking_consent, undefined);
@@ -234,7 +234,7 @@ try {
   const noJs = await browser.newContext({ javaScriptEnabled: false });
   const fallback = await noJs.newPage();
   await fallback.goto(`${origin}${path}`);
-  assert.equal(await fallback.getByRole('button', { name: 'Send request' }).isDisabled(), true);
+  assert.equal(await fallback.getByRole('button', { name: 'Request access' }).isDisabled(), true);
   assert.match(await fallback.locator('.starter-request-fallback a').getAttribute('href'), /^mailto:/);
   await noJs.close();
 
@@ -243,7 +243,7 @@ try {
   for (const variant of [
     { type: 'privacy', context: 'Delete my visit history', heading: 'Send a privacy request', subject: 'Privacy request' },
     { type: 'proposal', context: 'Licensing implementation', heading: 'Request a proposal', subject: 'Proposal request for Registry Stack' },
-    { type: 'starter', context: 'Professional licensing', heading: 'Request this starter', subject: 'Starter request: Professional licensing' },
+    { type: 'starter', context: 'Professional licensing', heading: 'Request access to this starter', subject: 'Starter access request: Professional licensing' },
   ]) {
     await unavailable.goto(`${unconfiguredOrigin}/contact/?type=${variant.type}&context=${encodeURIComponent(variant.context)}`);
     assert.equal(await unavailable.locator('[data-starter-request-form]').count(), 0);

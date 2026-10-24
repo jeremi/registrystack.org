@@ -7,7 +7,7 @@ import { starterRequestEndpoint as parseStarterRequestEndpoint } from '../lib/st
 
 const pageTitle = 'Contact Registry Stack';
 const pageDescription =
-  'Ask about a public registry service, implementation, support, request a proposal, request a starting configuration, or contact us about privacy or the website terms.';
+  'Ask about a public registry service, implementation, support, request a proposal, request access to a starting configuration, or contact us about privacy or the website terms.';
 const endpoint = parseStarterRequestEndpoint(import.meta.env.PUBLIC_STARTER_REQUEST_ENDPOINT, 'kiosk');
 const trackedEndpoint = parseStarterRequestEndpoint(import.meta.env.PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT, 'consented');
 if (trackedEndpoint && !endpoint) {
@@ -32,8 +32,8 @@ if (endpoint && trackedEndpoint) {
           <p class="eyebrow">Contact</p>
           <h1 id="contact-title">Tell us what you need.</h1>
           <p class="hero-lead">
-            Ask a question, describe a service, request a proposal, or request a starting
-            configuration. Do not include confidential records or personal case information.
+            Ask a question, describe a service, request a proposal, or request access to a
+            starting configuration. Do not include confidential records or personal case information.
           </p>
           <p class="hero-note" data-contact-context hidden></p>
         </div>

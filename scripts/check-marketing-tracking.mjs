@@ -99,7 +99,7 @@ async function configure(context) {
 async function submit(page, email) {
   const form = page.locator('[data-starter-request-form]');
   await form.getByRole('textbox', { name: 'Email address' }).fill(email);
-  await form.getByRole('button', { name: 'Send request' }).click();
+  await form.getByRole('button', { name: 'Request access' }).click();
   await form.locator('[data-starter-request-success]').waitFor({ state: 'visible' });
 }
 

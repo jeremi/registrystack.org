@@ -33,7 +33,7 @@ export const contactRecoveryHref = (type: ContactRequestType, context = ''): str
   const boundedContext = requestContext(context) ?? '';
   const suffix = boundedContext ? `: ${boundedContext}` : '';
   const subject = type === 'starter'
-    ? `Starter request${suffix}`
+    ? `Starter access request${suffix}`
     : type === 'service'
       ? `Service inquiry${suffix}`
       : type === 'proposal'

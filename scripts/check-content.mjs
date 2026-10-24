@@ -389,10 +389,10 @@ for (const starter of catalogueStarters) {
     failures.push(`starter ${starter.id} download ${downloadPath || '(none)'} is neither /downloads/starters/${starter.id}-starter.zip nor a breg-registry-starters release asset`);
   }
 }
-// Until the catalogue is published for download, a starter page asks for a
-// request through the native form or shared contact route and never links the zip.
+// Until the catalogue is published for download, a starter page asks for
+// access through the native form or shared contact route and never links the zip.
 const starterPageSource = readSource('src/pages/starters/[id].astro');
-if (starterPageSource.includes('href={starter.download.path}')) failures.push('starter page links the zip; starters are sent on request');
+if (starterPageSource.includes('href={starter.download.path}')) failures.push('starter page links the zip; access to starters is available on request');
 if (!starterPageSource.includes('data-journey="starter-request"')) failures.push('starter page is missing the starter request action');
 if (!starterPageSource.includes('const requestFormEnabled = Boolean(starterRequestEndpoint)') ||
     starterPageSource.includes("starter.id === 'professional-licensing'") ||
@@ -402,8 +402,8 @@ if (!starterPageSource.includes('const requestFormEnabled = Boolean(starterReque
   failures.push('every starter page must use the configured native form with its actual identity and source route');
 }
 const startersIndexSource = readSource('src/pages/starters/index.astro');
-if (!/not public yet[\s\S]*provided on request/i.test(startersIndexSource)) {
-  failures.push('starters catalogue must state that unpublished starter files are provided on request');
+if (!/not public yet[\s\S]*request access/i.test(startersIndexSource)) {
+  failures.push('starters catalogue must offer access requests for unpublished starter configurations');
 }
 const startersUpstream = JSON.parse(readSource('src/upstream/starters.json') || '{}');
 if (startersUpstream.starterCount !== catalogueStarters.length) {

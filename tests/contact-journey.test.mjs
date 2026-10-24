@@ -21,7 +21,7 @@ test('contact links retain only their source path and keep bounded enquiry click
   const anchors = [
     new Anchor('/contact/?type=proposal', 'Request a proposal', 'implementation-support-inquiry'),
     new Anchor('/contact/?type=privacy&context=Delete+my+data', 'Privacy request'),
-    new Anchor('#starter-request-form', 'Request the starter', 'starter-request'),
+    new Anchor('#starter-request-form', 'Request access', 'starter-request'),
     new Anchor('/faq/', 'FAQ'),
     new Anchor('https://other.example.org/contact/', 'External contact'),
   ];

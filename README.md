@@ -107,7 +107,7 @@ Use a compatible catalogue export from the owning starters repository;
 `scripts/sync-starters.mjs` defines the required input files.
 `src/upstream/starters.json` records the upstream release, revision and catalogue
 digest. Until that release is publicly downloadable, starter
-pages offer a request with an email fallback, not a working-download claim. Do
+pages offer access requests with an email fallback, not a working-download claim. Do
 not regenerate the catalogue just to change website prose.
 
 A starter is a starting configuration, not a complete service or evidence of

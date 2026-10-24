@@ -81,10 +81,10 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
           </p>
           <h1 id="starter-title">{starter.title}</h1>
           <p class="hero-lead">{lead}</p>
-          <p class="hero-note starter-hero-terms">Free starting configuration, available on request.</p>
+          <p class="hero-note starter-hero-terms">Free starting configuration. Access is available on request.</p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="#whats-inside">What you receive</a>
-            <a class="button button-secondary" href={requestActionHref} data-journey="starter-request">Request the starter</a>
+            <a class="button button-primary" href="#whats-inside">What is included</a>
+            <a class="button button-secondary" href={requestActionHref} data-journey="starter-request">Request access</a>
             <a class="button button-secondary" href={discussHref}>Discuss your service</a>
           </div>
         </div>
@@ -200,9 +200,9 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
       <div class="section-inner">
         <div class="section-heading compact">
           <p class="eyebrow">Free of charge</p>
-          <h2 id="inside-title">What you receive</h2>
-          <p>The model and configuration shown above, sent by email when you request it. The core configuration defines records, actions, and access. Your technical team can adapt it and generate a registry project with the {baseRegistry.name} command-line tools.</p>
-          <p>You can inspect the catalogue details without requesting the file. If you are planning a wider service, discuss your requirements first and use the starter only if it is a useful technical starting point.</p>
+          <h2 id="inside-title">What is included</h2>
+          <p>Request access to the model and configuration shown above. The core configuration defines records, actions, and access. Your technical team can adapt it and generate a registry project with the {baseRegistry.name} command-line tools.</p>
+          <p>You can inspect the catalogue details without requesting access. If you are planning a wider service, discuss your requirements first and use the starter only if it is a useful technical starting point.</p>
         </div>
         <div class="starter-inside">
           <div>
@@ -216,8 +216,8 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
             <p>The core configuration describes the registry itself. A staff-screen definition, when marked as included, is a separate description for an application to implement. It is not part of the registry runtime and is not a deployed staff application.</p>
             <h3>Review before implementation</h3>
             <p>Compare the model with your law, policy, forms, current data, staff responsibilities, and connected systems. Changes may involve more than adding fields or roles, and the starter does not supply migration, identity, integration, hosting, or operating procedures.</p>
-            <p class="starter-request"><a class="button button-primary" href={requestActionHref} data-journey="starter-request">Request the starter</a></p>
-            <p class="starter-legend">Sent by email, free of charge. Requesting one commits you to nothing.</p>
+            <p class="starter-request"><a class="button button-primary" href={requestActionHref} data-journey="starter-request">Request access</a></p>
+            <p class="starter-legend">Access is free. There is no obligation to start an implementation.</p>
             <div class="starter-inside-technical">
               <StarterTechnical
                 label="configuration values"
