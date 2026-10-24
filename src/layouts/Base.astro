@@ -171,6 +171,14 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
       document.querySelectorAll('a[href]').forEach((anchor) => {
         try {
           const url = new URL(anchor.href);
+          // strict-origin intentionally hides the referring page path. Carry
+          // only this public path to the contact form, never its query or hash.
+          if (url.origin === window.location.origin && url.pathname === '/contact/') {
+            const source = window.location.pathname;
+            if (source.length <= 500 && !source.includes('\\')) url.searchParams.set('source', source);
+            anchor.setAttribute('href', `${url.pathname}${url.search}${url.hash}`);
+            return;
+          }
           const targetSite = journeyTargets.get(url.hostname);
           if (!targetSite) return;
           anchor.href = journeyUrl(anchor, targetSite).toString();
@@ -185,7 +193,12 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
         if (!anchor) return;
         try {
           const url = new URL(anchor.href);
-          const targetSite = journeyTargets.get(url.hostname) || (url.protocol === 'mailto:' ? 'email' : '');
+          const isContact = url.origin === window.location.origin &&
+            (url.pathname === '/contact/' ||
+              (anchor.dataset.journey === 'starter-request' &&
+                url.pathname === window.location.pathname && url.hash === '#starter-request-form'));
+          const targetSite = journeyTargets.get(url.hostname) ||
+            (isContact ? 'contact' : url.protocol === 'mailto:' ? 'email' : '');
           if (targetSite) trackJourneyClick(anchor, targetSite);
         } catch (_error) {}
       });

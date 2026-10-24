@@ -2,18 +2,18 @@
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { askQuestionHref, contactEmail, mailtoHref } from '../data/contact';
+import { askQuestionHref, proposalHref } from '../data/contact';
 
-// The written brief. The email opens with the same fields; timing and budget
-// are optional so a reader without a budget or date can still send it.
+// Timing and budget are optional so a reader without a budget or date can
+// still request a proposal.
 const brief = [
-  { title: 'Your organization and role.', field: 'Your organization and role' },
-  { title: 'The service you need, who will use it, and what should improve.', field: 'The service you need, who will use it, and what should improve' },
-  { title: 'Your current records and systems, and where you want help.', field: 'Your current records and systems, and where you want help' },
-  { title: 'Timing: when you want to start and any funding deadline (optional).', field: 'Timing: when you want to start and any funding deadline (optional)' },
-  { title: 'Budget range and currency, if you can share it (optional).', field: 'Budget range and currency, if you can share it (optional)' },
+  'Your organization and role.',
+  'The service you need, who will use it, and what should improve.',
+  'Your current records and systems, and where you want help.',
+  'Timing: when you want to start and any funding deadline (optional).',
+  'Budget range and currency, if you can share it (optional).',
 ];
-const contactHref = mailtoHref('Registry Stack implementation or support inquiry', brief.map((item) => `${item.field}: `));
+const proposalRoute = proposalHref();
 const nextSteps = [
   'We review your needs and follow up with any questions.',
   'We discuss the service steps, existing systems and responsibilities, then propose a suitable way to start.',
@@ -77,19 +77,17 @@ const nextSteps = [
           <h2 id="inquiry-title">Ask a question.</h2>
           <p>Say who you are and describe the service or need. You do not need a budget to ask.</p>
           <a class="button button-secondary" href={askQuestionHref()} data-journey="ask-question">Ask a question</a>
-          <p class="email-note">Or write to {contactEmail}.</p>
         </div>
         <div class="pilot-brief" aria-labelledby="brief-title">
           <h3 id="brief-title">Request a proposal.</h3>
-          <p>Describe what you need so we can propose the work and its cost. Include these points in your email.</p>
+          <p>Describe what you need so we can propose the work and its cost. Include these points in your request.</p>
           <ol>
-            {brief.map((item) => <li>{item.title}</li>)}
+            {brief.map((item) => <li>{item}</li>)}
           </ol>
           <p>You can leave timing and budget blank if you do not know them yet.</p>
           <div class="inquiry-action">
             <p>Implementation pilots and support contracts are paid services. We confirm the scope and fee with you before starting.</p>
-            <a class="button button-primary" href={contactHref} data-journey="implementation-support-inquiry">Send an inquiry</a>
-            <p class="email-note">Opens your email app with these fields ready to complete, addressed to {contactEmail}.</p>
+            <a class="button button-primary" href={proposalRoute} data-journey="implementation-support-inquiry">Request a proposal</a>
           </div>
         </div>
       </div>
@@ -98,7 +96,7 @@ const nextSteps = [
     <section class="section" id="next-steps" aria-labelledby="next-steps-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <p class="eyebrow">After you write</p>
+          <p class="eyebrow">After you contact us</p>
           <h2 id="next-steps-title">What happens next</h2>
           <ol class="next-steps">
             {nextSteps.map((step) => <li>{step}</li>)}
@@ -139,7 +137,6 @@ const nextSteps = [
   .pilot-brief li::marker { color: var(--registry-stamp); font-family: var(--registry-mono); }
   .inquiry-action { border-top: 1px solid var(--registry-rule); padding-top: 22px; }
   .inquiry-action > p:first-child { font-size: var(--type-md); line-height: 1.6; }
-  .email-note { font-size: var(--type-base); margin: 16px 0 0; overflow-wrap: anywhere; }
   .service-options h4 { font-size: var(--type-body); margin: 22px 0 6px; }
   .pilot-brief > p { font-size: var(--type-md); line-height: 1.6; }
   .next-steps { line-height: 1.6; margin: 20px 0 0; padding-left: 22px; }

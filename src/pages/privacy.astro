@@ -2,10 +2,11 @@
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { contactHref } from '../data/contact';
 
 const pageTitle = 'Privacy policy | Registry Stack';
 const pageDescription =
-  'What registrystack.org collects, why, and what it does not do: starter requests, analytics, email correspondence, server logs, your rights, and the effective date.';
+  'What registrystack.org collects, why, and what it does not do: website enquiries, starter access requests, analytics, server logs, your rights, and the effective date.';
 ---
 
 <Base title={pageTitle} description={pageDescription}>
@@ -33,13 +34,14 @@ const pageDescription =
           <p>
             Registry Stack is published by Aubex Consulting LLC, 28 Geary St, Ste 650 #189, San
             Francisco, CA 94108, United States. Aubex is the controller responsible for this
-            website. You can reach us at <a href="mailto:contact@registrystack.org">contact@registrystack.org</a>.
+            website. You can reach us through our <a href={contactHref('privacy', 'website privacy question')}>privacy contact form</a>.
           </p>
 
           <h2 id="privacy-collect-title">What this site collects</h2>
           <p>
             This site is a static set of pages with no accounts. Aggregate analytics, optional
-            visit tracking, and starter requests serve different purposes, described below.
+            visit tracking, website enquiries, and starter access requests serve different purposes,
+            described below.
           </p>
           <h3>Analytics</h3>
           <p>
@@ -58,16 +60,18 @@ const pageDescription =
             tracker. If you accept tracking, it records the pages you visit on this website,
             referring sites, campaign labels, visit times, and browser and device information.
             We use this history to understand interest in our services. If you then submit a
-            starter request, we can link that history to the contact details you provide.
-            Accepting tracking does not sign you up for email marketing.
+            non-privacy website enquiry or starter access request, we can link your current visits to the
+            contact details you provide. A privacy request does not send a browser identifier or
+            attach your current visits, even if you accepted tracking. Accepting tracking does
+            not sign you up for email marketing.
           </p>
           <p>
-            You can reject tracking and still use the website and request a starter. Use
+            You can reject tracking and still use the website and request access to a starter. Use
             Tracking preferences in the footer to withdraw your consent or change your choice.
             We also respect browser Do Not Track and Global Privacy Control signals. We
             remember your choice in this browser for six months. Withdrawing stops further
             tracking and removes this website&rsquo;s tracking identifiers; it does not itself
-            erase information already received. Contact us if you want that information deleted.
+            erase information already received. Use our <a href={contactHref('privacy', 'delete tracked information')}>privacy contact form</a> if you want that information deleted.
           </p>
           <p>
             Mautic uses cookies and browser storage to recognize a consenting browser. We remove
@@ -77,27 +81,38 @@ const pageDescription =
             set of campaign labels. We do not send form contents or email addresses in tracking
             URLs, and we do not share this history with advertising networks.
           </p>
-          <h3>Email</h3>
+          <h3>Website enquiries</h3>
           <p>
-            If you email us, you give us your address and the content of your message. We use that
-            only to reply to you and keep the exchange as ordinary business correspondence.
+            If you use the contact form, we collect your email address, request type, source page,
+            and the message and organization details you choose to provide. We retain this
+            information in our self-hosted Mautic system so our team can review the enquiry and
+            reply manually by email. Submitting an enquiry does not sign you up for email
+            marketing.
           </p>
-          <h3>Starter requests</h3>
           <p>
-            If you use the professional licensing starter request form, we collect your email
+            If the form is unavailable, its recovery link lets you email us. If you use it or
+            reply to us by email, we receive your email address and the content of your message.
+            We use that information to handle the request and keep the exchange as ordinary
+            business correspondence.
+          </p>
+          <h3>Starter access requests</h3>
+          <p>
+            If you use a starter access request form, we collect your email
             address and any organization, role, or request details you choose to provide. We also
-            record the starter requested, the time of the request, and the source page. We retain
+            record the starter you requested access to, the time of the request, and the source page. We retain
             this information in our self-hosted Mautic system so our team can review the request
             and reply manually.
           </p>
           <p>
             Our servers receive your network address to process requests and use temporary
             rate-limit counters to limit abuse. Mautic is configured to anonymize IP addresses.
-            If you have not accepted tracking, the request is not
-            linked to your website visit history. If you accept tracking and it is available,
-            the form also sends the browser identifier so Mautic can attach your visits to the
-            request. Submitting an address does not verify that you own it or grant access to
-            any account. There is no automatic marketing signup.
+            If you have not accepted tracking, we do not send a browser identifier with your
+            enquiry or request or attach your current visits to it. Privacy requests follow this
+            rule even if tracking was accepted. If you accept tracking and it is available, a
+            non-privacy form sends the browser identifier so Mautic can attach your current visits
+            to the enquiry or request. Previously stored correspondence or visit history is not
+            erased automatically. Submitting an address does not verify that you own it or grant
+            access to any account. There is no automatic marketing signup.
           </p>
           <h3>Server logs</h3>
           <p>
@@ -114,7 +129,7 @@ const pageDescription =
 
           <h2 id="privacy-not-title">What this site does not do</h2>
           <ul class="check-list">
-            <li>It does not require tracking consent to submit a starter request.</li>
+            <li>It does not require tracking consent to submit a starter access request.</li>
             <li>It does not run advertising and does not share data with ad networks.</li>
             <li>It does not sell personal data.</li>
             <li>It does not load the Mautic visit tracker before you accept tracking.</li>
@@ -125,25 +140,26 @@ const pageDescription =
             Where the GDPR or the UK GDPR applies, we rely on legitimate interest to run
             aggregate, cookie-free analytics that help us understand which pages are useful.
             Optional Mautic visit tracking relies on your consent, which you can withdraw at any time. If
-            you email us or submit a starter request, that exchange proceeds on the basis that you
-            chose to contact us and provided your information for that purpose.
+            you submit a website enquiry or starter access request, that exchange proceeds on the basis
+            that you chose to contact us and provided your information for that purpose.
           </p>
 
           <h2 id="privacy-retention-title">Retention</h2>
           <p>
             Analytics events are aggregate and are not tied to an identified person. We keep them
-            only as long as they are useful for understanding site usage. Starter requests and
-            email correspondence are kept as ordinary business records for as long as they stay
-            relevant. Optional visit histories are held in our self-hosted Mautic system and
+            only as long as they are useful for understanding site usage. Website enquiries,
+            starter access requests, and related email correspondence are kept as ordinary business
+            records for as long as they stay relevant. Optional visit histories are held in our
+            self-hosted Mautic system and
             are separate from the six-month browser preference. Withdrawing consent does not
-            automatically delete those records; you can request their deletion using the contact
-            address below.
+            automatically delete those records; you can request their deletion through the privacy
+            contact form.
           </p>
 
           <h2 id="privacy-rights-title">Your rights</h2>
           <p>
             You can ask us to access, correct, or delete personal data you have given us, for
-            example a starter request or the content of an email, by writing to <a href="mailto:contact@registrystack.org">contact@registrystack.org</a>.
+            example a starter access request or website enquiry, through our <a href={contactHref('privacy', 'access, correction, or deletion request')}>privacy contact form</a>.
             We will respond. Aggregate analytics data is not tied to an identified person, so there
             is generally nothing to look up or erase per visitor. If you believe otherwise in your
             case, tell us and we will look into it.

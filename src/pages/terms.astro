@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { contactHref } from '../data/contact';
 
 const pageTitle = 'Terms of use | Registry Stack';
 const pageDescription =
@@ -82,7 +83,7 @@ const pageDescription =
 
           <h2 id="terms-contact-title">Contact</h2>
           <p>
-            Questions about these terms: <a href="mailto:contact@registrystack.org">contact@registrystack.org</a>.
+            Questions about these terms: <a href={contactHref('terms', 'website terms')}>use the terms contact form</a>.
           </p>
 
           <p class="legal-effective">Effective date: July 4, 2026.</p>

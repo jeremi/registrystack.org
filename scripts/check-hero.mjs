@@ -83,19 +83,17 @@ const redirects = [
   ['/solutions/casework/', '/products/casework/'],
 ];
 
-const mailtoBody = (href) => {
-  if (!href?.startsWith('mailto:contact@registrystack.org?')) return '';
-  return new URL(href).searchParams.get('body') ?? '';
-};
-const isServiceMailto = (href) => {
-  if (!href?.startsWith('mailto:contact@registrystack.org?')) return false;
-  const url = new URL(href);
-  const body = mailtoBody(href);
-  return /^Service inquiry: /.test(url.searchParams.get('subject') ?? '') &&
-    body.includes('\n') && !body.includes('\\n') &&
-    /^The service you need:\s*$/im.test(body) &&
-    /^Who will use it:\s*$/im.test(body) &&
-    /^What should improve:\s*$/im.test(body);
+const isContactRoute = (href, type, context) => {
+  if (!href) return false;
+  const target = new URL(href, url);
+  const allowed = new Set(['type', 'context', 'source']);
+  if (target.origin !== new URL(url).origin || target.pathname !== '/contact/' ||
+      [...target.searchParams.keys()].some((key) => !allowed.has(key)) ||
+      target.searchParams.getAll('type').length !== 1 || target.searchParams.get('type') !== type) {
+    return false;
+  }
+  const contexts = target.searchParams.getAll('context');
+  return context === undefined ? contexts.length === 0 : contexts.length === 1 && contexts[0] === context;
 };
 
 // Exploring solutions, describing a service, understanding the products,
@@ -118,12 +116,13 @@ for (const options of [
       continue;
     }
     if (!await page.locator('main h1').isVisible()) fail(`buyer route ${route} has no visible title`);
-    const nextSteps = page.locator('main a[href="/pricing/"], main a[href="/pricing/#inquiry"], main a[href^="mailto:contact@registrystack.org?"]');
+    const nextSteps = page.locator('main a[href="/pricing/"], main a[href^="/contact/?type=service&context="]');
     if (!await nextSteps.count()) fail(`buyer route ${route} has no way to discuss delivery`);
     const serviceInquiries = page.locator('main a[data-journey="service-inquiry"]');
     for (const inquiry of await serviceInquiries.all()) {
-      if (!isServiceMailto(await inquiry.getAttribute('href'))) {
-        fail(`buyer route ${route} has a service inquiry without needs-first newline-separated fields`);
+      if (!isContactRoute(await inquiry.getAttribute('href'), 'service',
+          new URL(await inquiry.getAttribute('href'), url).searchParams.get('context'))) {
+        fail(`buyer route ${route} has a service inquiry without its contextual contact route`);
       }
     }
   }
@@ -190,8 +189,8 @@ for (const options of [
         }
       }
       await page.goto(`${url}solutions/`);
-      const inquiry = page.locator('.final-cta a[href^="mailto:"]');
-      if (await inquiry.count() !== 1 || !isServiceMailto(await inquiry.getAttribute('href'))) {
+      const inquiry = page.locator('.final-cta a[href^="/contact/?type=service&context="]');
+      if (await inquiry.count() !== 1 || !isContactRoute(await inquiry.getAttribute('href'), 'service', 'Registry Stack')) {
         fail('the solutions closing invitation must let readers describe their service without choosing a configuration');
       }
       for (const route of solutionMenuHrefs.slice(1)) {
@@ -201,8 +200,10 @@ for (const options of [
           continue;
         }
         const contact = page.locator('.final-cta .button-primary');
-        if (await contact.count() !== 1 || !isServiceMailto(await contact.getAttribute('href'))) {
-          fail(`${route} must offer a service inquiry with useful fields`);
+        const contactHref = await contact.getAttribute('href');
+        const contactContext = new URL(contactHref, url).searchParams.get('context');
+        if (await contact.count() !== 1 || !contactContext || !isContactRoute(contactHref, 'service', contactContext)) {
+          fail(`${route} must offer a contextual service inquiry`);
         }
         if (familySolutionHrefs.has(route)) {
           for (const tutorial of ['first-breg', 'first-evidence-assertion']) {
@@ -243,15 +244,9 @@ for (const options of [
     }
   };
   await checkWeek('home');
-  // The light contact action opens a prefilled question, not a scoping brief.
-  const isQuestionMailto = (href) => {
-    if (!href?.startsWith('mailto:contact@registrystack.org?')) return false;
-    const params = new URL(href).searchParams;
-    return /^Question about /.test(params.get('subject') ?? '') && !/budget/i.test(params.get('body') ?? '');
-  };
   const heroInquiry = page.locator('.hero .hero-actions a').nth(1);
-  if (!isServiceMailto(await heroInquiry.getAttribute('href')) || !await heroInquiry.isVisible()) {
-    fail('hero secondary action must be a visible needs-first "Discuss your service" email');
+  if (!isContactRoute(await heroInquiry.getAttribute('href'), 'service', 'Registry Stack') || !await heroInquiry.isVisible()) {
+    fail('hero secondary action must be a visible contextual "Discuss your service" form route');
   }
   // A register family page tells the same kind of story for its own record,
   // and its hero leads to that figure.
@@ -332,7 +327,7 @@ for (const options of [
     const { origin, pathname, hash } = new URL(link.href);
     return { origin, pathname, hash };
   }));
-  for (const href of ['/customization/', '/pricing/', '/pricing/#inquiry']) {
+  for (const href of ['/customization/', '/pricing/', '/contact/']) {
     const target = new URL(href, url);
     const index = navLinks.findIndex((link) => link.origin === target.origin &&
       link.pathname === target.pathname && link.hash === target.hash);
@@ -375,8 +370,8 @@ for (const options of [
     }
     if (!await page.locator('.final-cta a[href="/pricing/"]').isVisible()) fail(`${product.name} is missing its closing pricing path`);
     const serviceInquiry = page.locator('.final-cta .button-primary');
-    if (!await serviceInquiry.isVisible() || !isServiceMailto(await serviceInquiry.getAttribute('href'))) {
-      fail(`${product.name} is missing its service inquiry with needs-first fields`);
+    if (!await serviceInquiry.isVisible() || !isContactRoute(await serviceInquiry.getAttribute('href'), 'service', product.name)) {
+      fail(`${product.name} is missing its contextual service inquiry`);
     }
     const unnamedSections = await page.locator('main > section').evaluateAll((sections) => sections.filter((section) => {
       if (section.getAttribute('aria-label')?.trim()) return false;
@@ -390,29 +385,30 @@ for (const options of [
   // The light question comes before the brief and asks for no budget; the
   // brief asks about the service, users and improvement, with budget and timing optional.
   const questionLinks = page.locator('main a[data-journey="ask-question"]');
-  if (await questionLinks.count() !== 1 || !isQuestionMailto(await questionLinks.getAttribute('href')) ||
+  if (await questionLinks.count() !== 1 || !isContactRoute(await questionLinks.getAttribute('href'), 'question', 'Registry Stack') ||
       !await questionLinks.isVisible()) {
     fail('pricing page is missing its "Ask a question" action');
   }
   const briefLinks = page.locator('main a[data-journey="implementation-support-inquiry"]');
   if (await briefLinks.count() !== 1) fail('pricing page is missing its inquiry action');
   for (const inquiry of await briefLinks.all()) {
-    const href = await inquiry.getAttribute('href');
-    const body = mailtoBody(href);
-    if (!body.includes('\n') || body.includes('\\n')) fail('pricing inquiry fields must be separated by real newlines');
-    for (const [name, field] of [
-      ['organization', /organization/i],
-      ['service', /^.*service you need/im],
-      ['users', /who will use it/i],
-      ['desired improvement', /what should improve/i],
-      ['current systems and help needed', /current records and systems.*where you want help/i],
-      ['optional timing', /^.*timing.*optional/im],
-      ['optional budget', /^.*budget.*optional/im],
-    ]) {
-      if (!field.test(body)) fail(`pricing inquiry is missing its ${name} field`);
+    if (!isContactRoute(await inquiry.getAttribute('href'), 'proposal')) {
+      fail('pricing proposal action must preserve the proposal request type');
     }
   }
-  const inquiryLinks = page.locator('main a[href^="mailto:"]');
+  const proposalGuidance = await page.locator('.pilot-brief').innerText();
+  for (const [name, field] of [
+    ['organization', /organization/i],
+    ['service', /service you need/i],
+    ['users', /who will use it/i],
+    ['desired improvement', /what should improve/i],
+    ['current systems and help needed', /current records and systems.*where you want help/i],
+    ['optional timing', /timing.*optional/i],
+    ['optional budget', /budget.*optional/i],
+  ]) {
+    if (!field.test(proposalGuidance)) fail(`pricing proposal guidance is missing ${name}`);
+  }
+  const inquiryLinks = briefLinks;
   for (const inquiry of await inquiryLinks.all()) {
     for (const price of ['US$20,000', 'US$7,500']) {
       const priceBeforeInquiry = await inquiry.evaluate((link, expectedPrice) => {
@@ -442,7 +438,7 @@ for (const options of [
 
   // A representative catalogue detail stays honest about availability: the
   // page is inspectable, while the unpublished file has a complete request
-  // journey whether the inline form is configured or email remains primary.
+  // journey whether the inline form is configured or the shared contact form is used.
   await page.goto(`${url}starters/professional-licensing/`);
   if (!await page.locator('main h1').isVisible()) fail('representative professional-licensing starter is missing');
   const starterRequest = page.locator('main .hero a[data-journey="starter-request"]');
@@ -450,9 +446,9 @@ for (const options of [
     fail('representative starter must offer a visible request near its introduction');
   } else {
     const requestHref = await starterRequest.getAttribute('href');
-    if (requestHref?.startsWith('mailto:contact@registrystack.org?')) {
+    if (isContactRoute(requestHref, 'starter', 'Professional licensing')) {
       if (await page.locator('#starter-request-form').count() !== 0) {
-        fail('unconfigured representative starter must keep the email-only request journey');
+        fail('unconfigured representative starter must use the shared contact journey');
       }
     } else if (requestHref === '#starter-request-form') {
       await starterRequest.click();
@@ -469,8 +465,9 @@ for (const options of [
         if (!completeForm) {
           fail('configured representative starter must render a complete inline request form');
         }
-        if (await fallback.count() !== 1 || !await fallback.isVisible()) {
-          fail('configured representative starter must keep a visible email fallback');
+        if (await fallback.count() !== 1 ||
+            (options.javaScriptEnabled === false ? !await fallback.isVisible() : await fallback.isVisible())) {
+          fail('configured representative starter must expose email recovery only without JavaScript or after an error');
         }
         if (completeForm) {
           if (options.javaScriptEnabled === false) {
@@ -492,11 +489,17 @@ for (const options of [
         }
       }
     } else {
-      fail('representative starter request must use the email or inline form journey');
+      fail('representative starter request must use the contact or inline form journey');
     }
   }
   if (await page.locator('main a[download], main a[href$=".zip"]').count()) {
     fail('representative starter must not offer an unpublished zip download');
+  }
+
+  await page.goto(`${url}contact/`);
+  const currentContact = page.locator('.top-nav a[aria-current="page"]').filter({ hasText: 'Contact' });
+  if (await currentContact.count() !== 1 || !await currentContact.isVisible()) {
+    fail('contact page must highlight Contact in the main navigation');
   }
 
   for (const [from, to] of redirects) {

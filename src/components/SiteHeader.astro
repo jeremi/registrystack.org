@@ -4,6 +4,7 @@
 // in the docs.
 import { products } from '../data/products';
 import { solutionAreas } from '../data/solutions';
+import { contactHref } from '../data/contact';
 const { current } = Astro.props;
 const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
@@ -74,6 +75,6 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
     {links.map((link) => (
       <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
     ))}
-    <a class="nav-emphasis" href="/pricing/#inquiry">Contact</a>
+    <a class="nav-emphasis" href={contactHref()} aria-current={current === 'contact' ? 'page' : undefined}>Contact</a>
   </nav>
 </header>

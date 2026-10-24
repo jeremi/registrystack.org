@@ -1,7 +1,7 @@
 // Plain words for the identifiers and codes in the starters catalogue, so a
 // starter page reads the way Registry Studio does: field names and types in
 // words on the surface, the identifiers themselves in technical details.
-import { mailtoHref } from './contact.ts';
+import { contactHref } from './contact.ts';
 
 // Tokens that are initialisms in the starters' field ids and values keys.
 const INITIALISMS = new Set(['uri', 'iri', 'url', 'id', 'api', 'vin', 'imo', 'iban', 'bic', 'vat', 'isin', 'lei']);
@@ -99,14 +99,5 @@ export const starterHoldsText = (starter: { summary?: string; task: string }): s
 // A public register a starter was modeled on, named by its host.
 export const sourceHost = (href: string): string => new URL(href).hostname.replace(/^www\./, '');
 
-// The email that requests a starter: the subject names it, and the body asks
-// for the register the office keeps, which is how we learn what a starter
-// lacks. An empty title leaves the reader to name the starter.
 export const starterRequestHref = (title: string): string =>
-  mailtoHref(`Starter request: ${title}`, [
-    `Starter: ${title}`,
-    'Organization: ',
-    'Your role: ',
-    'The register you keep (what it records, who changes it): ',
-    'Anything you already know is missing (optional): ',
-  ]);
+  contactHref('starter', title);

@@ -3,7 +3,7 @@
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { contactEmail, describeServiceHref } from '../data/contact';
+import { describeServiceHref } from '../data/contact';
 ---
 <Base title="Registries for digital public infrastructure | Registry Stack" description="Build reusable registry capabilities for digital public infrastructure with open-source software, documented interfaces and institutional control.">
   <SiteHeader current="dpi" />
@@ -13,7 +13,7 @@ import { contactEmail, describeServiceHref } from '../data/contact';
       <h1 id="dpi-title">One register can support many public services.</h1>
       <p class="hero-lead">Build reusable registry capabilities with open-source software and documented interfaces. Let institutions maintain their records while other services access the information they are permitted to use.</p>
       <div class="hero-actions"><a class="button button-primary" href={describeServiceHref('a DPI programme')} data-journey="service-inquiry">Discuss your programme</a><a class="button button-secondary" href="#shared-capabilities">Explore the approach</a></div>
-      <p class="hero-note">For digital-government teams, funders and implementation partners. {contactEmail}</p>
+      <p class="hero-note">For digital-government teams, funders and implementation partners.</p>
     </div></div></section>
 
     <section class="section" id="shared-capabilities" aria-labelledby="reuse-title"><div class="section-inner">

@@ -27,17 +27,12 @@ test('sourceHost names a source by its host without www', () => {
   assert.equal(sourceHost('https://datacatalogue.gov.ie/dataset/registered-teachers'), 'datacatalogue.gov.ie');
 });
 
-test('starterRequestHref opens a starter request with the title in the subject and body', () => {
+test('starterRequestHref routes to the contact form with the title as public context', () => {
   const href = starterRequestHref('Professional licensing');
-  assert.ok(href.startsWith('mailto:contact@registrystack.org?subject=Starter%20request%3A%20Professional%20licensing&body='));
-  const body = decodeURIComponent(href.split('&body=')[1]);
-  assert.deepEqual(body.split('\n'), [
-    'Starter: Professional licensing',
-    'Organization: ',
-    'Your role: ',
-    'The register you keep (what it records, who changes it): ',
-    'Anything you already know is missing (optional): ',
-  ]);
+  assert.equal(href, '/contact/?type=starter&context=Professional+licensing');
+  const url = new URL(href, 'https://registrystack.org');
+  assert.equal(url.searchParams.has('email'), false);
+  assert.equal(url.searchParams.has('message'), false);
 });
 
 test('starterHoldsText drops the sentence the lead already says', () => {

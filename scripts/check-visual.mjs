@@ -81,6 +81,9 @@ const routes = [
   { name: 'blog', path: '/blog/' },
   { name: 'security', path: '/security/' },
   { name: 'pricing', path: '/pricing/' },
+  { name: 'contact', path: '/contact/' },
+  { name: 'contact-proposal', path: '/contact/?type=proposal' },
+  { name: 'contact-privacy', path: '/contact/?type=privacy&context=delete+tracked+information' },
   { name: 'faq', path: '/faq/' },
 ];
 
@@ -114,10 +117,11 @@ for (const viewport of viewports) {
   const metrics = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     clientWidth: document.documentElement.clientWidth,
-    // Links inside the closed Solutions and Products disclosures are
+    // Closed navigation links and email recovery before a form error are
     // intentionally hidden, not clipped.
     clippedButtons: [...document.querySelectorAll('a, button')].filter((element) => {
       if (element.closest('details:not([open])')) return false;
+      if (element.closest('[data-form-enhanced] .starter-request-fallback:not(.show-recovery)')) return false;
       const rect = element.getBoundingClientRect();
       return rect.width <= 0 || rect.height <= 0;
     }).length,

@@ -8,7 +8,7 @@ import ServiceOutline from '../components/ServiceOutline.astro';
 import RegisterDay from '../components/RegisterDay.astro';
 import { products } from '../data/products';
 import { registerFamilies, solutionAreas } from '../data/solutions';
-import { contactEmail, describeServiceHref } from '../data/contact';
+import { describeServiceHref } from '../data/contact';
 
 const featured = registerFamilies.filter((area) => ['licensing', 'business-and-tax', 'health-and-safety'].includes(area.key));
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
@@ -27,7 +27,7 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
               <a class="button button-primary" href="/solutions/">Explore solutions</a>
               <a class="button button-secondary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a>
             </div>
-            <p class="hero-note">Start with an implementation pilot, with AI-assisted customization and support from our team. <a href={`mailto:${contactEmail}`}>{contactEmail}</a></p>
+            <p class="hero-note">Start with an implementation pilot, with AI-assisted customization and support from our team.</p>
           </div>
           <div class="hero-figure"><ServiceOutline /></div>
         </div>
@@ -127,7 +127,7 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
         <div class="section-heading"><p class="eyebrow">Choose how to get started</p><h2 id="adoption-title">Build with your team or work with ours.</h2></div>
         <div class="value-grid adoption-grid">
           <article><h3>Discuss an implementation</h3><p>Bring one service and the result you need. We agree the configuration, screens, integrations and responsibilities in a written pilot scope.</p><a class="inline-cta" href="/pricing/">Implementation and support <span aria-hidden="true">→</span></a></article>
-          <article><h3>Explore starting configurations</h3><p>Inspect models for common registers and request one for evaluation. We can help select a suitable model if you are unsure where to begin.</p><a class="inline-cta" href="/starters/">Browse starting configurations <span aria-hidden="true">→</span></a></article>
+          <article><h3>Explore starting configurations</h3><p>Inspect models for common registers and request access to one for evaluation. We can help select a suitable model if you are unsure where to begin.</p><a class="inline-cta" href="/starters/">Browse starting configurations <span aria-hidden="true">→</span></a></article>
         </div>
       </div>
     </section>
@@ -140,7 +140,7 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
       </div>
     </section>
 
-    <section class="final-cta" aria-labelledby="pilot-title"><div class="section-inner"><p class="eyebrow">Your next service</p><h2 id="pilot-title">Tell us what your institution needs.</h2><p>Describe the service, its users and the change you want to make. We can help assess the fit and scope the work.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="/pricing/">View implementation options</a></div><p class="final-cta-note">You can also email {contactEmail}.</p></div></section>
+    <section class="final-cta" aria-labelledby="pilot-title"><div class="section-inner"><p class="eyebrow">Your next service</p><h2 id="pilot-title">Tell us what your institution needs.</h2><p>Describe the service, its users and the change you want to make. We can help assess the fit and scope the work.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="/pricing/">View implementation options</a></div></div></section>
   </main>
   <SiteFooter />
 </Base>

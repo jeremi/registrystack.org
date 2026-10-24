@@ -2,7 +2,7 @@
 import Base from './Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { contactEmail, describeServiceHref } from '../data/contact';
+import { describeServiceHref } from '../data/contact';
 import type { products } from '../data/products';
 
 interface Props {
@@ -42,7 +42,6 @@ const discussHref = describeServiceHref(product.name);
           <a class="button button-primary" href={discussHref}>Discuss your service</a>
           <a class="button button-secondary" href="/pricing/">Implementation and support</a>
         </div>
-        <p class="final-cta-note">Or email {contactEmail}.</p>
       </div>
     </section>
   </main>

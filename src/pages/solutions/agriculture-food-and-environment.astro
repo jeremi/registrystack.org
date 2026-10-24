@@ -9,7 +9,7 @@ import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
-import { describeServiceHref, contactEmail } from '../../data/contact';
+import { describeServiceHref } from '../../data/contact';
 import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environment')!;
 
@@ -113,7 +113,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'What is a starter, exactly?',
-        a: 'A starter is a starting configuration for a particular kind of register. It is available by request and must be adapted to your rules, field operations and existing systems. You can begin by describing your service without selecting a starter first.',
+        a: 'A starter is a starting configuration for a particular kind of register. You can request free access to it, and it must be adapted to your rules, field operations and existing systems. You can begin by describing your service without selecting a starter first.',
         link: { href: '/starters/#agriculture-food-and-environment', label: 'Browse the agriculture, food and environment starters' },
       },
       ...sharedFamilyFaq,
@@ -126,6 +126,5 @@ const steps: WeekStep[] = [
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
     emphasis="docs"
-    note={`Or write to ${contactEmail}.`}
   />
 </Solution>

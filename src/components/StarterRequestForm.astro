@@ -1,27 +1,99 @@
 ---
+import {
+  contactEmail as defaultContactEmail,
+  contactNeutralRecoveryHref,
+  contactRecoveryHref,
+} from '../data/contact';
+import { contactRequestPresentation, type ContactRequestType } from '../lib/starter-request';
+
 interface Props {
-  endpoint: string;
+  endpoint?: string;
   trackedEndpoint?: string;
-  requestHref: string;
-  contactEmail: string;
+  requestHref?: string;
+  contactEmail?: string;
+  starterId?: string;
+  starterTitle?: string;
+  sourcePage?: string;
+  requestType?: ContactRequestType;
+  requestContext?: string;
+  requestFromUrl?: boolean;
+  messageRequired?: boolean;
+  headingLevel?: 2 | 3;
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+  messageLabel?: string;
+  submitLabel?: string;
+  successMessage?: string;
 }
 
-const { endpoint, trackedEndpoint, requestHref, contactEmail } = Astro.props;
+const {
+  endpoint,
+  trackedEndpoint,
+  requestHref,
+  contactEmail = defaultContactEmail,
+  starterId = '',
+  starterTitle = '',
+  sourcePage,
+  requestType = 'starter',
+  requestContext = starterTitle,
+  requestFromUrl = false,
+  messageRequired = requestType !== 'starter',
+  headingLevel = 3,
+  eyebrow,
+  heading,
+  intro,
+  messageLabel,
+  submitLabel,
+  successMessage,
+} = Astro.props;
+
+const presentation = contactRequestPresentation(requestType);
+const displayedEyebrow = eyebrow ?? presentation.eyebrow;
+const displayedHeading = heading ?? presentation.heading;
+const displayedIntro = intro ?? presentation.intro;
+const displayedMessageLabel = messageLabel ?? presentation.messageLabel;
+const displayedSubmitLabel = submitLabel ?? presentation.submitLabel;
+const displayedSuccessMessage = successMessage ?? presentation.successMessage;
+
+const recoveryHref = requestHref ?? (requestFromUrl
+  ? contactNeutralRecoveryHref()
+  : contactRecoveryHref(requestType, requestContext));
 ---
 
-{endpoint && (
-  <section class="starter-request-panel" id="starter-request-form" aria-labelledby="starter-request-title">
+<section
+  class="starter-request-panel"
+  id="starter-request-form"
+  aria-labelledby="starter-request-title"
+  data-request-panel
+  data-request-type={requestType}
+  data-request-context={requestContext}
+  data-request-from-url={requestFromUrl ? 'true' : undefined}
+>
     <div class="starter-request-intro">
-      <p class="eyebrow">Free of charge</p>
-      <h3 id="starter-request-title">Request this starter</h3>
-      <p>Tell us where to send the configuration. You can also add context so our team can understand what you are planning.</p>
+      <p class="eyebrow" data-request-eyebrow>{displayedEyebrow}</p>
+      {headingLevel === 2
+        ? <h2 id="starter-request-title" data-request-heading>{displayedHeading}</h2>
+        : <h3 id="starter-request-title" data-request-heading>{displayedHeading}</h3>}
+      <p data-request-intro>{displayedIntro}</p>
+      <p class="starter-request-context" data-request-context-summary hidden></p>
     </div>
 
-    <form data-starter-request-form data-endpoint={endpoint} data-tracked-endpoint={trackedEndpoint} aria-describedby="starter-request-privacy">
+    {endpoint && <form
+      data-starter-request-form
+      data-endpoint={endpoint}
+      data-tracked-endpoint={trackedEndpoint}
+      data-starter-id={starterId}
+      data-source-page={sourcePage}
+      data-request-type={requestType}
+      data-request-context={requestContext}
+      data-request-from-url={requestFromUrl ? 'true' : undefined}
+      aria-describedby="starter-request-privacy"
+    >
       <fieldset disabled data-starter-request-fields>
         <div class="starter-request-fields">
           <label>
-            <span>Email address <span aria-hidden="true">*</span></span>
+            <span>Email address <span data-required-marker aria-hidden="true">*</span></span>
             <input name="email" type="email" autocomplete="email" maxlength="254" required />
           </label>
           <label>
@@ -33,8 +105,12 @@ const { endpoint, trackedEndpoint, requestHref, contactEmail } = Astro.props;
             <input name="role" type="text" autocomplete="organization-title" maxlength="200" />
           </label>
           <label class="starter-request-message">
-            <span>What are you trying to do? <span class="optional">Optional</span></span>
-            <textarea name="message" rows="5" maxlength="2000"></textarea>
+            <span>
+              <span data-message-label>{displayedMessageLabel}</span>{' '}
+              <span data-required-marker data-message-required-marker aria-hidden="true" hidden={!messageRequired}>*</span>
+              <span class="optional" data-message-optional-marker hidden={messageRequired}>Optional</span>
+            </span>
+            <textarea name="message" rows="5" maxlength="2000" required={messageRequired}></textarea>
           </label>
           <label class="starter-request-honeypot" aria-hidden="true">
             <span>Leave this empty</span>
@@ -43,37 +119,89 @@ const { endpoint, trackedEndpoint, requestHref, contactEmail } = Astro.props;
         </div>
 
         <p class="starter-request-privacy" id="starter-request-privacy">
-          We use these details to review your request and reply. You can request the starter without accepting tracking. If you accept tracking, we link your visits to this request. There is no marketing signup. Read the <a href="/privacy/">privacy policy</a>.
+          <span data-request-privacy-copy>{presentation.privacyCopy}</span> Read the <a href="/privacy/">privacy policy</a>.
         </p>
-        <button class="button button-primary" type="submit" data-starter-request-submit>Send request</button>
+        <button class="button button-primary" type="submit" data-starter-request-submit>{displayedSubmitLabel}</button>
       </fieldset>
 
       <p class="starter-request-status" role="status" aria-live="polite" data-starter-request-submitting hidden>
         Sending your request&hellip;
       </p>
       <p class="starter-request-status starter-request-success" role="status" aria-live="polite" tabindex="-1" data-starter-request-success hidden>
-        Request received. Our team will review it.
+        <span data-request-success-copy>{displayedSuccessMessage}</span>
       </p>
       <p class="starter-request-status starter-request-error" role="alert" tabindex="-1" data-starter-request-error hidden>
         We could not confirm your request. Your details are still here. You can try again or use the email option below.
       </p>
-    </form>
+    </form>}
 
     <p class="starter-request-fallback">
-      Prefer email, or cannot use the form?{' '}<a href={requestHref}>Email {contactEmail}</a>.
+      {endpoint ? 'If the form does not work, ' : 'The form is unavailable. '}
+      <a href={recoveryHref} data-request-recovery>Email {contactEmail}</a>.
     </p>
-  </section>
-)}
+</section>
 
 <script>
-  import { submitStarterRequest } from '../lib/starter-request';
+  import {
+    isContactRequestType,
+    contactRequestPresentation,
+    requestContext as normalizeRequestContext,
+    requestSourcePage,
+    submitStarterRequest,
+  } from '../lib/starter-request';
+  import { contactRecoveryHref } from '../data/contact';
   import { getConsentedDeviceId } from '../lib/marketing-tracking';
 
-  for (const form of document.querySelectorAll<HTMLFormElement>('[data-starter-request-form]')) {
+  for (const panel of document.querySelectorAll<HTMLElement>('[data-request-panel]')) {
+    const form = panel.querySelector<HTMLFormElement>('[data-starter-request-form]');
+    const recoveryLink = panel.querySelector<HTMLAnchorElement>('[data-request-recovery]');
+    const requestedType = panel.dataset.requestType;
+    let type = isContactRequestType(requestedType) ? requestedType : 'question';
+    let context = normalizeRequestContext(panel.dataset.requestContext) ?? '';
+
+    if (panel.dataset.requestFromUrl === 'true') {
+      const params = new URLSearchParams(window.location.search);
+      const urlType = params.get('type') ?? undefined;
+      type = isContactRequestType(urlType) ? urlType : 'question';
+      context = normalizeRequestContext(params.get('context') ?? undefined) ?? '';
+      const sourcePage = requestSourcePage(params.get('source') ?? undefined) ?? '/contact/';
+      const presentation = contactRequestPresentation(type);
+      const setText = (selector: string, value: string) => {
+        const node = panel.querySelector<HTMLElement>(selector);
+        if (node) node.textContent = value;
+      };
+      setText('[data-request-eyebrow]', presentation.eyebrow);
+      setText('[data-request-heading]', presentation.heading);
+      setText('[data-request-intro]', presentation.intro);
+      setText('[data-message-label]', presentation.messageLabel);
+      setText('[data-starter-request-submit]', presentation.submitLabel);
+      setText('[data-request-success-copy]', presentation.successMessage);
+      setText('[data-request-privacy-copy]', presentation.privacyCopy);
+      if (recoveryLink) recoveryLink.href = contactRecoveryHref(type, context);
+      const contextSummary = panel.querySelector<HTMLElement>('[data-request-context-summary]');
+      if (contextSummary) {
+        contextSummary.textContent = context ? `About: ${context}` : '';
+        contextSummary.hidden = !context;
+      }
+      if (form) {
+        form.dataset.requestType = type;
+        form.dataset.requestContext = context;
+        if (!requestSourcePage(form.dataset.sourcePage)) form.dataset.sourcePage = sourcePage;
+        const message = form.elements.namedItem('message');
+        if (message instanceof HTMLTextAreaElement) message.required = type !== 'starter';
+        const requiredMarker = form.querySelector<HTMLElement>('[data-message-required-marker]');
+        const optionalMarker = form.querySelector<HTMLElement>('[data-message-optional-marker]');
+        if (requiredMarker) requiredMarker.hidden = type === 'starter';
+        if (optionalMarker) optionalMarker.hidden = type !== 'starter';
+      }
+    }
+
+    if (!form) continue;
     const fieldset = form.querySelector<HTMLFieldSetElement>('[data-starter-request-fields]');
     const submitting = form.querySelector<HTMLElement>('[data-starter-request-submitting]');
     const success = form.querySelector<HTMLElement>('[data-starter-request-success]');
     const error = form.querySelector<HTMLElement>('[data-starter-request-error]');
+    const recovery = form.closest<HTMLElement>('.starter-request-panel')?.querySelector<HTMLElement>('.starter-request-fallback');
     const endpoint = form.dataset.endpoint;
     const trackedEndpoint = form.dataset.trackedEndpoint;
 
@@ -96,20 +224,28 @@ const { endpoint, trackedEndpoint, requestHref, contactEmail } = Astro.props;
       error.hidden = true;
 
       try {
+        const type = isContactRequestType(form.dataset.requestType) ? form.dataset.requestType : undefined;
+        const sourcePage = requestSourcePage(form.dataset.sourcePage) ?? '/contact/';
         await submitStarterRequest(endpoint, {
           email: String(data.get('email') ?? '').trim(),
           organization: String(data.get('organization') ?? '').trim(),
           role: String(data.get('role') ?? '').trim(),
           message: String(data.get('message') ?? '').trim(),
           website: String(data.get('website') ?? '').trim(),
+          starterId: form.dataset.starterId,
+          sourcePage,
+          requestType: type,
+          requestContext: form.dataset.requestContext,
         }, import.meta.env.PUBLIC_MAUTIC_URL?.trim() ? getConsentedDeviceId() : undefined, trackedEndpoint);
         submitting.hidden = true;
         success.hidden = false;
+        recovery?.classList.remove('show-recovery');
         success.focus();
       } catch {
         submitting.hidden = true;
         error.hidden = false;
         fieldset.disabled = false;
+        recovery?.classList.add('show-recovery');
         error.focus();
       } finally {
         submissionInProgress = false;
@@ -117,6 +253,7 @@ const { endpoint, trackedEndpoint, requestHref, contactEmail } = Astro.props;
       }
     });
     fieldset.disabled = false;
+    panel.setAttribute('data-form-enhanced', 'true');
   }
 </script>
 
@@ -132,6 +269,7 @@ const { endpoint, trackedEndpoint, requestHref, contactEmail } = Astro.props;
     padding: clamp(24px, 4vw, 40px);
   }
 
+  .starter-request-intro h2,
   .starter-request-intro h3 {
     font-size: clamp(24px, 3vw, 32px);
     margin: 6px 0 12px;
@@ -162,7 +300,7 @@ const { endpoint, trackedEndpoint, requestHref, contactEmail } = Astro.props;
     gap: 7px;
   }
 
-  label > span > span:not(.optional) {
+  label > span > [data-required-marker] {
     color: var(--registry-stamp);
   }
 
@@ -225,6 +363,14 @@ const { endpoint, trackedEndpoint, requestHref, contactEmail } = Astro.props;
     grid-column: 1 / -1;
     margin: 0;
     padding-top: 18px;
+  }
+
+  .starter-request-panel[data-form-enhanced] .starter-request-fallback {
+    display: none;
+  }
+
+  .starter-request-panel[data-form-enhanced] .starter-request-fallback.show-recovery {
+    display: block;
   }
 
   .starter-request-privacy a,

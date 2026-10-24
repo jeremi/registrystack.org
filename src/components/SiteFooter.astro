@@ -1,7 +1,7 @@
 ---
 import { products } from '../data/products';
 import { solutionAreas } from '../data/solutions';
-import { askQuestionHref, contactEmail } from '../data/contact';
+import { askQuestionHref, describeServiceHref } from '../data/contact';
 import { marketingTrackingUrl } from '../lib/marketing-tracking';
 const year = new Date().getFullYear();
 const repoHref = 'https://github.com/registrystack/registry-stack';
@@ -39,9 +39,8 @@ const columns: { title: string; links: FooterEntry[] }[] = [
   { title: 'Work with us', links: [
     { href: '/pricing/', label: 'Implementation pilots' },
     { href: '/pricing/#support', label: 'Support contracts' },
-    { href: '/pricing/#inquiry', label: 'Discuss your needs' },
+    { href: describeServiceHref(), label: 'Discuss your service' },
     { href: askQuestionHref(), label: 'Ask a question' },
-    { href: `mailto:${contactEmail}`, label: contactEmail },
   ] },
 ];
 ---

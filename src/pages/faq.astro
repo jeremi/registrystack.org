@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import DocsHandoff from '../components/DocsHandoff.astro';
-import { askQuestionHref, contactEmail } from '../data/contact';
+import { askQuestionHref, describeServiceHref } from '../data/contact';
 
 const pageTitle = 'FAQ | Registry Stack';
 const pageDescription =
@@ -131,8 +131,8 @@ const groups = [
         }
       },
       {
-        "q": "How do we get a starting configuration?",
-        "a": "Starting configurations are free by email request. Use the request button on a catalogue page to open an email naming the configuration, or tell us what you need if you are unsure which one fits. We send the configuration for your team to evaluate and adapt.",
+        "q": "How do we access a starting configuration?",
+        "a": "Access to starting configurations is free. Use the access request form on a starter page, or tell us what you need if you are unsure which one fits. Our team will review your request and reply.",
         "link": {
           "label": "Find a starting configuration",
           "href": "/starters/"
@@ -143,7 +143,7 @@ const groups = [
         "a": "No. Describe the service, who will use it and what you want to improve. Our team can help identify a suitable starting configuration and discuss the changes needed.",
         "link": {
           "label": "Describe the service you need",
-          "href": "/pricing/#inquiry"
+          "href": describeServiceHref('a service that needs a starting configuration')
         }
       }
     ]
@@ -267,7 +267,6 @@ const faqSchema = {
     primaryLabel="Ask a question"
     primaryHref={askQuestionHref()}
     emphasis="docs"
-    note={contactEmail}
   />
   <SiteFooter />
 </Base>
