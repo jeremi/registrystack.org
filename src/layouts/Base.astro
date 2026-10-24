@@ -125,7 +125,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     {articleLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(articleLd)} />}
     {
       umamiWebsiteId && (
-        <script is:inline defer src={umamiScriptSrc} data-website-id={umamiWebsiteId} data-domains={umamiDomains}></script>
+        <script is:inline async src={umamiScriptSrc} data-website-id={umamiWebsiteId} data-domains={umamiDomains}></script>
       )
     }
   </head>

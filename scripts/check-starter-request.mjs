@@ -13,8 +13,10 @@ await mkdir(cache, { recursive: true });
 const scratch = await mkdtemp(join(cache, 'starter-request-'));
 const dist = join(scratch, 'dist');
 const unconfiguredDist = join(scratch, 'unconfigured-dist');
+const umamiDist = join(scratch, 'umami-dist');
 const endpoint = 'https://starter-requests.example.test/form/submit?formId=1&privacy=kiosk';
 const networkEndpoint = `${endpoint}&ajax=1`;
+const umamiScriptUrl = 'https://stats.example.test/script.js';
 const resultAliases = [
   'email',
   'organization',
@@ -42,6 +44,18 @@ const unconfiguredBuild = spawnSync('npm', ['run', 'build', '--', '--outDir', un
   env: { ...process.env, PUBLIC_STARTER_REQUEST_ENDPOINT: '', PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: '', PUBLIC_UMAMI_WEBSITE_ID: '', PUBLIC_MAUTIC_URL: '' },
 });
 assert.equal(unconfiguredBuild.status, 0, unconfiguredBuild.stderr || unconfiguredBuild.stdout);
+const umamiBuild = spawnSync('npm', ['run', 'build', '--', '--outDir', umamiDist], {
+  cwd: root, encoding: 'utf8',
+  env: {
+    ...process.env,
+    PUBLIC_STARTER_REQUEST_ENDPOINT: endpoint,
+    PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: '',
+    PUBLIC_UMAMI_WEBSITE_ID: '00000000-0000-4000-8000-000000000001',
+    PUBLIC_UMAMI_SCRIPT_SRC: umamiScriptUrl,
+    PUBLIC_MAUTIC_URL: '',
+  },
+});
+assert.equal(umamiBuild.status, 0, umamiBuild.stderr || umamiBuild.stdout);
 const createStaticServer = serveDir => createServer(async (request, response) => {
   const path = new URL(request.url, 'http://localhost').pathname;
   const file = resolve(serveDir, `.${path.endsWith('/') ? `${path}index.html` : path}`);
@@ -60,6 +74,79 @@ const unconfiguredOrigin = `http://127.0.0.1:${unconfiguredServer.address().port
 const path = '/starters/professional-licensing/';
 const browser = await chromium.launch();
 try {
+  // Optional analytics must not delay the form module. Hold the fully
+  // intercepted analytics response while the real built page initializes.
+  const umamiContext = await browser.newContext({ serviceWorkers: 'block' });
+  let releaseUmami;
+  const umamiGate = new Promise(resolve => { releaseUmami = resolve; });
+  const blockedUmamiRequests = [];
+  const umamiErrors = [];
+  await umamiContext.route('**/*', async route => {
+    const url = new URL(route.request().url());
+    if (url.href === umamiScriptUrl) {
+      await umamiGate;
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/javascript; charset=utf-8',
+        body: 'window.umami = { track() {} };',
+      });
+      return;
+    }
+    if (url.origin === 'https://registrystack.org') {
+      const file = resolve(umamiDist, `.${url.pathname.endsWith('/') ? `${url.pathname}index.html` : url.pathname}`);
+      if (!file.startsWith(`${umamiDist}${sep}`)) {
+        await route.fulfill({ status: 404, body: 'Not found' });
+        return;
+      }
+      try {
+        const body = await readFile(file);
+        await route.fulfill({
+          status: 200,
+          contentType: { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml' }[extname(file)] ?? 'application/octet-stream',
+          body,
+        });
+      } catch (error) {
+        if (error?.code !== 'ENOENT' && error?.code !== 'EISDIR') throw error;
+        await route.fulfill({ status: 404, body: 'Not found' });
+      }
+      return;
+    }
+    blockedUmamiRequests.push(url.href);
+    await route.abort('blockedbyclient');
+  });
+  const umamiPage = await umamiContext.newPage();
+  umamiPage.on('pageerror', error => umamiErrors.push(error.message));
+  try {
+    const statsRequest = umamiPage.waitForRequest(umamiScriptUrl);
+    await umamiPage.goto('https://registrystack.org/starters/professional-licensing/', {
+      waitUntil: 'commit',
+    });
+    await statsRequest;
+    const umamiFieldset = umamiPage.locator('[data-starter-request-fields]');
+    await umamiFieldset.waitFor({ state: 'attached' });
+    try {
+      await umamiPage.waitForFunction(() => {
+        const fieldset = document.querySelector('[data-starter-request-fields]');
+        const panel = document.querySelector('[data-request-panel]');
+        return fieldset instanceof HTMLFieldSetElement && fieldset.disabled === false &&
+          panel?.dataset.formEnhanced === 'true';
+      }, undefined, { timeout: 10_000 });
+    } catch (error) {
+      if (error?.name !== 'TimeoutError') throw error;
+      assert.fail('Optional analytics blocked starter-request form initialization.');
+    }
+    assert.equal(await umamiFieldset.evaluate(fieldset => fieldset.disabled), false);
+    assert.equal(
+      await umamiPage.locator('[data-request-panel]').getAttribute('data-form-enhanced'),
+      'true',
+    );
+    assert.deepEqual(blockedUmamiRequests, []);
+    assert.deepEqual(umamiErrors, []);
+  } finally {
+    releaseUmami();
+    await umamiContext.close();
+  }
+
   const context = await browser.newContext();
   const page = await context.newPage();
   const browserErrors = [];
