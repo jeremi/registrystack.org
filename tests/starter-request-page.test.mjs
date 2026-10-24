@@ -62,6 +62,10 @@ test('privacy policy explains starter request handling while preserving Umami di
   assert.match(privacy, /network address[^<]*temporary rate-limit counters/i);
   assert.match(privacy, /does not forward your network address\s+to Mautic/i);
   assert.match(privacy, /not\s+linked to your website visit history/i);
+  assert.match(privacy, /accept tracking/i);
+  assert.match(privacy, /withdraw[^<]*consent/i);
+  assert.match(privacy, /six months/i);
+  assert.doesNotMatch(privacy, /does not build behavioral profiles|does not set any cookies of its/i);
   assert.match(privacy, /no automatic\s+marketing signup/i);
   assert.match(privacy, /Umami/);
   assert.doesNotMatch(privacy, /\b(?:relay|DNT|kiosk mode)\b/i);

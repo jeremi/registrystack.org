@@ -42,7 +42,7 @@ const { endpoint, requestHref, contactEmail } = Astro.props;
         </div>
 
         <p class="starter-request-privacy" id="starter-request-privacy">
-          We use these details to review your request and reply. The form does not sign you up for marketing. Read the <a href="/privacy/">privacy policy</a>.
+          We use these details to review your request and reply. You can request the starter without accepting tracking. If you accept tracking, we link your visits to this request. There is no marketing signup. Read the <a href="/privacy/">privacy policy</a>.
         </p>
         <button class="button button-primary" type="submit" data-starter-request-submit>Send request</button>
       </fieldset>
@@ -66,6 +66,7 @@ const { endpoint, requestHref, contactEmail } = Astro.props;
 
 <script>
   import { submitStarterRequest } from '../lib/starter-request';
+  import { getConsentedDeviceId } from '../lib/marketing-tracking';
 
   for (const form of document.querySelectorAll<HTMLFormElement>('[data-starter-request-form]')) {
     const fieldset = form.querySelector<HTMLFieldSetElement>('[data-starter-request-fields]');
@@ -99,7 +100,7 @@ const { endpoint, requestHref, contactEmail } = Astro.props;
           role: String(data.get('role') ?? '').trim(),
           message: String(data.get('message') ?? '').trim(),
           website: String(data.get('website') ?? '').trim(),
-        });
+        }, import.meta.env.PUBLIC_MAUTIC_URL?.trim() ? getConsentedDeviceId() : undefined);
         submitting.hidden = true;
         success.hidden = false;
         success.focus();

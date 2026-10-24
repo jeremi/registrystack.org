@@ -49,6 +49,34 @@ test('invalid or oversized details and a filled honeypot never reach Mautic', as
   assert.equal(fetch.mock.calls.length, 0);
 });
 
+test('a currently consented device is sent only in the request body', async (t) => {
+  let sent;
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    sent = { url, options };
+    return Response.json(result);
+  });
+  const device = 'abcdefghij0123456789abc';
+  await submitStarterRequest(endpoint, input, device);
+  assert.equal(sent.url, endpoint);
+  assert.equal(sent.options.body.get('tracking_consent'), 'granted');
+  assert.equal(sent.options.body.get('mautic_device_id'), device);
+  assert.equal(sent.options.credentials, 'omit');
+  assert.equal(sent.options.referrerPolicy, 'no-referrer');
+});
+
+test('missing or unusable tracking identity never prevents a request', async (t) => {
+  const sent = [];
+  t.mock.method(globalThis, 'fetch', async (_url, options) => {
+    sent.push(options.body);
+    return Response.json(result);
+  });
+  for (const device of [undefined, '', 'not-a-device', 'A'.repeat(23)]) {
+    await submitStarterRequest(endpoint, input, device);
+  }
+  assert.equal(sent.length, 4);
+  assert.ok(sent.every(body => !body.has('tracking_consent') && !body.has('mautic_device_id')));
+});
+
 test('only a saved matching submission is success, not an arbitrary HTTP 200', async (t) => {
   const failures = [
     () => Response.json({ ok: false }),

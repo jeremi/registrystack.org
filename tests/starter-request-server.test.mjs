@@ -5,6 +5,7 @@ import { after, describe, test } from 'node:test';
 import { createStarterRequestServer } from '../server/starter-request.mjs';
 
 const websiteOrigin = 'https://www.example.test';
+const deviceId = 'abc123def456ghi789jkl01';
 const openServers = new Set();
 
 after(async () => {
@@ -75,6 +76,30 @@ async function post(baseUrl, body = formBody(), options = {}) {
       ...options.headers,
     },
     body,
+  });
+}
+
+async function rawPost(baseUrl, body, headers = {}) {
+  const data = body.toString();
+  return new Promise((resolve, reject) => {
+    const request = http.request(new URL(`${baseUrl}/starter-request`), {
+      method: 'POST',
+      headers: {
+        Origin: websiteOrigin,
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        'Content-Length': Buffer.byteLength(data),
+        ...headers,
+      },
+    }, (response) => {
+      const chunks = [];
+      response.on('data', chunk => chunks.push(chunk));
+      response.once('end', () => resolve({
+        status: response.statusCode,
+        body: Buffer.concat(chunks).toString('utf8'),
+      }));
+    });
+    request.once('error', reject);
+    request.end(data);
   });
 }
 
@@ -149,6 +174,153 @@ describe('starter request relay', () => {
 
     await closeServer(server);
     await closeServer(upstream);
+  });
+
+  test('uses the tracked form only for an explicitly consented valid identity', async () => {
+    const calls = [];
+    const { server, baseUrl } = await makeRelay({
+      mauticTrackedFormId: 8,
+      fetch: async (_url, init) => {
+        calls.push(init);
+        return echoedMauticResponse(init);
+      },
+    });
+    const response = await post(baseUrl, formBody({
+      tracking_consent: 'granted',
+      mautic_device_id: deviceId,
+    }), {
+      headers: {
+        Cookie: 'mtc_id=must-not-forward',
+        Referer: `${websiteOrigin}/starters/professional-licensing/`,
+        'User-Agent': 'Identifying Browser/1.0',
+        'X-Forwarded-For': '203.0.113.91',
+      },
+    });
+
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { ok: true });
+    assert.equal(calls.length, 1);
+    const body = new URLSearchParams(calls[0].body);
+    assert.equal(body.get('mauticform[formId]'), '8');
+    assert.equal(body.get('mautic_device_id'), deviceId);
+    assert.equal(body.get('mauticform[mautic_device_id]'), null);
+    assert.equal(calls[0].headers.DNT, undefined);
+    assert.equal(calls[0].headers['User-Agent'], 'Identifying Browser/1.0');
+    for (const header of ['Cookie', 'Referer', 'Sec-GPC', 'X-Forwarded-For']) {
+      assert.equal(calls[0].headers[header], undefined);
+    }
+    assert.equal(response.headers.get('set-cookie'), null);
+
+    await closeServer(server);
+  });
+
+  test('falls back to the kiosk form when a consented request lacks a bounded browser user agent', async (t) => {
+    const cases = [
+      ['missing', {}],
+      ['blank', { 'User-Agent': '' }],
+      ['oversized', { 'User-Agent': 'x'.repeat(513) }],
+    ];
+    for (const [name, headers] of cases) {
+      await t.test(name, async () => {
+        let upstream;
+        const { server, baseUrl } = await makeRelay({
+          mauticTrackedFormId: 8,
+          fetch: async (_url, init) => {
+            upstream = init;
+            return echoedMauticResponse(init);
+          },
+        });
+        const response = await rawPost(baseUrl, formBody({
+          tracking_consent: 'granted',
+          mautic_device_id: deviceId,
+        }), headers);
+        assert.equal(response.status, 200);
+        assert.deepEqual(JSON.parse(response.body), { ok: true });
+        const upstreamBody = new URLSearchParams(upstream.body);
+        assert.equal(upstreamBody.get('mauticform[formId]'), '7');
+        assert.equal(upstreamBody.get('mautic_device_id'), null);
+        assert.equal(upstream.headers.DNT, '1');
+        assert.equal(upstream.headers['User-Agent'], 'RegistryStack-Starter-Request/1.0');
+        await closeServer(server);
+      });
+    }
+  });
+
+  test('uses the kiosk form when consented attribution is unavailable or denied by a privacy header', async (t) => {
+    const cases = [
+      ['no consented identity', { mauticTrackedFormId: 8 }, formBody(), {}],
+      ['tracked form not configured', {}, formBody({ tracking_consent: 'granted', mautic_device_id: deviceId }), {}],
+      ['DNT', { mauticTrackedFormId: 8 }, formBody({ tracking_consent: 'granted', mautic_device_id: deviceId }), { DNT: '1' }],
+      ['GPC', { mauticTrackedFormId: 8 }, formBody({ tracking_consent: 'granted', mautic_device_id: deviceId }), { 'Sec-GPC': '1' }],
+    ];
+    for (const [name, config, body, headers] of cases) {
+      await t.test(name, async () => {
+        let upstream;
+        const { server, baseUrl } = await makeRelay({
+          ...config,
+          fetch: async (_url, init) => {
+            upstream = init;
+            return echoedMauticResponse(init);
+          },
+        });
+        const response = await post(baseUrl, body, { headers });
+        assert.equal(response.status, 200);
+        const upstreamBody = new URLSearchParams(upstream.body);
+        assert.equal(upstreamBody.get('mauticform[formId]'), '7');
+        assert.equal(upstreamBody.get('mautic_device_id'), null);
+        assert.equal(upstream.headers.DNT, '1');
+        assert.equal(upstream.headers['Sec-GPC'], undefined);
+        await closeServer(server);
+      });
+    }
+  });
+
+  test('rejects malformed or duplicated attribution fields before contacting Mautic', async () => {
+    const { server, baseUrl } = await makeRelay({
+      mauticTrackedFormId: 8,
+      fetch: async () => assert.fail('upstream called'),
+    });
+    const valid = formBody({ tracking_consent: 'granted', mautic_device_id: deviceId });
+    const cases = [
+      formBody({ tracking_consent: 'granted' }),
+      formBody({ mautic_device_id: deviceId }),
+      formBody({ tracking_consent: 'denied', mautic_device_id: deviceId }),
+      formBody({ tracking_consent: 'granted', mautic_device_id: deviceId.toUpperCase() }),
+      formBody({ tracking_consent: 'granted', mautic_device_id: deviceId.slice(1) }),
+      new URLSearchParams([...valid, ['tracking_consent', 'granted']]),
+      new URLSearchParams([...valid, ['mautic_device_id', deviceId]]),
+    ];
+    for (const body of cases) {
+      const response = await post(baseUrl, body);
+      assert.equal(response.status, 400);
+      assert.deepEqual(await response.json(), { ok: false });
+    }
+    await closeServer(server);
+  });
+
+  test('does not expose or log the consented device identifier', async () => {
+    const entries = [];
+    const methods = ['error', 'log', 'warn'];
+    const originals = Object.fromEntries(methods.map((method) => [method, console[method]]));
+    for (const method of methods) console[method] = (...values) => entries.push([method, ...values]);
+    let server;
+    try {
+      const relay = await makeRelay({
+        mauticTrackedFormId: 8,
+        fetch: async (_url, init) => echoedMauticResponse(init),
+      });
+      server = relay.server;
+      const response = await post(relay.baseUrl, formBody({
+        tracking_consent: 'granted',
+        mautic_device_id: deviceId,
+      }));
+      assert.equal(response.status, 200);
+      assert.equal((await response.text()).includes(deviceId), false);
+      assert.equal(JSON.stringify(entries).includes(deviceId), false);
+    } finally {
+      for (const method of methods) console[method] = originals[method];
+      if (server) await closeServer(server);
+    }
   });
 
   test('exposes only the health check and origin-bound POST surface', async () => {
@@ -367,6 +539,9 @@ describe('starter request relay', () => {
       { mauticBaseUrl: 'https://forms.example.org/#fragment' },
       { mauticFormId: 0 },
       { mauticFormId: '1.5' },
+      { mauticTrackedFormId: 0 },
+      { mauticTrackedFormId: '1.5' },
+      { mauticTrackedFormId: 7 },
     ]) {
       assert.throws(() => createStarterRequestServer({ ...base, ...overrides }));
     }
@@ -378,5 +553,7 @@ describe('starter request relay', () => {
       websiteOrigin: 'http://127.0.0.1:4321',
       allowLoopbackWebsiteOrigin: true,
     }));
+    assert.doesNotThrow(() => createStarterRequestServer({ ...base, mauticTrackedFormId: 8 }));
+    assert.doesNotThrow(() => createStarterRequestServer({ ...base, mauticTrackedFormId: '' }));
   });
 });

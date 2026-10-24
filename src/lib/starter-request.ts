@@ -22,7 +22,7 @@ export function starterRequestEndpoint(value: string | undefined): string | unde
   return url.href;
 }
 
-export async function submitStarterRequest(endpoint: string, input: StarterRequestInput): Promise<void> {
+export async function submitStarterRequest(endpoint: string, input: StarterRequestInput, consentedDeviceId?: string): Promise<void> {
   const configuredEndpoint = starterRequestEndpoint(endpoint);
   if (!configuredEndpoint) throw new Error('Starter request form is unavailable.');
   const email = input.email.trim();
@@ -36,9 +36,14 @@ export async function submitStarterRequest(endpoint: string, input: StarterReque
   const body = new URLSearchParams({
     email, organization, role, message, website: '',
   });
-  // Only the submission service contacts Mautic. It enforces DNT and strips
-  // browser identity. Omit cookies on this hop as well; never load an embed
-  // or navigate the browser to a Mautic form endpoint.
+  // Consent is checked by the caller at submission time. An unavailable tracker
+  // must never prevent a request, so an absent or malformed identity is omitted.
+  if (consentedDeviceId && /^[a-z0-9]{23}$/.test(consentedDeviceId)) {
+    body.set('tracking_consent', 'granted');
+    body.set('mautic_device_id', consentedDeviceId);
+  }
+  // The service selects the private Mautic form. Browser cookies, network
+  // address and referrer are never forwarded with a starter request.
   const response = await fetch(configuredEndpoint, {
     method: 'POST',
     mode: 'cors',

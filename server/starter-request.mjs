@@ -6,7 +6,15 @@ import { fileURLToPath } from 'node:url';
 const STARTER_ID = 'professional-licensing';
 const SOURCE_PAGE = '/starters/professional-licensing/';
 const USER_AGENT = 'RegistryStack-Starter-Request/1.0';
-const ALLOWED_FIELDS = new Set(['email', 'organization', 'role', 'message', 'website']);
+const ALLOWED_FIELDS = new Set([
+  'email',
+  'organization',
+  'role',
+  'message',
+  'website',
+  'tracking_consent',
+  'mautic_device_id',
+]);
 
 class RequestError extends Error {
   constructor(status, code) {
@@ -21,6 +29,11 @@ function positiveInteger(value, name, defaultValue) {
   const parsed = typeof candidate === 'string' && /^\d+$/.test(candidate) ? Number(candidate) : candidate;
   if (!Number.isSafeInteger(parsed) || parsed <= 0) throw new Error(`Invalid ${name}.`);
   return parsed;
+}
+
+function optionalPositiveInteger(value, name) {
+  if (value === undefined || value === null || value === '') return undefined;
+  return positiveInteger(value, name);
 }
 
 function isLoopback(hostname) {
@@ -124,12 +137,24 @@ function parseForm(raw) {
   const role = (params.get('role') ?? '').trim();
   const message = (params.get('message') ?? '').trim();
   const website = (params.get('website') ?? '').trim();
+  const hasTrackingConsent = params.has('tracking_consent');
+  const hasDeviceId = params.has('mautic_device_id');
   const saneEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
   if (!email || email.length > 254 || !saneEmail.test(email) ||
       organization.length > 200 || role.length > 200 || message.length > 2000 || website) {
     throw new RequestError(400, 'invalid_form');
   }
-  return { email, organization, role, message };
+  if (hasTrackingConsent !== hasDeviceId) throw new RequestError(400, 'invalid_form');
+  let mauticDeviceId;
+  if (hasTrackingConsent) {
+    const trackingConsent = params.get('tracking_consent');
+    const candidateDeviceId = params.get('mautic_device_id');
+    if (trackingConsent !== 'granted' || !/^[a-z0-9]{23}$/.test(candidateDeviceId)) {
+      throw new RequestError(400, 'invalid_form');
+    }
+    mauticDeviceId = candidateDeviceId;
+  }
+  return { email, organization, role, message, mauticDeviceId };
 }
 
 async function readRequestBody(request, limitBytes) {
@@ -193,8 +218,13 @@ async function readResponseBody(response, limitBytes) {
   return Buffer.concat(chunks, size).toString('utf8');
 }
 
-async function submitToMautic(config, fields) {
+async function submitToMautic(config, fields, denyTracking, browserUserAgent) {
   const requestToken = randomUUID();
+  const boundedBrowserUserAgent = typeof browserUserAgent === 'string' &&
+    browserUserAgent.trim().length > 0 && browserUserAgent.length <= 512;
+  const tracked = Boolean(
+    config.mauticTrackedFormId && fields.mauticDeviceId && !denyTracking && boundedBrowserUserAgent,
+  );
   const body = new URLSearchParams({
     'mauticform[email]': fields.email,
     'mauticform[organization]': fields.organization,
@@ -204,8 +234,9 @@ async function submitToMautic(config, fields) {
     'mauticform[source_page]': SOURCE_PAGE,
     'mauticform[request_token]': requestToken,
     'mauticform[website]': '',
-    'mauticform[formId]': String(config.mauticFormId),
+    'mauticform[formId]': String(tracked ? config.mauticTrackedFormId : config.mauticFormId),
   });
+  if (tracked) body.set('mautic_device_id', fields.mauticDeviceId);
   const target = new URL('/form/submit?ajax=1', config.mauticBaseUrl);
   const abortController = new AbortController();
   let timedOut = false;
@@ -220,15 +251,16 @@ async function submitToMautic(config, fields) {
 
   try {
     const exchange = async () => {
+      const headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        'User-Agent': tracked ? browserUserAgent : USER_AGENT,
+      };
+      if (!tracked) headers.DNT = '1';
       const upstream = await config.fetch(target, {
         method: 'POST',
         redirect: 'error',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-          DNT: '1',
-          'User-Agent': USER_AGENT,
-        },
+        headers,
         body,
         signal: abortController.signal,
       });
@@ -290,9 +322,13 @@ function createRateLimiter({ perIpLimit, globalLimit, rateWindowMs, maxTrackedIp
 }
 
 export function createStarterRequestServer(options = {}) {
+  const mauticFormId = positiveInteger(options.mauticFormId, 'MAUTIC_FORM_ID');
+  const mauticTrackedFormId = optionalPositiveInteger(options.mauticTrackedFormId, 'MAUTIC_TRACKED_FORM_ID');
+  if (mauticTrackedFormId === mauticFormId) throw new Error('MAUTIC form IDs must be distinct.');
   const config = {
     mauticBaseUrl: parseMauticBaseUrl(options.mauticBaseUrl),
-    mauticFormId: positiveInteger(options.mauticFormId, 'MAUTIC_FORM_ID'),
+    mauticFormId,
+    mauticTrackedFormId,
     websiteOrigin: parseWebsiteOrigin(options.websiteOrigin, options.allowLoopbackWebsiteOrigin === true),
     fetch: options.fetch ?? globalThis.fetch,
     requestLimitBytes: positiveInteger(options.requestLimitBytes, 'requestLimitBytes', 32 * 1024),
@@ -356,7 +392,8 @@ export function createStarterRequestServer(options = {}) {
       const contentEncoding = (request.headers['content-encoding'] ?? 'identity').trim().toLowerCase();
       if (contentEncoding !== 'identity') throw new RequestError(415, 'unsupported_media_type');
       const fields = parseForm(await readRequestBody(request, config.requestLimitBytes));
-      await submitToMautic(config, fields);
+      const denyTracking = request.headers.dnt === '1' || request.headers['sec-gpc'] === '1';
+      await submitToMautic(config, fields, denyTracking, request.headers['user-agent']);
       sendJson(request, response, config.websiteOrigin, 200, { ok: true });
     } catch (error) {
       const status = error instanceof RequestError ? error.status : 500;
@@ -377,6 +414,7 @@ if (isMain) {
     const server = createStarterRequestServer({
       mauticBaseUrl: process.env.MAUTIC_BASE_URL,
       mauticFormId: process.env.MAUTIC_FORM_ID,
+      mauticTrackedFormId: process.env.MAUTIC_TRACKED_FORM_ID,
       websiteOrigin: process.env.WEBSITE_ORIGIN,
       perIpLimit: process.env.PER_IP_RATE_LIMIT,
       globalLimit: process.env.GLOBAL_RATE_LIMIT,

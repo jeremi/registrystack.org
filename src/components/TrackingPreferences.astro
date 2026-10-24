@@ -1,0 +1,230 @@
+---
+interface Props {
+  mauticUrl: string;
+  canonicalUrl: string;
+}
+
+const { mauticUrl, canonicalUrl } = Astro.props;
+---
+
+<aside
+  class="tracking-preferences"
+  data-tracking-preferences
+  data-mautic-url={mauticUrl}
+  data-canonical-url={canonicalUrl}
+  aria-labelledby="tracking-preferences-title"
+  hidden
+>
+  <div class="tracking-preferences-copy">
+    <h2 id="tracking-preferences-title" tabindex="-1">Cookies on this website</h2>
+    <p>
+      We use optional cookies to understand how you use our website and which services interest
+      you. If you contact us, we may link this activity to your enquiry. You can change your choice at any time.
+      <a href="/privacy/">Privacy policy</a>.
+    </p>
+    <p data-tracking-signal hidden>
+      Your browser is asking sites not to track you, so tracking stays off.
+    </p>
+    <p class="tracking-preferences-error" data-tracking-error role="alert" hidden>
+      We could not save that choice. Tracking remains off.
+    </p>
+  </div>
+  <div class="tracking-preferences-actions">
+    <button class="tracking-choice" type="button" data-tracking-accept>Accept optional cookies</button>
+    <button class="tracking-choice" type="button" data-tracking-reject>Reject optional cookies</button>
+  </div>
+</aside>
+
+<script>
+  import {
+    CONSENT_STORAGE_KEY,
+    buildMauticPageview,
+    readTrackingPreference,
+    rejectMauticTracking,
+    revokeMauticTracking,
+    saveTrackingPreference,
+    startMauticTracking,
+    trackingDeniedByBrowser,
+  } from '../lib/marketing-tracking';
+
+  const panel = document.querySelector<HTMLElement>('[data-tracking-preferences]');
+  const acceptButton = panel?.querySelector<HTMLButtonElement>('[data-tracking-accept]');
+  const rejectButton = panel?.querySelector<HTMLButtonElement>('[data-tracking-reject]');
+  const signalMessage = panel?.querySelector<HTMLElement>('[data-tracking-signal]');
+  const errorMessage = panel?.querySelector<HTMLElement>('[data-tracking-error]');
+  const title = panel?.querySelector<HTMLElement>('#tracking-preferences-title');
+
+  if (panel && acceptButton && rejectButton && signalMessage && errorMessage) {
+    const mauticUrl = panel.dataset.mauticUrl;
+    const canonicalUrl = panel.dataset.canonicalUrl;
+    if (!mauticUrl || !canonicalUrl) throw new Error('Tracking preferences are missing their configuration.');
+
+    const pageview = buildMauticPageview({
+      canonicalUrl,
+      pageTitle: document.title,
+      currentUrl: window.location.href,
+      referrer: document.referrer,
+    });
+    const browserDeniesTracking = trackingDeniedByBrowser();
+    let trackingStarted = false;
+
+    const startTracking = () => {
+      const started = startMauticTracking(mauticUrl, pageview);
+      trackingStarted ||= started;
+      return started;
+    };
+
+    const showError = () => {
+      errorMessage.hidden = false;
+    };
+    const openPreferences = (moveFocus = false) => {
+      errorMessage.hidden = true;
+      signalMessage.hidden = !browserDeniesTracking;
+      acceptButton.disabled = browserDeniesTracking;
+      panel.hidden = false;
+      if (moveFocus) title?.focus();
+    };
+    const closePreferences = () => {
+      panel.hidden = true;
+    };
+
+    for (const control of document.querySelectorAll<HTMLElement>('[data-tracking-preferences-open]')) {
+      const container = control.closest<HTMLElement>('[data-tracking-preferences-control]');
+      if (container) container.hidden = false;
+      control.addEventListener('click', () => openPreferences(true));
+    }
+
+    acceptButton.addEventListener('click', () => {
+      errorMessage.hidden = true;
+      if (browserDeniesTracking || !saveTrackingPreference('accepted')) {
+        showError();
+        return;
+      }
+      if (!startTracking()) {
+        saveTrackingPreference('rejected');
+        revokeMauticTracking();
+        showError();
+        return;
+      }
+      closePreferences();
+    });
+
+    rejectButton.addEventListener('click', () => {
+      errorMessage.hidden = true;
+      const rejection = rejectMauticTracking();
+      if (rejection === 'failed') {
+        showError();
+        return;
+      }
+      if (rejection === 'reload') {
+        window.location.reload();
+        return;
+      }
+      closePreferences();
+    });
+
+    window.addEventListener('storage', (event) => {
+      if (event.key !== CONSENT_STORAGE_KEY || !trackingStarted) return;
+      if (readTrackingPreference() === 'accepted') return;
+      revokeMauticTracking();
+      window.location.reload();
+    });
+
+    const currentPreference = readTrackingPreference();
+    if (currentPreference === 'accepted') {
+      if (!startTracking()) openPreferences();
+    } else {
+      // This also clears an expired or denied Mautic identity before any new choice.
+      startTracking();
+      if (!currentPreference && !browserDeniesTracking) openPreferences();
+    }
+  }
+</script>
+
+<style>
+  .tracking-preferences {
+    align-items: end;
+    background: var(--registry-white);
+    border: 2px solid var(--registry-ink);
+    bottom: 16px;
+    box-shadow: var(--offset-md);
+    display: grid;
+    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    left: 50%;
+    max-width: min(860px, calc(100vw - 32px));
+    padding: 20px;
+    position: fixed;
+    transform: translateX(-50%);
+    width: 100%;
+    z-index: 40;
+  }
+
+  .tracking-preferences[hidden] {
+    display: none;
+  }
+
+  .tracking-preferences-copy h2 {
+    color: var(--registry-ink);
+    font-size: var(--type-body);
+    margin: 0 0 6px;
+  }
+
+  .tracking-preferences-copy p {
+    font-size: var(--type-sm);
+    line-height: 1.55;
+    margin: 0;
+    max-width: 640px;
+  }
+
+  .tracking-preferences-copy p + p {
+    margin-top: 8px;
+  }
+
+  .tracking-preferences-error {
+    color: var(--registry-stamp);
+    font-weight: 700;
+  }
+
+  .tracking-preferences-actions {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+  }
+
+  .tracking-choice {
+    background: var(--registry-white);
+    border: 2px solid var(--registry-blue);
+    color: var(--registry-blue);
+    cursor: pointer;
+    font-weight: 700;
+    min-height: 44px;
+    padding: 8px 14px;
+  }
+
+  .tracking-choice:hover:not(:disabled) {
+    background: var(--registry-active);
+  }
+
+  .tracking-choice:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  @media (max-width: 720px) {
+    .tracking-preferences {
+      align-items: stretch;
+      bottom: 8px;
+      gap: 14px;
+      grid-template-columns: 1fr;
+      max-width: calc(100vw - 16px);
+      padding: 16px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .tracking-preferences-actions {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

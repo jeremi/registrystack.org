@@ -15,7 +15,7 @@ const dist = join(scratch, 'dist');
 const endpoint = 'https://starter-requests.example.test/starter-request';
 const build = spawnSync('npm', ['run', 'build', '--', '--outDir', dist], {
   cwd: root, encoding: 'utf8',
-  env: { ...process.env, PUBLIC_STARTER_REQUEST_ENDPOINT: endpoint, PUBLIC_UMAMI_WEBSITE_ID: '' },
+  env: { ...process.env, PUBLIC_STARTER_REQUEST_ENDPOINT: endpoint, PUBLIC_UMAMI_WEBSITE_ID: '', PUBLIC_MAUTIC_URL: '' },
 });
 assert.equal(build.status, 0, build.stderr || build.stdout);
 const server = createServer(async (request, response) => {
@@ -87,6 +87,27 @@ try {
   assert.equal(await page.locator('[data-starter-request-form]').count(), 0);
   assert.match(await page.locator('.hero-actions [data-journey="starter-request"]').getAttribute('href'), /^mailto:/);
   await context.close();
+
+  // Disabling the integration must ignore identifiers left by an earlier visit.
+  const disabledTracking = await browser.newContext();
+  await disabledTracking.addInitScript(() => {
+    localStorage.setItem('registrystack.marketing-tracking', JSON.stringify({ version: 1, choice: 'accepted', expiresAt: Date.now() + 86400000 }));
+    localStorage.setItem('mautic_device_id', 'a'.repeat(23));
+  });
+  let disabledSubmission;
+  await disabledTracking.route(endpoint, route => {
+    disabledSubmission = Object.fromEntries(new URLSearchParams(route.request().postData()));
+    return route.fulfill({ json: { ok: true }, headers: { 'access-control-allow-origin': origin } });
+  });
+  const disabledPage = await disabledTracking.newPage();
+  await disabledPage.goto(`${origin}${path}`);
+  await disabledPage.getByRole('textbox', { name: 'Email address' }).fill('disabled@example.invalid');
+  await disabledPage.getByRole('button', { name: 'Send request' }).click();
+  await disabledPage.locator('[data-starter-request-success]').waitFor({ state: 'visible' });
+  assert.equal(disabledSubmission.mautic_device_id, undefined);
+  assert.equal(disabledSubmission.tracking_consent, undefined);
+  assert.equal(await disabledPage.locator('[data-tracking-preferences]').count(), 0);
+  await disabledTracking.close();
 
   const noJs = await browser.newContext({ javaScriptEnabled: false });
   const fallback = await noJs.newPage();

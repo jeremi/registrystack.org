@@ -1,18 +1,22 @@
 # Professional licensing starter request service
 
 This Node 24 service accepts the public website form at `/starter-request` and
-submits the request to one self-hosted Mautic form. It supports only the
+submits the request to a self-hosted Mautic form. It supports only the
 `professional-licensing` starter. The website retains its email request link as
 a no-JavaScript fallback and whenever `PUBLIC_STARTER_REQUEST_ENDPOINT` is
 unset.
 
-The browser calls this service only. The service sends `DNT: 1` to Mautic and
-does not forward the browser's network address, cookies, user agent, or
-referrer. It uses a fixed service user agent and a unique request token to
-confirm that Mautic saved the matching request. No Mautic API key or browser
-tracking script is used.
+The browser calls this service only. The default path sends `DNT: 1` to Mautic
+and does not forward the browser's network address, cookies, user agent, or
+referrer. An optional second form can attribute a request to an existing Mautic
+device after the visitor grants tracking consent. On that path only, the relay
+forwards the browser User-Agent that Mautic already recorded for the consented
+device. This lets Mautic match its device signature without receiving cookies,
+the browser address, or the referrer. The service uses a fixed user agent on
+every untracked request and a unique request token to confirm that Mautic saved
+the matching request. No Mautic API key is used.
 
-## Configure the Mautic form
+## Configure the Mautic forms
 
 Create one published form in kiosk mode. Configure its fields exactly as
 follows; aliases are case-sensitive.
@@ -31,22 +35,43 @@ follows; aliases are case-sensitive.
 Turn auto-fill off for every field. Do not add form actions, campaign
 membership, notifications, or automatic email. Set the post action to a message
 with the confirmation `Request received.` Keep Mautic's email transport disabled
-with `null://null`; fulfillment and replies are manual.
+with `null://null`; fulfillment and replies are manual. In Mautic's Contact
+field settings, keep **Publicly updatable** off for the fixed Email field. The
+tracked form can still associate the self-asserted email through native form
+handling; the public tracking endpoint must not be allowed to update it.
 
-Mautic kiosk mode and the relay's `DNT: 1` request are both required. The local
-acceptance fixture in `tests/fixtures/mautic-starter-form.php` creates this shape
-against Mautic 7.2.1 and refuses a non-local instance or an instance with email
-enabled.
+Kiosk mode on this default form and the relay's `DNT: 1` request are both
+required. The local acceptance fixture in
+`tests/fixtures/mautic-starter-form.php` creates this shape against Mautic 7.2.1
+and refuses a non-local instance or an instance with email enabled.
+
+For consented journey attribution, create a second published form with the
+same fields, aliases, result-saving settings, and email mapping. Keep kiosk mode
+off on this second form. Do not add actions, campaign membership, notifications,
+or automatic email to either form. Set `MAUTIC_TRACKED_FORM_ID` to the second
+form's distinct ID.
+
+The website may submit `tracking_consent=granted` with a 23-character lowercase
+alphanumeric `mautic_device_id`. Only that exact pair selects the tracked form,
+and the relay sends the device ID as Mautic's top-level `mautic_device_id`
+parameter. It is not a form field and must not be saved in form results. A
+request carrying `DNT: 1` or `Sec-GPC: 1` always uses the kiosk form without the
+device ID. A missing tracked-form configuration also falls back to the kiosk
+form. A missing, blank, or longer-than-512-character browser User-Agent also
+falls back to the kiosk form, so malformed metadata cannot block a request or
+create a misleading tracked device. The email and device ID are self-asserted
+contact and marketing identity, not authentication or authorization.
 
 ## Configure the service
 
 The service can run directly with Node 24 or from `server/Dockerfile`. Set these
-required environment variables in the runtime environment:
+environment variables in the runtime environment:
 
 | Variable | Value |
 | --- | --- |
 | `MAUTIC_BASE_URL` | Private base URL of the Mautic service, for example `http://mautic/` on a shared private Docker network |
 | `MAUTIC_FORM_ID` | Positive integer ID of the form configured above |
+| `MAUTIC_TRACKED_FORM_ID` | Optional distinct positive integer ID of the otherwise identical non-kiosk form |
 | `WEBSITE_ORIGIN` | Exact public website origin allowed to submit, for example `https://www.example.org` |
 
 `PORT` defaults to `3000`. `PER_IP_RATE_LIMIT` defaults to 100 requests and
@@ -102,13 +127,13 @@ the exact website origin such as `https://www.example.org`.
 
 Before setting `PUBLIC_STARTER_REQUEST_ENDPOINT` and enabling the website form:
 
-1. Record the Mautic form-result and Contact counts.
+1. Record the result counts for both configured form IDs and the Contact count.
 2. From outside the deployment network, send `POST` requests to both
    `https://mautic.example.org/form/submit?ajax=1` and
    `https://mautic.example.org/index.php/form/submit?ajax=1`.
 3. Require `403` from both requests and confirm that neither count changed.
-4. Submit once through the relay and confirm that exactly one matching form
-   result exists and the relay returns success.
+4. Submit once through the relay and confirm that exactly one matching result
+   exists across both form IDs and the relay returns success.
 
 This example follows Traefik's documented [file-provider router
 configuration](https://doc.traefik.io/traefik/reference/routing-configuration/other-providers/file/),
@@ -142,9 +167,9 @@ manually.
 The relay does not retry automatically. A timeout or lost upstream response
 can occur after Mautic has saved the result, and a manual retry uses a new
 request token and can create a second result. When a submitter reports an error
-or timeout, check recent Mautic results for the same email and submission time
-before asking them to try again. Treat repeated rows as separate requests only
-after that operator check.
+or timeout, check recent results under both configured form IDs for the same
+email and submission time before asking them to try again. Treat repeated rows
+as separate requests only after that operator check.
 
 ## Verify
 
@@ -168,6 +193,15 @@ MAUTIC_TEST_CONTAINER=mautic-web-test \
   node scripts/check-starter-request-mautic.mjs
 ```
 
-The check creates the fixture form in that local container and compares stored
-record counts before and after its requests. Its safeguards reject a live
-Mautic instance; do not point it at production.
+The check creates both fixture forms, disables public updates on the Contact
+Email field if needed, and compares stored records before and after its
+requests. It drains only the disposable instance's `hit` messenger transport
+before the baseline, then consumes one page-hit message at a time so it can
+verify processed URLs, attribution, and reports. It never consumes the `email`
+transport. Its safeguards reject a live Mautic instance; do not point it at
+production.
+
+When production configures `MAUTIC_MESSENGER_DSN_HIT` with an asynchronous
+transport, operate a supervised consumer for Mautic's `hit` transport. Without
+that consumer, Mautic stores the initial visit but leaves report fields such as
+the processed page URL incomplete.

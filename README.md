@@ -193,6 +193,34 @@ image with its source. Fonts are bundled, so the image render works offline.
 Optional analytics distinguishes tutorial and inquiry link clicks. A click is
 not proof of tutorial completion or a submitted, qualified inquiry.
 
+## Optional request capture and visit tracking
+
+`PUBLIC_STARTER_REQUEST_ENDPOINT` enables the professional licensing request
+form. Its separate service stores requests in Mautic while preserving the
+email fallback. See [submission service setup](server/README.md).
+
+`PUBLIC_MAUTIC_URL` enables an optional website tracking choice. Leave it unset
+to omit the tracker and preference UI. With it configured as an HTTPS origin,
+Mautic loads only after explicit consent. Refusing tracking does not prevent a
+starter request. An opted-in browser's history can attach to the submitted
+email through the separately configured consented form; the email is
+self-asserted, never an authentication credential.
+
+The website records canonical page URLs, titles, referring site origins,
+and bounded campaign labels. Tracking preferences are remembered for 180 days;
+withdrawal clears the website identifiers and reloads the page. Browser DNT
+and GPC signals keep Mautic tracking off. Umami remains separate aggregate
+analytics and covers outbound links to documentation, demos and GitHub.
+
+Follow [Mautic tracking operations](server/mautic-tracking.md) before activation,
+including exact-origin CORS, the tracking-cookie proxy boundary and disabled
+email. The workflow reads both public settings from repository variables.
+This source change does not activate either service by itself.
+
+`npm run check:marketing-tracking` verifies the configured browser flow with a
+deterministic tracking server. The optional real-Mautic acceptance command in
+the service README verifies native device association and stored page hits.
+
 ## GitHub Pages
 
 The deployment workflow installs locked dependencies and Chromium, runs

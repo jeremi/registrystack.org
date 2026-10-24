@@ -14,7 +14,29 @@ http:
       service: noop@internal
       tls: {}
 
+    mautic-browser-tracking:
+      rule: "Host(`mautic.example.org`) && (PathPrefix(`/mtc`) || Path(`/mtracking.gif`) || PathPrefix(`/index.php/mtc`) || Path(`/index.php/mtracking.gif`))"
+      entryPoints:
+        - websecure-replace-me
+      priority: 9000
+      middlewares:
+        - mautic-tracking-cookie-boundary
+      # Use the existing Mautic backend service from your proxy configuration.
+      service: replace-with-mautic-backend@docker
+      tls: {}
+
   middlewares:
+    mautic-tracking-cookie-boundary:
+      headers:
+        # Tracking uses the explicitly consented website device ID. Ignore old
+        # Mautic-origin cookies, which the website cannot clear on withdrawal.
+        # Keep this middleware off the administrator login and other routes.
+        customRequestHeaders:
+          Cookie: ""
+        customResponseHeaders:
+          Set-Cookie: ""
+          Cache-Control: no-store
+
     deny-public-mautic-form-clients:
       ipAllowList:
         # 0.0.0.0 is the unspecified address and cannot be a routable client.

@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import TrackingPreferences from '../components/TrackingPreferences.astro';
+import { marketingTrackingUrl } from '../lib/marketing-tracking';
 
 interface Props {
   title?: string;
@@ -27,6 +29,9 @@ const {
   ogImageAlt = 'Registry Stack: Public registers and services, built around your rules.',
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, 'https://registrystack.org').toString();
+const mauticUrl = noindex
+  ? undefined
+  : marketingTrackingUrl(import.meta.env.PUBLIC_MAUTIC_URL);
 const ogImageUrl = new URL(ogImagePath, 'https://registrystack.org').toString();
 const articleHeadline = title.replace(/ \| Registry Stack$/, '');
 const organizationLd = {
@@ -92,6 +97,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="strict-origin" />
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalUrl} />}
@@ -125,6 +131,9 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
   </head>
   <body>
     <slot />
+    {mauticUrl && (
+      <TrackingPreferences mauticUrl={mauticUrl} canonicalUrl={canonicalUrl} />
+    )}
     <script is:inline>
       // Progressive enhancement only: the nav disclosure works without it,
       // and analytics is skipped when Umami is not loaded.

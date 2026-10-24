@@ -38,8 +38,8 @@ const pageDescription =
 
           <h2 id="privacy-collect-title">What this site collects</h2>
           <p>
-            This site is a static set of pages with no accounts. It does not set any cookies of its
-            own. Starter requests are described below.
+            This site is a static set of pages with no accounts. Aggregate analytics, optional
+            visit tracking, and starter requests serve different purposes, described below.
           </p>
           <h3>Analytics</h3>
           <p>
@@ -51,6 +51,31 @@ const pageDescription =
             GitHub, with the link&rsquo;s destination and label, so we can see which resources
             visitors use next. These events are not tied to a name, an email address, or any other
             identifying detail.
+          </p>
+          <h3>Optional visit tracking</h3>
+          <p>
+            When optional tracking is enabled, we ask before loading our self-hosted Mautic
+            tracker. If you accept tracking, it records the pages you visit on this website,
+            referring sites, campaign labels, visit times, and browser and device information.
+            We use this history to understand interest in our services. If you then submit a
+            starter request, we can link that history to the contact details you provide.
+            Accepting tracking does not sign you up for email marketing.
+          </p>
+          <p>
+            You can reject tracking and still use the website and request a starter. Use
+            Tracking preferences in the footer to withdraw your consent or change your choice.
+            We also respect browser Do Not Track and Global Privacy Control signals. We
+            remember your choice in this browser for six months. Withdrawing stops further
+            tracking and removes this website&rsquo;s tracking identifiers; it does not itself
+            erase information already received. Contact us if you want that information deleted.
+          </p>
+          <p>
+            Mautic uses cookies and browser storage to recognize a consenting browser. We remove
+            these identifiers when tracking is rejected, or on your next visit after the
+            remembered choice expires.
+            Page URLs sent to Mautic exclude fragments and query parameters except for a limited
+            set of campaign labels. We do not send form contents or email addresses in tracking
+            URLs, and we do not share this history with advertising networks.
           </p>
           <h3>Email</h3>
           <p>
@@ -68,8 +93,11 @@ const pageDescription =
           <p>
             To process the request, the form service receives your network address and uses
             temporary rate-limit counters to limit abuse. It does not forward your network address
-            to Mautic. The form does not load Mautic scripts or set cookies, and the request is not
-            linked to your website visit history. There is no automatic marketing signup.
+            to Mautic. If you have not accepted tracking, the request is not
+            linked to your website visit history. If you accept tracking and it is available,
+            the form also sends the browser identifier so Mautic can attach your visits to the
+            request. Submitting an address does not verify that you own it or grant access to
+            any account. There is no automatic marketing signup.
           </p>
           <h3>Server logs</h3>
           <p>
@@ -78,19 +106,25 @@ const pageDescription =
             configure or query those logs beyond what GitHub provides. GitHub&rsquo;s own privacy
             statement covers that data.
           </p>
+          <p>
+            Our form and tracking servers also receive network addresses and browser headers
+            to respond to requests and operate the service. Requests to the optional Mautic
+            tracker start only after you accept tracking.
+          </p>
 
           <h2 id="privacy-not-title">What this site does not do</h2>
           <ul class="check-list">
-            <li>It does not set cookies of its own.</li>
+            <li>It does not require tracking consent to submit a starter request.</li>
             <li>It does not run advertising and does not share data with ad networks.</li>
             <li>It does not sell personal data.</li>
-            <li>It does not build behavioral profiles of visitors.</li>
+            <li>It does not load the Mautic visit tracker before you accept tracking.</li>
           </ul>
 
           <h2 id="privacy-basis-title">Legal bases for visitors in the EEA and UK</h2>
           <p>
             Where the GDPR or the UK GDPR applies, we rely on legitimate interest to run
-            aggregate, cookie-free analytics that help us understand which pages are useful. If
+            aggregate, cookie-free analytics that help us understand which pages are useful.
+            Optional Mautic visit tracking relies on your consent, which you can withdraw at any time. If
             you email us or submit a starter request, that exchange proceeds on the basis that you
             chose to contact us and provided your information for that purpose.
           </p>
@@ -100,7 +134,10 @@ const pageDescription =
             Analytics events are aggregate and are not tied to an identified person. We keep them
             only as long as they are useful for understanding site usage. Starter requests and
             email correspondence are kept as ordinary business records for as long as they stay
-            relevant.
+            relevant. Optional visit histories are held in our self-hosted Mautic system and
+            are separate from the six-month browser preference. Withdrawing consent does not
+            automatically delete those records; you can request their deletion using the contact
+            address below.
           </p>
 
           <h2 id="privacy-rights-title">Your rights</h2>
