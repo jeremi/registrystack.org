@@ -961,11 +961,74 @@ async function runRetainedLocalRefusalScenario(browser, engine) {
   }
 }
 
+async function runDocsConsentPointerScenario(browser, engine) {
+  console.log(`${engine}: checking canonical docs consent pointer targets.`);
+  for (const width of [1280, 1488, 1536]) {
+    const records = createRecords(`${engine}-docs-consent-pointer-${width}`);
+    const context = await browser.newContext({
+      serviceWorkers: 'block',
+      viewport: { width, height: desktopViewport.height },
+    });
+    try {
+      await configureContext(context, records);
+      const page = await context.newPage();
+      await page.goto(`${docsOrigin}/start/concepts/`);
+      const panel = page.locator('[data-registry-shared-tracking]');
+      const reject = panel.getByRole('button', { name: 'Reject optional cookies' });
+      await panel.waitFor({ state: 'visible' });
+      await reject.waitFor({ state: 'visible' });
+
+      const bounds = await reject.boundingBox();
+      assert.ok(bounds, `${engine}: ${width}px docs Reject button has no pointer bounds.`);
+      const center = {
+        x: bounds.x + bounds.width / 2,
+        y: bounds.y + bounds.height / 2,
+      };
+      const hit = await reject.evaluate((button, point) => {
+        const target = document.elementFromPoint(point.x, point.y);
+        return {
+          isReject: target === button || (target instanceof Element && button.contains(target)),
+          target: target instanceof Element
+            ? `${target.tagName.toLowerCase()}${target.id ? `#${target.id}` : ''}${
+                [...target.classList].map(name => `.${name}`).join('')
+              }`
+            : String(target),
+        };
+      }, center);
+      assert.equal(
+        hit.isReject,
+        true,
+        `${engine}: ${width}px docs Reject center is covered by ${hit.target}.`,
+      );
+
+      await page.mouse.click(center.x, center.y);
+      await panel.waitFor({ state: 'hidden' });
+      assert.equal(await panel.locator('[data-tracking-error]').isVisible(), false);
+      assert.equal(records.nativeRequests.length, 0, `${engine}: ${width}px refusal loaded Mautic.`);
+      assert.equal(records.nativeEventRequests, 0, `${engine}: ${width}px refusal sent a native event.`);
+      assert.equal(records.pageviews.length, 0, `${engine}: ${width}px refusal sent a pageview.`);
+      assert.equal(records.formSubmissions.length, 0, `${engine}: ${width}px refusal submitted a form.`);
+      assert.deepEqual(records.errors, [], `${engine}: ${width}px refusal raised a page error.`);
+      assert.deepEqual(records.blocked, [], `${engine}: ${width}px refusal made an unexpected request.`);
+    } finally {
+      await context.close();
+    }
+  }
+}
+
 async function runEngine(engine, browserType) {
   console.log(`${engine}: checking shared main/docs journey.`);
   const browser = await browserType.launch();
   const records = createRecords(engine);
   try {
+    if (docsDist) {
+      await runDocsConsentPointerScenario(browser, engine);
+    } else {
+      console.log(
+        `${engine}: skipping canonical docs consent pointer checks; ` +
+        'DOCS_TRACKING_DIST is not configured and the fallback fixture has no docs layout.',
+      );
+    }
     const context = await browser.newContext({
       serviceWorkers: 'block',
       viewport: desktopViewport,
