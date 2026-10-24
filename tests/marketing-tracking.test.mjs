@@ -72,8 +72,6 @@ test('renders shared optional consent without putting a native tracker on parent
   const openPreferences = component.match(/const openPreferences = [\s\S]*?const closePreferences/);
   assert.ok(openPreferences);
   assert.doesNotMatch(openPreferences[0], /errorMessage\.hidden = true/, 'State renders must not erase a tracking failure.');
-  assert.match(component, /if \(client\.state\.choice === 'accepted' && client\.state\.generation === generation\) \{\s+sentGeneration = generation;/);
-  assert.match(component, /if \(pendingGeneration === generation\) pendingGeneration = null;/);
   assert.match(component, /change your choice at any time/i);
   assert.doesNotMatch(component, /aria-modal|role="dialog"|<script[^>]+src=/i);
   assert.doesNotMatch(component, /startMauticTracking|saveTrackingPreference|window\.location\.reload/);

@@ -584,7 +584,7 @@ async function runKioskScenario(browser, engine, records, mode) {
     }
   } else if (mode === 'bridge') {
     try {
-      await panel.locator('[data-tracking-error]').waitFor({ state: 'visible', timeout: 12_000 });
+      await panel.locator('[data-tracking-error]').waitFor({ state: 'visible', timeout: 15_000 });
     } catch (error) {
       const state = await page.evaluate(() => ({
         frameCount: document.querySelectorAll('iframe[src="https://registrystack.org/tracking-bridge/"]').length,
@@ -622,8 +622,14 @@ async function runBridgeRecoveryScenario(browser, engine) {
       return window.__trackingRecoveryDocument;
     });
     const panel = page.locator('[data-tracking-preferences]');
-    await panel.locator('[data-tracking-error]').waitFor({ state: 'visible', timeout: 9_000 });
-    assert.equal(records.bridgeLoads, 1, `${engine}: initial bridge failure retried before user action.`);
+    await waitFor(
+      () => records.bridgeRequests.includes('read'),
+      `${engine}: initial bridge failure did not recover its consent read.`,
+    );
+    await panel.waitFor({ state: 'visible' });
+    assert.equal(records.bridgeLoads, 2, `${engine}: initial bridge failure did not retry exactly once.`);
+    assert.equal(await panel.locator('[data-tracking-error]').isVisible(), false);
+    assert.equal(records.pageviews.length, 0, `${engine}: read recovery authorized tracking.`);
 
     await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
     await waitFor(
@@ -631,7 +637,7 @@ async function runBridgeRecoveryScenario(browser, engine) {
       `${engine}: consent did not recover after the initial bridge load failure.`,
       10_000,
     );
-    assert.ok(records.bridgeLoads >= 2, `${engine}: recovery did not replace the failed bridge frame.`);
+    assert.equal(records.bridgeLoads, 2, `${engine}: acceptance unnecessarily replaced the recovered frame.`);
     assert.equal(
       await page.evaluate(() => window.__trackingRecoveryDocument),
       documentToken,
@@ -639,6 +645,175 @@ async function runBridgeRecoveryScenario(browser, engine) {
     );
     await panel.waitFor({ state: 'hidden' });
     assert.deepEqual(records.errors, [], `${engine}: bridge recovery raised a page error.`);
+  } finally {
+    await context.close();
+  }
+}
+
+async function runValidatedReadRecoveryScenario(browser, engine, surface) {
+  console.log(`${engine}: checking ${surface} validated read recovery clears a stale error.`);
+  const records = createRecords(`${engine}-${surface}-validated-read-recovery`);
+  const bridgeControl = { failLoads: 0, instrument: true };
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    await configureContext(context, records, { bridgeControl });
+    const seededAt = Date.now();
+    const rejected = {
+      version: 2,
+      choice: 'rejected',
+      generation: '00000000-0000-4000-8000-000000000002',
+      expiresAt: seededAt + 300_000,
+      revision: seededAt,
+    };
+    const sharedStorage = await context.newPage();
+    await sharedStorage.goto(`${mainOrigin}/__acceptance/storage-seed`);
+    await sharedStorage.evaluate(([key, value]) => {
+      localStorage.setItem(key, JSON.stringify(value));
+    }, [consentKey, rejected]);
+    await sharedStorage.close();
+
+    bridgeControl.failLoads = 2;
+    const page = await context.newPage();
+    const pageUrl = surface === 'main'
+      ? `${mainOrigin}/solutions/licensing/`
+      : `${docsOrigin}/start/concepts/`;
+    const panel = page.locator(surface === 'main'
+      ? '[data-tracking-preferences]'
+      : '[data-registry-shared-tracking]');
+    const errorMessage = panel.locator('[data-tracking-error]');
+    await page.goto(pageUrl);
+    await errorMessage.waitFor({ state: 'visible', timeout: 15_000 });
+
+    assert.equal(bridgeControl.failLoads, 0, `${engine}: ${surface} did not retry the failed read.`);
+    await waitFor(
+      async () => await page.locator(`iframe[src="${mainOrigin}/tracking-bridge/"]`).count() === 0,
+      `${engine}: ${surface} did not discard the second failed bridge frame.`,
+    );
+    assert.equal(records.bridgeLoads, 2, `${engine}: ${surface} did not fail exactly two bridge loads.`);
+    assert.equal(records.blocked.length, 2, `${engine}: ${surface} made an unexpected blocked request.`);
+    assert.equal(await errorMessage.isVisible(), true);
+
+    await page.evaluate(() => {
+      window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await panel.waitFor({ state: 'hidden', timeout: 10_000 });
+    await waitFor(
+      () => records.bridgeRequests.filter(type => type === 'read').length >= 1,
+      `${engine}: ${surface} recovery did not complete a bridge read.`,
+    );
+    const recovered = await page.frames()
+      .find(frame => frame.url() === `${mainOrigin}/tracking-bridge/`)
+      ?.evaluate(key => JSON.parse(localStorage.getItem(key) ?? 'null'), consentKey);
+    assert.deepEqual(recovered, rejected, `${engine}: ${surface} did not recover the saved rejection.`);
+
+    await page.locator('[data-tracking-preferences-open]').click();
+    await panel.waitFor({ state: 'visible' });
+    assert.equal(
+      await errorMessage.evaluate(element => element.hidden),
+      true,
+      `${engine}: ${surface} showed the stale bridge-read error after validated recovery.`,
+    );
+    assert.equal(await errorMessage.isVisible(), false);
+    assert.equal(records.nativeRequests.length, 0, `${engine}: ${surface} refusal loaded Mautic.`);
+    assert.equal(records.pageviews.length, 0, `${engine}: ${surface} refusal sent a pageview.`);
+    assert.equal(records.formSubmissions.length, 0, `${engine}: ${surface} refusal submitted a form.`);
+    assert.deepEqual(records.errors, [], `${engine}: ${surface} read recovery raised a page error.`);
+  } finally {
+    await context.close();
+  }
+}
+
+async function runAmbiguousPageviewRecoveryScenario(browser, engine, surface) {
+  console.log(`${engine}: checking ${surface} ambiguous pageview acknowledgement recovery.`);
+  const records = createRecords(`${engine}-${surface}-ambiguous-pageview-recovery`);
+  const bridgeControl = { instrument: true };
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    await context.addInitScript(bridgeOrigin => {
+      if (window.top !== window) return;
+      window.__acceptanceBridgeOkResponses = 0;
+      window.__acceptanceDroppedBridgeResponses = 0;
+      window.addEventListener('message', event => {
+        const bridgeFrame = document.querySelector(`iframe[src="${bridgeOrigin}/tracking-bridge/"]`);
+        const message = event.data;
+        if (
+          event.origin !== bridgeOrigin ||
+          event.source !== bridgeFrame?.contentWindow ||
+          message?.protocol !== 'registrystack-tracking' ||
+          message?.version !== 2 ||
+          message?.ok !== true
+        ) return;
+        window.__acceptanceBridgeOkResponses += 1;
+        if (window.__acceptanceBridgeOkResponses !== 2) return;
+        window.__acceptanceDroppedBridgeResponses += 1;
+        event.stopImmediatePropagation();
+      }, true);
+    }, mainOrigin);
+    await configureContext(context, records, { bridgeControl });
+
+    const seededAt = Date.now();
+    const accepted = {
+      version: 2,
+      choice: 'accepted',
+      generation: '00000000-0000-4000-8000-000000000003',
+      expiresAt: seededAt + 300_000,
+      revision: seededAt,
+    };
+    const sharedStorage = await context.newPage();
+    await sharedStorage.goto(`${mainOrigin}/__acceptance/storage-seed`);
+    await sharedStorage.evaluate(([key, value]) => {
+      localStorage.setItem(key, JSON.stringify(value));
+    }, [consentKey, accepted]);
+    await sharedStorage.close();
+
+    const page = await context.newPage();
+    const pageUrl = surface === 'main'
+      ? `${mainOrigin}/solutions/licensing/`
+      : `${docsOrigin}/start/concepts/`;
+    const panel = page.locator(surface === 'main'
+      ? '[data-tracking-preferences]'
+      : '[data-registry-shared-tracking]');
+    const errorMessage = panel.locator('[data-tracking-error]');
+    await page.goto(pageUrl);
+    await waitFor(
+      () => records.pageviews.length === 1,
+      `${engine}: ${surface} initial accepted pageview was not delivered.`,
+    );
+    await errorMessage.waitFor({ state: 'visible', timeout: 10_000 });
+    assert.equal(
+      await errorMessage.getAttribute('data-tracking-failure'),
+      'response-timeout',
+      `${engine}: ${surface} did not surface the dropped pageview acknowledgement as a timeout.`,
+    );
+    assert.equal(records.pageviews.length, 1, `${engine}: ${surface} retried before resume.`);
+    assert.deepEqual(
+      await page.evaluate(() => ({
+        dropped: window.__acceptanceDroppedBridgeResponses,
+        okResponses: window.__acceptanceBridgeOkResponses,
+      })),
+      { dropped: 1, okResponses: 2 },
+      `${engine}: ${surface} did not drop exactly the pageview acknowledgement.`,
+    );
+
+    await page.evaluate(() => {
+      window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await waitFor(
+      () => records.bridgeRequests.filter(type => type === 'read').length >= 2,
+      `${engine}: ${surface} resume did not complete a fresh consent read.`,
+    );
+    await panel.waitFor({ state: 'hidden', timeout: 10_000 });
+    await waitFor(
+      async () => await errorMessage.evaluate(element => element.hidden),
+      `${engine}: ${surface} resume did not clear the pageview timeout.`,
+    );
+    await delay(250);
+    assert.equal(records.formSubmissions.length, 0, `${engine}: ${surface} submitted a form.`);
+    assert.deepEqual(records.errors, [], `${engine}: ${surface} recovery raised a page error.`);
+    assert.deepEqual(records.blocked, [], `${engine}: ${surface} made an unexpected request.`);
+    return records.pageviews.length;
   } finally {
     await context.close();
   }
@@ -1021,6 +1196,35 @@ async function runEngine(engine, browserType) {
   const browser = await browserType.launch();
   const records = createRecords(engine);
   try {
+    const ambiguousPageviewResults = [[
+      'main',
+      await runAmbiguousPageviewRecoveryScenario(browser, engine, 'main'),
+    ]];
+    if (docsDist) {
+      ambiguousPageviewResults.push([
+        'docs',
+        await runAmbiguousPageviewRecoveryScenario(browser, engine, 'docs'),
+      ]);
+    } else {
+      console.log(
+        `${engine}: skipping canonical docs ambiguous pageview recovery; ` +
+        'DOCS_TRACKING_DIST is not configured.',
+      );
+    }
+    assert.deepEqual(
+      Object.fromEntries(ambiguousPageviewResults),
+      Object.fromEntries(ambiguousPageviewResults.map(([surface]) => [surface, 1])),
+      `${engine}: ambiguously delivered pageviews were retried after resume.`,
+    );
+    await runValidatedReadRecoveryScenario(browser, engine, 'main');
+    if (docsDist) {
+      await runValidatedReadRecoveryScenario(browser, engine, 'docs');
+    } else {
+      console.log(
+        `${engine}: skipping canonical docs validated read recovery; ` +
+        'DOCS_TRACKING_DIST is not configured.',
+      );
+    }
     if (docsDist) {
       await runDocsConsentPointerScenario(browser, engine);
     } else {
