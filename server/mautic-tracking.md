@@ -15,8 +15,8 @@ establishes these contracts:
 
 - A non-kiosk form submission can associate the submitted Contact with a valid
   Mautic device when `mautic_device_id` is a top-level form POST value.
-- A kiosk form submitted with `DNT: 1` records the request without associating
-  the submitting browser's device activity.
+- A kiosk submission with `DNT: 1`, stripped cookies, and no top-level device
+  ID records the request without associating browser activity.
 - After its queued page-hit notification is processed, Mautic records page
   URL, title, referrer, and inbound UTM parameters on the tracked page hit.
 
@@ -149,7 +149,7 @@ mauticform[...]=...
 
 Only this valid consent-plus-device path includes a device ID. The browser
 chooses the unlinked form whenever consent or a usable device is absent. The
-proxy injects `DNT: 1` on that route and removes request cookies. It also injects
+proxy injects `DNT: 1` on that route and removes request cookies.
 The proxy returns `403` before Mautic if a consented-route request carries
 `DNT: 1` or `Sec-GPC: 1`. The normal website selects the kiosk route when
 either signal is active. The consented route preserves the browser User-Agent
