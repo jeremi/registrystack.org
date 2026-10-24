@@ -30,6 +30,7 @@ const trackedEndpoint = `${formsOrigin}/form/submit?formId=2&privacy=consented`;
 const desktopViewport = { width: 1280, height: 900 };
 const mobileViewport = { width: 390, height: 844 };
 const consentKey = 'registrystack.shared-marketing-tracking.v2';
+const localRefusalKey = 'registrystack.tracking-local-refusal.v2';
 const identityKey = 'registrystack.shared-mautic-identity.v2';
 const nativeIdentityKeys = ['mtc_id', 'mautic_device_id'];
 const legacyConsentKey = 'registrystack.marketing-tracking';
@@ -869,6 +870,97 @@ async function runExcludedVisitorScenario(browser, engine) {
   }
 }
 
+async function runRetainedLocalRefusalScenario(browser, engine) {
+  console.log(`${engine}: checking retained local refusal startup replay.`);
+  const records = createRecords(`${engine}-retained-local-refusal`);
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    await configureContext(context, records);
+    // Observe the acknowledgement directly. A background fetch probe can be
+    // cancelled when successful refusal removes its bridge iframe.
+    await context.addInitScript(({ mainOrigin, docsOrigin }) => {
+      if (location.origin !== docsOrigin) return;
+      window.addEventListener('message', event => {
+        const message = event.data;
+        if (event.origin !== mainOrigin || message?.protocol !== 'registrystack-tracking' ||
+            message?.version !== 2 || message?.ok !== true || message?.state?.choice !== 'rejected') return;
+        document.documentElement.dataset.acceptanceRejectedRevision = String(message.state.revision);
+      });
+    }, { mainOrigin, docsOrigin });
+    const seededAt = Date.now();
+    const accepted = {
+      version: 2,
+      choice: 'accepted',
+      generation: '00000000-0000-4000-8000-000000000001',
+      expiresAt: seededAt + 60_000,
+      revision: seededAt,
+    };
+    const sharedStorage = await context.newPage();
+    await sharedStorage.goto(`${mainOrigin}/__acceptance/storage-seed`);
+    await sharedStorage.evaluate(([key, value]) => {
+      localStorage.setItem(key, JSON.stringify(value));
+    }, [consentKey, accepted]);
+
+    const docsPage = await context.newPage();
+    await docsPage.goto(`${docsOrigin}/__acceptance/storage-seed`);
+    await docsPage.evaluate(([key, value]) => localStorage.setItem(key, value), [
+      localRefusalKey,
+      'rejected',
+    ]);
+    await docsPage.goto(`${docsOrigin}/start/concepts/`);
+    const panel = docsPage.locator('[data-registry-shared-tracking]');
+    await panel.waitFor({ state: 'attached' });
+
+    let rejected;
+    await waitFor(async () => {
+      rejected = await sharedStorage.evaluate(key => {
+        try {
+          return JSON.parse(localStorage.getItem(key) ?? 'null');
+        } catch {
+          return null;
+        }
+      }, consentKey);
+      return rejected?.choice === 'rejected' && rejected.revision > accepted.revision;
+    }, `${engine}: retained local refusal did not reach the shared bridge.`);
+    await waitFor(
+      async () => await docsPage.locator('html').getAttribute('data-acceptance-rejected-revision') === String(rejected.revision),
+      `${engine}: shared refusal acknowledgement did not arrive.`,
+    );
+    await waitFor(
+      async () => await docsPage.evaluate(key => localStorage.getItem(key), localRefusalKey) === null,
+      `${engine}: acknowledged refusal remained local.`,
+    );
+    assert.equal(records.nativeRequests.length, 0, `${engine}: retained refusal loaded Mautic.`);
+    assert.equal(records.pageviews.length, 0, `${engine}: retained refusal sent a pageview.`);
+    assert.equal(await panel.locator('[data-tracking-error]').isVisible(), false);
+    assert.equal(await panel.isVisible(), false);
+    assert.equal(await docsPage.evaluate(key => localStorage.getItem(key), localRefusalKey), null);
+    await assertNoIdentityInDocs(docsPage, records, []);
+    assert.deepEqual(records.errors, [], `${engine}: retained refusal raised a page error.`);
+
+    await docsPage.reload();
+    await panel.waitFor({ state: 'attached' });
+    await waitFor(
+      async () => await docsPage.locator('html').getAttribute('data-acceptance-rejected-revision') === String(rejected.revision),
+      `${engine}: retained shared rejection was not acknowledged after reload.`,
+    );
+    await delay(250);
+    assert.deepEqual(
+      await sharedStorage.evaluate(key => JSON.parse(localStorage.getItem(key) ?? 'null'), consentKey),
+      rejected,
+      `${engine}: reload replaced the retained shared rejection.`,
+    );
+    assert.equal(records.nativeRequests.length, 0, `${engine}: reload loaded Mautic after refusal.`);
+    assert.equal(records.pageviews.length, 0, `${engine}: reload sent a pageview after refusal.`);
+    assert.equal(await panel.locator('[data-tracking-error]').isVisible(), false);
+    assert.equal(await panel.isVisible(), false);
+    await assertNoIdentityInDocs(docsPage, records, []);
+    assert.deepEqual(records.errors, [], `${engine}: refusal reload raised a page error.`);
+  } finally {
+    await context.close();
+  }
+}
+
 async function runEngine(engine, browserType) {
   console.log(`${engine}: checking shared main/docs journey.`);
   const browser = await browserType.launch();
@@ -1110,6 +1202,7 @@ async function runEngine(engine, browserType) {
     await runSplitStartupBudgetScenario(browser, engine);
     await runExplicitBootstrapRecoveryScenario(browser, engine);
     await runExcludedVisitorScenario(browser, engine);
+    await runRetainedLocalRefusalScenario(browser, engine);
 
     for (const mode of ['legacy', 'bridge', 'storage', 'dnt', 'gpc']) {
       await runKioskScenario(browser, engine, records, mode);
