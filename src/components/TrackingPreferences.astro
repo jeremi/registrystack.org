@@ -40,6 +40,7 @@ const { mauticUrl, canonicalUrl } = Astro.props;
     buildMauticPageview,
     getSharedTrackingClient,
     trackingDeniedByBrowser,
+    trackingFailureReason,
   } from '../lib/shared-tracking-client.mjs';
 
   const panel = document.querySelector<HTMLElement>('[data-tracking-preferences]');
@@ -70,14 +71,21 @@ const { mauticUrl, canonicalUrl } = Astro.props;
     const closePreferences = () => {
       panel.hidden = true;
     };
-    const showError = () => {
+    const showError = (error?: unknown) => {
       openPreferences();
       errorMessage.hidden = false;
+      errorMessage.dataset.trackingFailure = trackingFailureReason(error);
+      if (client.readRetryReason) panel.dataset.trackingReadRetry = client.readRetryReason;
     };
     let sentGeneration: string | null = null;
     let pendingGeneration: string | null = null;
     const client = getSharedTrackingClient({ onFailure: showError });
-    const renderState = (state: typeof client.state) => {
+    const renderState = (state: typeof client.state, confirmed = false) => {
+      if (client.readRetryReason) panel.dataset.trackingReadRetry = client.readRetryReason;
+      if (confirmed) {
+        errorMessage.hidden = true;
+        delete errorMessage.dataset.trackingFailure;
+      }
       if (state.choice === 'accepted' && !browserDeniesTracking) {
         closePreferences();
         if (state.generation !== sentGeneration && state.generation !== pendingGeneration) {
@@ -87,8 +95,8 @@ const { mauticUrl, canonicalUrl } = Astro.props;
             if (client.state.choice === 'accepted' && client.state.generation === generation) {
               sentGeneration = generation;
             }
-          }).catch(() => {
-            if (client.state.choice === 'accepted' && client.state.generation === generation) showError();
+          }).catch((error: unknown) => {
+            if (client.state.choice === 'accepted' && client.state.generation === generation) showError(error);
           }).finally(() => {
             if (pendingGeneration === generation) pendingGeneration = null;
           });
@@ -115,8 +123,8 @@ const { mauticUrl, canonicalUrl } = Astro.props;
       }
       try {
         renderState(await client.choose('accepted'));
-      } catch {
-        showError();
+      } catch (error) {
+        showError(error);
         return;
       }
     });
@@ -125,8 +133,8 @@ const { mauticUrl, canonicalUrl } = Astro.props;
       errorMessage.hidden = true;
       try {
         renderState(await client.choose('rejected'));
-      } catch {
-        showError();
+      } catch (error) {
+        showError(error);
         return;
       }
     });
