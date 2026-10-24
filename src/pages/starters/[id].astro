@@ -8,12 +8,14 @@ import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import StarterIncludes from '../../components/StarterIncludes.astro';
+import StarterRequestForm from '../../components/StarterRequestForm.astro';
 import StarterRecordType from '../../components/StarterRecordType.astro';
 import StarterTechnical from '../../components/StarterTechnical.astro';
 import { products } from '../../data/products';
 import { contactEmail, describeServiceHref } from '../../data/contact';
 import { areaForStarter, featuredStarterForArea, starterHoldsText, starterLead, starterRequestHref, starters, startersSource, type Starter } from '../../data/starters';
 import { actionDescriptionWords, sourceHost, words } from '../../data/starter-words';
+import { starterRequestEndpoint as parseStarterRequestEndpoint } from '../../lib/starter-request';
 
 export function getStaticPaths() {
   return starters.map((starter) => ({ params: { id: starter.id }, props: { starter } }));
@@ -33,6 +35,21 @@ const baseRegistry = products.find((p) => p.key === 'base-registry')!;
 // release remain private.
 const requestHref = starterRequestHref(starter.title);
 const discussHref = describeServiceHref(starter.title);
+const starterRequestEndpoint = parseStarterRequestEndpoint(import.meta.env.PUBLIC_STARTER_REQUEST_ENDPOINT, 'kiosk');
+const starterRequestTrackedEndpoint = parseStarterRequestEndpoint(import.meta.env.PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT, 'consented');
+if (starterRequestTrackedEndpoint && !starterRequestEndpoint) {
+  throw new Error('A tracked starter form endpoint requires the kiosk endpoint.');
+}
+if (starterRequestEndpoint && starterRequestTrackedEndpoint) {
+  const kioskUrl = new URL(starterRequestEndpoint);
+  const trackedUrl = new URL(starterRequestTrackedEndpoint);
+  if (kioskUrl.origin !== trackedUrl.origin ||
+      kioskUrl.searchParams.get('formId') === trackedUrl.searchParams.get('formId')) {
+    throw new Error('Starter form endpoints must share an origin and use distinct form IDs.');
+  }
+}
+const requestFormEnabled = starter.id === 'professional-licensing' && Boolean(starterRequestEndpoint);
+const requestActionHref = requestFormEnabled ? '#starter-request-form' : requestHref;
 
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
 const list = (items: string[]) => items.join(', ');
@@ -64,10 +81,10 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
           </p>
           <h1 id="starter-title">{starter.title}</h1>
           <p class="hero-lead">{lead}</p>
-          <p class="hero-note starter-hero-terms">Free starting configuration, available by email request.</p>
+          <p class="hero-note starter-hero-terms">Free starting configuration, available by {requestFormEnabled ? 'request' : 'email request'}.</p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href="#whats-inside">What you receive</a>
-            <a class="button button-secondary" href={requestHref} data-journey="starter-request">Request the starter</a>
+            <a class="button button-secondary" href={requestActionHref} data-journey="starter-request">Request the starter</a>
             <a class="button button-secondary" href={discussHref}>Discuss your service</a>
           </div>
         </div>
@@ -199,7 +216,7 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
             <p>The core configuration describes the registry itself. A staff-screen definition, when marked as included, is a separate description for an application to implement. It is not part of the registry runtime and is not a deployed staff application.</p>
             <h3>Review before implementation</h3>
             <p>Compare the model with your law, policy, forms, current data, staff responsibilities, and connected systems. Changes may involve more than adding fields or roles, and the starter does not supply migration, identity, integration, hosting, or operating procedures.</p>
-            <p class="starter-request"><a class="button button-primary" href={requestHref} data-journey="starter-request">Request the starter</a></p>
+            <p class="starter-request"><a class="button button-primary" href={requestActionHref} data-journey="starter-request">Request the starter</a></p>
             <p class="starter-legend">Sent by email, free of charge. Requesting one commits you to nothing.</p>
             <div class="starter-inside-technical">
               <StarterTechnical
@@ -211,6 +228,14 @@ const pageTitle = `${starter.title} starter | Registry Stack`;
             </div>
           </div>
         </div>
+        {requestFormEnabled && starterRequestEndpoint && (
+          <StarterRequestForm
+            endpoint={starterRequestEndpoint}
+            trackedEndpoint={starterRequestTrackedEndpoint}
+            requestHref={requestHref}
+            contactEmail={contactEmail}
+          />
+        )}
         <p class="starter-attribution">The record definitions draw on <a href={startersSource.publicschema.repository} rel="noopener">PublicSchema</a> {startersSource.publicschema.version}, available under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">Creative Commons Attribution 4.0 licence</a>. The starter configuration is provided under the Apache 2.0 licence.</p>
       </div>
     </section>

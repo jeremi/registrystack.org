@@ -2,8 +2,12 @@
 import { products } from '../data/products';
 import { solutionAreas } from '../data/solutions';
 import { askQuestionHref, contactEmail } from '../data/contact';
+import { marketingTrackingUrl } from '../lib/marketing-tracking';
 const year = new Date().getFullYear();
 const repoHref = 'https://github.com/registrystack/registry-stack';
+const trackingPreferencesAvailable = Boolean(
+  marketingTrackingUrl(import.meta.env.PUBLIC_MAUTIC_URL),
+);
 const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 // The flagship products lead the column, as they do in the header menu.
@@ -61,6 +65,34 @@ const columns: { title: string; links: FooterEntry[] }[] = [
   </div>
   <div class="site-footer-base">
     <p>&copy; {year} Aubex Consulting LLC. Core software: Apache-2.0.</p>
-    <p><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/imprint/">Legal notice</a></p>
+    <p>
+      <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/imprint/">Legal notice</a>
+      {trackingPreferencesAvailable && (
+        <span data-tracking-preferences-control hidden>
+          {' · '}
+          <button class="footer-tracking-preferences" type="button" data-tracking-preferences-open>
+            Tracking preferences
+          </button>
+        </span>
+      )}
+    </p>
   </div>
 </footer>
+
+<style>
+  .footer-tracking-preferences {
+    appearance: none;
+    background: none;
+    border: 0;
+    color: rgba(255, 255, 255, 0.78);
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .footer-tracking-preferences:hover {
+    color: var(--registry-white);
+  }
+</style>

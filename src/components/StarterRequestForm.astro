@@ -1,0 +1,260 @@
+---
+interface Props {
+  endpoint: string;
+  trackedEndpoint?: string;
+  requestHref: string;
+  contactEmail: string;
+}
+
+const { endpoint, trackedEndpoint, requestHref, contactEmail } = Astro.props;
+---
+
+{endpoint && (
+  <section class="starter-request-panel" id="starter-request-form" aria-labelledby="starter-request-title">
+    <div class="starter-request-intro">
+      <p class="eyebrow">Free of charge</p>
+      <h3 id="starter-request-title">Request this starter</h3>
+      <p>Tell us where to send the configuration. You can also add context so our team can understand what you are planning.</p>
+    </div>
+
+    <form data-starter-request-form data-endpoint={endpoint} data-tracked-endpoint={trackedEndpoint} aria-describedby="starter-request-privacy">
+      <fieldset disabled data-starter-request-fields>
+        <div class="starter-request-fields">
+          <label>
+            <span>Email address <span aria-hidden="true">*</span></span>
+            <input name="email" type="email" autocomplete="email" maxlength="254" required />
+          </label>
+          <label>
+            <span>Organization <span class="optional">Optional</span></span>
+            <input name="organization" type="text" autocomplete="organization" maxlength="200" />
+          </label>
+          <label>
+            <span>Your role <span class="optional">Optional</span></span>
+            <input name="role" type="text" autocomplete="organization-title" maxlength="200" />
+          </label>
+          <label class="starter-request-message">
+            <span>What are you trying to do? <span class="optional">Optional</span></span>
+            <textarea name="message" rows="5" maxlength="2000"></textarea>
+          </label>
+          <label class="starter-request-honeypot" aria-hidden="true">
+            <span>Leave this empty</span>
+            <input name="website" type="text" tabindex="-1" autocomplete="off" />
+          </label>
+        </div>
+
+        <p class="starter-request-privacy" id="starter-request-privacy">
+          We use these details to review your request and reply. You can request the starter without accepting tracking. If you accept tracking, we link your visits to this request. There is no marketing signup. Read the <a href="/privacy/">privacy policy</a>.
+        </p>
+        <button class="button button-primary" type="submit" data-starter-request-submit>Send request</button>
+      </fieldset>
+
+      <p class="starter-request-status" role="status" aria-live="polite" data-starter-request-submitting hidden>
+        Sending your request&hellip;
+      </p>
+      <p class="starter-request-status starter-request-success" role="status" aria-live="polite" tabindex="-1" data-starter-request-success hidden>
+        Request received. Our team will review it.
+      </p>
+      <p class="starter-request-status starter-request-error" role="alert" tabindex="-1" data-starter-request-error hidden>
+        We could not confirm your request. Your details are still here. You can try again or use the email option below.
+      </p>
+    </form>
+
+    <p class="starter-request-fallback">
+      Prefer email, or cannot use the form?{' '}<a href={requestHref}>Email {contactEmail}</a>.
+    </p>
+  </section>
+)}
+
+<script>
+  import { submitStarterRequest } from '../lib/starter-request';
+  import { getConsentedDeviceId } from '../lib/marketing-tracking';
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-starter-request-form]')) {
+    const fieldset = form.querySelector<HTMLFieldSetElement>('[data-starter-request-fields]');
+    const submitting = form.querySelector<HTMLElement>('[data-starter-request-submitting]');
+    const success = form.querySelector<HTMLElement>('[data-starter-request-success]');
+    const error = form.querySelector<HTMLElement>('[data-starter-request-error]');
+    const endpoint = form.dataset.endpoint;
+    const trackedEndpoint = form.dataset.trackedEndpoint;
+
+    if (!fieldset || !submitting || !success || !error || !endpoint) continue;
+
+    let submissionInProgress = false;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (submissionInProgress || !form.reportValidity()) return;
+
+      // Disabled controls are omitted from FormData. Read them before locking
+      // the form against a second submission.
+      const data = new FormData(form);
+      submissionInProgress = true;
+      fieldset.disabled = true;
+      form.setAttribute('aria-busy', 'true');
+      submitting.hidden = false;
+      success.hidden = true;
+      error.hidden = true;
+
+      try {
+        await submitStarterRequest(endpoint, {
+          email: String(data.get('email') ?? '').trim(),
+          organization: String(data.get('organization') ?? '').trim(),
+          role: String(data.get('role') ?? '').trim(),
+          message: String(data.get('message') ?? '').trim(),
+          website: String(data.get('website') ?? '').trim(),
+        }, import.meta.env.PUBLIC_MAUTIC_URL?.trim() ? getConsentedDeviceId() : undefined, trackedEndpoint);
+        submitting.hidden = true;
+        success.hidden = false;
+        success.focus();
+      } catch {
+        submitting.hidden = true;
+        error.hidden = false;
+        fieldset.disabled = false;
+        error.focus();
+      } finally {
+        submissionInProgress = false;
+        form.removeAttribute('aria-busy');
+      }
+    });
+    fieldset.disabled = false;
+  }
+</script>
+
+<style>
+  .starter-request-panel {
+    background: var(--registry-white);
+    border: 1px solid var(--registry-rule);
+    border-left: 5px solid var(--registry-blue);
+    display: grid;
+    gap: clamp(24px, 4vw, 44px);
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    margin: 30px 0 40px;
+    padding: clamp(24px, 4vw, 40px);
+  }
+
+  .starter-request-intro h3 {
+    font-size: clamp(24px, 3vw, 32px);
+    margin: 6px 0 12px;
+  }
+
+  .starter-request-intro p:last-child {
+    color: var(--registry-body);
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .starter-request-fields {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  label {
+    color: var(--registry-ink);
+    display: grid;
+    font-weight: 700;
+    gap: 7px;
+  }
+
+  label > span > span:not(.optional) {
+    color: var(--registry-stamp);
+  }
+
+  .optional {
+    color: var(--registry-muted);
+    font-size: var(--type-xs);
+    font-weight: 400;
+    margin-left: 6px;
+  }
+
+  input,
+  textarea {
+    background: var(--registry-paper);
+    border: 1px solid var(--registry-paper-rule);
+    border-radius: 0;
+    color: var(--registry-ink);
+    font: inherit;
+    line-height: 1.45;
+    padding: 11px 12px;
+    width: 100%;
+  }
+
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid var(--registry-brass);
+    outline-offset: 2px;
+  }
+
+  .starter-request-message {
+    grid-column: 1 / -1;
+  }
+
+  .starter-request-honeypot {
+    height: 1px;
+    left: -10000px;
+    overflow: hidden;
+    position: absolute;
+    top: auto;
+    width: 1px;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .starter-request-privacy,
+  .starter-request-fallback,
+  .starter-request-status {
+    color: var(--registry-muted);
+    font-size: var(--type-sm);
+    line-height: 1.55;
+  }
+
+  .starter-request-privacy {
+    margin: 16px 0;
+  }
+
+  .starter-request-fallback {
+    border-top: 1px solid var(--registry-rule);
+    grid-column: 1 / -1;
+    margin: 0;
+    padding-top: 18px;
+  }
+
+  .starter-request-privacy a,
+  .starter-request-fallback a {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .starter-request-status {
+    margin: 14px 0 0;
+  }
+
+  .starter-request-success {
+    color: var(--registry-blue);
+    font-weight: 700;
+  }
+
+  .starter-request-error {
+    color: var(--registry-stamp);
+    font-weight: 700;
+  }
+
+  @media (max-width: 760px) {
+    .starter-request-panel,
+    .starter-request-fields {
+      grid-template-columns: 1fr;
+    }
+
+    .starter-request-message {
+      grid-column: auto;
+    }
+  }
+</style>

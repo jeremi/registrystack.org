@@ -44,6 +44,9 @@ jobs:
           PUBLIC_UMAMI_WEBSITE_ID: ${{ vars.PUBLIC_UMAMI_WEBSITE_ID }}
           PUBLIC_UMAMI_SCRIPT_SRC: ${{ vars.PUBLIC_UMAMI_SCRIPT_SRC }}
           PUBLIC_UMAMI_DOMAINS: ${{ vars.PUBLIC_UMAMI_DOMAINS }}
+          PUBLIC_STARTER_REQUEST_ENDPOINT: ${{ vars.PUBLIC_STARTER_REQUEST_ENDPOINT }}
+          PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: ${{ vars.PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT }}
+          PUBLIC_MAUTIC_URL: ${{ vars.PUBLIC_MAUTIC_URL }}
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v5

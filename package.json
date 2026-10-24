@@ -20,7 +20,9 @@
     "check:visual": "node scripts/check-visual.mjs",
     "check:funnel": "node scripts/check-funnel.mjs",
     "check:hero": "node scripts/check-hero.mjs",
-    "check": "npm test && npm run check:content && astro check && npm run build && npm run check:links && npm run check:a11y && npm run check:visual && npm run check:funnel && npm run check:hero"
+    "check:starter-request": "node scripts/check-starter-request.mjs",
+    "check:marketing-tracking": "node scripts/check-marketing-tracking.mjs",
+    "check": "npm test && npm run check:content && astro check && npm run build && npm run check:starter-request && npm run check:marketing-tracking && npm run check:links && npm run check:a11y && npm run check:visual && npm run check:funnel && npm run check:hero"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",
