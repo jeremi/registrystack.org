@@ -81,3 +81,13 @@ test('renders shared optional consent without putting a native tracker on parent
   assert.match(form, /type !== 'privacy'/);
   assert.match(form, /\.abort\(/);
 });
+
+test('privacy notice requires extra marketplace acceptance and describes one-way withdrawal', async () => {
+  const privacy = await readFile(new URL('../src/pages/privacy.astro', import.meta.url), 'utf8');
+  await transform(privacy);
+  assert.match(privacy, /Marketplace tracking requires a separate explicit acceptance/i);
+  assert.match(privacy, /Accepting here does not enable marketplace tracking/i);
+  assert.match(privacy, /later marketplace activity can be combined with the website and\s+documentation activity already associated/i);
+  assert.match(privacy, /Rejecting on any participating property stops further consented Mautic visit tracking\s+on all three properties/i);
+  assert.match(privacy, /does not\s+re-enable marketplace tracking without another marketplace acceptance/i);
+});

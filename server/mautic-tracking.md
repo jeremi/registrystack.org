@@ -62,7 +62,7 @@ The website consent layer is the authority for whether tracking runs. Do not
 depend on a browser header or a Mautic-side filter as a substitute for the
 website's consent decision.
 
-## Shared website and documentation journey
+## Shared website and documentation, with marketplace enrollment
 
 Use this Mautic instance for all enrolled Registry Stack properties. The full
 canonical page URL identifies the property for Reports and Segments; keep the
@@ -70,16 +70,24 @@ origin in that URL instead of reducing every property to a relative path.
 Enrollment is explicit for each reviewed HTTPS origin. Do not use wildcard
 CORS entries for all subdomains or all demo deployments.
 
-The exact main website and documentation origins in `tracking-protocol.mjs`
-share version-2 consent through `/tracking-bridge/` on the main website.
-Website-only acceptance does not authorize the expanded scope. The bridge
-stores the choice for 180 days and binds the native server-issued device to a
-random consent generation. Rejection, expiry, and browser privacy signals
-invalidate that identity. Other open frames observe storage changes, and
-suspended pages refresh their state on return.
+The main website and documentation continue to share the deployed version-2
+consent protocol through `/tracking-bridge/` on the main website. The
+marketplace uses that wire protocol but is enrolled separately by the broker.
+An existing website-and-documentation acceptance does not authorize a
+marketplace pageview. The marketplace must obtain an explicit acceptance that
+names all three properties; the broker then stores only the current global
+consent generation in a strict marketplace-enrollment record. A matching
+enrollment projects the accepted global state to the exact marketplace origin.
+
+The bridge stores the global choice for 180 days and binds the native
+server-issued device to a random consent generation. Rejection on any property,
+expiry, browser privacy signals, or any generation rotation invalidates the
+marketplace enrollment and the shared identity. Accepting again on the website
+or documentation does not re-enroll the marketplace. Other open frames observe
+storage changes, and suspended pages refresh their state on return.
 
 Only the bridge loads the native tracker and stores its identity. Documentation
-does not receive or persist a device identifier. The main website can request
+and the marketplace do not receive or persist a device identifier. The main website can request
 one for an immediate form submission with the expected consent generation.
 The form waits at most 750 milliseconds for this optional association, then
 falls back to the kiosk form. Privacy requests always use the kiosk form.
@@ -94,17 +102,30 @@ delayed request cannot cross withdrawal and re-consent.
 No identity is placed in navigation URLs. Internal navigation adds no
 acquisition UTMs; earlier internal handoff tuples are ignored by Mautic.
 
-Mautic CORS stays restricted to the main website: all native tracker requests
-execute inside that origin's bridge. The existing cookie-stripping proxy
+Mautic CORS permits only the exact main website and marketplace origins needed
+by tracking and the kiosk form. Maintained clients send all native tracker requests
+inside the main website's bridge. The existing cookie-stripping proxy
 boundary remains in place. GitHub Pages does not supply a path-specific
 `frame-ancestors` header, so arbitrary embedding is not blocked by this static
-page. Message validation enforces the data boundary. Scripts on both enrolled
-origins are trusted to request the shared choice; only main may request an ID.
+page. Message validation enforces the data boundary. Scripts on the main website
+and documentation are trusted to request the global choice. Marketplace scripts
+can request a projected choice and explicit enrollment, but old global acceptance
+alone never authorizes a marketplace effect. Only main may request an ID.
 
 The canonical docs integration is part of the pinned release source. Its
-released root includes tracking preferences; `/dev/`, versioned archives, and
-404 do not. Existing archive bytes are unchanged. Activation needs a new
-docs-bearing release and the acceptance checks in both repositories.
+released root and `/dev/` include tracking preferences; versioned archives and
+404 pages do not. The broker keeps the deployed version-2 wire contract and
+response schema unchanged, so marketplace enrollment does not require rebuilding
+an immutable documentation release.
+
+The marketplace sends only canonical static routes and fixed public titles to
+Mautic after consent. Its separate Umami events are aggregate, use an explicit
+script endpoint, and accept only reviewed action names such as `download_intent`
+and `request_submitted`, and public pack IDs. Its pack request form is a separate
+native Mautic form submission: it sends the visitor-supplied contact fields and
+public pack context for request fulfilment, but never sends or associates a
+browser device ID. Search terms, queries, fragments, contribution text, request
+tokens, and form values never enter either tracker.
 
 Demos remain outside the shared choice. Enrolling one requires revised
 notices, a new consent version, a reviewed exact origin, and verification of
@@ -125,6 +146,7 @@ Each property's page-data adapter must follow this contract:
 | --- | --- | --- |
 | Main website | Canonical static paths and public titles; reviewed inbound campaign labels | Current shared consent and optional request association |
 | Documentation | Public canonical routes and titles; no search text or private query values | Shared bridge consent and identity; no device disclosure to documentation |
+| Marketplace | Canonical static paths, public titles, and reviewed public pack IDs; no search text, queries, contribution text, or request values | Explicit marketplace enrollment bound to the current shared generation; no device disclosure to marketplace |
 | Demos | Explicitly allowlisted public screens or route templates, such as `/records/:recordId`; fixed, nonidentifying titles | Separate demo application accounts from marketing identity; require tracking consent |
 
 Do not copy the website helper unchanged into a demo. It removes query strings
@@ -338,7 +360,7 @@ operator view; do not treat it as anonymous traffic coverage. Use Mautic's
 **UTM Codes** Report for `utm_source`, `utm_medium`, `utm_campaign`,
 `utm_content`, and `utm_term`.
 
-Do not add UTM parameters to links between the main website and documentation.
+Do not add UTM parameters to links among the main website, documentation, and marketplace.
 Internal UTMs would replace the inbound source that attribution is meant to
 preserve. Those links retain their Umami click events. Demo links keep their
 existing destination UTMs until demos are enrolled in the shared journey.
@@ -375,28 +397,31 @@ Activate tracking only after all of these checks pass:
    runs.
 8. With consent, page hits appear on the device Contact and a website enquiry
    through the consented form associates with that same device activity.
-9. Withdrawing consent on either property clears the shared identifiers and
-   stops further tracking on both properties, including open tabs. The enquiry
+9. Withdrawing consent on any participating property clears the shared identifiers and
+   stops further Mautic tracking on all three properties, including open tabs. The enquiry
    form still succeeds through the unlinked form.
 10. Granting consent again produces a new shared device ID and does not relink
-   the browser to the withdrawn profile through an old Mautic cookie.
+    the browser to the withdrawn profile through an old Mautic cookie. Website
+    or documentation acceptance alone does not re-enroll marketplace tracking.
 11. Both per-form Results screens show their complete saved request fields,
    including request type and context, and the combined Form Submissions Report
    counts successful requests from both form IDs without treating Contact count
    as submission count.
 12. The public privacy notice accurately describes consented Mautic tracking,
    storage, attribution, withdrawal, and the independent no-consent form path.
-13. A main website to documentation to starter request journey retains one
-    permitted device and Contact, with correct public page URLs and external
-    acquisition labels. Test Chromium, Firefox, and WebKit before rollout.
-14. Documentation cannot request a device identifier. Unexpected origins,
+13. A main website acceptance continues through documentation but leaves the
+    marketplace unknown until its explicit acceptance. After that click, a main
+    website to documentation to marketplace journey retains one permitted device
+    and Contact, with correct public page URLs and external acquisition labels.
+    Test Chromium, Firefox, and WebKit before rollout.
+14. Documentation and marketplace cannot request a device identifier. Unexpected origins,
     frames, fields, and replayed request IDs cannot read or change shared state.
 15. Blocked storage, frames, locks, or trackers leave optional tracking off and
-    the unlinked enquiry available. Expired and previous-version acceptance do
-    not authorize the shared scope.
-16. Development docs, versioned archives, and error pages produce no optional
-    tracking. Publish through a new immutable docs release; existing archive
-    bytes must remain unchanged.
+    the unlinked enquiry available. Missing, malformed, stale-generation, or
+    unpersisted marketplace enrollment never authorizes a marketplace pageview.
+16. The released docs root and `/dev/` retain the deployed protocol-v2 journey.
+    Versioned archives and error pages produce no optional tracking, and existing
+    archive bytes remain unchanged.
 
 Use an incognito browser and a new address or test alias for each identity-flow
 case. Delete test records only through the agreed operational procedure.

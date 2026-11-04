@@ -78,6 +78,14 @@ not reject an unrelated extra query key. The website endpoint parser accepts
 only `formId` and `privacy`, then the submission adapter adds Mautic's required
 `ajax=1`.
 
+For marketplace requests, add separate exact-origin POST and OPTIONS routers
+for the existing kiosk form only. Reuse its body limit, rate limit, cookie
+stripping, injected `DNT: 1`, and no-store response controls. Add the exact
+marketplace origin to the kiosk/preflight CORS allowlists and Mautic's restricted
+CORS configuration. Do not add a marketplace consented-form route or wildcard
+origin. The marketplace adapter never sends a device identifier, including
+when optional visit tracking is accepted.
+
 Mautic selects the submitted form from the URL-encoded
 `mauticform[formId]` body field, not from the proxy's query selector. Traefik
 does not inspect or remove URL-encoded fields. The adapter sends the matching

@@ -17,12 +17,15 @@ const scratch = await mkdtemp(join(cache, 'shared-marketing-tracking-'));
 const websiteDist = join(scratch, 'website');
 const configuredDocsDist = process.env.DOCS_TRACKING_DIST?.trim();
 const docsDist = configuredDocsDist ? resolve(configuredDocsDist) : null;
+const configuredMarketplaceDist = process.env.MARKETPLACE_TRACKING_DIST?.trim();
+const marketplaceDist = configuredMarketplaceDist ? resolve(configuredMarketplaceDist) : null;
 const configuredScreenshotDir = process.env.TRACKING_SCREENSHOT_DIR?.trim();
 const screenshotDir = configuredScreenshotDir ? resolve(configuredScreenshotDir) : null;
 if (screenshotDir) await mkdir(screenshotDir, { recursive: true });
 
 const mainOrigin = 'https://registrystack.org';
 const docsOrigin = 'https://docs.registrystack.org';
+const marketplaceOrigin = 'https://marketplace.registrystack.org';
 const trackerOrigin = 'https://mautic.example.test';
 const formsOrigin = 'https://forms.example.test';
 const bridgeLoadBlockerUrl = 'https://bridge-load.example.invalid/hold.gif';
@@ -33,6 +36,7 @@ const mobileViewport = { width: 390, height: 844 };
 const consentKey = 'registrystack.shared-marketing-tracking.v2';
 const localRefusalKey = 'registrystack.tracking-local-refusal.v2';
 const identityKey = 'registrystack.shared-mautic-identity.v2';
+const marketplaceEnrollmentKey = 'registrystack.marketplace-tracking-enrollment.v1';
 const nativeIdentityKeys = ['mtc_id', 'mautic_device_id'];
 const legacyConsentKey = 'registrystack.marketing-tracking';
 const blockedStorageScript = `<script>
@@ -79,6 +83,16 @@ if (docsDist) {
     docsIndex,
     /data-registry-shared-tracking[^>]+data-shared-tracking-bridge-url="https:\/\/registrystack\.org\/tracking-bridge\/"/,
     'DOCS_TRACKING_DIST must be a canonical Registry Docs build with shared tracking enabled.',
+  );
+}
+
+if (marketplaceDist) {
+  await access(join(marketplaceDist, 'index.html'));
+  const marketplaceIndex = await readFile(join(marketplaceDist, 'index.html'), 'utf8');
+  assert.match(
+    marketplaceIndex,
+    /data-marketplace-analytics[^>]+data-shared-tracking-enabled="true"/,
+    'MARKETPLACE_TRACKING_DIST must be a canonical marketplace build with shared tracking enabled.',
   );
 }
 
@@ -234,6 +248,7 @@ function createRecords(engine) {
     bridgeLoads: 0,
     bridgeRequests: [],
     docsCookieHeaders: [],
+    marketplaceCookieHeaders: [],
     nativeRequests: [],
     nativeEventRequests: 0,
     nextDevice: 0,
@@ -354,6 +369,13 @@ async function configureContext(context, records, {
       } else {
         await route.fulfill({ status: 404, body: 'Not found' });
       }
+      return;
+    }
+
+    if (url.origin === marketplaceOrigin && marketplaceDist) {
+      records.marketplaceCookieHeaders.push(request.headers().cookie ?? '');
+      const asset = await staticAsset(marketplaceDist, url.pathname);
+      await route.fulfill(asset ? { status: 200, ...asset } : { status: 404, body: 'Not found' });
       return;
     }
 
@@ -489,6 +511,32 @@ async function assertNoIdentityInDocs(page, records, deviceIds) {
     assert.ok(
       records.docsCookieHeaders.every(header => !header.includes(`${key}=`)),
       `Registry Docs received ${key} in an HTTP request.`,
+    );
+  }
+}
+
+async function assertNoIdentityInMarketplace(page, records, deviceIds) {
+  const storage = await page.evaluate(() => Object.fromEntries(
+    Array.from({ length: localStorage.length }, (_, index) => localStorage.key(index))
+      .filter(Boolean)
+      .map(key => [key, localStorage.getItem(key)]),
+  ));
+  for (const key of [
+    consentKey,
+    identityKey,
+    marketplaceEnrollmentKey,
+    ...nativeIdentityKeys,
+  ]) {
+    assert.equal(storage[key], undefined, `Marketplace must not store ${key}.`);
+  }
+  const serialized = JSON.stringify(storage);
+  for (const deviceId of deviceIds) assert.ok(!serialized.includes(deviceId));
+  const documentCookies = await page.evaluate(() => document.cookie);
+  for (const key of nativeIdentityKeys) {
+    assert.ok(!documentCookies.includes(`${key}=`), `Marketplace can read ${key}.`);
+    assert.ok(
+      records.marketplaceCookieHeaders.every(header => !header.includes(`${key}=`)),
+      `Marketplace received ${key} in an HTTP request.`,
     );
   }
 }
@@ -1479,6 +1527,100 @@ async function runDocsConsentPointerScenario(browser, engine) {
   }
 }
 
+async function runMarketplaceEnrollmentScenario(browser, engine) {
+  console.log(`${engine}: checking explicit marketplace enrollment on the deployed protocol-v2 scope.`);
+  const records = createRecords(`${engine}-marketplace-enrollment`);
+  const context = await browser.newContext({ serviceWorkers: 'block', viewport: desktopViewport });
+  try {
+    await configureContext(context, records);
+    const mainPage = await context.newPage();
+    await mainPage.goto(`${mainOrigin}/solutions/licensing/`);
+    const mainPanel = mainPage.locator('[data-tracking-preferences]');
+    await mainPanel.waitFor({ state: 'visible' });
+    await mainPanel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await waitFor(() => records.pageviews.length === 1, `${engine}: website acceptance did not track.`);
+    const firstDevice = records.pageviews[0].deviceId;
+
+    const docsPage = await context.newPage();
+    await docsPage.goto(`${docsOrigin}/start/concepts/`);
+    await waitFor(() => records.pageviews.length === 2, `${engine}: deployed docs did not retain protocol-v2 tracking.`);
+    assert.equal(records.pageviews[1].deviceId, firstDevice);
+
+    const marketplacePage = await context.newPage();
+    await marketplacePage.goto(
+      `${marketplaceOrigin}/packs/professional-licensing/?email=private%40example.invalid#secret`,
+    );
+    const marketplacePanel = marketplacePage.locator('[data-marketplace-tracking]');
+    await marketplacePanel.waitFor({ state: 'visible' });
+    await delay(250);
+    assert.equal(records.pageviews.length, 2, `${engine}: old website acceptance authorized marketplace.`);
+    await assertNoIdentityInMarketplace(marketplacePage, records, [firstDevice]);
+
+    await marketplacePanel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await marketplacePanel.waitFor({ state: 'hidden' });
+    await waitFor(() => records.pageviews.length === 3, `${engine}: marketplace acceptance did not track.`);
+    const marketplaceView = records.pageviews.at(-1);
+    assert.equal(marketplaceView.page_url, `${marketplaceOrigin}/packs/professional-licensing/`);
+    assert.equal(marketplaceView.deviceId, firstDevice);
+    assert.ok(!JSON.stringify(marketplaceView).includes('private'));
+    const enrolled = await mainPage.evaluate(key => JSON.parse(localStorage.getItem(key) ?? 'null'), marketplaceEnrollmentKey);
+    const globalConsent = await mainPage.evaluate(key => JSON.parse(localStorage.getItem(key) ?? 'null'), consentKey);
+    assert.deepEqual(enrolled, { version: 1, generation: globalConsent.generation });
+
+    await marketplacePage.locator('[data-marketplace-tracking-open]').click();
+    await marketplacePanel.getByRole('button', { name: 'Reject optional cookies' }).click();
+    await marketplacePanel.waitFor({ state: 'hidden' });
+    await mainPage.waitForFunction(key => {
+      try {
+        return JSON.parse(localStorage.getItem(key) ?? 'null')?.choice === 'rejected';
+      } catch {
+        return false;
+      }
+    }, consentKey);
+    const beforeReacceptance = records.pageviews.length;
+    await docsPage.reload();
+    await delay(250);
+    assert.equal(records.pageviews.length, beforeReacceptance, `${engine}: marketplace rejection did not stop docs.`);
+
+    await mainPage.bringToFront();
+    await mainPage.locator('[data-tracking-preferences-open]').click();
+    await mainPanel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await waitFor(
+      () => records.pageviews.length > beforeReacceptance,
+      `${engine}: website reacceptance did not resume website tracking.`,
+    );
+    const secondDevice = records.pageviews.at(-1).deviceId;
+    assert.notEqual(secondDevice, firstDevice, `${engine}: global reacceptance reused withdrawn identity.`);
+
+    const beforeMarketplaceReenrollment = records.pageviews.length;
+    await marketplacePage.reload();
+    await marketplacePanel.waitFor({ state: 'visible' });
+    await delay(250);
+    assert.equal(
+      records.pageviews.length,
+      beforeMarketplaceReenrollment,
+      `${engine}: website reacceptance silently re-enrolled marketplace.`,
+    );
+    await marketplacePanel.getByRole('button', { name: 'Accept optional cookies' }).click();
+    await marketplacePanel.waitFor({ state: 'hidden' });
+    await waitFor(
+      () => records.pageviews.length > beforeMarketplaceReenrollment,
+      `${engine}: explicit marketplace re-enrollment did not resume tracking.`,
+    );
+    assert.equal(
+      records.pageviews.length,
+      beforeMarketplaceReenrollment + 1,
+      `${engine}: marketplace re-enrollment generated more than one pageview.`,
+    );
+    assert.equal(records.pageviews.at(-1).deviceId, secondDevice);
+    await assertNoIdentityInDocs(docsPage, records, [firstDevice, secondDevice]);
+    await assertNoIdentityInMarketplace(marketplacePage, records, [firstDevice, secondDevice]);
+    assert.deepEqual(records.errors, [], `${engine}: marketplace enrollment raised a page error.`);
+  } finally {
+    await context.close();
+  }
+}
+
 async function runEngine(engine, browserType) {
   console.log(`${engine}: checking shared main/docs journey.`);
   const browser = await browserType.launch();
@@ -1786,12 +1928,19 @@ async function runEngine(engine, browserType) {
     await runExplicitBootstrapRecoveryScenario(browser, engine);
     await runExcludedVisitorScenario(browser, engine);
     await runRetainedLocalRefusalScenario(browser, engine);
+    if (marketplaceDist) {
+      await runMarketplaceEnrollmentScenario(browser, engine);
+    } else {
+      console.log(
+        `${engine}: skipping marketplace enrollment journey; MARKETPLACE_TRACKING_DIST is not configured.`,
+      );
+    }
 
     for (const mode of ['legacy', 'bridge', 'storage', 'dnt', 'gpc']) {
       await runKioskScenario(browser, engine, records, mode);
     }
     assert.deepEqual(records.errors, [], `${engine}: uncaught page errors were observed.`);
-    console.log(`${engine}: shared main/docs tracking journey passed.`);
+    console.log(`${engine}: shared tracking journey passed.`);
   } finally {
     await browser.close();
   }
@@ -1822,5 +1971,7 @@ for (const engine of requestedBrowsers) {
 }
 
 console.log(
-  `Shared tracking browser checks passed in ${requestedBrowsers.join(', ')} (${docsDist ? 'canonical Registry Docs build' : 'shared-client docs fixture'}).`,
+  `Shared tracking browser checks passed in ${requestedBrowsers.join(', ')} (` +
+  `${docsDist ? 'canonical Registry Docs build' : 'shared-client docs fixture'}, ` +
+  `${marketplaceDist ? 'canonical marketplace build' : 'marketplace journey skipped'}).`,
 );

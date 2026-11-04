@@ -40,7 +40,7 @@ test('readiness contains no consent, identity, request, or surplus data', () => 
   ]) assert.equal(parseTrackingReady(invalid), null);
 });
 
-test('publishes the two exact enrolled origins and main-only association origin', () => {
+test('publishes the deployed website and docs origins and main-only association origin', () => {
   assert.deepEqual(TRACKING_ALLOWED_ORIGINS, [
     'https://registrystack.org',
     'https://docs.registrystack.org',

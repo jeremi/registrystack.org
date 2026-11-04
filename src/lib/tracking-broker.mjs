@@ -17,6 +17,10 @@ const NATIVE_IDENTITY_KEYS = ['mtc_id', 'mautic_device_id'];
 const DEVICE_ID_PATTERN = /^[a-z0-9]{23}$/;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const BOOTSTRAP_LOCK_NAME = 'registrystack-mautic-device-v2';
+const MARKETPLACE_ORIGIN = 'https://marketplace.registrystack.org';
+const MARKETPLACE_ENROLLMENT_RECORD_VERSION = 1;
+export const MARKETPLACE_ENROLLMENT_STORAGE_KEY = 'registrystack.marketplace-tracking-enrollment.v1';
+const BROKER_ALLOWED_ORIGINS = Object.freeze([...TRACKING_ALLOWED_ORIGINS, MARKETPLACE_ORIGIN]);
 const MAX_SEEN_REQUEST_IDS = 1000;
 const INTERNAL_UTM = {
   utm_source: 'registry_docs',
@@ -92,6 +96,21 @@ function parseIdentityRecord(raw) {
       isUuid(value.attemptId)
     ) return value;
     return null;
+  } catch (_error) {
+    return null;
+  }
+}
+
+function parseMarketplaceEnrollmentRecord(raw) {
+  if (!raw) return null;
+  try {
+    const value = JSON.parse(raw);
+    if (
+      !exactKeys(value, ['version', 'generation']) ||
+      value.version !== MARKETPLACE_ENROLLMENT_RECORD_VERSION ||
+      !isUuid(value.generation)
+    ) return null;
+    return value;
   } catch (_error) {
     return null;
   }
@@ -197,7 +216,7 @@ export function createTrackingBroker({
   navigator: currentNavigator = globalThis.navigator,
   storage = currentWindow?.localStorage,
   locks = currentNavigator?.locks,
-  allowedOrigins = TRACKING_ALLOWED_ORIGINS,
+  allowedOrigins = BROKER_ALLOWED_ORIGINS,
   associationOrigin = TRACKING_ASSOCIATION_ORIGIN,
   mauticUrl = undefined,
   now = () => Date.now(),
@@ -260,6 +279,36 @@ export function createTrackingBroker({
     }
   }
 
+  function marketplaceEnrollment() {
+    const raw = safeGet(MARKETPLACE_ENROLLMENT_STORAGE_KEY);
+    const record = parseMarketplaceEnrollmentRecord(raw);
+    if (!record && raw) safeRemove(MARKETPLACE_ENROLLMENT_STORAGE_KEY);
+    return record;
+  }
+
+  function saveMarketplaceEnrollment(generation) {
+    return safeSet(MARKETPLACE_ENROLLMENT_STORAGE_KEY, {
+      version: MARKETPLACE_ENROLLMENT_RECORD_VERSION,
+      generation,
+    });
+  }
+
+  function marketplaceEnrolled(state) {
+    return state.choice === 'accepted' && marketplaceEnrollment()?.generation === state.generation;
+  }
+
+  function stateForOrigin(state, origin) {
+    if (origin !== MARKETPLACE_ORIGIN || state.choice === 'rejected' || marketplaceEnrolled(state)) {
+      return state;
+    }
+    return {
+      choice: null,
+      generation: state.generation,
+      expiresAt: null,
+      revision: state.revision,
+    };
+  }
+
   function clearNativeIdentifiers() {
     for (const key of NATIVE_IDENTITY_KEYS) {
       safeRemove(key);
@@ -293,15 +342,14 @@ export function createTrackingBroker({
 
   function notifyChanged(state) {
     lastPublishedState = state;
-    const changed = {
-      protocol: TRACKING_PROTOCOL,
-      version: TRACKING_PROTOCOL_VERSION,
-      type: 'changed',
-      state,
-    };
     for (const [source, origin] of connectedParents) {
       try {
-        source.postMessage(changed, origin);
+        source.postMessage({
+          protocol: TRACKING_PROTOCOL,
+          version: TRACKING_PROTOCOL_VERSION,
+          type: 'changed',
+          state: stateForOrigin(state, origin),
+        }, origin);
       } catch (_error) {
         connectedParents.delete(source);
       }
@@ -335,6 +383,7 @@ export function createTrackingBroker({
       revision: nextRevision(previous),
     };
     const persisted = safeSet(TRACKING_CONSENT_STORAGE_KEY, record);
+    safeRemove(MARKETPLACE_ENROLLMENT_STORAGE_KEY);
     clearNativeIdentity();
     if (previous.choice === 'accepted') markNativeRuntimeInvalid();
     if (!persisted) return initialState();
@@ -399,6 +448,7 @@ export function createTrackingBroker({
       clearNativeIdentity();
       return null;
     }
+    safeRemove(MARKETPLACE_ENROLLMENT_STORAGE_KEY);
     clearNativeIdentity();
     if (previous.choice === 'accepted') markNativeRuntimeInvalid();
     const state = publicState(record);
@@ -568,13 +618,13 @@ export function createTrackingBroker({
     }
   }
 
-  function success(id, state, deviceId) {
+  function success(id, state, origin, deviceId) {
     return {
       protocol: TRACKING_PROTOCOL,
       version: TRACKING_PROTOCOL_VERSION,
       id,
       ok: true,
-      state,
+      state: stateForOrigin(state, origin),
       ...(deviceId ? { deviceId } : {}),
     };
   }
@@ -588,7 +638,7 @@ export function createTrackingBroker({
   }
 
   async function handleRequest(request, origin) {
-    if (request.type === 'read') return success(request.id, effectiveState());
+    if (request.type === 'read') return success(request.id, effectiveState(), origin);
     if (request.type === 'choose') {
       if (request.choice === 'accepted' && browserDeniesTracking()) {
         return failure(request.id, 'not-allowed');
@@ -596,21 +646,37 @@ export function createTrackingBroker({
       const current = effectiveState();
       if (request.expectedRevision !== current.revision) {
         if (request.choice === 'rejected' && current.choice === 'rejected') {
-          return success(request.id, current);
+          return success(request.id, current, origin);
         }
         return failure(request.id, 'unavailable');
+      }
+      if (origin === MARKETPLACE_ORIGIN && request.choice === 'accepted') {
+        const identity = identityRecord();
+        const interrupted = current.choice === 'accepted' &&
+          identity?.generation === current.generation && identity.status === 'pending' &&
+          !DEVICE_ID_PATTERN.test(safeGet('mautic_device_id') ?? '');
+        let accepted = current;
+        if (current.choice !== 'accepted' || interrupted) {
+          accepted = saveChoice('accepted', current);
+          if (!accepted) return failure(request.id, 'unavailable');
+        }
+        if (!saveMarketplaceEnrollment(accepted.generation)) {
+          return failure(request.id, 'unavailable');
+        }
+        notifyChanged(accepted);
+        return success(request.id, accepted, origin);
       }
       if (current.choice === request.choice) {
         const identity = identityRecord();
         const interrupted = current.choice === 'accepted' &&
           identity?.generation === current.generation && identity.status === 'pending' &&
           !DEVICE_ID_PATTERN.test(safeGet('mautic_device_id') ?? '');
-        if (!interrupted) return success(request.id, current);
+        if (!interrupted) return success(request.id, current, origin);
         // An explicit retry can replace an interrupted native realm. The
         // revision check above still prevents stale acceptance after refusal.
       }
       const saved = saveChoice(request.choice, current);
-      return saved ? success(request.id, saved) : failure(request.id, 'unavailable');
+      return saved ? success(request.id, saved, origin) : failure(request.id, 'unavailable');
     }
     if (request.type === 'associate') {
       if (origin !== associationOrigin) return failure(request.id, 'not-allowed');
@@ -619,15 +685,18 @@ export function createTrackingBroker({
         return failure(request.id, 'unavailable');
       }
       const device = readyDevice(state);
-      return device ? success(request.id, state, device) : failure(request.id, 'unavailable');
+      return device ? success(request.id, state, origin, device) : failure(request.id, 'unavailable');
     }
     if (request.type === 'pageview') {
       const pageview = sanitizedPageview(request.pageview, origin, enrolledOrigins);
       const state = effectiveState();
-      if (!pageview || state.choice !== 'accepted') return failure(request.id, 'not-allowed');
+      if (!pageview || state.choice !== 'accepted' ||
+          (origin === MARKETPLACE_ORIGIN && !marketplaceEnrolled(state))) {
+        return failure(request.id, 'not-allowed');
+      }
       if (state.generation !== request.expectedGeneration) return failure(request.id, 'unavailable');
       const tracked = await bootstrapPageview(pageview, state.generation);
-      return tracked ? success(request.id, effectiveState()) : failure(request.id, 'unavailable');
+      return tracked ? success(request.id, effectiveState(), origin) : failure(request.id, 'unavailable');
     }
     return failure(request.id, 'invalid-request');
   }
@@ -669,6 +738,11 @@ export function createTrackingBroker({
   }
 
   function handleStorage(event) {
+    if (event?.key === MARKETPLACE_ENROLLMENT_STORAGE_KEY) {
+      notifyChanged(effectiveState());
+      flushNativeRuntimeInvalidation();
+      return;
+    }
     if (
       event?.key === TRACKING_CONSENT_STORAGE_KEY ||
       event?.key === TRACKING_IDENTITY_STORAGE_KEY ||

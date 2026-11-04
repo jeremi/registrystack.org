@@ -10,10 +10,14 @@ import {
   TRACKING_PROTOCOL,
   TRACKING_PROTOCOL_VERSION,
 } from '../src/lib/tracking-protocol.mjs';
-import { createTrackingBroker } from '../src/lib/tracking-broker.mjs';
+import {
+  MARKETPLACE_ENROLLMENT_STORAGE_KEY,
+  createTrackingBroker,
+} from '../src/lib/tracking-broker.mjs';
 
 const mainOrigin = 'https://registrystack.org';
 const docsOrigin = 'https://docs.registrystack.org';
+const marketplaceOrigin = 'https://marketplace.registrystack.org';
 const requestId = '00000000-0000-4000-8000-000000000001';
 const chooseRequestId = '00000000-0000-4000-8000-000000000002';
 const pageviewRequestId = '00000000-0000-4000-8000-000000000003';
@@ -180,7 +184,7 @@ test('read is side-effect free for Mautic and rejects wrong origins or window so
   assert.equal(source.messages.length, before);
 });
 
-test('v1 consent and native identity never become shared acceptance', async () => {
+test('retired version-1 consent and native identity never become shared acceptance', async () => {
   const storage = new MemoryStorage();
   storage.setItem('registrystack.marketing-tracking', JSON.stringify({
     version: 1,
@@ -226,6 +230,205 @@ test('accepted pageview bootstraps one server identity and main-only association
     ok: false,
     error: 'not-allowed',
   });
+  const marketplaceAssociation = await send(
+    request('associate', { expectedGeneration: firstGeneration }, '00000000-0000-4000-8000-000000000006'),
+    marketplaceOrigin,
+  );
+  assert.deepEqual(marketplaceAssociation, {
+    protocol: TRACKING_PROTOCOL,
+    version: TRACKING_PROTOCOL_VERSION,
+    id: '00000000-0000-4000-8000-000000000006',
+    ok: false,
+    error: 'not-allowed',
+  });
+});
+
+test('website acceptance does not enroll marketplace, whose explicit acceptance retains the generation', async () => {
+  const { send, nativeCalls, storage } = harness();
+  const websiteAccepted = await send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+  const read = await send(
+    request('read', {}, '00000000-0000-4000-8000-000000000071'),
+    marketplaceOrigin,
+  );
+  assert.deepEqual(read.state, {
+    choice: null,
+    generation: websiteAccepted.state.generation,
+    expiresAt: null,
+    revision: websiteAccepted.state.revision,
+  });
+  const refusedBeforeEnrollment = await send(
+    request('pageview', pageviewPayload({
+      page_url: `${marketplaceOrigin}/packs/professional-licensing/`,
+      page_title: 'Professional licensing starter',
+      page_referrer: mainOrigin,
+    }), '00000000-0000-4000-8000-000000000072'),
+    marketplaceOrigin,
+  );
+  assert.equal(refusedBeforeEnrollment.ok, false);
+  assert.equal(refusedBeforeEnrollment.error, 'not-allowed');
+  assert.deepEqual(nativeCalls, []);
+
+  const accepted = await send(
+    request('choose', {
+      choice: 'accepted',
+      expectedRevision: websiteAccepted.state.revision,
+    }, '00000000-0000-4000-8000-000000000073'),
+    marketplaceOrigin,
+  );
+  assert.deepEqual(accepted.state, websiteAccepted.state);
+  assert.deepEqual(JSON.parse(storage.getItem(MARKETPLACE_ENROLLMENT_STORAGE_KEY)), {
+    version: 1,
+    generation: websiteAccepted.state.generation,
+  });
+  const tracked = await send(
+    request('pageview', pageviewPayload({
+      page_url: `${marketplaceOrigin}/packs/professional-licensing/`,
+      page_title: 'Professional licensing starter',
+      page_referrer: mainOrigin,
+    }), '00000000-0000-4000-8000-000000000074'),
+    marketplaceOrigin,
+  );
+  assert.equal(tracked.ok, true);
+  assert.deepEqual(nativeCalls, [{
+    page_url: `${marketplaceOrigin}/packs/professional-licensing/`,
+    page_title: 'Professional licensing starter',
+    page_referrer: mainOrigin,
+  }]);
+
+  const wrongOrigin = await send(
+    request(
+      'pageview',
+      pageviewPayload({
+        page_url: `${docsOrigin}/private/`,
+        page_title: 'Wrong origin',
+        page_referrer: '',
+      }),
+      '00000000-0000-4000-8000-000000000075',
+    ),
+    marketplaceOrigin,
+  );
+  assert.equal(wrongOrigin.ok, false);
+  assert.equal(wrongOrigin.error, 'not-allowed');
+});
+
+test('marketplace rejection is global and main reacceptance requires fresh marketplace enrollment', async () => {
+  const { send, storage, nativeCalls } = harness();
+  const accepted = await send(
+    request('choose', { choice: 'accepted', expectedRevision: 0 }),
+    marketplaceOrigin,
+  );
+  await send(request('pageview', pageviewPayload({
+    page_url: `${marketplaceOrigin}/`,
+    page_title: 'Registry Stack Marketplace',
+    page_referrer: '',
+  }, accepted.state.generation)), marketplaceOrigin);
+  assert.equal(nativeCalls.length, 1);
+
+  const rejected = await send(request('choose', {
+    choice: 'rejected',
+    expectedRevision: accepted.state.revision,
+  }, '00000000-0000-4000-8000-000000000076'), marketplaceOrigin);
+  assert.equal(rejected.state.choice, 'rejected');
+  assert.equal((await send(request('read', {}, '00000000-0000-4000-8000-000000000077'), docsOrigin)).state.choice, 'rejected');
+  assert.equal(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY), null);
+
+  const mainAccepted = await send(request('choose', {
+    choice: 'accepted',
+    expectedRevision: rejected.state.revision,
+  }, '00000000-0000-4000-8000-000000000078'));
+  const marketplaceRead = await send(
+    request('read', {}, '00000000-0000-4000-8000-000000000079'),
+    marketplaceOrigin,
+  );
+  assert.equal(mainAccepted.state.choice, 'accepted');
+  assert.equal(marketplaceRead.state.choice, null);
+  assert.equal(marketplaceRead.state.generation, mainAccepted.state.generation);
+  assert.equal((await send(request('pageview', pageviewPayload({
+    page_url: `${marketplaceOrigin}/`,
+    page_title: 'Registry Stack Marketplace',
+    page_referrer: '',
+  }, mainAccepted.state.generation), '00000000-0000-4000-8000-000000000080'), marketplaceOrigin)).ok, false);
+  assert.equal(nativeCalls.length, 1);
+});
+
+test('marketplace enrollment persistence fails closed without undoing valid website consent', async () => {
+  class EnrollmentFailureStorage extends MemoryStorage {
+    setItem(key, value) {
+      if (key === MARKETPLACE_ENROLLMENT_STORAGE_KEY) throw new Error('Enrollment storage unavailable.');
+      super.setItem(key, value);
+    }
+  }
+  const storage = new EnrollmentFailureStorage();
+  const { send, nativeCalls } = harness({ storage });
+  const websiteAccepted = await send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+  const marketplaceAccepted = await send(request('choose', {
+    choice: 'accepted',
+    expectedRevision: websiteAccepted.state.revision,
+  }, '00000000-0000-4000-8000-000000000081'), marketplaceOrigin);
+  assert.equal(marketplaceAccepted.ok, false);
+  assert.equal(marketplaceAccepted.error, 'unavailable');
+  assert.equal((await send(request('read', {}, '00000000-0000-4000-8000-000000000082'))).state.choice, 'accepted');
+  assert.equal((await send(
+    request('read', {}, '00000000-0000-4000-8000-000000000083'),
+    marketplaceOrigin,
+  )).state.choice, null);
+  assert.deepEqual(nativeCalls, []);
+});
+
+test('marketplace enrollment storage events update its projection without changing global revision', async () => {
+  const storage = new MemoryStorage();
+  storage.setItem(TRACKING_CONSENT_STORAGE_KEY, JSON.stringify({
+    version: 2,
+    choice: 'accepted',
+    generation: firstGeneration,
+    expiresAt: now + 1000,
+    revision: now - 1000,
+  }));
+  const source = new MessageSource();
+  const { send, listeners } = harness({ storage, source });
+  const initial = await send(request('read'), marketplaceOrigin);
+  assert.equal(initial.state.choice, null);
+  storage.setItem(MARKETPLACE_ENROLLMENT_STORAGE_KEY, JSON.stringify({
+    version: 1,
+    generation: firstGeneration,
+  }));
+  listeners.get('storage')({ key: MARKETPLACE_ENROLLMENT_STORAGE_KEY });
+  const changed = source.messages.filter(({ message }) => message.type === 'changed').at(-1).message;
+  assert.deepEqual(changed.state, {
+    choice: 'accepted',
+    generation: firstGeneration,
+    expiresAt: now + 1000,
+    revision: now - 1000,
+  });
+});
+
+test('stale or malformed marketplace enrollment cannot authorize a pageview', async () => {
+  for (const enrollment of [
+    { version: 1, generation: secondGeneration },
+    { version: 1, generation: firstGeneration, extra: true },
+    { version: 2, generation: firstGeneration },
+  ]) {
+    const storage = new MemoryStorage();
+    storage.setItem(TRACKING_CONSENT_STORAGE_KEY, JSON.stringify({
+      version: 2,
+      choice: 'accepted',
+      generation: firstGeneration,
+      expiresAt: now + 1000,
+      revision: now - 1000,
+    }));
+    storage.setItem(MARKETPLACE_ENROLLMENT_STORAGE_KEY, JSON.stringify(enrollment));
+    const { send, nativeCalls } = harness({ storage });
+    const read = await send(request('read'), marketplaceOrigin);
+    assert.equal(read.state.choice, null);
+    const tracked = await send(request('pageview', pageviewPayload({
+      page_url: `${marketplaceOrigin}/`,
+      page_title: 'Registry Stack Marketplace',
+      page_referrer: '',
+    })), marketplaceOrigin);
+    assert.equal(tracked.ok, false);
+    assert.equal(tracked.error, 'not-allowed');
+    assert.deepEqual(nativeCalls, []);
+  }
 });
 
 test('choose compares the caller revision before mutating shared consent', async () => {
