@@ -556,6 +556,25 @@ if (!layoutSource.includes('og-image.png')) {
 if (!existsSync(resolve('public/og-image.png'))) {
   failures.push('public/og-image.png is missing (run npm run build:og)');
 }
+if (!layoutSource.includes('type="application/rss+xml"')) {
+  failures.push('layout does not advertise the RSS feed with a rel="alternate" link');
+}
+
+// Starters are sent on request while their repository and releases stay
+// private, so llms.txt must not tell agents a public download exists.
+const llmsText = readSource('public/llms.txt');
+if (/breg-registry-starters|\bzip\b|SHA-256|checksum/i.test(llmsText)) {
+  failures.push('public/llms.txt describes a public starter download; starters are available on request');
+}
+
+// GitHub Pages drops dot-directories from the artifact unless told to keep
+// them, which left /.well-known/security.txt returning 404.
+if (existsSync(resolve('public/.well-known'))) {
+  const deployWorkflow = readSource('.github/workflows/deploy.yml');
+  if (!/upload-pages-artifact@[\s\S]*?include-hidden-files:\s*true/.test(deployWorkflow)) {
+    failures.push('deploy workflow must set include-hidden-files: true so public/.well-known is published');
+  }
+}
 
 // 6. Every shadow is one of the brand's offset tokens: a hard edge with no
 // blur. An inset rule draws an accent underline, not a shadow, so it stays.
