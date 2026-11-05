@@ -2,7 +2,8 @@
 title: 'Before you connect a registry, define the question'
 description: 'A practical worksheet for agreeing who may ask, for which service, what the registry may answer, and what must remain undisclosed.'
 publishedAt: 2026-07-30
-author: 'Registry Stack'
+updatedAt: 2026-11-05
+author: 'Jeremi Joslin'
 audience: 'Program owners, registry owners, policy teams, and integrators'
 category: 'Field guide'
 readingMinutes: 12
@@ -163,16 +164,16 @@ path.
 
 | Need identified by the worksheet                                   | Registry Stack role                                                                                                                                                               |
 | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Publish a protected, read-only view of selected entities or fields | Registry Relay exposes declared routes over an existing source, checks the caller's dataset scope, limits filters and projections, and records the request                        |
-| Return a configured aggregate                                      | Registry Relay serves the declared aggregate route; the deployment still needs to consider repeated-query disclosure because Relay does not provide a longitudinal privacy budget |
-| Return a boolean or bounded value instead of a record              | Evidence Gateway evaluates the configured evidence claim against a compiler-pinned Relay consultation and applies the claim's disclosure policy                                   |
+| Publish a protected, read-only view of selected entities or fields | Registry Relay (retired in October 2026) exposed declared routes over an existing source, checked the caller's dataset scope, limited filters and projections, and recorded the request                        |
+| Return a configured aggregate                                      | Registry Relay (retired) served the declared aggregate route; the deployment still needed to consider repeated-query disclosure because Relay did not provide a longitudinal privacy budget |
+| Return a boolean or bounded value instead of a record              | Evidence Gateway evaluates the configured evidence claim and applies the claim's disclosure policy (this article's original design used a compiler-pinned Relay consultation, now retired)                                   |
 | Issue a portable credential from registry-backed evidence          | Evidence Gateway can issue the configured SD-JWT VC profile and deliver it to a wallet through a separate OID4VCI service; external wallet and verifier compatibility must be tested for the intended pilot |
 | Describe datasets, policies, and evidence offerings for discovery  | [Registry Manifest](https://docs.registrystack.org/products/registry-manifest/) is a metadata description format, not a Registry Stack product; publishing it grants no access and enforces no policy |
 
-Relay and Evidence Gateway write separate audit records because they own
-different boundaries. Relay owns source access and adaptation. Evidence
-Gateway owns evidence authorization, evaluation, disclosure, and issuance. Their correlation
-identifiers support restricted reconciliation without merging the products into
+In the retired Relay design, Relay and Evidence Gateway wrote separate audit records because they owned
+different boundaries. Relay owned source access and adaptation. Evidence
+Gateway owned evidence authorization, evaluation, disclosure, and issuance. Their correlation
+identifiers supported restricted reconciliation without merging the products into
 one undifferentiated log.
 
 For the full technical boundary, read [Records stay

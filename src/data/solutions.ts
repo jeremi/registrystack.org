@@ -113,7 +113,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     openFirst: ['population-register', 'social-registry'],
     audience: 'For population and civil registration offices, social protection ministries, education, immigration and electoral authorities.',
-    description: 'Maintain people, identity, household, enrollment and status records. Review corrections and let authorized services check specific information.',
+    description: 'Maintain population registers, social registries and enrollment records. Review corrections and let authorized services check specific information.',
     products: ['base-registry', 'evidence-gateway', 'casework'],
   },
   {

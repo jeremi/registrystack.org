@@ -2,7 +2,8 @@
 title: 'What must a reviewer reconstruct after registry access?'
 description: 'A review checklist for connecting the request, authority, policy, source consultation, disclosure, outcome, and retained audit evidence.'
 publishedAt: 2026-07-30
-author: 'Registry Stack'
+updatedAt: 2026-11-05
+author: 'Jeremi Joslin'
 audience: 'Security reviewers, auditors, data-protection teams, registry owners, and funders'
 category: 'Review guide'
 readingMinutes: 13
@@ -57,7 +58,7 @@ That question has seven parts:
 | Requester       | Which authenticated system or role asked, with which scope and access mode                                                                       |
 | Authority       | Which institution owned the source and was authoritative for the requested fact                                                                  |
 | Policy          | Which purpose, claim, policy version or hash, and disclosure rule were applied                                                                   |
-| Source          | Which Relay consultation and source binding produced the typed facts                                                                             |
+| Source          | Which source consultation and source binding produced the typed facts (in the retired Registry Relay design, a Relay consultation)                                                                            |
 | Outcome         | Whether the request was allowed, denied, unavailable, ambiguous, or failed, and what response shape left the boundary                            |
 | Continuity      | Whether the retained records form a verifiable sequence, were shipped or anchored as required, and remain within the approved retention boundary |
 
@@ -73,8 +74,8 @@ no longer only a document beside the system.
 
 Registry Stack applies the same discipline to the access path:
 
-- Registry Relay configuration defines how an approved source can be read and
-  which typed outputs exist.
+- Registry Relay configuration (Relay was retired in October 2026) defined how an
+  approved source could be read and which typed outputs existed.
 - Evidence Gateway configuration defines who can request a claim, for which
   purpose, and what disclosure modes are allowed.
 - Runtime audit records show which configured path was exercised.
@@ -114,7 +115,7 @@ evidence to a programme. It does not silently become the programme's decision.
   raw subject identifiers throughout the logs?
 
 Evidence Gateway audit events use keyed hashes for principal and subject
-references. Registry Relay has its own product-specific audit record. Reviewers
+references. The retired Registry Relay had its own product-specific audit record. Reviewers
 should be given an approved interpretation layer, not unrestricted access to
 every raw log or secret used to derive identifiers.
 
@@ -133,7 +134,7 @@ It does not prove that this identity could ask this question for this purpose.
 
 ### 4. Follow the source consultation
 
-For a Relay read:
+For a read through the retired Registry Relay:
 
 - Which dataset, entity, relationship, aggregate, or configured route was
   accessed?
@@ -142,21 +143,21 @@ For a Relay read:
 - How many rows or groups were returned?
 - What freshness statement can the operator support?
 
-For an Evidence Gateway evaluation backed by Relay:
+For an Evidence Gateway evaluation that was backed by Relay (historical design):
 
 - Which consultation identifier did Evidence Gateway invoke?
-- Did Relay return `match`, `no_match`, or `ambiguous`?
+- Did Relay (retired) return `match`, `no_match`, or `ambiguous`?
 - Which typed outputs were made available to the claim?
 - Did Evidence Gateway preserve source, denial, verification, and availability
   failures instead of converting them to `false`?
 
-Evidence Gateway and Relay keep separate audit authority. Their evaluation and
-consultation identifiers provide the restricted bridge for reconstruction.
+In the Relay design, Evidence Gateway and Relay kept separate audit authority. Their evaluation and
+consultation identifiers provided the restricted bridge for reconstruction.
 Do not join the logs by raw subject identifier.
 
 ### 5. Identify exactly what left the boundary
 
-- Did Relay return selected fields, records, a relationship, or an aggregate?
+- Did the access layer (Relay, in the retired design) return selected fields, records, a relationship, or an aggregate?
 - Did Evidence Gateway return `value`, `predicate`, or `redacted`?
 - Which object fields were redacted?
 - Was the response a plain evaluation result, a credential, or a signed
@@ -201,7 +202,7 @@ That statement has boundaries:
   backup, and recovery are operator responsibilities.
 - Audit fail-closed is a deployment capability. Review which protected route
   families use it and whether the running posture confirms it.
-- Relay and Evidence Gateway use separate audit keys and chains. Reusing secrets or
+- In the retired Relay design, Relay and Evidence Gateway used separate audit keys and chains. Reusing secrets or
   storage across trust domains weakens the boundary.
 
 Ask the operator to demonstrate chain verification, off-host handling, and
@@ -209,8 +210,8 @@ recovery. Do not accept the phrase “tamper-proof log” as evidence.
 
 ## A sanitized reconstruction example
 
-The example below is a reviewer-facing view assembled from current Relay and
-Evidence Gateway concepts. It is not a raw production log and contains no personal
+The example below is a reviewer-facing view assembled from Registry Relay (retired in October 2026) and
+Evidence Gateway concepts as they were when this article was written. It is not a raw production log and contains no personal
 identifier or source value.
 
 ### Approved question
@@ -228,7 +229,7 @@ identifier or source value.
 
 ### Evidence Gateway review view
 
-| Current audit concept          | Sanitized observation                                                                              |
+| Audit concept at publication   | Sanitized observation                                                                              |
 | ------------------------------ | -------------------------------------------------------------------------------------------------- |
 | `event_id` and `occurred_at`   | One bounded event and UTC time are present                                                         |
 | `principal_id_hash`            | A keyed pseudonym identifies the admitted workload without storing its raw identifier in this view |
@@ -236,13 +237,13 @@ identifier or source value.
 | `purposes`                     | The approved voucher-review purpose was recorded                                                   |
 | `claim_hash` and `policy_hash` | The evaluated claim and policy configuration are bound without copying their sensitive content     |
 | `decision` and `status`        | Evaluation allowed and returned success                                                            |
-| `relay_consultation_count`     | One Relay consultation supported the evaluation                                                    |
+| `relay_consultation_count`     | One Relay consultation (retired design) supported the evaluation                                                    |
 | `relay_consultation_ids`       | The restricted correlation identifier is available to the reviewer                                 |
 | `redacted_fields`              | No unexpected value fields were released                                                           |
 
-### Relay review view
+### Relay review view (historical)
 
-| Current audit concept                        | Sanitized observation                                                                          |
+| Audit concept at publication                 | Sanitized observation                                                                          |
 | -------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | `request_id`                                 | The consultation request has a server-owned correlation identifier                             |
 | `principal_id` and `auth_mode`               | The configured Evidence Gateway workload was authenticated through the approved mode           |
@@ -250,7 +251,7 @@ identifier or source value.
 | `scopes_used` and `purpose`                  | The expected dataset scope and purpose were checked                                            |
 | Policy identifiers and hashes                | The governed access policy and evaluated rules can be identified where the PDP profile is used |
 | `status_code`, `row_count`, and `error_code` | The request outcome is distinguishable from a denial or source error                           |
-| Envelope hashes                              | The event is retained in the Relay audit chain                                                 |
+| Envelope hashes                              | The event is retained in the Relay audit chain (retired design)                                                 |
 
 ### Result and decision
 
@@ -275,7 +276,7 @@ Programme decision record:
 
 A careful review ends with non-guarantees:
 
-- **Source truth:** Relay reports what the configured source consultation
+- **Source truth:** In the retired Relay design, Relay reported what the configured source consultation
   produced. It does not prove that the source record is factually correct or
   current.
 - **Legal authority:** Configuration can encode reviewed rules. It cannot
@@ -304,7 +305,7 @@ For a pilot, request these eight items:
 4. One allowed request and one denial.
 5. One `no_match`, ambiguity, or source-failure path where the scenario permits
    safe testing.
-6. The corresponding Relay and Evidence Gateway audit records, sanitized through the
+6. The corresponding audit records (Evidence Gateway, and Relay if the deployment still runs the retired product), sanitized through the
    approved review process.
 7. Evidence that the retained chains verify and that the deployment's shipping
    or anchoring posture matches its claim.

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import TrackingPreferences from '../components/TrackingPreferences.astro';
 import { marketingTrackingUrl } from '../lib/marketing-tracking';
+import { articleLd, organizationLd, websiteLd } from '../lib/structured-data.ts';
 
 interface Props {
   title?: string;
@@ -34,54 +35,19 @@ const mauticUrl = noindex
   : marketingTrackingUrl(import.meta.env.PUBLIC_MAUTIC_URL);
 const ogImageUrl = new URL(ogImagePath, 'https://registrystack.org').toString();
 const articleHeadline = title.replace(/ \| Registry Stack$/, '');
-const organizationLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'Registry Stack',
-  legalName: 'Aubex Consulting LLC',
-  url: 'https://registrystack.org',
-  logo: 'https://registrystack.org/og-image.png',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: '28 Geary St, Ste 650 #189',
-    addressLocality: 'San Francisco',
-    addressRegion: 'CA',
-    postalCode: '94108',
-    addressCountry: 'US',
-  },
-  contactPoint: {
-    '@type': 'ContactPoint',
-    email: 'contact@registrystack.org',
-    contactType: 'customer support',
-  },
-  sameAs: ['https://github.com/registrystack'],
-};
-const articleLd =
+const organizationJsonLd = organizationLd();
+const websiteJsonLd = Astro.url.pathname === '/' ? websiteLd() : null;
+const articleJsonLd =
   type === 'article' && publishedAt
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
+    ? articleLd({
         headline: articleHeadline,
         description,
-        datePublished: publishedAt,
-        ...(updatedAt ? { dateModified: updatedAt } : {}),
-        author: {
-          '@type': 'Organization',
-          name: author,
-          url: 'https://registrystack.org',
-        },
-        publisher: {
-          '@type': 'Organization',
-          name: 'Registry Stack',
-          url: 'https://registrystack.org',
-          logo: {
-            '@type': 'ImageObject',
-            url: 'https://registrystack.org/og-image.png',
-          },
-        },
-        mainEntityOfPage: canonicalUrl,
+        url: canonicalUrl,
         image: ogImageUrl,
-      }
+        publishedAt,
+        updatedAt,
+        author,
+      })
     : null;
 const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID?.trim();
 const umamiScriptSrc =
@@ -105,6 +71,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="application/rss+xml" title="Registry Stack field notes" href="/rss.xml" />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -121,8 +88,9 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     {publishedAt && <meta property="article:published_time" content={publishedAt} />}
     {updatedAt && <meta property="article:modified_time" content={updatedAt} />}
     {type === 'article' && <meta property="article:author" content={author} />}
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationLd)} />
-    {articleLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(articleLd)} />}
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
+    {websiteJsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />}
+    {articleJsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />}
     {
       umamiWebsiteId && (
         <script is:inline async src={umamiScriptSrc} data-website-id={umamiWebsiteId} data-domains={umamiDomains}></script>

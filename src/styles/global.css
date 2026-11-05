@@ -1896,6 +1896,12 @@ section[id], .section-inner[id] { scroll-margin-top: 80px; }
   margin: 16px 0 0;
 }
 
+.article-byline {
+  color: var(--registry-ink);
+  font-size: var(--type-base);
+  margin: 18px 0 0;
+}
+
 .article-frame {
   align-items: start;
   display: grid;
@@ -1940,6 +1946,13 @@ section[id], .section-inner[id] { scroll-margin-top: 80px; }
 
 .article-body strong {
   color: var(--registry-ink);
+}
+
+.article-author {
+  border-top: 1px solid rgba(22, 22, 22, 0.22);
+  font-size: var(--type-sm);
+  margin-top: 64px;
+  padding-top: 18px;
 }
 
 .article-body a {

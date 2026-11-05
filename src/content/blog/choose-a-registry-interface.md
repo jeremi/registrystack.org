@@ -2,7 +2,7 @@
 title: 'Do you need the records, or just the answer?'
 description: 'Three short questions that decide whether a service should maintain a registry, publish from one, or ask it a question.'
 publishedAt: 2026-09-16
-author: 'Registry Stack'
+author: 'Jeremi Joslin'
 audience: 'Programme and service owners, architects, integrators, and registry teams'
 category: 'Decision guide'
 readingMinutes: 5
