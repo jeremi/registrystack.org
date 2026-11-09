@@ -51,6 +51,7 @@ const paths = [
   '/customization/',
   '/architecture/headless/',
   '/digital-public-infrastructure/',
+  '/data-spaces/',
   '/solutions/local-government/',
   '/solutions/licensing/',
   '/solutions/business-and-tax/',

@@ -170,6 +170,7 @@ for (const route of [
   '/customization/',
   '/architecture/headless/',
   '/digital-public-infrastructure/',
+  '/data-spaces/',
   '/starters/',
   '/blog/',
   '/security/',
@@ -219,7 +220,7 @@ if (!footerSource.includes('href: describeServiceHref()') || !footerSource.inclu
 if (/mailto:|contactEmail/.test(footerSource)) {
   failures.push('footer must not bypass the contact form with a direct email link');
 }
-for (const route of ['/solutions/', '/ai/', '/customization/', '/architecture/headless/', '/digital-public-infrastructure/', '/starters/', '/blog/', '/security/', '/faq/']) {
+for (const route of ['/solutions/', '/ai/', '/customization/', '/architecture/headless/', '/digital-public-infrastructure/', '/data-spaces/', '/starters/', '/blog/', '/security/', '/faq/']) {
   if (!footerSource.includes(`href: '${route}'`)) failures.push(`footer is missing ${route}`);
 }
 

@@ -1,0 +1,129 @@
+---
+// Reader: an institution deciding what it can offer or use in a data space.
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { describeServiceHref } from '../data/contact';
+
+const releaseSource = 'https://github.com/registrystack/registry-stack/tree/v0.46.0/products';
+const adapterExample = `${releaseSource}/adapter/examples/dhis2-consultation`;
+const evidenceExample = `${releaseSource}/evidence/examples/standalone`;
+const registryEvidenceExample = `${releaseSource}/breg/evidence`;
+const odrlGuide = 'https://github.com/registrystack/registry-stack/blob/v0.46.0/products/breg/odrl-export.md';
+---
+
+<Base title="Data spaces and authoritative registers | Registry Stack" description="Use an authoritative register, connect an existing system or offer signed answers through a data space. Agree what each participant may access.">
+  <SiteHeader current="data-spaces" />
+  <main>
+    <section class="hero hero-cover" aria-labelledby="data-spaces-title">
+      <div class="hero-inner"><div class="hero-copy">
+        <p class="eyebrow">Data spaces</p>
+        <h1 id="data-spaces-title">Share data from the systems your institution already runs.</h1>
+        <p class="hero-lead">Give approved partners access to selected records or a signed answer to a specific question. Registry Stack can manage the source register, connect an existing system or prepare the answer your institution agrees to share.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#example">See a licence status example</a>
+          <a class="button button-secondary" href={describeServiceHref('data space participation')} data-journey="service-inquiry">Discuss your exchange</a>
+        </div>
+        <p class="hero-note">For data providers, data users and the teams connecting them.</p>
+      </div></div>
+    </section>
+
+    <section class="section" aria-labelledby="data-space-meaning-title">
+      <div class="section-inner approach-split">
+        <div class="section-heading">
+          <h2 id="data-space-meaning-title">Agree how organizations will share and use data.</h2>
+          <p>A data space brings organizations together under shared rules and technical arrangements. The bodies governing the space set the rules for joining, requesting and using data. Each data holder decides what it can offer under those rules. An organization can provide data, use data from others or do both.</p>
+          <p>Common European Data Spaces bring together governance and infrastructure in areas such as health, mobility and public administration. The Data Spaces Support Centre explains the roles and building blocks a programme can choose. <a href="https://digital-strategy.ec.europa.eu/en/policies/data-spaces">European Commission overview</a> · <a href="https://blueprint.dssc.eu/">Data Spaces Support Centre blueprint</a></p>
+        </div>
+        <div class="editorial-callout">
+          <h3>Start from a specific need</h3>
+          <p>One participant needs to check a fact another institution already holds. Agree which source can answer, who may ask and how much information the receiving service needs.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="example" aria-labelledby="licence-example-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Illustrative exchange</p>
+          <h2 id="licence-example-title">Check a supplier’s licence without requesting the full file.</h2>
+          <p>A licensing authority maintains the register. A public procurement service needs to check a supplier’s recorded licence status for an agreed purpose.</p>
+        </div>
+        <ol class="delivery-steps exchange-steps">
+          <li><h3>Describe the offer</h3><p>The authority describes the licence status check, which organizations can request it and the terms for using the answer.</p></li>
+          <li><h3>Answer an approved request</h3><p>The procurement service supplies the licence reference through the agreed exchange channel. Evidence Gateway checks the request, reads the approved source and returns a signed status.</p></li>
+          <li><h3>Use the answer</h3><p>The procurement service can verify the signature and apply its own rules. The licensing authority keeps the underlying file and controls access to the source.</p></li>
+        </ol>
+        <p class="section-note">Inspect the configuration and synthetic cases in the <a href={evidenceExample}>released Evidence Gateway licence status example</a>. To see how a register can provide the source, read the <a href={registryEvidenceExample}>Base Registry Engine and Evidence Gateway example</a>.</p>
+      </div>
+    </section>
+
+    <section class="section" id="components" aria-labelledby="data-space-components-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">What Registry Stack supplies</p>
+          <h2 id="data-space-components-title">Choose what your institution needs to participate.</h2>
+        </div>
+        <div class="value-grid component-grid">
+          <article>
+            <h3>Maintain the source register</h3>
+            <p>Base Registry Engine maintains records, defines which operations and fields a caller may use, and keeps a history of changes. Offer only the records and fields the institution has agreed to share.</p>
+            <a class="inline-cta" href="/products/base-registry/">Explore Base Registry Engine <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Connect a system you already use</h3>
+            <p>Registry Adapter exposes an agreed API over an existing system. It checks who can call each operation, maps the request and returns the fields the project defines. The source applies its own access rules and keeps its records. The DHIS2 example shows different views over the same source.</p>
+            <a class="inline-cta" href={adapterExample}>Inspect how Adapter maps a DHIS2 source <span aria-hidden="true">↗</span></a>
+          </article>
+          <article>
+            <h3>Share an answer instead of a record</h3>
+            <p>Evidence Gateway answers a predefined question using an approved source. The receiving service can verify who issued the answer and whether it was altered.</p>
+            <a class="inline-cta" href="/products/evidence-gateway/">Explore Evidence Gateway <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Describe what others can request</h3>
+            <p>Registry Manifest can produce portable descriptions for a catalogue. Registry Discovery can index approved descriptions of Evidence providers. The implementation connects the metadata to the catalogue the space uses. The receiving service applies its own trust rules before calling a provider.</p>
+            <a class="inline-cta" href="https://docs.registrystack.org/products/registry-manifest/">Explore Registry Manifest <span aria-hidden="true">↗</span></a>
+          </article>
+        </div>
+        <p class="section-note">If partners need to request changes, the source institution defines the allowed actions. Registry Casework can record a required staff decision. Base Registry Engine checks who is allowed to apply that decision before updating the register.</p>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="exchange" aria-labelledby="exchange-integration-title">
+      <div class="section-inner approach-split">
+        <div class="section-heading">
+          <p class="eyebrow">Participation and integration</p>
+          <h2 id="exchange-integration-title">Connect the service to the data space’s exchange infrastructure.</h2>
+          <p>The data space sets its rules for membership, identity, agreements and use of data. Your integration team connects the participant’s API to the connector or exchange network the space requires and agrees how the provider will verify the caller’s identity. The provider’s service enforces its access rules on each request.</p>
+          <p>X-Road is one example. Its Security Servers carry signed requests and responses between participants’ systems. Connecting a Registry Stack API to an institution’s Security Server is part of the integration. NIIS describes support for data space protocols in its X-Road 8 release plan. Check which version and features your programme uses. <a href="https://x-road.global/data-exchange">How X-Road exchanges data</a> · <a href="https://www.niis.org/blog/2026/11/4/x-road-8-spaceship-is-cleared-for-launch">NIIS’s X-Road 8 release plan</a></p>
+        </div>
+        <div class="editorial-callout">
+          <h3>Review policy alongside the integration</h3>
+          <p>Base Registry Engine can export a partial description of configured read permissions in the Open Digital Rights Language (ODRL). Operators review the export and the list of omissions before sharing it. A connector such as Eclipse Dataspace Components needs its own policy configuration and tested mapping. Base Registry Engine checks each live request to the register against its own access rules.</p>
+          <a class="inline-cta" href={odrlGuide}>Read the policy export scope <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="data-space-next-title">
+      <div class="section-inner">
+        <p class="eyebrow">Start with one exchange</p>
+        <h2 id="data-space-next-title">Bring one source, one partner and the data they need.</h2>
+        <p>Tell us which system holds the data, who needs to use it and which rules and exchange infrastructure apply. Agree what the receiving service may retain and how to test an allowed request, a refused request and an unavailable source.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href={describeServiceHref('data space participation')} data-journey="service-inquiry">Discuss your exchange</a>
+          <a class="button button-secondary" href="/pricing/">View implementation options</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .exchange-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .component-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 900px) { .exchange-steps { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) { .component-grid { grid-template-columns: 1fr; } }
+</style>

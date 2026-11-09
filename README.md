@@ -177,6 +177,8 @@ layouts that work from mobile through desktop.
   or use an optional assistant channel for selected operations.
 - `/digital-public-infrastructure/`: reusable registries within a DPI programme,
   interoperability, institutional control and documented standards scope.
+- `/data-spaces/`: participant roles, authoritative registers, API mappings and
+  signed answers, with separate responsibilities for the space and its connector.
 - `/starters/` and `/starters/<id>/`: configurations available by request, their
   included parts and what an implementation still needs.
 - `/products/base-registry/`, `/products/evidence-gateway/` and

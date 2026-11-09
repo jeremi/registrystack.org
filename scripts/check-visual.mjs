@@ -67,6 +67,7 @@ const routes = [
   { name: 'customization', path: '/customization/' },
   { name: 'headless', path: '/architecture/headless/' },
   { name: 'digital-public-infrastructure', path: '/digital-public-infrastructure/' },
+  { name: 'data-spaces', path: '/data-spaces/' },
   { name: 'solutions-local-government', path: '/solutions/local-government/' },
   { name: 'solutions-licensing', path: '/solutions/licensing/' },
   { name: 'solutions-business-and-tax', path: '/solutions/business-and-tax/' },

@@ -108,7 +108,7 @@ for (const options of [
   const fail = (message) => failures.push(`${mode}: ${message}`);
   // Buyers can enter through customization, programme-level DPI, or a local
   // service without choosing a starter or relying on JavaScript.
-  for (const route of ['/customization/', '/digital-public-infrastructure/', '/solutions/local-government/']) {
+  for (const route of ['/customization/', '/digital-public-infrastructure/', '/data-spaces/', '/solutions/local-government/']) {
     const response = await page.goto(new URL(route, url).href);
     if (response?.status() !== 200) {
       fail(`buyer route ${route} does not open successfully`);
@@ -167,6 +167,20 @@ for (const options of [
         }
       }
     }
+  }
+  for (const route of ['/digital-public-infrastructure/', '/architecture/headless/']) {
+    await page.goto(new URL(route, url).href);
+    const dataSpaces = page.locator('main a[href="/data-spaces/"]');
+    if (await dataSpaces.count() !== 1 || !await dataSpaces.isVisible()) {
+      fail(`${route} must lead readers to data spaces`);
+      continue;
+    }
+    await dataSpaces.click();
+    if (new URL(page.url()).pathname !== '/data-spaces/' || !await page.locator('main h1').isVisible()) {
+      fail(`the data spaces link from ${route} must open the data spaces page`);
+      continue;
+    }
+    await followAnchor(page.locator('.hero .hero-actions a').first(), '#example', 'data spaces example');
   }
   await page.goto(url);
 
