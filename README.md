@@ -28,11 +28,18 @@ before using the abbreviation.
   working documents, never in visible copy.
 - Let readers describe their needs before selecting a product or starting
   configuration. Browsing configurations is an optional evaluation path.
-- Explain the current AI-assisted implementation offer: our team uses
-  AI-assisted authoring to adapt configuration and application code; the
-  institution reviews the result. Ordinary service operation does not require
-  an AI model. The planned direct AI assistant in Registry Studio is a separate
-  future capability. Do not imply an available autonomous self-service builder.
+- Separate AI for service design, AI-assisted implementation and citizen access
+  through a compatible assistant. Present design as a method, implementation as
+  a scoped engagement with our team, and citizen access as an optional integration
+  for a configured Base Registry Engine service. The person reviews and submits
+  the request on the institution's site. The institution approves service rules
+  and proposed implementation changes. The configured service can run without an
+  AI model. Registry Studio and its direct assistant are in development.
+- Explain headless architecture through the choice to use an existing portal,
+  staff application or integration. Distinguish published service descriptions
+  from the channels that carry requests and the products that authorize and
+  perform operations. Identify the cross-institution catalogue example as
+  illustrative.
 - Sell a configured solution and the work to deliver it without presenting
   every component as a complete application. A written implementation scope
   agrees screens, integrations, migration, hosting, operation and handover.
@@ -154,13 +161,20 @@ layouts that work from mobile through desktop.
 
 ## Pages
 
-- `/`: service outcomes, solution areas, AI-assisted customization, an example
+- `/`: service outcomes, solution areas, AI for public services, an example
   journey, ownership and reuse, products, adoption options and developer paths.
 - `/solutions/` and `/solutions/<area>/`: service-specific problems, capabilities,
   examples, relevant configurations and next steps.
 - `/solutions/local-government/`: municipal services and an implementation path.
-- `/customization/`: needs-first customization, today's assisted implementation
-  and the planned Studio assistant.
+- `/ai/`: overview of AI for service design, implementation and citizen access.
+- `/ai/service-design/`: a design method and an illustrative school enrolment
+  brief with scenarios for the implementation team to test.
+- `/customization/`: scoped implementation, an example of adapting a service
+  and Registry Studio in development.
+- `/ai/citizen-access/`: optional access through a compatible assistant, with a
+  documented handoff to the institution's review and submission page.
+- `/architecture/headless/`: connect your own interface through documented APIs
+  or use an optional assistant channel for selected operations.
 - `/digital-public-infrastructure/`: reusable registries within a DPI programme,
   interoperability, institutional control and documented standards scope.
 - `/starters/` and `/starters/<id>/`: configurations available by request, their
@@ -173,9 +187,10 @@ layouts that work from mobile through desktop.
 - `/blog/`: published field guides, with historical notices on retired product
   material and an RSS feed at `/rss.xml`.
 
-Keep former routes as redirects in `astro.config.mjs`. `/ai/` now leads to
-customization. `/pilot/` preserves known section links into `/pricing/` and has
-a no-JavaScript fallback. Historical plans do not override this structure.
+Keep former routes as redirects in `astro.config.mjs`. `/ai/` serves the AI
+overview and links to `/customization/` for the implementation offer. `/pilot/`
+preserves known section links into `/pricing/` and has a no-JavaScript fallback.
+Historical plans do not override this structure.
 
 ## Commands
 

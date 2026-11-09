@@ -1,0 +1,272 @@
+---
+// Reader: a programme owner or architect deciding how Registry Stack fits
+// behind existing citizen and staff applications.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+
+const pageTitle = 'Headless architecture for public services | Registry Stack';
+const pageDescription =
+  'Connect your portal or staff application through documented interfaces. Registry Stack products enforce the institution’s access rules.';
+const adoptionDocsHref = 'https://docs.registrystack.org/start/adopt/';
+const pythonExampleHref =
+  'https://github.com/registrystack/registry-stack/tree/v0.46.0/products/platform/examples/python-composition';
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="headless" />
+
+  <main>
+    <section class="hero hero-cover" aria-labelledby="headless-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Headless architecture</p>
+          <h1 id="headless-title">Use Registry Stack behind the portal you already run.</h1>
+          <p class="hero-lead">
+            Connect your existing portal or staff application through documented APIs. You choose
+            the screens people use. Each product checks what the caller can see and do.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href={adoptionDocsHref}>Review the adoption paths</a>
+            <a class="button button-secondary" href="/digital-public-infrastructure/">See how it fits within DPI</a>
+          </div>
+          <p class="hero-note">Add or change an interface while keeping the same register and access rules.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="channels-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Interfaces around governed products</p>
+          <h2 id="channels-title">Put the service experience where people already work.</h2>
+          <p>
+            A portal or staff application can call the products it needs. You can also connect
+            an approved assistant to a configured registry task. Each product checks access when
+            it receives a request.
+          </p>
+        </div>
+
+        <figure class="channel-map" aria-labelledby="channel-map-title channel-map-caption">
+          <h3 id="channel-map-title">How an interface reaches the service</h3>
+          <div class="channel-map-grid">
+            <section aria-labelledby="experience-layer-title">
+              <p class="map-label">Experience</p>
+              <h4 id="experience-layer-title">Your chosen interface</h4>
+              <ul>
+                <li>Existing citizen portal</li>
+                <li>Staff casework screens</li>
+                <li>Approved compatible assistant</li>
+              </ul>
+            </section>
+            <span class="map-arrow" aria-hidden="true">&rarr;</span>
+            <section aria-labelledby="interface-layer-title">
+              <p class="map-label">Interface</p>
+              <h4 id="interface-layer-title">A documented channel</h4>
+              <ul>
+                <li>Public HTTP contract</li>
+                <li>Released language client</li>
+                <li>Configured MCP tools</li>
+              </ul>
+            </section>
+            <span class="map-arrow" aria-hidden="true">&rarr;</span>
+            <section aria-labelledby="authority-layer-title">
+              <p class="map-label">Authority</p>
+              <h4 id="authority-layer-title">The product that owns the effect</h4>
+              <ul>
+                <li>Base Registry Engine records</li>
+                <li>Registry Casework decisions</li>
+                <li>Evidence Gateway answers</li>
+              </ul>
+            </section>
+          </div>
+          <figcaption id="channel-map-caption">
+            A portal or staff app can use the APIs of the products it connects to. The assistant
+            integration shown here uses MCP to reach a configured Base Registry Engine task.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="contract-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Choose the right contract</p>
+          <h2 id="contract-title">Match the interface to the task and responsibility.</h2>
+          <p>Each channel has a different scope. Product authorization remains in force for all of them.</p>
+        </div>
+        <div class="value-grid">
+          <article>
+            <h3>HTTP and released clients</h3>
+            <p>Your application can use the public product APIs, released Node.js and Python clients, or the Rust client from source. Your team manages sign-in, follows requests through each step and handles failures.</p>
+          </article>
+          <article>
+            <h3>Narrower MCP tools</h3>
+            <p>Model Context Protocol (MCP) connects an approved assistant to selected tasks. The released citizen tools can read permitted details and prepare a draft for the person to submit on the institution’s site.</p>
+          </article>
+          <article>
+            <h3>Independent product decisions</h3>
+            <p>A Casework approval records a review decision. Base Registry Engine still requires independent permission before an application can change a record.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="catalogue-seam-title">
+      <div class="section-inner approach-split">
+        <div class="section-heading">
+          <p class="eyebrow">From description to effect</p>
+          <h2 id="catalogue-seam-title">Keep discovery, requests, and decisions in their proper place.</h2>
+          <p>
+            Public metadata can describe a service, its channels, and the institution responsible
+            for it. Description helps people and software understand what exists. It does not grant
+            access or perform the service.
+          </p>
+          <p>
+            An HTTP client or MCP tool carries an authenticated request to a product. The product
+            checks its current rules and state before reading information, recording a decision,
+            or making a change.
+          </p>
+        </div>
+        <div class="editorial-callout" aria-labelledby="seam-summary-title">
+          <h3 id="seam-summary-title">Three separate responsibilities</h3>
+          <ol>
+            <li><strong>Catalogue metadata</strong> describes the service and available channels.</li>
+            <li><strong>HTTP or MCP</strong> carries a request through a bounded interface.</li>
+            <li><strong>The product runtime</strong> authorizes and records the result it owns.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="python-example-title">
+      <div class="section-inner approach-split">
+        <div class="section-heading">
+          <p class="eyebrow">A public source example</p>
+          <h2 id="python-example-title">See how an application coordinates a record change.</h2>
+          <p>
+            The v0.46.0 Python example submits a proposal to Base Registry Engine and gives staff
+            commands for reviewing it in Registry Casework. It uses a separately authorized caller
+            to apply the approved version and can submit a notice through Registry Messaging.
+          </p>
+          <p>
+            The application tracks the steps and handles retries. Each product checks the
+            credentials presented to it and applies its own rules.
+          </p>
+          <a class="inline-cta" href={pythonExampleHref}>Inspect the v0.46.0 Python reference application <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <div class="editorial-callout" aria-labelledby="proof-limit-title">
+          <h3 id="proof-limit-title">From example to deployment</h3>
+          <p>Inspect the reference code and its local tests for review, separate credentials and retry handling. Configure your own callers and policies, then test the complete journey against your running services.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="headless-choice-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <h2 id="headless-choice-title">Plan how people will use the service.</h2>
+        </div>
+        <div class="section-links headless-links" aria-label="Related architecture and AI pages">
+          <a class="inline-cta" href="/ai/citizen-access/">Follow a request prepared in chat <span aria-hidden="true">&rarr;</span></a>
+          <a class="inline-cta" href="/ai/">Explore AI for public services <span aria-hidden="true">&rarr;</span></a>
+          <a class="inline-cta" href="/digital-public-infrastructure/">Plan reusable capabilities within DPI <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <DocsHandoff
+      eyebrow="For your technical team"
+      heading="Choose the smallest product set and the interface your service needs."
+      body="Review the maintained adoption paths, then define the user journey, credentials, product boundaries, and recovery work in the implementation scope."
+      primaryLabel="Review the adoption paths"
+      primaryHref={adoptionDocsHref}
+      emphasis="docs"
+    />
+  </main>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  .channel-map {
+    background: var(--registry-paper);
+    border: 1px solid var(--registry-paper-rule);
+    margin: 0;
+    padding: clamp(24px, 5vw, 48px);
+  }
+
+  .channel-map > h3 {
+    font-size: var(--type-2xl);
+    line-height: 1.35;
+    margin-bottom: 28px;
+  }
+
+  .channel-map-grid {
+    align-items: stretch;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  .channel-map-grid section {
+    background: var(--registry-white);
+    border-top: 3px solid var(--registry-blue);
+    padding: 24px;
+  }
+
+  .channel-map-grid h4 {
+    font-size: var(--type-xl);
+    line-height: 1.35;
+    margin: 6px 0 14px;
+  }
+
+  .map-label {
+    color: var(--registry-blue);
+    font: 700 var(--type-2xs)/1.5 var(--registry-mono);
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .channel-map-grid ul,
+  .editorial-callout ol {
+    line-height: 1.6;
+    margin-bottom: 0;
+    padding-left: 1.2rem;
+  }
+
+  .channel-map-grid li + li,
+  .editorial-callout li + li {
+    margin-top: 8px;
+  }
+
+  .map-arrow {
+    align-self: center;
+    color: var(--registry-red);
+    font: 700 var(--type-2xl)/1 var(--registry-mono);
+  }
+
+  .channel-map figcaption {
+    color: var(--registry-muted);
+    font-size: var(--type-sm);
+    line-height: 1.6;
+    margin-top: 24px;
+  }
+
+  .headless-links {
+    justify-content: center;
+  }
+
+  @media (max-width: 920px) {
+    .channel-map-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .map-arrow {
+      justify-self: center;
+      transform: rotate(90deg);
+    }
+  }
+</style>

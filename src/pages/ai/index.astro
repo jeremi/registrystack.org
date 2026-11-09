@@ -1,0 +1,61 @@
+---
+// Reader: an institutional service owner deciding where AI can assist without
+// moving public authority or service rules into an AI system.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { describeServiceHref } from '../../data/contact';
+---
+<Base title="AI for public services | Registry Stack" description="Use AI to help design and adapt a public service, or give people another way to prepare requests. Your institution sets the rules.">
+  <SiteHeader current="ai" />
+  <main>
+    <section class="hero hero-cover" aria-labelledby="ai-title"><div class="hero-inner"><div class="hero-copy">
+      <p class="eyebrow">AI for public services</p>
+      <h1 id="ai-title">Design, adapt and offer another way to use a service.</h1>
+      <p class="hero-lead">Use AI to help turn research into a service brief or adapt a service with our team. You can also give people the option to prepare a request through an approved assistant.</p>
+      <div class="hero-actions"><a class="button button-primary" href="#ai-jobs">See where AI fits</a><a class="button button-secondary" href="/customization/">Explore implementation</a></div>
+      <p class="hero-note">Your institution sets the rules and decides who can access the service.</p>
+    </div></div></section>
+
+    <section class="section" id="ai-jobs" aria-labelledby="jobs-title"><div class="section-inner">
+      <div class="section-heading"><h2 id="jobs-title">Start with the work you need to do.</h2></div>
+      <div class="ai-job-grid">
+        <article>
+          <p class="availability">Worked method</p>
+          <h3>Design a public service</h3>
+          <p>Use research and current forms to draft a brief. Staff and applicants help the team test its assumptions. The responsible authority answers open policy questions.</p>
+          <a class="inline-cta" href="/ai/service-design/">See a worked design example <span aria-hidden="true">→</span></a>
+        </article>
+        <article>
+          <p class="availability">Available with our team</p>
+          <h3>Implement and adapt</h3>
+          <p>Our team uses AI-assisted tools and reusable software to prepare records, forms, screens and review steps for a scoped implementation. Your service and technical teams review and test the work.</p>
+          <a class="inline-cta" href="/customization/">See what a pilot involves <span aria-hidden="true">→</span></a>
+        </article>
+        <article>
+          <p class="availability">Experimental integration</p>
+          <h3>Offer access through an assistant</h3>
+          <p>A compatible assistant can help a signed-in person prepare a registry change request. The person reviews and submits the draft on the institution’s site.</p>
+          <a class="inline-cta" href="/ai/citizen-access/">Follow a request from chat to submission <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+    </div></section>
+
+    <section class="section section-muted" aria-labelledby="foundation-title"><div class="section-inner approach-split">
+      <div class="section-heading"><p class="eyebrow">Headless architecture</p><h2 id="foundation-title">Choose how people access the service.</h2><p>Keep the portal or staff tools you use today and connect new interfaces when you need them. The Registry Stack products apply the rules for what each interface can read or change.</p><a class="inline-cta" href="/architecture/headless/">See how the products fit behind your interfaces <span aria-hidden="true">→</span></a></div>
+      <div class="editorial-callout"><h3>Run the service without an AI model</h3><p>Your team can use AI to help design or configure the service. The resulting service can run through your existing channels, with an assistant as an option for selected tasks.</p></div>
+    </div></section>
+
+    <section class="final-cta" aria-labelledby="next-title"><div class="section-inner"><p class="eyebrow">Start with one service</p><h2 id="next-title">Bring the current process and the result you need.</h2><p>We can help assess which components fit and agree what to configure, connect and test in a scoped pilot.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref('AI-assisted public services')} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="/pricing/">View implementation options</a></div></div></section>
+  </main><SiteFooter />
+</Base>
+
+<style>
+  .ai-job-grid { display: grid; gap: 24px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ai-job-grid article { background: var(--registry-white); border: 1px solid var(--registry-rule); border-top: 3px solid var(--registry-blue); display: flex; flex-direction: column; padding: clamp(22px, 3vw, 30px); }
+  .ai-job-grid h3 { font-size: var(--type-2xl); }
+  .ai-job-grid article > p:not(.availability) { line-height: 1.65; }
+  .ai-job-grid .inline-cta { margin-top: auto; }
+  .availability { color: var(--registry-blue); font: 600 var(--type-xs)/1.5 var(--registry-mono); letter-spacing: 0.03em; margin: 0 0 14px; text-transform: uppercase; }
+  @media (max-width: 900px) { .ai-job-grid { grid-template-columns: 1fr; } }
+</style>

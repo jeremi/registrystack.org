@@ -14,7 +14,6 @@ export default defineConfig({
     '/why/': '/',
     '/problem/': '/',
     '/ecosystem/': '/',
-    '/ai/': '/customization/',
     '/use-cases/': '/solutions/',
     '/how-it-fits/': '/',
     '/notary/': '/products/evidence-gateway/',

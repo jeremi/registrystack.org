@@ -1,0 +1,129 @@
+---
+// Reader: a public-service owner evaluating a reviewable AI-assisted design
+// method before choosing implementation work.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { describeServiceHref } from '../../data/contact';
+
+const xstackRevision = '63232ff60799fec494a7d70f2c74a326eed086ff';
+const xstackRepository = 'https://github.com/publicdigital/XStack';
+const xstackFormMethod = `https://github.com/publicdigital/XStack/blob/${xstackRevision}/skills/form-to-spec/SKILL.md`;
+---
+<Base title="AI-assisted public service design | Registry Stack" description="See how a service team can turn research and existing forms into a brief, a prototype and scenarios to test.">
+  <SiteHeader current="ai-service-design" />
+  <main>
+    <section class="hero hero-cover" aria-labelledby="design-title"><div class="hero-inner"><div class="hero-copy">
+      <p class="eyebrow">AI-assisted service design</p>
+      <h1 id="design-title">Turn research and forms into a service brief.</h1>
+      <p class="hero-lead">Observe how people use the service today. AI can help organize what you learn, draft a brief and suggest what to test. Your team checks the draft with the people who use and run the service.</p>
+      <div class="hero-actions"><a class="button button-primary" href="#worked-example">Follow the worked example</a><a class="button button-secondary" href="/customization/">See how implementation works</a></div>
+      <p class="hero-note">A design method illustrated with a fictional school enrolment service.</p>
+    </div></div></section>
+
+    <section class="section" aria-labelledby="method-title"><div class="section-inner">
+      <div class="section-heading"><h2 id="method-title">Find out what people need before changing the form.</h2><p>Keep a record of what the team observed, where each requirement came from and who can answer the remaining questions.</p></div>
+      <ol class="delivery-steps">
+        <li><h3>Collect the current evidence</h3><p>Gather the form, guidance, policy, letters and system fields. Observe a parent and an officer completing the work. Record where the written process and actual work differ.</p></li>
+        <li><h3>Separate facts from questions</h3><p>Extract each requested item and its stated purpose. Mark policy, lookup, access and exception questions for the responsible local team to answer.</p></li>
+        <li><h3>Review the service brief</h3><p>Describe the users, outcome, journey, staff work, decisions, records and handoffs. Keep source references beside each important claim.</p></li>
+        <li><h3>Try a prototype and agree what to test</h3><p>Ask applicants and staff to try the proposed steps. Use their feedback to revise the brief. Agree how the implementation team will test the usual path and the exceptions.</p></li>
+      </ol>
+    </div></section>
+
+    <section class="section section-muted" id="worked-example" aria-labelledby="example-title"><div class="section-inner">
+      <div class="section-heading"><p class="eyebrow">Fictional worked example</p><h2 id="example-title">Prepare a school enrolment brief.</h2><p>A parent applies at a school office. An officer helps and records the application on the parent’s behalf. The team compares what the form asks with what happens at the counter.</p></div>
+
+      <div class="evidence-grid">
+        <article class="artifact">
+          <p class="artifact-label">Current artifact</p>
+          <h3>School-enrolment form</h3>
+          <dl>
+            <div><dt>1. Child</dt><dd>Name and date of birth</dd></div>
+            <div><dt>2. Applicant</dt><dd>Parent or guardian details</dd></div>
+            <div><dt>3. Home</dt><dd>Address used for the catchment check</dd></div>
+            <div><dt>4. Request</dt><dd>Preferred school and supporting information</dd></div>
+          </dl>
+          <p class="artifact-note">Keep the form item numbers in the brief so staff can check how each question is handled.</p>
+        </article>
+        <article class="artifact">
+          <p class="artifact-label">Fictional observation</p>
+          <h3>Parent and school officer</h3>
+          <ol>
+            <li>The parent brings the form and available evidence.</li>
+            <li>The officer enters the date of birth from the form, asks the parent to confirm it and records the application on their behalf.</li>
+            <li>The service checks the approved age and catchment rules.</li>
+            <li>A request outside the catchment area goes to a district officer for a decision.</li>
+          </ol>
+          <p class="artifact-note">Observation records what happens. Separate interviews and usability research with real parents and officers establish needs, barriers and language or accessibility requirements.</p>
+        </article>
+      </div>
+    </div></section>
+
+    <section class="section" aria-labelledby="questions-title"><div class="section-inner approach-split">
+      <div class="section-heading"><p class="eyebrow">Questions for local owners</p><h2 id="questions-title">Verify policy and lookup rules before drafting the final behavior.</h2><p>AI may identify these questions. The education authority, civil-registration authority and service team provide the answers and evidence.</p></div>
+      <div class="question-list">
+        <article><h3>Age and school year</h3><p>Which date determines age eligibility, and which rule applies to the requested school year?</p></article>
+        <article><h3>Parent relationship</h3><p>May the civil-registration source answer whether the applicant is recorded as a parent, and what happens when no answer is available?</p></article>
+        <article><h3>Address and catchment</h3><p>Which maintained source establishes the address, who owns the catchment map and when is a manual check required?</p></article>
+        <article><h3>Requests for another school</h3><p>Who may decide an exception, what must they consider and which record is changed after approval?</p></article>
+      </div>
+    </div></section>
+
+    <section class="section section-muted" aria-labelledby="brief-title"><div class="section-inner">
+      <div class="section-heading"><p class="eyebrow">Draft brief for local review</p><h2 id="brief-title">Describe what the service should do.</h2><p>Keep the form, the observation and the proposed change together. Mark which decisions still need an answer before the team can build.</p></div>
+      <dl class="brief-grid">
+        <div><dt>Outcome</dt><dd>A parent receives a school assignment and a reference they can use to check progress.</dd></div>
+        <div><dt>Parent work</dt><dd>Provide the information not already available from an approved source, review the application and request another school when needed.</dd></div>
+        <div><dt>Officer work</dt><dd>Help complete the application, identify unavailable information and record assisted work under the officer's own access.</dd></div>
+        <div><dt>Form item 1 · Date of birth</dt><dd>The officer enters the date and confirms it with the parent. The team proposes asking the civil register whether the child meets the age requirement. The education authority must confirm the cut-off and the civil-registration authority must approve the lookup and the information it can return.</dd></div>
+        <div><dt>Human decision</dt><dd>A district officer decides a request outside the catchment area. The case record holds the decision but does not change the enrolment record.</dd></div>
+        <div><dt>Recorded result</dt><dd>The registry checks authority, records the assignment and keeps the change history. A separate service sends the assignment notice.</dd></div>
+      </dl>
+    </div></section>
+
+    <section class="section" aria-labelledby="scenarios-title"><div class="section-inner">
+      <div class="section-heading"><p class="eyebrow">Prototype and test scenarios</p><h2 id="scenarios-title">Try the steps with a parent and a school officer.</h2><p>In a prototype, show the officer a screen that says “We couldn’t check the birth details. Review the document with the parent.” Ask the pair to explain what they would do next. Their feedback can change the brief before the team builds the service.</p><p>Carry the following scenarios into implementation once the institution confirms the rules and fallback process.</p></div>
+      <div class="scenario-list">
+        <article><p class="scenario-number">01</p><h3>Eligible child in the catchment area</h3><p>Given an officer is helping the parent and the approved source confirms the bounded registration, age and parent questions, when the officer submits the reviewed application, the service returns a case reference and records the catchment assignment.</p></article>
+        <article><p class="scenario-number">02</p><h3>Source answer unavailable</h3><p>If the approved source cannot answer, the service explains the missing check and sends the request through the institution’s agreed review route.</p></article>
+        <article><p class="scenario-number">03</p><h3>Parent requests another school</h3><p>A district officer records the decision. The register checks the authority of the person or service applying it before recording any assignment.</p></article>
+      </div>
+    </div></section>
+
+    <section class="section section-muted" aria-labelledby="reference-title"><div class="section-inner approach-split">
+      <div class="section-heading"><p class="eyebrow">Method reference</p><h2 id="reference-title">Learn from Public Digital’s XStack.</h2><p>Public Digital’s XStack describes how service teams can use AI to support research, journey mapping and prototyping. Its form review method keeps each numbered item visible and flags the questions that need a local answer.</p></div>
+      <div class="editorial-callout"><h3>Read the method</h3><p>Explore <a href={xstackRepository}>Public Digital’s XStack</a> or follow its <a href={xstackFormMethod}>form-to-spec guide</a>.</p></div>
+    </div></section>
+
+    <section class="final-cta" aria-labelledby="next-title"><div class="section-inner"><p class="eyebrow">From design to implementation</p><h2 id="next-title">Use the brief to agree what to build and test.</h2><p>Bring your brief or the forms you already use. We can scope the configuration and integration work with your team.</p><div class="hero-actions"><a class="button button-primary" href="/customization/">See how implementation works</a><a class="button button-secondary" href={describeServiceHref('AI-assisted implementation')} data-journey="service-inquiry">Discuss your service</a></div><p class="final-cta-note"><a href="/pricing/">View implementation and support options</a>.</p></div></section>
+  </main><SiteFooter />
+</Base>
+
+<style>
+  .evidence-grid { display: grid; gap: 28px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .artifact { background: var(--registry-white); border: 1px solid var(--registry-rule); border-top: 3px solid var(--registry-blue); padding: clamp(22px, 3vw, 32px); }
+  .artifact-label, .scenario-number { color: var(--registry-blue); font: 600 var(--type-xs)/1.5 var(--registry-mono); letter-spacing: 0.03em; margin: 0 0 12px; text-transform: uppercase; }
+  .artifact h3 { font-size: var(--type-2xl); }
+  .artifact dl { margin: 24px 0; }
+  .artifact dl div { border-top: 1px solid var(--registry-rule); display: grid; gap: 16px; grid-template-columns: minmax(110px, 0.65fr) minmax(0, 1.35fr); padding: 12px 0; }
+  .artifact dt { color: var(--registry-muted); }
+  .artifact dd { color: var(--registry-ink); font-weight: 600; margin: 0; }
+  .artifact ol { line-height: 1.65; margin: 24px 0; padding-left: 22px; }
+  .artifact-note { border-top: 1px solid var(--registry-rule); color: var(--registry-muted); font-size: var(--type-sm); line-height: 1.6; margin: 24px 0 0; padding-top: 18px; }
+  .question-list { display: grid; gap: 0; }
+  .question-list article { border-top: 1px solid var(--registry-rule); padding: 18px 0; }
+  .question-list article:last-child { border-bottom: 1px solid var(--registry-rule); }
+  .question-list h3 { font-size: var(--type-subhead); margin-bottom: 7px; }
+  .question-list p { font-size: var(--type-md); margin: 0; }
+  .brief-grid { display: grid; gap: 0 32px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+  .brief-grid div { border-top: 1px solid var(--registry-rule); padding: 20px 0 24px; }
+  .brief-grid dt { color: var(--registry-blue); font: 600 var(--type-xs)/1.5 var(--registry-mono); letter-spacing: 0.03em; margin-bottom: 8px; text-transform: uppercase; }
+  .brief-grid dd { line-height: 1.65; margin: 0; }
+  .scenario-list { display: grid; gap: 24px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .scenario-list article { border-top: 3px solid var(--registry-blue); padding-top: 20px; }
+  .scenario-list h3 { font-size: var(--type-subhead); }
+  .scenario-list article > p:last-child { font-size: var(--type-md); line-height: 1.65; }
+  @media (max-width: 900px) { .evidence-grid, .brief-grid, .scenario-list { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) { .artifact dl div { grid-template-columns: 1fr; gap: 4px; } }
+</style>

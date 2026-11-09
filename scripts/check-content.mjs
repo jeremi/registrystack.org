@@ -68,7 +68,6 @@ const supersededRoutes = [
   '/manifest/',
   '/problem/',
   '/ecosystem/',
-  '/ai/',
   '/how-it-fits/',
   '/pilot/',
   ...retiredIaRoutes,
@@ -167,7 +166,9 @@ const navigationSource = [
 for (const route of [
   ...productPages.map((page) => page.route),
   '/solutions/',
+  '/ai/',
   '/customization/',
+  '/architecture/headless/',
   '/digital-public-infrastructure/',
   '/starters/',
   '/blog/',
@@ -206,7 +207,7 @@ if (!headerSource.includes('href="/solutions/"') || !headerSource.includes('All 
 for (const route of ['/starters/', '/#developers', 'https://docs.registrystack.org/']) {
   if (!headerSource.includes(`href: '${route}'`)) failures.push(`the Products menu is missing ${route}`);
 }
-for (const route of ['/customization/', '/pricing/']) {
+for (const route of ['/ai/', '/pricing/']) {
   if (!headerSource.includes(`href: '${route}'`)) failures.push(`header is missing its direct ${route} route`);
 }
 if (!headerSource.includes('href={contactHref()}') || !headerSource.includes('>Contact</a>')) {
@@ -218,7 +219,7 @@ if (!footerSource.includes('href: describeServiceHref()') || !footerSource.inclu
 if (/mailto:|contactEmail/.test(footerSource)) {
   failures.push('footer must not bypass the contact form with a direct email link');
 }
-for (const route of ['/solutions/', '/customization/', '/digital-public-infrastructure/', '/starters/', '/blog/', '/security/', '/faq/']) {
+for (const route of ['/solutions/', '/ai/', '/customization/', '/architecture/headless/', '/digital-public-infrastructure/', '/starters/', '/blog/', '/security/', '/faq/']) {
   if (!footerSource.includes(`href: '${route}'`)) failures.push(`footer is missing ${route}`);
 }
 
@@ -229,7 +230,7 @@ for (const staleRoute of supersededRoutes) {
 }
 // Former routes redirect to the product, pricing page, home explanation, or
 // technical documentation that now owns the reader's next step.
-for (const oldPage of ['notary', 'relay', 'manifest', 'problem', 'ecosystem', 'ai', 'how-it-fits', 'use-cases']) {
+for (const oldPage of ['notary', 'relay', 'manifest', 'problem', 'ecosystem', 'how-it-fits', 'use-cases']) {
   if (existsSync(resolve(`src/pages/${oldPage}.astro`))) {
     failures.push(`superseded marketing page still exists: src/pages/${oldPage}.astro`);
   }
@@ -240,7 +241,6 @@ const expectedRedirects = [
   "'/problem/': '/'",
   "'/ecosystem/': '/'",
   "'/how-it-fits/': '/'",
-  "'/ai/': '/customization/'",
   "'/use-cases/': '/solutions/'",
   "'/notary/': '/products/evidence-gateway/'",
   "'/relay/': '/products/evidence-gateway/'",

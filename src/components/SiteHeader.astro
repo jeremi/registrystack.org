@@ -10,7 +10,7 @@ const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 
 const links = [
-  { href: '/customization/', label: 'Customization', key: 'customization' },
+  { href: '/ai/', label: 'AI for public services', key: 'ai' },
   { href: '/pricing/', label: 'Pricing', key: 'pricing' },
 ];
 const evaluationLinks = [
@@ -21,6 +21,7 @@ const evaluationLinks = [
 
 const onSolutionPage = current === 'solutions' || current === 'local-government' || solutionAreas.some((area) => area.key === current);
 const onProductPage = current === 'starters' || products.some((product) => product.key === current);
+const inAiSection = current === 'customization' || Astro.url.pathname.startsWith('/ai/');
 // The flagship products lead the menu; the data order is otherwise kept.
 const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
 ---
@@ -73,7 +74,7 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       </div>
     </details>
     {links.map((link) => (
-      <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
+      <a href={link.href} aria-current={current === link.key ? 'page' : link.key === 'ai' && inAiSection ? 'location' : undefined}>{link.label}</a>
     ))}
     <a class="nav-emphasis" href={contactHref()} aria-current={current === 'contact' ? 'page' : undefined}>Contact</a>
   </nav>

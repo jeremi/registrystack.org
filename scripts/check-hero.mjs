@@ -68,7 +68,6 @@ const redirects = [
   ['/problem/', '/'],
   ['/ecosystem/', '/'],
   ['/how-it-fits/', '/'],
-  ['/ai/', '/customization/'],
   ['/use-cases/', '/solutions/'],
   ['/pilot/', '/pricing/'],
   ['/pilot/#support', '/pricing/#support'],
@@ -136,6 +135,39 @@ for (const options of [
       fail(`${label} did not reach a visible ${target} destination`);
     }
   };
+  await page.goto(url);
+
+  // The old /ai/ entry now serves an overview. Each path leads to a
+  // different next step, including for readers without JavaScript.
+  const aiLink = page.getByRole('navigation', { name: 'Main navigation' }).locator('a[href="/ai/"]');
+  if (await aiLink.count() !== 1 || !await aiLink.isVisible()) {
+    fail('main navigation must offer one visible AI overview link');
+  } else {
+    await aiLink.click();
+    if (new URL(page.url()).pathname !== '/ai/' || !await page.locator('main h1').isVisible()) {
+      fail('AI navigation must open the overview rather than redirect to the pilot offer');
+    } else {
+      for (const [route, nextStep] of [
+        ['/ai/service-design/', '/customization/'],
+        ['/customization/', '/pricing/'],
+        ['/ai/citizen-access/', 'https://docs.registrystack.org/configure/breg-mcp/'],
+        ['/architecture/headless/', 'https://docs.registrystack.org/start/adopt/'],
+      ]) {
+        await page.goto(new URL('/ai/', url).href);
+        const link = page.locator(`main a[href="${route}"]:visible`).first();
+        if (!await link.count()) {
+          fail(`AI overview must give readers a visible link to ${route}`);
+          continue;
+        }
+        await link.click();
+        if (new URL(page.url()).pathname !== route || !await page.locator('main h1').isVisible()) {
+          fail(`the AI overview link did not open ${route}`);
+        } else if (!await page.locator(`main a[href^="${nextStep}"]:visible`).count()) {
+          fail(`${route} must offer its next step at ${nextStep}`);
+        }
+      }
+    }
+  }
   await page.goto(url);
 
   const heroPrimary = page.locator('.hero .hero-actions a').first();
@@ -327,7 +359,7 @@ for (const options of [
     const { origin, pathname, hash } = new URL(link.href);
     return { origin, pathname, hash };
   }));
-  for (const href of ['/customization/', '/pricing/', '/contact/']) {
+  for (const href of ['/ai/', '/pricing/', '/contact/']) {
     const target = new URL(href, url);
     const index = navLinks.findIndex((link) => link.origin === target.origin &&
       link.pathname === target.pathname && link.hash === target.hash);

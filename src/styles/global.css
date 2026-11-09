@@ -137,8 +137,8 @@ dd a {
   color: var(--registry-ink);
 }
 
-/* The open page is ticked in the register: ink text, stamp-red underline. */
-.top-nav a[aria-current='page'] {
+/* Mark the current page or section with ink text and a stamp-red underline. */
+.top-nav a:is([aria-current='page'], [aria-current='location']) {
   box-shadow: inset 0 -2px 0 var(--registry-stamp);
   color: var(--registry-ink);
 }
