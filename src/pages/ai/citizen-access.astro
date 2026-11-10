@@ -1,219 +1,146 @@
 ---
-// Reader: a public-service owner considering an AI assistant as one optional
-// citizen channel for a narrowly configured BReg service.
 import Base from '../../layouts/Base.astro';
+import AiLandingHero from '../../components/AiLandingHero.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
-import DocsHandoff from '../../components/DocsHandoff.astro';
+import { describeServiceHref } from '../../data/contact';
 
-const pageTitle = 'Citizen access through an AI assistant | Registry Stack';
-const pageDescription =
-  'Help a signed-in person prepare a registry correction in chat, then review and submit it on the institution’s site.';
+const context = 'AI for citizen access';
 const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
 ---
 
-<Base title={pageTitle} description={pageDescription}>
+<Base
+  title="Citizen access through an AI assistant | Registry Stack"
+  description="Let people prepare a registry correction in chat, then review and submit it on your service website. Explore an experimental integration for selected tasks."
+>
   <SiteHeader current="ai-citizen-access" />
-
   <main>
-    <section class="hero hero-cover" aria-labelledby="citizen-access-title">
-      <div class="hero-inner">
-        <div class="hero-copy">
-          <p class="eyebrow">AI for citizen access</p>
-          <h1 id="citizen-access-title">Help people prepare a request in chat.</h1>
-          <p class="hero-lead">
-            A compatible assistant can help a signed-in person read permitted details and prepare
-            a correction. The person reviews and submits the draft on a separate page run for the
-            institution.
-          </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href={mcpDocsHref}>Read the citizen assistant guide</a>
-            <a class="button button-secondary" href="/ai/">Explore AI for public services</a>
-          </div>
-          <p class="hero-note">An experimental integration available for evaluation with a configured Base Registry Engine service.</p>
+    <AiLandingHero
+      eyebrow="AI for citizen access"
+      heading="Help people start a registry request in chat."
+      lead="Give people a guided way to prepare a correction with an approved assistant. They review and submit the request on your service website."
+      context={context}
+      exampleHref="#correction-example"
+      exampleLabel="See the address example"
+      note="Experimental integration with Base Registry Engine."
+    >
+      <div class="assistant-preview">
+        <p class="ai-example-label">Approved assistant · Alex signed in</p>
+        <p class="question-bubble">“Can I update my contact address?”</p>
+        <p class="reply-bubble">“Your draft is ready to review on the service website.”</p>
+      </div>
+      <p class="handoff-label"><span aria-hidden="true">↓</span> Review link</p>
+      <div class="review-preview">
+        <div class="review-heading">
+          <p class="ai-example-label">Service website</p>
+          <span class="draft-label">Draft</span>
+        </div>
+        <p class="ai-example-title">Review address change</p>
+        <dl class="address-fields">
+          <div><dt>Current</dt><dd>6 Station Road</dd></div>
+          <div><dt>Proposed</dt><dd>18 Market Street</dd></div>
+        </dl>
+      </div>
+    </AiLandingHero>
+
+    <section class="section section-muted" id="correction-example" aria-labelledby="example-title">
+      <div class="section-inner approach-split">
+        <div class="section-heading">
+          <p class="eyebrow">Illustrative address correction</p>
+          <h2 id="example-title">From a conversation to an official request</h2>
+          <p>Alex has moved and needs to correct a contact address. After signing in, Alex can describe the change to the approved assistant and prepare a draft using the details the register permits.</p>
+          <p>Alex signs in separately on the institution’s website to check the draft and choose whether to submit it.</p>
+        </div>
+        <div class="editorial-callout">
+          <h3>What Alex can do</h3>
+          <ol class="approach-steps">
+            <li><strong>Prepare the change</strong><span>Confirm the new address and get a link to the draft.</span></li>
+            <li><strong>Review and submit</strong><span>Compare the proposed address with the current record on the service website.</span></li>
+            <li><strong>Check progress</strong><span>After submitting, ask the assistant for the status if the institution has enabled that option.</span></li>
+          </ol>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="correction-example-title">
+    <section class="section" aria-labelledby="fit-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">Fictional example</p>
-          <h2 id="correction-example-title">“I moved. Can I update my address?”</h2>
-          <p>
-            Alex notices that the contact address in a register is out of date. The institution
-            has approved a compatible assistant as one way to start a correction.
-          </p>
-        </div>
-
-        <ol class="citizen-steps" aria-label="Fictional address correction through an assistant and institution review page">
-          <li>
-            <span class="step-number" aria-hidden="true">01</span>
-            <div>
-              <h3>Alex signs in</h3>
-              <p>Alex signs in through the approved assistant. The register uses that sign-in to identify Alex’s own record.</p>
-            </div>
-          </li>
-          <li>
-            <span class="step-number" aria-hidden="true">02</span>
-            <div>
-              <h3>The assistant prepares a draft</h3>
-              <p>It reads the details the register permits and prepares a draft correction with Alex.</p>
-            </div>
-          </li>
-          <li>
-            <span class="step-number" aria-hidden="true">03</span>
-            <div>
-              <h3>Alex opens the institution page</h3>
-              <p>The assistant returns a review link. Alex signs in again on a separate page, compares the draft with the current record, and chooses whether to submit it.</p>
-            </div>
-          </li>
-          <li>
-            <span class="step-number" aria-hidden="true">04</span>
-            <div>
-              <h3>The register handles the submitted request</h3>
-              <p>Base Registry Engine checks access and follows the institution’s rules for reviewing and applying the change. Alex can ask the assistant for the request’s status.</p>
-            </div>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="authority-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <p class="eyebrow">Institutional authority</p>
-          <h2 id="authority-title">Configure what the assistant may see and prepare.</h2>
-          <p>
-            The institution chooses the service, identity provider, access profile, permitted
-            fields, and task authority. The implementation connects and tests those parts before
-            anyone uses the channel.
-          </p>
+          <h2 id="fit-title">Add an assistant for one task at a time</h2>
         </div>
         <div class="value-grid">
           <article>
-            <h3>Approve the assistant and sign-in</h3>
-            <p>Connect the institution’s sign-in service and agree how the assistant will handle the information it receives.</p>
+            <h3>Keep your existing routes open</h3>
+            <p>People can continue using your portal or another supported route. The configured service can run without an AI model.</p>
           </article>
           <article>
-            <h3>Define the allowed task</h3>
-            <p>Specify which details the assistant can see and which fields it can include in a draft. The register checks that permission each time.</p>
+            <h3>Choose the task and the details it needs</h3>
+            <p>Approve the assistant, the fields it can read and the changes it can help draft. The register checks access when it receives a request.</p>
           </article>
           <article>
-            <h3>Separate preparation from submission</h3>
-            <p>The institution’s review page uses a separate sign-in for Alex to review and submit the draft.</p>
+            <h3>Keep review under your rules</h3>
+            <p>Your institution decides who reviews the request. The register checks that the person or service applying an approved change has permission.</p>
           </article>
         </div>
+        <p class="section-note">For technical teams, the <a href={mcpDocsHref}>Model Context Protocol (MCP) integration guide</a> covers sign-in, the separate service that grants access to each draft, and the review website. See also <a href="/architecture/headless/">how Registry Stack connects to your existing interfaces</a>.</p>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="scope-title">
-      <div class="section-inner approach-split">
-        <div class="section-heading">
-          <p class="eyebrow">An optional channel</p>
-          <h2 id="scope-title">Start with one task your institution can support.</h2>
-          <p>
-            The integration uses Model Context Protocol (MCP) to connect an approved assistant to
-            a configured registry service. The institution can keep its portal or another supported
-            route available to people who prefer it.
-          </p>
-          <p>
-            The service can run without an AI model. Add an assistant when you have agreed what it
-            may do, how people will review the draft and who will operate the integration.
-          </p>
+    <section class="final-cta" aria-labelledby="next-title">
+      <div class="section-inner">
+        <h2 id="next-title">Choose a request people can try</h2>
+        <p>Tell us which task people need help with, which details it needs, and where they should review the draft. We’ll discuss how to evaluate it with your team.</p>
+        <div class="section-links">
+          <a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a>
+          <a class="button button-secondary" href="/pricing/">View implementation options</a>
         </div>
-        <div class="editorial-callout" aria-labelledby="implementation-title">
-          <h3 id="implementation-title">What your technical team connects</h3>
-          <ul>
-            <li>A compatible assistant and approved client registration</li>
-            <li>An identity provider that supports delegated access</li>
-            <li>An external task authority that issues grants for each draft, including follow-up reads and edits, and reports whether those grants are still valid</li>
-            <li>Separate gateway and review services with distinct credentials, run over a secure connection</li>
-            <li>Testing for the exact records, fields, and correction action</li>
-          </ul>
-          <p><a href={mcpDocsHref}>Review the deployment conditions in Registry Docs</a>.</p>
-        </div>
-      </div>
-      <div class="section-inner related-pages" aria-label="Related citizen access and architecture pages">
-        <a class="inline-cta" href="/architecture/headless/">See the headless architecture <span aria-hidden="true">&rarr;</span></a>
-        <a class="inline-cta" href="/digital-public-infrastructure/">Place the service within a digital public infrastructure programme <span aria-hidden="true">&rarr;</span></a>
       </div>
     </section>
-
-    <DocsHandoff
-      eyebrow="Choose the next step"
-      heading="Check what you need to offer the assistant channel."
-      body="Start with the citizen task, the permitted details, and the point where the institution requires review."
-      primaryLabel="Read the technical guide"
-      primaryHref={mcpDocsHref}
-      emphasis="docs"
-    />
   </main>
-
   <SiteFooter />
 </Base>
 
 <style>
-  .citizen-steps {
-    display: grid;
-    gap: 0;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  .assistant-preview, .review-preview {
+    background: var(--registry-white);
+    border: 1px solid var(--registry-paper-rule);
+    border-radius: 5px;
+    padding: 14px;
   }
-
-  .citizen-steps li {
-    align-items: start;
+  .question-bubble, .reply-bubble {
+    border-radius: 4px;
+    color: var(--registry-ink);
+    font-size: var(--type-body-sm);
+    line-height: 1.45;
+    padding: 8px 10px;
+    width: fit-content;
+  }
+  .question-bubble { background: var(--registry-blue-tint); margin: 10px 0 8px auto; }
+  .reply-bubble { background: var(--registry-paper); margin: 0; }
+  .handoff-label {
+    color: var(--registry-blue);
+    font: 600 var(--type-xs)/1.5 var(--registry-mono);
+    margin: 8px 0 8px 14px;
+    text-transform: uppercase;
+  }
+  .handoff-label span { margin-inline-end: 4px; }
+  .review-preview { margin-inline-start: clamp(8px, 2vw, 24px); }
+  .review-heading { align-items: baseline; display: flex; flex-wrap: wrap; gap: 4px 10px; justify-content: space-between; }
+  .draft-label {
+    background: var(--registry-stamp-tint);
+    color: var(--registry-stamp);
+    font: 600 var(--type-xs)/1.5 var(--registry-mono);
+    padding: 2px 6px;
+    text-transform: uppercase;
+  }
+  .review-preview .ai-example-title { margin: 6px 0 12px; }
+  .address-fields {
     border-top: 1px solid var(--registry-paper-rule);
     display: grid;
-    gap: clamp(18px, 4vw, 40px);
-    grid-template-columns: 3.5rem minmax(0, 1fr);
-    padding: clamp(24px, 4vw, 34px) 0;
-  }
-
-  .citizen-steps li:last-child {
-    border-bottom: 1px solid var(--registry-paper-rule);
-  }
-
-  .step-number {
-    color: var(--registry-blue);
-    font: 700 var(--type-base)/1.4 var(--registry-mono);
-    letter-spacing: 0.08em;
-  }
-
-  .citizen-steps h3 {
-    font-size: var(--type-2xl);
-    line-height: 1.3;
-    margin-bottom: 8px;
-  }
-
-  .citizen-steps p {
-    font-size: var(--type-base);
-    line-height: 1.65;
+    gap: 10px 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     margin: 0;
-    max-width: 72ch;
+    padding-top: 10px;
   }
-
-  .editorial-callout ul {
-    line-height: 1.65;
-    padding-left: 1.25rem;
-  }
-
-  .editorial-callout li + li {
-    margin-top: 8px;
-  }
-
-  .related-pages {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px 32px;
-    padding-top: 0;
-  }
-
-  @media (max-width: 560px) {
-    .citizen-steps li {
-      gap: 8px;
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
+  .address-fields dt { color: var(--registry-muted); font-size: var(--type-base); }
+  .address-fields dd { color: var(--registry-ink); font-size: var(--type-body-sm); font-weight: 600; margin: 2px 0 0; }
 </style>

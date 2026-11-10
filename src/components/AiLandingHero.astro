@@ -1,0 +1,104 @@
+---
+import { describeServiceHref } from '../data/contact';
+
+interface Props {
+  eyebrow: string;
+  heading: string;
+  lead: string;
+  context: string;
+  exampleHref: string;
+  exampleLabel: string;
+  note?: string;
+}
+
+const { eyebrow, heading, lead, context, exampleHref, exampleLabel, note } = Astro.props;
+---
+
+<section class="hero hero-cover ai-hero" aria-labelledby="ai-hero-title">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow">{eyebrow}</p>
+      <h1 id="ai-hero-title">{heading}</h1>
+      <p class="hero-lead">{lead}</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a>
+        <a class="button button-secondary" href={exampleHref}>{exampleLabel}</a>
+      </div>
+      {note && <p class="hero-note">{note}</p>}
+    </div>
+    <figure class="ai-hero-example">
+      <figcaption>
+        <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M4 2.75h8l4 4v10.5H4zM12 2.75v4h4M7 10h6m-6 3h6" />
+        </svg>
+        Illustrative example
+      </figcaption>
+      <div class="ai-example-content"><slot /></div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .ai-hero .hero-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 64px);
+    padding-block: clamp(48px, 7vw, 94px);
+  }
+  .ai-hero .hero-copy { text-align: start; }
+  .ai-hero h1 { text-wrap: pretty; }
+  .ai-hero .hero-lead { font-size: clamp(1.125rem, 1.7vw, 1.3125rem); }
+  .ai-hero .hero-actions { justify-content: start; }
+  .ai-hero-example {
+    background: var(--registry-paper);
+    border: 1px solid var(--registry-paper-rule);
+    border-radius: 8px;
+    box-shadow: var(--offset-lg);
+    color: var(--registry-ink);
+    margin: 0 12px 12px 0;
+    min-width: 0;
+  }
+  .ai-hero-example figcaption {
+    align-items: center;
+    background: var(--registry-white);
+    border-bottom: 1px solid var(--registry-paper-rule);
+    border-radius: 8px 8px 0 0;
+    color: var(--registry-blue);
+    display: flex;
+    font: 600 var(--type-xs)/1.4 var(--registry-mono);
+    gap: 8px;
+    padding: 12px clamp(16px, 2.4vw, 28px);
+    text-transform: uppercase;
+  }
+  .ai-example-content { padding: clamp(16px, 2.4vw, 28px); }
+  .ai-example-content :global(.ai-example-label) {
+    color: var(--registry-blue);
+    display: block;
+    font: 600 var(--type-xs)/1.45 var(--registry-mono);
+    margin: 0 0 4px;
+    text-transform: uppercase;
+  }
+  .ai-example-content :global(.ai-example-title) {
+    color: var(--registry-ink);
+    font-size: clamp(1.375rem, 2.2vw, 1.875rem);
+    font-weight: 700;
+    line-height: 1.16;
+    margin: 0 0 18px;
+  }
+  .ai-example-content :global(.ai-example-rows) { margin: 0; }
+  .ai-example-content :global(.ai-example-rows > div) {
+    border-top: 1px solid var(--registry-paper-rule);
+    padding: 11px 0;
+  }
+  .ai-example-content :global(.ai-example-rows > div:last-child) { padding-bottom: 0; }
+  .ai-example-content :global(.ai-example-rows dd) {
+    color: var(--registry-ink);
+    font-size: var(--type-body-sm);
+    line-height: 1.4;
+    margin: 0;
+  }
+  @media (max-width: 820px) {
+    .ai-hero .hero-inner { grid-template-columns: minmax(0, 1fr); }
+    .ai-hero-example { max-width: 560px; }
+  }
+</style>

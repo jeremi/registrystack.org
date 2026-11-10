@@ -168,6 +168,32 @@ for (const options of [
       }
     }
   }
+  for (const [route, exampleTarget, inquiryContext] of [
+    ['/ai/', '#ai-jobs', 'AI-assisted public services'],
+    ['/ai/service-design/', '#worked-example', 'AI-assisted service design'],
+    ['/customization/', '#change-example', 'AI-assisted implementation'],
+    ['/ai/citizen-access/', '#correction-example', 'AI for citizen access'],
+  ]) {
+    const landingUrl = new URL(route, url).href;
+    await page.goto(landingUrl);
+    const hero = page.locator('main .hero');
+    const figure = hero.locator('figure figcaption').filter({ hasText: 'Illustrative example' });
+    if (await figure.count() !== 1 || !await figure.isVisible()) {
+      fail(`${route} must show a labelled illustration in its hero`);
+    }
+
+    const inquiry = hero.locator('a.button-primary[data-journey="service-inquiry"]');
+    if (await inquiry.count() !== 1 || !isContactRoute(await inquiry.getAttribute('href'), 'service', inquiryContext)) {
+      fail(`${route} must lead with a contextual service inquiry`);
+    } else {
+      await inquiry.click();
+      if (!isContactRoute(page.url(), 'service', inquiryContext) || !await page.locator('#contact-title').isVisible()) {
+        fail(`${route} hero inquiry must open the contact page with its service context`);
+      }
+      await page.goto(landingUrl);
+    }
+    await followAnchor(hero.locator('a.button-secondary'), exampleTarget, `${route} hero example`);
+  }
   for (const route of ['/digital-public-infrastructure/', '/architecture/headless/']) {
     await page.goto(new URL(route, url).href);
     const dataSpaces = page.locator('main a[href="/data-spaces/"]');

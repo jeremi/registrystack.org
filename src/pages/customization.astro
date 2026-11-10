@@ -1,63 +1,115 @@
 ---
-// Reader: a service owner deciding how to adapt a solution and who can help.
 import Base from '../layouts/Base.astro';
+import AiLandingHero from '../components/AiLandingHero.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { describeServiceHref } from '../data/contact';
+
+const context = 'AI-assisted implementation';
 ---
-<Base title="Implement and adapt a public service | Registry Stack" description="Work with our team to configure and test a public service. Use AI-assisted implementation and review the proposed changes before deployment.">
+
+<Base
+  title="Implement and adapt a public service | Registry Stack"
+  description="Adapt open-source registry software to your forms, rules and systems. Work with our team to configure and test one service in a scoped pilot."
+>
   <SiteHeader current="customization" />
   <main>
-    <section class="hero hero-cover" aria-labelledby="customize-title"><div class="hero-inner"><div class="hero-copy">
-      <p class="eyebrow">AI-assisted implementation</p>
-      <h1 id="customize-title">Build and adapt a service around your rules.</h1>
-      <p class="hero-lead">Bring a service brief or the forms and procedures you already use. Our team uses AI and reusable software to help prepare changes to records, forms and review steps. Your team reviews and tests the result.</p>
-      <div class="hero-actions"><a class="button button-primary" href={describeServiceHref('customization')} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="#how-customization-works">See the process</a></div>
-      <p class="hero-note">Available through a scoped implementation pilot. Your institution approves the rules, and the service can run without an AI model.</p>
-    </div></div></section>
+    <AiLandingHero
+      eyebrow="AI-assisted implementation"
+      heading="Build a service around your rules."
+      lead="Adapt open-source registry software to your forms, rules and review steps. Our team uses AI to help prepare changes your institution can review and test before approving them."
+      context={context}
+      exampleHref="#change-example"
+      exampleLabel="See a change example"
+      note="Available through a scoped implementation pilot."
+    >
+      <p class="ai-example-label">Proposed change</p>
+      <p class="ai-example-title">Open enrolment to five-year-olds</p>
+      <dl class="ai-example-rows">
+        <div><dt class="ai-example-label">Entry age</dt><dd>6 years to <strong>5 years</strong></dd></div>
+        <div><dt class="ai-example-label">Turns five by the cut-off</dt><dd>Meets the age rule</dd></div>
+        <div><dt class="ai-example-label">Turns five after the cut-off</dt><dd>Does not meet the age rule</dd></div>
+      </dl>
+    </AiLandingHero>
 
-    <section class="section" id="how-customization-works" aria-labelledby="process-title"><div class="section-inner">
-      <div class="section-heading"><p class="eyebrow">From a brief to a service</p><h2 id="process-title">Agree what to change and how to test it.</h2><p>We start with the service you describe, identify a suitable starting point and agree the adaptations with your team.</p></div>
-      <ol class="delivery-steps">
-        <li><h3>Agree the brief</h3><p>Bring the proposed steps, open questions and scenarios to test. Share any prototype your team has tried with applicants and staff. Your institution resolves open policy questions.</p></li>
-        <li><h3>Prepare the changes</h3><p>We use AI to help draft changes to the configuration and application code. Your team can review the proposed screens, permissions and steps alongside the brief.</p></li>
-        <li><h3>Test the service together</h3><p>Try a representative application and an exception. Check who can see the request, record a decision and make the resulting change.</p></li>
-        <li><h3>Agree the handover</h3><p>Specify the configuration, test cases and operating instructions your team will receive. Name who will run the service and maintain each integration.</p></li>
-      </ol>
-      <p class="section-note">Still defining the service? <a href="/ai/service-design/">See how to prepare a service brief</a>. You can also <a href="/starters/">browse starting configurations</a> for evaluation.</p>
-      <div class="editorial-callout"><h3>Start with public forms and fictional examples</h3><p>These are enough for an initial discussion. Include any restrictions on AI tools or data use in your inquiry so we can assess an appropriate approach before you share confidential material or personal records.</p></div>
-    </div></section>
-
-    <section class="section section-muted" id="change-example" aria-labelledby="change-title"><div class="section-inner">
-      <div class="section-heading">
-        <p class="eyebrow">Illustrative change</p>
-        <h2 id="change-title">What changes when children can start school a year earlier?</h2>
-        <p>In this example, an education authority opens pre-primary enrolment to children aged five. An assistant could help draft the changes. The delivery team would check all four places against the approved policy.</p>
+    <section class="section section-muted" id="change-example" aria-labelledby="change-title">
+      <div class="section-inner approach-split">
+        <div class="section-heading">
+          <p class="eyebrow">Illustrative school enrolment</p>
+          <h2 id="change-title">Change one rule across the whole service</h2>
+          <p>An education authority lowers the entry age for pre-primary school. That affects what the service checks, what staff tell parents and what appears in the assignment notice.</p>
+          <p>Our team can use AI to help draft the changes. The education authority reviews the proposed behavior and test results before approving a release.</p>
+        </div>
+        <div class="editorial-callout">
+          <h3>What the team checks before release</h3>
+          <dl class="change-checks">
+            <div><dt>Eligibility</dt><dd>The service applies the cut-off date for the correct school year.</dd></div>
+            <div><dt>Evidence</dt><dd>An approved age check uses the revised rule and has an agreed fallback.</dd></div>
+            <div><dt>Notice</dt><dd>The assignment letter names the right programme and start date.</dd></div>
+            <div><dt>Guidance</dt><dd>The portal and school office give parents the same information.</dd></div>
+          </dl>
+        </div>
       </div>
-      <div class="value-grid change-grid">
-        <article><h3>Eligibility rule</h3><p>Use the approved cut-off date. Test a child who turns five by the cut-off and one who turns five just after it.</p></article>
-        <article><h3>Evidence check</h3><p>If the service verifies age with another authority, agree the updated question and test what happens when an answer is unavailable.</p></article>
-        <article><h3>Assignment notice</h3><p>Check that the letter tells parents the right programme and start date.</p></article>
-        <article><h3>Published guidance</h3><p>Check that the portal and school office give parents the same entry age and date.</p></article>
-      </div>
-      <p class="section-note">The education authority reviews the proposed changes and test results before approving the release.</p>
-      <div class="editorial-callout">
-        <h3>See how one released component is configured and tested</h3>
-        <p>A separate Evidence Gateway example uses a fictional licence register. One matching active licence returns a signed status. Two matches or an unavailable source return an error without a status. You can inspect the configuration and run the cases with synthetic data.</p>
-        <a class="inline-cta" href="https://github.com/registrystack/registry-stack/tree/v0.46.0/products/evidence/examples/standalone/">Read the licence status example and run instructions <span aria-hidden="true">↗</span></a>
-      </div>
-    </div></section>
+    </section>
 
-    <section class="section" id="studio" aria-labelledby="studio-title"><div class="section-inner approach-split">
-      <div class="section-heading"><p class="eyebrow">Registry Studio · In development</p><h2 id="studio-title">Review suggested changes in Registry Studio.</h2><p>We are building a way to start from your documents, review suggested requirements and see which questions still need your team’s decision. A direct assistant for proposing changes is planned.</p><p>For AI-assisted implementation today, work with our team through a scoped pilot.</p></div>
-      <div class="editorial-callout"><h3>Tell us what takes effort to change</h3><p>Show us a form that needs adapting, a review step that keeps changing, or a set of related registers your team maintains.</p><a class="inline-cta" href={describeServiceHref('Registry Studio')} data-journey="service-inquiry">Discuss your customization needs <span aria-hidden="true">→</span></a></div>
-    </div></section>
+    <section class="section" id="how-customization-works" aria-labelledby="pilot-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <h2 id="pilot-title">What you agree in an implementation pilot</h2>
+        </div>
+        <div class="value-grid">
+          <article>
+            <h3>Fit with your existing systems</h3>
+            <p>We assess where reusable records, forms or review steps can help. Together we agree what to configure, which systems to connect and where the service will run.</p>
+          </article>
+          <article>
+            <h3>Cases to try before going live</h3>
+            <p>Try a typical request and an exception. Check what people can see, who records the decision and who can make the resulting change.</p>
+          </article>
+          <article>
+            <h3>What your team will take over</h3>
+            <p>Agree which configuration, tests and operating instructions your team receives, and who will run the service and maintain each connection. The configured service can run without an AI model.</p>
+          </article>
+        </div>
+        <p class="section-note">Still defining the service? <a href="/ai/service-design/">See how to prepare a service brief</a>. You can also <a href="/starters/">browse starting configurations</a>.</p>
+      </div>
+    </section>
 
-    <section class="final-cta" aria-labelledby="next-title"><div class="section-inner"><p class="eyebrow">Implementation and support</p><h2 id="next-title">Define one service to work on together.</h2><p>Agree the outcome, responsibilities and fee before implementation begins.</p><a class="button button-primary" href="/pricing/">View implementation options</a></div></section>
-  </main><SiteFooter />
+    <section class="section section-muted" aria-labelledby="proof-title">
+      <div class="section-inner approach-split">
+        <div class="section-heading">
+          <p class="eyebrow">Released example</p>
+          <h2 id="proof-title">Try a licence status check</h2>
+          <p>In this separate Evidence Gateway example, a request with one matching active licence gets a signed answer. The sample cases show what happens if two licences match or the source is unavailable.</p>
+          <a class="inline-cta" href="https://github.com/registrystack/registry-stack/tree/v0.46.0/products/evidence/examples/standalone/">Explore the runnable example with fictional data <span aria-hidden="true">↗</span></a>
+        </div>
+        <section id="studio" class="editorial-callout" aria-labelledby="studio-title">
+          <p class="eyebrow">In development</p>
+          <h3 id="studio-title">Registry Studio</h3>
+          <p>We’re building a workspace for reviewing suggested requirements and tracking questions for your team. An assistant for proposing changes directly in Studio is planned.</p>
+        </section>
+      </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="next-title">
+      <div class="section-inner">
+        <h2 id="next-title">Scope one implementation pilot</h2>
+        <p>Bring a public form and a fictional example of what you need to change. We’ll discuss what to build and test. Tell us about any limits on AI tools or data use.</p>
+        <div class="section-links">
+          <a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a>
+          <a class="button button-secondary" href="/pricing/">View implementation options</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
 </Base>
 
 <style>
-  .change-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 700px) { .change-grid { grid-template-columns: 1fr; } }
+  .change-checks { margin: 0; }
+  .change-checks > div { border-top: 1px solid var(--registry-paper-rule); padding: 10px 0; }
+  .change-checks > div:last-child { padding-bottom: 0; }
+  .change-checks dt { color: var(--registry-ink); font-weight: 700; }
+  .change-checks dd { line-height: 1.5; margin: 2px 0 0; }
+  #studio { scroll-margin-top: 78px; }
 </style>
