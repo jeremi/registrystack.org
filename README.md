@@ -338,8 +338,9 @@ analytics and covers outbound links to documentation, demos and GitHub. Internal
 website/documentation handoffs do not add acquisition UTMs. The bridge also
 ignores the earlier internal handoff tuple in links from released pages.
 
-The bridge trusts exactly the main website and documentation origins. Only the
-main website can request an identifier, immediately before a form submission.
+The bridge accepts only the exact main website, documentation and separately
+enrolled marketplace origins. Only the main website can request an identifier,
+immediately before a form submission.
 Iframe, storage, lock, or tracker failures keep attribution off and select the
 unlinked form. A tracked request is aborted if consent changes while it is
 pending; a request already accepted by Mautic cannot be recalled by withdrawal.
