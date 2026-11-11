@@ -46,7 +46,7 @@ export const contactRecoveryHref = (type: ContactRequestType, context = ''): str
   return mailtoHref(subject, [
     'Organization: ',
     'Your role: ',
-    type === 'starter' ? 'The register you keep: ' : 'Message: ',
+    type === 'starter' ? 'The register you need: ' : 'Message: ',
   ]);
 };
 

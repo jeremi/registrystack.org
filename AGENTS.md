@@ -19,6 +19,10 @@ It is the maintained audience policy for this site.
 - Lead with the reader's problem, practical outcomes, fit with existing
   systems, and adoption decisions. Explain technical concepts when they help
   that decision; route implementation instructions to the documentation.
+- Check the README’s product scope against the page’s implied starting
+  condition, including shared enquiries: new services and existing-service
+  adaptations are both supported. Narrow integration pages can retain a
+  deliberate existing-system audience.
 - Apply the README’s page-purpose and section-selection tests before retaining
   optional material or proposing a new topic. Review final renders for relevance
   as well as factual correctness and layout.

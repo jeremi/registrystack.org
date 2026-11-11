@@ -13,8 +13,9 @@ application area. Organize general navigation by service area and show examples
 from different government levels together. Technical evaluators and implementers
 have dedicated product, starter and documentation paths.
 
-The website helps a reader understand which service they can improve, how the
-software can be adapted, who can deliver it and what to do next. Lead with the
+The website helps a reader assess a new register or service, an adaptation to
+an existing one, or a capability added beside an existing system; understand
+what must be configured or integrated; and choose a delivery route and next step. Lead with the
 service or problem. Explain open source, interoperability and reusable
 components through the choices they give the institution. DPI is relevant to
 funders, national digital teams and implementation partners; define the term
@@ -119,11 +120,35 @@ command-line instructions belong in the documentation. Explain approvals,
 access, source freshness and implementation responsibilities in plain language
 where they affect the buyer's decision.
 
+## Product scope for website messaging
+
+Registry Stack supplies configurable software for creating public registers and
+services, adapting existing ones, and adding record, review or information-check
+capabilities beside systems an institution keeps. A new service does not require
+an existing digital service or register. The institution defines its records,
+rules and responsibilities; an implementation supplies or adapts screens,
+sign-in and integrations. These components are not complete, ready-made sector
+applications. Core runtime software is Apache-2.0; implementation and support
+are commercial services, and Studio has separate terms and availability.
+
+This scope follows the maintained [product concepts](https://docs.registrystack.org/start/concepts/)
+(“What runs” and “What no product owns”), the component descriptions below, and
+the implementation responsibilities on this site. It is a scope statement, not
+copy to repeat on every page. Use an existing-system example where it helps;
+do not make possession of that system a condition of a general enquiry.
+
 ## Page purpose and section selection
 
 - Name one reader, their decision and the useful next step before drafting.
   An independent reviewer checks final renders, including optional content,
   against that task before considering the implementation rationale.
+- Check the page's implied starting condition against the product scope above.
+  For a general entry or enquiry, can an institution with no existing digital
+  service recognize a route as readily as one adapting a service? For a focused
+  integration page, is the existing-system condition deliberate and clear?
+  Review headings, examples, shared CTAs, contact states and metadata together.
+  A neutral headline does not excuse a narrower next step. Do not force a
+  “create and improve” formula into every heading or remove necessary limits.
 - For each section ask: if it disappeared, which decision would be unanswered
   or which material misunderstanding would become likely? Accuracy alone does
   not earn space. An accordion does not make an unrelated topic relevant.

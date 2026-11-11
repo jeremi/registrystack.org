@@ -48,7 +48,7 @@ export function contactRequestPresentation(type: ContactRequestType): {
         privacyCopy: 'We use these details to review your request and reply. You can request access without accepting tracking. If you accept tracking, we may link your visits to this request. There is no marketing signup.',
       };
     case 'service':
-      return { eyebrow: 'Service enquiry', heading: 'Discuss your service', intro: 'Describe the service, its users, and what should improve. Our team will review your message and reply.', messageLabel: 'Your service and what you need', submitLabel: 'Send message', successMessage: 'Message received. Our team will review it and reply.', privacyCopy: sharedPrivacy };
+      return { eyebrow: 'Service enquiry', heading: 'Discuss your service', intro: 'Describe the service, who will use it and what it needs to do. Our team will review your message and reply.', messageLabel: 'Your service and what you need', submitLabel: 'Send message', successMessage: 'Message received. Our team will review it and reply.', privacyCopy: sharedPrivacy };
     case 'proposal':
       return { eyebrow: 'Implementation', heading: 'Request a proposal', intro: 'Describe the service and implementation support you want us to price. We will reply to clarify the scope.', messageLabel: 'What should the proposal cover?', submitLabel: 'Request a proposal', successMessage: 'Request received. Our team will review it and reply.', privacyCopy: sharedPrivacy };
     case 'privacy':

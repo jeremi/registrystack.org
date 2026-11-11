@@ -468,7 +468,7 @@ for (const options of [
 
   await page.goto(`${url}pricing/`);
   // The light question comes before the brief and asks for no budget; the
-  // brief asks about the service, users and improvement, with budget and timing optional.
+  // brief keeps budget and timing optional. Its meaning is reviewed independently.
   const questionLinks = page.locator('main a[data-journey="ask-question"]');
   if (await questionLinks.count() !== 1 || !isContactRoute(await questionLinks.getAttribute('href'), 'question', 'Registry Stack') ||
       !await questionLinks.isVisible()) {
@@ -483,11 +483,6 @@ for (const options of [
   }
   const proposalGuidance = await page.locator('.pilot-brief').innerText();
   for (const [name, field] of [
-    ['organization', /organization/i],
-    ['service', /service you need/i],
-    ['users', /who will use it/i],
-    ['desired improvement', /what should improve/i],
-    ['current systems and help needed', /current records and systems.*where you want help/i],
     ['optional timing', /timing.*optional/i],
     ['optional budget', /budget.*optional/i],
   ]) {

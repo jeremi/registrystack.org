@@ -493,9 +493,8 @@ if (!pricingSource.includes('href={askQuestionHref()}')) failures.push('pricing 
 if (!/Budget[^'\n]*\(optional\)/.test(pricingSource) || !/Timing[^'\n]*\(optional\)/.test(pricingSource)) {
   failures.push('pricing brief must mark budget and timing as optional');
 }
-for (const need of [/service you need/i, /who will use it/i, /what should improve/i]) {
-  if (!need.test(pricingSource)) failures.push(`pricing brief is missing the needs-first field ${need}`);
-}
+// The brief's audience assumptions and meaning belong to independent reader
+// review. Do not lock an editorial sentence into this structural gate.
 // The two prices appear on the pricing page only; other pages link to it.
 for (const relativePath of sweptFiles) {
   if (relativePath === 'src/pages/pricing.astro') continue;
