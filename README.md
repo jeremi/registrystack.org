@@ -28,18 +28,45 @@ before using the abbreviation.
   working documents, never in visible copy.
 - Let readers describe their needs before selecting a product or starting
   configuration. Browsing configurations is an optional evaluation path.
-- Separate AI for service design, AI-assisted implementation and citizen access
-  through a compatible assistant. Present design as a method, implementation as
-  a scoped engagement with our team, and citizen access as an optional integration
-  for a configured Base Registry Engine service. The person reviews and submits
-  the request on the institution's site. The institution approves service rules
-  and proposed implementation changes. The configured service can run without an
-  AI model. Registry Studio and its direct assistant are in development.
+- Use the AI overview to orient readers among service design, implementation
+  and citizen access. Put the three jobs and their deliverables before any deep
+  example. Keep runtime permissions and assistant logging claims scoped to
+  citizen access; they are not guarantees about third-party design tools.
+- Write the AI pages in the words a ministry adviser would say aloud: "your
+  staff", "another government system", "the details you allow", "your official
+  website", "check and submit". Keep product and engineering terms (fields,
+  callers, permitted, review page) for the maintained documentation.
+- Label an example card "Example" and name what it shows. Put the fictional
+  marking in the caption under the card ("Fictional example. Rules and screens
+  are configured for your service."), not in a bar above the visual.
+- Present AI-assisted implementation as a scoped engagement with our team,
+  service design as a method offered mainly through partners, and citizen access
+  through an approved assistant as available in a pilot for a configured Base
+  Registry Engine service. The citizen access page states that the integration
+  is a Preview outside the compatibility promise and that a release may change
+  or remove it. The overview and the homepage do not repeat that note. The
+  person reviews and submits the request on the institution's site. The
+  assistant cannot submit a request, approve it or change a record. The
+  institution approves service rules and proposed implementation changes. The
+  configured service runs with no AI model required. Registry Studio is an
+  authoring tool in development. Its local prototype
+  includes document-assisted drafting; this does not establish public access
+  or a general conversational editing assistant. Studio has separate commercial
+  terms and is not covered by the core runtime’s Apache-2.0 licence.
+- State what AI does and who decides as plain positive claims. Do not undersell:
+  state maturity in positive terms ("Available in a pilot") and give readers
+  statements that are true by design. Keep interface stability notes and
+  detailed limits on the page that describes the feature and in the maintained
+  documentation. Use "an assistant you approve" for an assistant the institution
+  has registered, and say that the connection uses Model Context Protocol (MCP),
+  an open standard.
+- Take the team's track record from `src/data/team.ts`. It describes registries
+  the team has built across separate customer projects. Never present it as
+  Registry Stack deployments, and name no product or customer.
 - Explain headless architecture through the choice to use an existing portal,
-  staff application or integration. Distinguish published service descriptions
-  from the channels that carry requests and the products that authorize and
-  perform operations. Identify the cross-institution catalogue example as
-  illustrative.
+  staff application or integration. Explain the access and operation scope of
+  the interface being offered; link to maintained contracts for implementation
+  detail.
 - Sell a configured solution and the work to deliver it without presenting
   every component as a complete application. A written implementation scope
   agrees screens, integrations, migration, hosting, operation and handover.
@@ -69,11 +96,6 @@ the source information is true. Use independent products or combine them as
 needed. [Registry Relay is retired](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/)
 and must not be marketed as current software.
 
-Review each page as its intended reader: can they understand the value, assess
-fit and find a next step without knowing our internal vocabulary? Automated
-checks protect wiring and selected factual boundaries; they cannot answer that
-editorial question.
-
 Review existing copy before reusing it. Name the actor, task and object, then
 explain the useful result. For staff reviews, use “Review requests and record
 decisions” and explain assignment and due dates with a concrete request. For
@@ -96,6 +118,31 @@ link to maintained tutorials. Protocol names, configuration contracts and
 command-line instructions belong in the documentation. Explain approvals,
 access, source freshness and implementation responsibilities in plain language
 where they affect the buyer's decision.
+
+## Page purpose and section selection
+
+- Name one reader, their decision and the useful next step before drafting.
+  An independent reviewer checks final renders, including optional content,
+  against that task before considering the implementation rationale.
+- For each section ask: if it disappeared, which decision would be unanswered
+  or which material misunderstanding would become likely? Accuracy alone does
+  not earn space. An accordion does not make an unrelated topic relevant.
+- Use current capabilities and bounded examples to support the offer. A possible
+  service catalogue is a new topic on a registry implementation page. A separate
+  guide needs its own reader task, maintained owner and approved scope first.
+- Qualify the specific claim a reader could materially misinterpret, beside that
+  claim. Preserve assistant permissions, independent register updates and the
+  distinction between a signature and source accuracy. Do not add accreditation
+  denials or general limitations where no related promise is made.
+- Finish the agreed page job before proposing another topic, audience or guide.
+  Stop for explicit scope approval before adding one. Reviewer requests are input,
+  not permission to grow the brief; record adopted cuts as well as additions.
+- An unresolved material off-purpose or unsupported-claim finding from the
+  independent reviewer blocks readiness. Resolve it with an edit or an explicit
+  owner decision on scope; passing automated checks does not clear that finding.
+
+Automated checks establish navigation and selected factual boundaries. The
+section-to-reader-decision review establishes whether the content belongs.
 
 ## Site implementation
 
@@ -125,8 +172,8 @@ and request journeys are covered by tests.
 
 ### Website enquiries
 
-The shared inline form covers website contact invitations and every starter
-page. Set this public build variable to the exact HTTPS route for the unlinked
+The shared inline form covers website contact invitations. Current configuration
+access requests belong to the marketplace; archived reference pages link there. Set this public build variable to the exact HTTPS route for the unlinked
 native Mautic form:
 
 ```sh
@@ -146,11 +193,18 @@ All general contact links use `src/data/contact.ts`. `describeServiceHref`
 invites the service, its users and the result needed. `askQuestionHref` supports
 a lighter question. The pricing inquiry includes optional budget and timing.
 Print the email address beside mailto buttons so readers without an email app
-can still contact the team. The header Contact link opens the pricing inquiry.
+can still contact the team. The header Contact link opens the general contact page.
 
 The homepage starts with use cases and customization. Product choices and
-technical evaluation follow. Shared figures must identify their illustrative
-purpose, keep fields inside the record they describe and distinguish stored
+technical evaluation follow. The main site explains service fit; the configuration
+marketplace owns pack browsing, model detail and access requests. Keep service
+categories here and link each to its corresponding marketplace collection.
+The old `/starters/` index offers seven collection handoffs. Its 84 detail pages
+remain indexable reference snapshots, labelled with their catalogue version and
+linked to the exact current marketplace configuration. They do not collect
+requests for the archived model. Do not change live marketplace indexing as
+part of website content work. Shared figures must identify their
+illustrative purpose, keep fields inside the record they describe and distinguish stored
 information from disclosed answers. Preserve no-JavaScript and reduced-motion
 access. A hosted legacy lab is not evidence of the current product journey.
 
@@ -161,26 +215,37 @@ layouts that work from mobile through desktop.
 
 ## Pages
 
-- `/`: service outcomes, solution areas, AI for public services, an example
-  journey, ownership and reuse, products, adoption options and developer paths.
+- `/`: service outcomes, the team's track record, solution areas, how AI uses a
+  register under the institution's rules, an example journey, ownership and
+  reuse, the open-source/commercial relationship and technical evaluation paths.
 - `/solutions/` and `/solutions/<area>/`: service-specific problems, capabilities,
   examples, relevant configurations and next steps.
 - `/solutions/local-government/`: municipal services and an implementation path.
-- `/ai/`: overview of AI for service design, implementation and citizen access.
-- `/ai/service-design/`: a design method and an illustrative school enrolment
+- `/ai/`: orientation among three uses: service design, implementation and
+  citizen access, with scoped institutional control and routes to detail.
+- `/products/studio/`: authoring and review of registry and service definitions,
+  document-assisted drafting in the local prototype, handover and availability.
+  Distinguish Studio's commercial terms from the core runtime licence.
+- `/ai/service-design/`: a design method and an example school enrolment
   brief with scenarios for the implementation team to test.
-- `/customization/`: scoped implementation, an example of adapting a service
-  and Registry Studio in development.
-- `/ai/citizen-access/`: optional access through a compatible assistant, with a
-  documented handoff to the institution's review and submission page.
+- `/customization/`: scoped implementation, an example of adapting a service,
+  how each change is tested before release, how AI is used in a pilot and
+  Registry Studio in development.
+- `/ai/citizen-access/`: access through an assistant the institution approves,
+  available in a pilot, what the assistant can and cannot do, a documented
+  handoff to the institution's review and submission page, and the Preview
+  stability note in its FAQ and technical note.
 - `/architecture/headless/`: connect your own interface through documented APIs
   or use an optional assistant channel for selected operations.
-- `/digital-public-infrastructure/`: reusable registries within a DPI programme,
-  interoperability, institutional control and documented standards scope.
+- `/digital-public-infrastructure/`: the choice to connect an existing source or
+  establish a register, one facility example, and delivery and operating choices.
 - `/data-spaces/`: participant roles, authoritative registers, API mappings and
   signed answers, with separate responsibilities for the space and its connector.
-- `/starters/` and `/starters/<id>/`: configurations available by request, their
-  included parts and what an implementation still needs.
+- `https://marketplace.registrystack.org/`: configuration browsing, model detail
+  and access requests; the seven service categories link to matching collections.
+- `/starters/`: a compatibility handoff to the seven marketplace collections.
+- `/starters/<id>/`: versioned reference models retained during migration, with
+  current configuration and access requests linked to the matching marketplace pack.
 - `/products/base-registry/`, `/products/evidence-gateway/` and
   `/products/casework/`: component capabilities, boundaries and tutorials.
 - `/pricing/`: implementation and support prices, responsibilities, inquiry and
@@ -266,8 +331,11 @@ forms or load the proxy configuration.
 `npm run check:marketing-tracking` verifies the configured browser flow with a
 deterministic tracking server. Set `DOCS_TRACKING_DIST` to the canonical docs
 build directory and `TRACKING_BROWSERS=chromium,firefox,webkit` to verify both
-actual sites across the complete browser matrix. The website and docs copies
-of `shared-tracking-client.mjs` and `tracking-protocol.mjs` must stay identical.
+actual sites across the complete browser matrix. Set `MARKETPLACE_TRACKING_DIST` to a tracking-enabled canonical marketplace
+build to exercise its separate enrollment. `TRACKING_SCENARIO=marketplace-enrollment`
+selects that one journey for diagnosis; leave it unset for the final full run.
+The website and docs copies of `shared-tracking-client.mjs` and
+`tracking-protocol.mjs` must stay identical.
 
 `node scripts/check-shared-tracking-mautic.mjs` provides optional native
 acceptance against fresh, disposable `mautic/mautic:7.2.1-apache` and
@@ -278,6 +346,34 @@ campaigns or form actions, and empty email queues. Set `MAUTIC_TEST_CONTAINER`,
 `SHARED_TRACKING_TEST_SCRATCH` selects where browser artifacts are retained.
 The fixture creates synthetic forms and contacts and consumes only the hit
 queue. Never use production or a restored production database for this check.
+
+## Marketplace route cutover
+
+The default build retains indexable legacy references. Set neither migration
+variable for this publication mode. `npm run check:marketplace` verifies every
+legacy route, its individual catalogue content, and seven collection handoffs.
+
+The optional cutover replaces the index and all 84 details with exact destination
+documents. It requires both `PUBLIC_MARKETPLACE_MIGRATION_ENABLED=true` and an
+explicit `MARKETPLACE_INDEXING_DECISION`:
+
+- `require-indexable`: audit all destination responses, canonicals and indexing
+  directives before building. Nonempty robots exclusions require manual review.
+- `accept-current-noindex`: deliberately accept that the destination blocks
+  indexing. This is a search-discoverability tradeoff, not an indexing fix.
+
+The workflow reads these optional repository variables; it does not set them.
+Do not enable cutover accidentally while the marketplace is blocked from search.
+The default keeps current navigation going to the marketplace without retiring
+searchable reference routes. Resolve indexing with the marketplace owner before
+choosing the indexed cutover path.
+
+GitHub Pages serves static HTML, so these are script/HTML-refresh redirects with
+visible fallbacks, not HTTP 301 responses. Known category bookmarks map to their
+collections with JavaScript; no-JavaScript category arrivals fall back to the
+marketplace index. Redirect verification checks exact pack destinations and
+supported fragments. The migrated routes leave the sitemap. No indexing setting
+on the marketplace is changed by this build.
 
 ## GitHub Pages
 

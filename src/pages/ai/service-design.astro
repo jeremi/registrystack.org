@@ -6,36 +6,38 @@ import SiteFooter from '../../components/SiteFooter.astro';
 import { describeServiceHref } from '../../data/contact';
 
 const context = 'AI-assisted service design';
-const xstackFormMethod = 'https://github.com/publicdigital/XStack/blob/63232ff60799fec494a7d70f2c74a326eed086ff/skills/form-to-spec/SKILL.md';
 ---
 
 <Base
   title="AI-assisted public service design | Registry Stack"
-  description="Use research and existing forms to design a public service. Try a prototype with staff and applicants and give your delivery team a brief they can build from."
+  description="Use research and existing forms to design a government service. Try a prototype with staff and applicants, then give your delivery team a clear brief."
+  ogImagePath="/og-ai.png"
+  ogImageAlt="Registry Stack: Design, adapt and access public services with AI."
 >
   <SiteHeader current="ai-service-design" />
-  <main>
+  <main id="main-content" tabindex="-1">
     <AiLandingHero
-      eyebrow="AI-assisted service design method"
+      eyebrow="AI-assisted service design"
       heading="Design a service you can test before you build."
       lead="Turn research and existing forms into a service brief with AI. Test a prototype with applicants and staff before you decide what to build."
       context={context}
       exampleHref="#worked-example"
       exampleLabel="See the enrolment example"
+      note="Available as a scoped engagement, mainly through our partners."
     >
-      <p class="ai-example-label">Draft service brief</p>
+      <p class="ai-example-label">Example: draft service brief</p>
       <p class="ai-example-title">School enrolment</p>
       <dl class="ai-example-rows">
-        <div><dt class="ai-example-label">Form item 1</dt><dd>The parent supplies the child’s date of birth.</dd></div>
-        <div><dt class="ai-example-label">Proposed change</dt><dd>Ask the civil register if the child meets the age rule.</dd></div>
-        <div><dt class="ai-example-label">Decision for the education authority</dt><dd>Which cut-off date applies to this school year?</dd></div>
+        <div><dt>Form item 1</dt><dd>The parent supplies the child’s date of birth.</dd></div>
+        <div><dt>Proposed change</dt><dd>Ask the civil register if the child meets the age rule.</dd></div>
+        <div><dt>Decision for the education authority</dt><dd>Which cut-off date applies to this school year?</dd></div>
       </dl>
     </AiLandingHero>
 
     <section class="section section-muted" id="worked-example" aria-labelledby="example-title">
       <div class="section-inner approach-split">
         <div class="section-heading">
-          <p class="eyebrow">Illustrative school enrolment</p>
+          <p class="eyebrow">Example: school enrolment</p>
           <h2 id="example-title">Help a parent apply for school</h2>
           <p>A parent brings a form to the school office. The officer enters the child’s date of birth and confirms it with the parent.</p>
           <p>The team tries a prototype that asks an approved civil register for an age check. If the source can’t answer, the screen prompts the officer to review the document with the parent.</p>
@@ -71,14 +73,14 @@ const xstackFormMethod = 'https://github.com/publicdigital/XStack/blob/63232ff60
             <p>Ask applicants and staff to try common and difficult cases. Use what you learn to revise the brief and agree what to test in the working service.</p>
           </article>
         </div>
-        <p class="section-note">This approach draws on <a href={xstackFormMethod}>Public Digital’s XStack form review method</a>.</p>
+        <p class="section-note">We offer this design method as a scoped engagement, delivered mainly through our partners. The brief becomes the starting point for <a href="/customization/">an implementation pilot</a>.</p>
       </div>
     </section>
 
     <section class="final-cta" aria-labelledby="next-title">
       <div class="section-inner">
         <h2 id="next-title">Start with a form you already use</h2>
-        <p>Bring the form and tell us where staff or applicants get stuck. We’ll discuss how your team’s design could guide a scoped implementation.</p>
+        <p>Bring the form and tell us where staff or applicants get stuck. We run service design with our partners, and the brief guides a scoped implementation.</p>
         <div class="section-links">
           <a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a>
           <a class="button button-secondary" href="/customization/">See how implementation works</a>

@@ -58,14 +58,14 @@ const steps: WeekStep[] = [
 ---
 <Solution
   area={area}
-  heading="Maintain regulated facility, operator, product and hazard records."
+  heading="Keep facility and safety registers current."
   description="Staff can review inspection findings, record decisions and apply authorized status changes. Inspectors, insurers and other permitted services can use the same facility code and check a specific status without receiving the regulatory file."
 >
-  <section class="section" id="example" aria-labelledby="health-week-title">
+  <section class="section" id="example" aria-labelledby="health-example-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="health-week-title">Record a status change after an inspection.</h2>
+        <h2 id="health-example-title">Record a status change after an inspection.</h2>
       </div>
       <RegisterWeek
         id="health-week"
@@ -88,16 +88,12 @@ const steps: WeekStep[] = [
       </div>
     </div>
   </section>
-  <SolutionStarters
-    area={area}
-    heading="Start from a health or safety register like yours."
-    intro="A starting configuration can provide a model for facilities, trials, devices, operators or hazards. It is adapted to your rules, terminology, staff work and existing systems."
-  />
+  <SolutionStarters area={area} />
   <SolutionFaq
     items={[
       {
         q: 'Does this hold patient or clinical data?',
-        a: 'No. It holds registers of facilities, trials, devices, operators, and radiation sources. Where an entry needs to point to a medicine, such as a shortage notice, it refers to the medicine’s entry in the existing medicines catalogue instead of copying it.',
+        a: 'The examples here cover regulatory registers, such as facilities, trials, devices, operators and radiation sources. Clinical care and patient records are outside the service examples shown here. A notice concerning a medicine can refer to the existing medicines catalogue.',
       },
       {
         q: 'Does this replace our system?',
@@ -114,11 +110,6 @@ const steps: WeekStep[] = [
         a: 'Your office decides, entry by entry and role by role: what the public may read, who may record an authorization, and who may look one up. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
-      {
-        q: 'What is a starter, exactly?',
-        a: 'A starter is a starting configuration for a particular kind of register. You can request free access to it, and it must be adapted to your rules, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
-        link: { href: '/starters/#health-and-safety', label: 'Browse the health and safety starters' },
-      },
       ...sharedFamilyFaq,
     ]}
   />
@@ -128,6 +119,7 @@ const steps: WeekStep[] = [
     body="Tell us which facility or oversight service you want to improve, who reports changes, who decides and which systems need the resulting status. We can show how Registry Stack could fit."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
+    note="The core software is Apache-2.0 open source. Aubex offers paid implementation and support; your team or another provider can also operate it."
     emphasis="docs"
   />
 </Solution>

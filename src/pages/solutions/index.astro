@@ -4,53 +4,38 @@ import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
 import { solutionAreas, registerFamilies } from '../../data/solutions';
-import { products } from '../../data/products';
-import { startersForArea, starterCount } from '../../data/starters';
 import { describeServiceHref } from '../../data/contact';
 
 const pageTitle = 'Solutions | Registry Stack';
 const pageDescription = 'Find a public service or register close to your institution’s work, see what applicants and staff can do, and choose a next step.';
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
-// The flagship products lead, as in the Products menu; the data order is otherwise kept.
-const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
 ---
 
 <Base title={pageTitle} description={pageDescription}>
   <SiteHeader current="solutions" />
-  <main class="solutions-index">
-    <section class="hero" aria-labelledby="solutions-title">
-      <div class="hero-inner">
-        <div class="hero-copy">
-          <p class="eyebrow">Solutions</p>
-          <h1 id="solutions-title">Start from the public service you need to improve.</h1>
-          <p class="hero-lead">Explore licensing, registration, facility oversight and other services for national, regional and local government. See how applicants submit information, staff review requests and your institution maintains its records.</p>
-          <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="#registers">Find a service</a>
-            <a class="button button-secondary" href="/starters/">Explore {starterCount} starting configurations</a>
-          </div>
-        </div>
-      </div>
+  <main id="main-content" tabindex="-1" class="solutions-index">
+    <section class="hero directory-hero" aria-labelledby="solutions-title">
+      <div class="hero-inner"><div class="hero-copy">
+        <p class="eyebrow">Solutions</p>
+        <h1 id="solutions-title">Registers and services</h1>
+        <p class="hero-lead">Browse by register area, or see how to connect services, review requests and issue credentials.</p>
+      </div></div>
     </section>
 
-    <section id="registers" class="section" aria-labelledby="registers-title">
+    <section id="registers" class="section directory-section" aria-labelledby="registers-title">
       <div class="section-inner">
-        <div class="section-heading">
-          <p class="eyebrow">By service and register</p>
-          <h2 id="registers-title">Find the area closest to your work.</h2>
-          <p>See a service example, the records it needs and starting configurations that can be adapted to your institution’s rules.</p>
-        </div>
+        <h2 id="registers-title" class="directory-label">By service area</h2>
         <ul class="solution-area-grid">
           {registerFamilies.map((area) => (
             <li>
               <a href={area.slug}>
                 <span class="solution-area-name">{area.name}</span>
-                {area.audience && <span class="solution-area-audience">{area.audience}</span>}
                 <span class="solution-area-intent">{area.intent}</span>
-                <span class="solution-area-count">{startersForArea(area).length} starting configurations</span>
               </a>
             </li>
           ))}
         </ul>
+        <p class="directory-note">Looking for a model? <a href="https://marketplace.registrystack.org/">Browse starting configurations in the marketplace</a>.</p>
       </div>
     </section>
 
@@ -59,14 +44,12 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
         <div class="section-heading">
           <p class="eyebrow">Checks, staff reviews and credentials</p>
           <h2 id="shared-work-title">Improve a service you already run.</h2>
-          <p>Use Registry Stack with the registers and other software your institution already uses.</p>
         </div>
         <ul class="solution-area-grid">
           {crossCutting.map((area) => (
             <li>
               <a href={area.slug}>
                 <span class="solution-area-name">{area.name}</span>
-                <span class="solution-area-intent">{area.intent}</span>
                 {area.example && <span class="solution-area-example">{area.example}</span>}
               </a>
             </li>
@@ -75,30 +58,17 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       </div>
     </section>
 
-    <section class="section" id="products" aria-labelledby="products-title">
+    <section class="section technical-handoff" id="products" aria-labelledby="products-title">
       <div class="section-inner">
-        <div class="section-heading">
-          <p class="eyebrow">Products</p>
-          <h2 id="products-title">Software for records, reviews and information checks.</h2>
-          <p>Use one component with your existing systems, or combine several as part of a configured service. Each has a specific job.</p>
-        </div>
-        <ul class="solution-area-grid solution-product-row">
-          {productEntries.map((product) => (
-            <li>
-              <a href={product.href}>
-                <span class="solution-area-name">{product.name}</span>
-                <span class="solution-area-intent">{product.intent}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <h2 id="products-title">Evaluating the software?</h2>
+        <p>Find component details, local tutorials and current limitations in the <a href="/#developers">technical evaluation guide</a>. You can adopt the open-source components with your own team or another provider.</p>
       </div>
     </section>
 
     <DocsHandoff
       eyebrow="Discuss your service"
-      heading="Tell us about the service you want to improve."
-      body="Tell us what people need to do, what your staff must decide and which systems you already use. We can help identify a suitable starting point and the work needed to deliver it."
+      heading="Discuss a register or service."
+      body="Tell us which records, staff tasks or information checks you need, and which systems must connect. We can help assess the fit and scope an implementation."
       primaryLabel="Discuss your service"
       primaryHref={describeServiceHref()}
     />
@@ -107,21 +77,28 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
 </Base>
 
 <style>
+  .directory-hero .hero-inner { padding-top: 44px; padding-bottom: 32px; }
+  .directory-hero h1 { font-size: clamp(30px, 3.8vw, 46px); max-width: 800px; }
+  .directory-hero .hero-lead { max-width: 720px; margin-bottom: 0; }
+  .directory-section .section-inner { padding-top: 24px; }
+  .directory-label { font-size: var(--type-base); font-family: var(--registry-mono); font-weight: 500; color: var(--registry-body); margin: 0 0 20px; }
+  .directory-note { margin: 28px 0 0; font-size: var(--type-base); }
+  .technical-handoff .section-inner { padding-top: 40px; padding-bottom: 40px; }
+  .technical-handoff h2 { font-size: var(--type-subhead); margin-bottom: 12px; }
+  .technical-handoff p { font-size: var(--type-body-sm); margin-bottom: 0; max-width: 760px; }
+
   .solution-area-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; list-style: none; margin: 0; padding: 0; }
-  .solution-product-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .solution-area-grid li { border-top: 1px solid #c9d0c5; }
   .solution-area-grid a { display: grid; gap: 4px; padding: 18px 0 20px; }
   .solution-area-grid a:hover { text-decoration: none; }
   .solution-area-grid a:hover .solution-area-name { color: var(--registry-blue); }
   .solution-area-name { color: var(--registry-ink); font-size: var(--type-body); font-weight: 700; }
-  .solution-area-audience { color: var(--registry-body); font-size: var(--type-md); }
   .solution-area-intent { color: var(--registry-muted); font-size: var(--type-md); }
-  .solution-area-example { color: var(--registry-body); font-size: var(--type-md); margin-top: 8px; }
-  .solution-area-count { color: var(--registry-blue); font-family: var(--registry-mono); font-size: var(--type-xs); margin-top: 6px; }
+  .solution-area-example { color: var(--registry-body); font-size: var(--type-md); }
   @media (max-width: 900px) {
-    .solution-area-grid, .solution-product-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .solution-area-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 620px) {
-    .solution-area-grid, .solution-product-row { grid-template-columns: 1fr; }
+    .solution-area-grid { grid-template-columns: 1fr; }
   }
 </style>

@@ -12,16 +12,15 @@ const pageDescription = 'Run local permit and registration services, from applic
 
 <Base title={pageTitle} description={pageDescription}>
   <SiteHeader current="local-government" />
-  <main class="solution-page local-government-page">
+  <main id="main-content" tabindex="-1" class="solution-page local-government-page">
     <section class="hero" aria-labelledby="local-government-title">
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Local government</p>
           <h1 id="local-government-title">Run local permits and registrations from application to renewal.</h1>
           <p class="hero-lead">Give residents and businesses a clear way to apply, give staff one place to review each request, and keep the resulting permit or registration record current. Registry Stack can connect to the payment, document and mapping systems your authority already uses.</p>
-          <p>We offer scoped implementation pilots for one local service. A written scope defines the applicant and staff screens, integrations, and who will host, operate and support each part.</p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="#example">See three possible services</a>
+            <a class="button button-primary" href="#example">Explore service examples</a>
             <a class="button button-secondary" href="#what-changes">Follow the service</a>
           </div>
         </div>
@@ -31,9 +30,9 @@ const pageDescription = 'Run local permit and registration services, from applic
     <section id="example" class="section" aria-labelledby="local-examples-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">Possible local services</p>
-          <h2 id="local-examples-title">Three examples of services an implementation could support.</h2>
-          <p>These fictional examples show possible services. The forms, decisions and public information would follow each authority’s own rules.</p>
+          <p class="eyebrow">Service examples</p>
+          <h2 id="local-examples-title">Start with a service your authority manages.</h2>
+          <p>These illustrative services are configured around each authority’s forms, decisions and rules for public information.</p>
         </div>
         <div class="product-facts">
           <article>
@@ -64,7 +63,7 @@ const pageDescription = 'Run local permit and registration services, from applic
         </div>
         <dl>
           <dt>Apply and provide evidence</dt>
-          <dd>Applicants can start a request, save it, return later, explain why a document is unavailable, replace evidence and see the latest version they submitted.</dd>
+          <dd>Applicants submit details and supporting evidence, return to a saved draft and replace missing documents.</dd>
           <dt>Review and decide</dt>
           <dd>Staff receive the request in the right queue and check the evidence. If something is missing, they request changes; the applicant revises the request and submits it for a new review. Supervisors can see which officer is responsible for each active review and what needs attention.</dd>
           <dt>Update the permit or registration</dt>
@@ -80,7 +79,7 @@ const pageDescription = 'Run local permit and registration services, from applic
         <div class="section-heading">
           <p class="eyebrow">Fits existing systems</p>
           <h2 id="local-scope-title">Keep the systems that still serve the authority well.</h2>
-          <p>Registry Stack can provide the register and connect to existing payment, identity, mapping, document or finance systems. An implementation can also include applicant, staff or public screens, hosting, data migration and integrations. The written scope states what the delivery team will provide and what the authority will operate.</p>
+          <p>Connect the register to the payment, identity, mapping, document and finance systems you already use. The implementation scope identifies what is added, what stays in place and who operates each part.</p>
         </div>
       </div>
     </section>
@@ -92,7 +91,7 @@ const pageDescription = 'Run local permit and registration services, from applic
           {
             q: 'Do we need to choose a starting configuration first?',
             a: 'No. Tell us which service you run, who uses it and what should improve. We can identify a useful starting configuration and explain how it would be adapted. You can request free access to current configurations.',
-            link: { href: '/starters/', label: 'Explore available starting configurations' },
+            link: { href: 'https://marketplace.registrystack.org/', label: 'Browse the configuration marketplace' },
           },
           {
             q: 'Do we have to replace our current applications?',
@@ -101,7 +100,7 @@ const pageDescription = 'Run local permit and registration services, from applic
           },
           {
             q: 'Can the implementation include screens and hosting?',
-            a: 'Yes. An implementation can include applicant, staff or public screens, identity, hosting, migration and integrations. The written scope states what is included. The core open-source components and available starting configurations must be adapted; they are not a ready-made municipal service.',
+            a: 'Yes. The written scope can include applicant, staff or public screens, identity, hosting, migration and integrations. We agree what your authority needs and how it will be tested before handover.',
           },
           {
             q: 'Which service should we discuss first?',
@@ -117,6 +116,7 @@ const pageDescription = 'Run local permit and registration services, from applic
       body="Describe a market permit, premises registration, rented-housing registration or another local service. Include who applies, what staff decide and which systems they use today."
       primaryLabel="Discuss a local service"
       primaryHref={describeServiceHref('a local government service')}
+      note="The core software is Apache-2.0 open source. Aubex offers paid implementation and support; your team or another provider can also operate it."
       emphasis="docs"
     />
   </main>

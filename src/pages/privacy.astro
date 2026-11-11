@@ -12,7 +12,7 @@ const pageDescription =
 <Base title={pageTitle} description={pageDescription}>
   <SiteHeader current="privacy" />
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <section class="hero" aria-labelledby="privacy-hero-title">
       <div class="hero-inner">
         <div class="hero-copy">
@@ -21,6 +21,7 @@ const pageDescription =
           <p class="hero-lead">
             This page explains what registrystack.org collects, why, and what it does not do. It
             covers this website and the optional visit tracking shared with docs.registrystack.org.
+            Marketplace tracking requires the separate acceptance described below.
             The <a href="https://docs.registrystack.org/privacy/">documentation privacy policy</a>
             describes its other processing. The hosted lab at lab.registrystack.org is a separate
             service with its own policy and is outside this shared tracking choice.
@@ -102,8 +103,8 @@ const pageDescription =
           </p>
           <h3>Website enquiries</h3>
           <p>
-            If you use the contact form, we collect your email address, request type, source page,
-            and the message and organization details you choose to provide. We retain this
+            If you use the contact form, we collect your email address, request type, request context,
+            source page, a request reference, and the message, organization and role details you provide. We retain this
             information in our self-hosted Mautic system so our team can review the enquiry and
             reply manually by email. Submitting an enquiry does not sign you up for email
             marketing.
@@ -148,7 +149,7 @@ const pageDescription =
 
           <h2 id="privacy-not-title">What this site does not do</h2>
           <ul class="check-list">
-            <li>It does not require tracking consent to submit a starter access request.</li>
+            <li>It does not require tracking consent to send an enquiry or request access to a starting configuration.</li>
             <li>It does not run advertising and does not share data with ad networks.</li>
             <li>It does not sell personal data.</li>
             <li>It does not load the Mautic visit tracker before you accept tracking.</li>
@@ -188,7 +189,7 @@ const pageDescription =
           <p>
             This site links to GitHub for source code and releases, to docs.registrystack.org for
             documentation, to marketplace.registrystack.org for reusable packs and access
-            requests, and to lab.registrystack.org, a hosted demo that runs on synthetic data only.
+            requests, and to lab.registrystack.org, a separate hosted lab.
             Each property has its own privacy notice for its other processing. Marketplace visit
             tracking also requires the additional acceptance described above.
           </p>
@@ -199,7 +200,7 @@ const pageDescription =
             it last changed.
           </p>
 
-          <p class="legal-effective">Effective date: November 4, 2026.</p>
+          <p class="legal-effective">Effective date: November 11, 2026.</p>
         </div>
       </div>
     </section>

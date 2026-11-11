@@ -9,25 +9,26 @@ import RegisterDay from '../components/RegisterDay.astro';
 import { products } from '../data/products';
 import { registerFamilies, solutionAreas } from '../data/solutions';
 import { describeServiceHref } from '../data/contact';
+import { teamRecordShort } from '../data/team';
 
 const featured = registerFamilies.filter((area) => ['licensing', 'business-and-tax', 'health-and-safety'].includes(area.key));
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 ---
 <Base>
   <SiteHeader />
-  <main>
+  <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="hero-title">
       <div class="hero-inner">
         <div class="hero-top">
           <div class="hero-copy">
             <p class="eyebrow">Open-source software for public registers and services</p>
             <h1 id="hero-title">Public registers and services, built around your rules.</h1>
-            <p class="hero-lead">Maintain registers, review requests and let authorized services check information. In a scoped pilot, our team uses AI to help adapt open-source software to your forms, records and review steps.</p>
+            <p class="hero-lead">Maintain public records, review applications and let authorized services check information. Registry Stack is open-source software you can adapt to your institution’s rules, connect to existing systems and run where you choose.</p>
             <div class="hero-actions" aria-label="Primary actions">
               <a class="button button-primary" href="/solutions/">Explore solutions</a>
               <a class="button button-secondary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a>
             </div>
-            <p class="hero-note">Your institution approves the rules and chooses where the service runs. <a href="/ai/">Explore AI for public services</a>.</p>
+            <p class="hero-note">{teamRecordShort} Start with an implementation pilot, and <a href="/ai/">see how AI can use your register under your rules</a>.</p>
           </div>
           <div class="hero-figure"><ServiceOutline /></div>
         </div>
@@ -57,19 +58,13 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
     </section>
 
     <section class="section section-muted" id="customization" aria-labelledby="customization-title">
-      <div class="section-inner approach-split">
+      <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">AI for public services</p>
-          <h2 id="customization-title">Use AI to help design and adapt a service.</h2>
-          <p>Start from the work your staff and applicants do today. Use AI to help prepare a service brief or propose changes your team can test and approve.</p>
-          <p>Your service can run without an AI model. You can also choose to connect an assistant for selected tasks.</p>
-          <a class="inline-cta" href="/ai/">See where AI fits <span aria-hidden="true">→</span></a>
+          <h2 id="customization-title"><span class="heading-sentence">AI can use your register.</span> <span class="heading-sentence">Your rules still apply.</span></h2>
+          <p>Your staff, other government systems and AI assistants reach your records through the same rules. An assistant you approve can read the details you allow and prepare a request. The person checks it and submits it on your official website.</p>
+          <a class="inline-cta" href="/ai/">See how AI works with your register <span aria-hidden="true">→</span></a>
         </div>
-        <ol class="approach-steps">
-          <li><strong><a href="/ai/service-design/">Design the service</a></strong><span>Turn research and existing forms into a brief your team can review.</span></li>
-          <li><strong><a href="/customization/">Implement and adapt it</a></strong><span>Work with our team to configure and test one service.</span></li>
-          <li><strong><a href="/ai/citizen-access/">Offer another way to use it</a></strong><span>Let people prepare a permitted request in a compatible assistant, then review and submit it on your site.</span></li>
-        </ol>
       </div>
     </section>
 
@@ -98,36 +93,14 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
     </section>
 
     <section class="section section-muted" id="open-source" aria-labelledby="ownership-title">
-      <div class="section-inner">
+      <div class="section-inner" id="get-started">
         <div class="section-heading">
-          <p class="eyebrow">Open source. Reusable components.</p>
-          <h2 id="ownership-title">Keep control as your services change.</h2>
+          <p class="eyebrow">Open-source software. Commercial implementation and support.</p>
+          <h2 id="ownership-title">Build with your team or work with ours.</h2>
         </div>
-        <div class="value-grid">
-          <article><h3>Adapt the software</h3><p>The core software is Apache-2.0 open source. Your team or a provider you choose can inspect, adapt and operate it.</p><a class="inline-cta" href="/faq/">Ownership and licensing <span aria-hidden="true">→</span></a></article>
-          <article><h3>Connect existing systems</h3><p>Add a registry or connect a service to information you already maintain. Agree the interfaces and any migration needed for your use case.</p><a class="inline-cta" href="/solutions/check-a-fact/">Connect a service to a register <span aria-hidden="true">→</span></a></article>
-          <article><h3>Reuse across public services</h3><p>A register can support several services. Combine reusable components as part of a digital public infrastructure programme.</p><a class="inline-cta" href="/digital-public-infrastructure/">Registry Stack and DPI <span aria-hidden="true">→</span></a></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="products" aria-labelledby="products-title">
-      <div class="section-inner" id="how-it-works">
-        <div class="section-heading"><p class="eyebrow">The software behind the service</p><h2 id="products-title">Use the capabilities your service needs.</h2><p>Adopt a component on its own or combine them in a configured solution.</p></div>
-        <div class="home-solution-grid">
-          <article class="home-solution-card"><p class="eyebrow">Base Registry Engine</p><h3>Manage records and their history.</h3><p>Define the information you keep, its relationships and the rules for reading and changing it.</p><a class="inline-cta" href="/products/base-registry/">Explore Base Registry Engine <span aria-hidden="true">→</span></a></article>
-          <article class="home-solution-card"><p class="eyebrow">Evidence Gateway</p><h3>Share only the information needed.</h3><p>Let authorized services ask predefined questions and receive digitally signed answers from your register.</p><a class="inline-cta" href="/products/evidence-gateway/">Explore Evidence Gateway <span aria-hidden="true">→</span></a></article>
-          <article class="home-solution-card"><p class="eyebrow">Registry Casework</p><h3>Coordinate reviews and decisions.</h3><p>Assign requests, track deadlines and record review decisions. The register controls how approved changes are applied.</p><a class="inline-cta" href="/products/casework/">Explore Registry Casework <span aria-hidden="true">→</span></a></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" id="get-started" aria-labelledby="adoption-title">
-      <div class="section-inner">
-        <div class="section-heading"><p class="eyebrow">Choose how to get started</p><h2 id="adoption-title">Build with your team or work with ours.</h2></div>
         <div class="value-grid adoption-grid">
-          <article><h3>Discuss an implementation</h3><p>Bring one service and the result you need. We agree the configuration, screens, integrations and responsibilities in a written pilot scope.</p><a class="inline-cta" href="/pricing/">Implementation and support <span aria-hidden="true">→</span></a></article>
-          <article><h3>Explore starting configurations</h3><p>Inspect models for common registers and request access to one for evaluation. We can help select a suitable model if you are unsure where to begin.</p><a class="inline-cta" href="/starters/">Browse starting configurations <span aria-hidden="true">→</span></a></article>
+          <article><h3>Use and adapt the software</h3><p>The core software is Apache-2.0 open source. Your team or a provider you choose can inspect, adapt and operate it. Your institution decides where it runs and who can use its records.</p><a class="inline-cta" href="/faq/">Ownership, licensing and hosting <span aria-hidden="true">→</span></a></article>
+          <article><h3>Work with Aubex</h3><p>Aubex builds and supports Registry Stack. Bring one service: we agree the configuration, screens, integrations and responsibilities in a written pilot scope. Implementation and ongoing support are paid services.</p><a class="inline-cta" href="/pricing/">Implementation and support <span aria-hidden="true">→</span></a></article>
         </div>
       </div>
     </section>
@@ -135,6 +108,7 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
     <section class="section" id="developers" aria-labelledby="developers-title">
       <div class="section-inner" id="start-testing">
         <div class="section-heading"><p class="eyebrow">For technical teams</p><h2 id="developers-title">Inspect the software. Run an example.</h2><p>Use a local tutorial with sample data to evaluate the core capabilities.</p></div>
+        <div id="products"><div id="how-it-works" class="home-product-links" aria-label="Product details">{products.map((product) => <a href={product.href}>{product.name}</a>)}</div></div>
         <div class="developer-grid">{products.filter((product) => product.featured).map((product) => (<article><h3>{product.solution}</h3><p>{product.firstResult}</p><a class="inline-cta developer-tutorial" href={product.tutorialHref}>{product.tutorialLabel} <span aria-hidden="true">↗</span></a></article>))}</div>
         <p class="developer-note" id="project-status">The core software is available for self-hosted pilots. Read the <a href="https://docs.registrystack.org/explanation/known-limitations/">current limitations</a>, <a href="https://docs.registrystack.org/">documentation</a> and <a href="https://github.com/registrystack/registry-stack">source and releases</a>.</p>
       </div>
@@ -162,12 +136,8 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
   .shared-capabilities { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .shared-work { border-top: 1px solid var(--registry-rule); margin-top: 36px; padding-top: 20px; }
   .shared-work > p { color: var(--registry-body); font-size: var(--type-base); margin: 0 0 8px; }
-  .home-solution-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 24px; max-width: none; margin-top: 0; }
-  .home-solution-card { display: flex; flex-direction: column; gap: 16px; border-top: 3px solid var(--registry-blue); padding: 28px; }
-  .home-solution-card .eyebrow { font-size: var(--type-xs); }
-  .home-solution-card h3 { font-size: var(--type-2xl); line-height: 1.25; }
-  .home-solution-card > p:not(.eyebrow) { font-size: var(--type-body-sm); }
-  .home-solution-card .inline-cta { font-size: var(--type-base); margin-top: auto; }
+  .home-product-links { display: flex; flex-wrap: wrap; gap: 12px 28px; border-bottom: 1px solid var(--registry-rule); margin-bottom: 32px; padding-bottom: 20px; }
+  .home-product-links a { font-weight: 700; }
   .adoption-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .developer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
   .developer-grid article { border-top: 1px solid var(--registry-rule); padding-top: 22px; }
@@ -175,6 +145,6 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
   .developer-grid p { font-size: var(--type-body-sm); }
   .developer-grid a { font-size: var(--type-base); }
   .developer-note { font-size: var(--type-base); margin-top: 28px; }
-  @media (max-width: 900px) { .hero-top, .home-solution-grid, .featured-solutions, .shared-capabilities { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .hero-top, .featured-solutions, .shared-capabilities { grid-template-columns: 1fr; } }
   @media (max-width: 700px) { .adoption-grid, .developer-grid { grid-template-columns: 1fr; } }
 </style>

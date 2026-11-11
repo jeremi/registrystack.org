@@ -38,7 +38,7 @@ export async function GET() {
     '<rss version="2.0">',
     '<channel>',
     '<title>Registry Stack field notes</title>',
-    '<description>Practical guidance for governed registry access and trusted evidence.</description>',
+    '<description>Practical guides to sharing registry information, limiting disclosure and reviewing access. Some guides include historical product examples.</description>',
     '<link>https://registrystack.org/blog/</link>',
     '<language>en</language>',
     items,

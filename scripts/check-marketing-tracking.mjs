@@ -28,6 +28,7 @@ const docsOrigin = 'https://docs.registrystack.org';
 const marketplaceOrigin = 'https://marketplace.registrystack.org';
 const trackerOrigin = 'https://mautic.example.test';
 const formsOrigin = 'https://forms.example.test';
+const starterContactPath = '/contact/?type=starter&context=Professional+licensing';
 const bridgeLoadBlockerUrl = 'https://bridge-load.example.invalid/hold.gif';
 const kioskEndpoint = `${formsOrigin}/form/submit?formId=1&privacy=kiosk`;
 const trackedEndpoint = `${formsOrigin}/form/submit?formId=2&privacy=consented`;
@@ -68,6 +69,10 @@ const build = spawnSync('npm', ['run', 'build', '--', '--outDir', websiteDist], 
   maxBuffer: 8 * 1024 * 1024,
   env: {
     ...process.env,
+    // Keep fixture builds in the uncut-over website mode; form regressions use
+    // the real contact page. Candidate redirects are checked by check:marketplace.
+    PUBLIC_MARKETPLACE_MIGRATION_ENABLED: '',
+    MARKETPLACE_INDEXING_DECISION: '',
     PUBLIC_STARTER_REQUEST_ENDPOINT: kioskEndpoint,
     PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: trackedEndpoint,
     PUBLIC_MAUTIC_URL: trackerOrigin,
@@ -647,7 +652,7 @@ async function runKioskScenario(browser, engine, records, mode) {
   const submissionsBefore = records.formSubmissions.length;
   const blockedBefore = records.blocked.length;
   await page.goto(
-    `${mainOrigin}/starters/professional-licensing/`,
+    `${mainOrigin}${starterContactPath}`,
     mode === 'bridge' ? { waitUntil: 'domcontentloaded' } : undefined,
   );
   const panel = page.locator('[data-tracking-preferences]');
@@ -917,7 +922,7 @@ async function runPendingBridgeModuleScenario(browser, engine, surface) {
 
     const page = await context.newPage();
     const pageUrl = surface === 'main'
-      ? `${mainOrigin}/starters/professional-licensing/`
+      ? `${mainOrigin}${starterContactPath}`
       : `${docsOrigin}/start/concepts/`;
     const panel = page.locator(surface === 'main'
       ? '[data-tracking-preferences]'
@@ -968,7 +973,7 @@ async function runPendingBridgeModuleScenario(browser, engine, surface) {
     assert.equal(await errorMessage.evaluate(element => element.hidden), true);
     assert.equal(records.nativeRequests.length, 0, `${engine}: ${surface} rejection loaded Mautic.`);
     assert.equal(records.pageviews.length, 0, `${engine}: ${surface} rejection sent a pageview.`);
-    assert.equal(records.formSubmissions.length, 0, `${engine}: ${surface} submitted the starter form.`);
+    assert.equal(records.formSubmissions.length, 0, `${engine}: ${surface} submitted the enquiry form.`);
     assert.deepEqual(records.errors, [], `${engine}: ${surface} delayed bridge raised a page error.`);
     assert.deepEqual(records.blocked, [], `${engine}: ${surface} made an unexpected request.`);
     return pendingState;
@@ -1169,7 +1174,7 @@ async function runSlowReplacementAssociationScenario(browser, engine) {
   try {
     await configureContext(context, records, { bridgeControl });
     const page = await context.newPage();
-    await page.goto(`${mainOrigin}/starters/professional-licensing/`);
+    await page.goto(`${mainOrigin}${starterContactPath}`);
     const panel = page.locator('[data-tracking-preferences]');
     await panel.waitFor({ state: 'visible' });
     await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
@@ -1304,7 +1309,7 @@ async function runExplicitBootstrapRecoveryScenario(browser, engine) {
   try {
     await configureContext(context, records, { bridgeControl });
     const page = await context.newPage();
-    await page.goto(`${mainOrigin}/starters/professional-licensing/`);
+    await page.goto(`${mainOrigin}${starterContactPath}`);
     const panel = page.locator('[data-tracking-preferences]');
     await panel.waitFor({ state: 'visible' });
     await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
@@ -1359,7 +1364,7 @@ async function runExcludedVisitorScenario(browser, engine) {
   try {
     await configureContext(context, records, { excludeNativeVisitors: true });
     const page = await context.newPage();
-    await page.goto(`${mainOrigin}/starters/professional-licensing/`);
+    await page.goto(`${mainOrigin}${starterContactPath}`);
     const panel = page.locator('[data-tracking-preferences]');
     await panel.waitFor({ state: 'visible' });
     await panel.getByRole('button', { name: 'Accept optional cookies' }).click();
@@ -1530,6 +1535,7 @@ async function runDocsConsentPointerScenario(browser, engine) {
 async function runMarketplaceEnrollmentScenario(browser, engine) {
   console.log(`${engine}: checking explicit marketplace enrollment on the deployed protocol-v2 scope.`);
   const records = createRecords(`${engine}-marketplace-enrollment`);
+  const viewsFrom = origin => records.pageviews.filter(view => new URL(view.page_url).origin === origin);
   const context = await browser.newContext({ serviceWorkers: 'block', viewport: desktopViewport });
   try {
     await configureContext(context, records);
@@ -1578,6 +1584,10 @@ async function runMarketplaceEnrollmentScenario(browser, engine) {
       }
     }, consentKey);
     const beforeReacceptance = records.pageviews.length;
+    const beforeWebsiteReacceptance = viewsFrom(mainOrigin).length;
+    // Capture before global reacceptance, so even an unauthorized marketplace
+    // view sent before the later reload violates the negative assertion.
+    const beforeMarketplaceReenrollment = viewsFrom(marketplaceOrigin).length;
     await docsPage.reload();
     await delay(250);
     assert.equal(records.pageviews.length, beforeReacceptance, `${engine}: marketplace rejection did not stop docs.`);
@@ -1586,33 +1596,45 @@ async function runMarketplaceEnrollmentScenario(browser, engine) {
     await mainPage.locator('[data-tracking-preferences-open]').click();
     await mainPanel.getByRole('button', { name: 'Accept optional cookies' }).click();
     await waitFor(
-      () => records.pageviews.length > beforeReacceptance,
+      () => viewsFrom(mainOrigin).length > beforeWebsiteReacceptance,
       `${engine}: website reacceptance did not resume website tracking.`,
     );
-    const secondDevice = records.pageviews.at(-1).deviceId;
+    const secondDevice = viewsFrom(mainOrigin).at(-1).deviceId;
     assert.notEqual(secondDevice, firstDevice, `${engine}: global reacceptance reused withdrawn identity.`);
 
-    const beforeMarketplaceReenrollment = records.pageviews.length;
     await marketplacePage.reload();
     await marketplacePanel.waitFor({ state: 'visible' });
     await delay(250);
+    if (viewsFrom(marketplaceOrigin).length !== beforeMarketplaceReenrollment) {
+      // Synthetic fixture diagnostics identify which property emitted a late
+      // pageview without changing the consent invariant under test.
+      console.error(JSON.stringify({
+        scenario: 'marketplace-reenrollment',
+        engine,
+        beforeMarketplaceReenrollment,
+        marketplacePageviews: viewsFrom(marketplaceOrigin).length,
+        consent: await mainPage.evaluate(key => JSON.parse(localStorage.getItem(key) ?? 'null'), consentKey),
+        enrollment: await mainPage.evaluate(key => JSON.parse(localStorage.getItem(key) ?? 'null'), marketplaceEnrollmentKey),
+        pageviews: records.pageviews.map(({ page_url, deviceId }) => ({ page_url, deviceId })),
+      }));
+    }
     assert.equal(
-      records.pageviews.length,
+      viewsFrom(marketplaceOrigin).length,
       beforeMarketplaceReenrollment,
       `${engine}: website reacceptance silently re-enrolled marketplace.`,
     );
     await marketplacePanel.getByRole('button', { name: 'Accept optional cookies' }).click();
     await marketplacePanel.waitFor({ state: 'hidden' });
     await waitFor(
-      () => records.pageviews.length > beforeMarketplaceReenrollment,
+      () => viewsFrom(marketplaceOrigin).length > beforeMarketplaceReenrollment,
       `${engine}: explicit marketplace re-enrollment did not resume tracking.`,
     );
     assert.equal(
-      records.pageviews.length,
+      viewsFrom(marketplaceOrigin).length,
       beforeMarketplaceReenrollment + 1,
       `${engine}: marketplace re-enrollment generated more than one pageview.`,
     );
-    assert.equal(records.pageviews.at(-1).deviceId, secondDevice);
+    assert.equal(viewsFrom(marketplaceOrigin).at(-1).deviceId, secondDevice);
     await assertNoIdentityInDocs(docsPage, records, [firstDevice, secondDevice]);
     await assertNoIdentityInMarketplace(marketplacePage, records, [firstDevice, secondDevice]);
     assert.deepEqual(records.errors, [], `${engine}: marketplace enrollment raised a page error.`);
@@ -1795,24 +1817,30 @@ async function runEngine(engine, browserType) {
     await docsPage.waitForLoadState('domcontentloaded');
     await waitFor(() => records.pageviews.length === 3, `${engine}: docs navigation did not send a pageview.`);
 
-    const starterPopup = context.waitForEvent('page');
-    await docsPage.evaluate(origin => {
+    const enquiryPopup = context.waitForEvent('page');
+    await docsPage.evaluate(({ origin, path }) => {
       const link = document.createElement('a');
-      link.href = `${origin}/starters/professional-licensing/`;
+      link.href = `${origin}${path}`;
       link.target = '_blank';
       document.body.append(link);
       link.click();
-    }, mainOrigin);
-    const starterPage = await starterPopup;
-    await starterPage.waitForLoadState('domcontentloaded');
-    await waitFor(() => records.pageviews.length === 4, `${engine}: main starter navigation was not tracked.`);
-    assert.equal(await starterPage.locator('[data-tracking-preferences]').isVisible(), false);
-    await submitForm(starterPage, { email: `accepted-${engine}@example.invalid` });
+    }, { origin: mainOrigin, path: starterContactPath });
+    const enquiryPage = await enquiryPopup;
+    await enquiryPage.waitForLoadState('domcontentloaded');
+    await waitFor(() => records.pageviews.length === 4, `${engine}: main contextual enquiry navigation was not tracked.`);
+    assert.equal(await enquiryPage.locator('[data-tracking-preferences]').isVisible(), false);
+    await submitForm(enquiryPage, { email: `accepted-${engine}@example.invalid` });
     const trackedSubmission = latestSubmission(records);
     const trackedUrl = new URL(trackedSubmission.url);
     assert.equal(trackedUrl.searchParams.get('formId'), '2');
     assert.equal(trackedSubmission.data['mauticform[formId]'], '2');
     assert.equal(trackedSubmission.data.mautic_device_id, firstDevice);
+    assert.equal(records.pageviews[3].page_url, `${mainOrigin}/contact/`);
+    assert.equal(records.pageviews[3].page_referrer, docsOrigin);
+    assert.equal(trackedSubmission.data['mauticform[starter_id]'], '');
+    assert.equal(trackedSubmission.data['mauticform[request_type]'], 'starter');
+    assert.equal(trackedSubmission.data['mauticform[request_context]'], 'Professional licensing');
+    assert.equal(trackedSubmission.data['mauticform[source_page]'], '/contact/');
 
     await mainPage.goto(`${mainOrigin}/contact/?type=privacy&context=website%20privacy%20question`);
     await waitFor(() => records.pageviews.length === 5, `${engine}: privacy page was not tracked.`);
@@ -1858,7 +1886,7 @@ async function runEngine(engine, browserType) {
       `${engine}: rejection did not stop Registry Docs.`,
     );
     await rejectedDocsPage.close();
-    await mainPage.goto(`${mainOrigin}/starters/professional-licensing/`);
+    await mainPage.goto(`${mainOrigin}${starterContactPath}`);
     await new Promise(resolvePromise => setTimeout(resolvePromise, 250));
     assert.equal(
       records.pageviews.length,
@@ -1918,7 +1946,7 @@ async function runEngine(engine, browserType) {
     assert.equal(await docsBridge.count(), 1, `${engine}: retained docs page did not replace its bridge.`);
 
     await assertNoIdentityInDocs(docsPage, records, [firstDevice, secondDevice]);
-    await assertCleanUrls([mainPage, docsPage, starterPage], [firstDevice, secondDevice]);
+    await assertCleanUrls([mainPage, docsPage, enquiryPage], [firstDevice, secondDevice]);
     assert.deepEqual(records.errors, [], `${engine}: uncaught page errors were observed.`);
     await context.close();
 
@@ -1965,13 +1993,26 @@ for (const engine of requestedBrowsers) {
   assert.ok(availableBrowsers.has(engine), `Unsupported tracking browser: ${engine}`);
 }
 
+// Keep the enrollment regression independently reproducible while the default
+// command still runs every shared-tracking scenario.
+const selectedScenario = process.env.TRACKING_SCENARIO?.trim() || 'all';
+assert.ok(['all', 'marketplace-enrollment'].includes(selectedScenario), `Unsupported tracking scenario: ${selectedScenario}`);
+if (selectedScenario === 'marketplace-enrollment') {
+  assert.ok(marketplaceDist, 'The marketplace enrollment scenario requires MARKETPLACE_TRACKING_DIST.');
+}
 for (const engine of requestedBrowsers) {
   const browserType = availableBrowsers.get(engine);
-  await runEngine(engine, browserType);
+  if (selectedScenario === 'all') {
+    await runEngine(engine, browserType);
+  } else {
+    const browser = await browserType.launch();
+    try { await runMarketplaceEnrollmentScenario(browser, engine); }
+    finally { await browser.close(); }
+  }
 }
 
 console.log(
-  `Shared tracking browser checks passed in ${requestedBrowsers.join(', ')} (` +
+  `${selectedScenario === 'all' ? 'Shared tracking' : 'Marketplace enrollment'} browser checks passed in ${requestedBrowsers.join(', ')} (` +
   `${docsDist ? 'canonical Registry Docs build' : 'shared-client docs fixture'}, ` +
   `${marketplaceDist ? 'canonical marketplace build' : 'marketplace journey skipped'}).`,
 );

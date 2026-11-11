@@ -11,11 +11,13 @@ test('contact links retain only their source path and keep bounded enquiry click
   const location = new URL('https://registrystack.org/pricing/?email=private@example.invalid#private');
   class Anchor {
     constructor(href, text, journey) {
+      this.rawHref = href;
       this.href = new URL(href, location).href;
       this.textContent = text;
       this.dataset = journey ? { journey } : {};
     }
-    setAttribute(name, value) { if (name === 'href') this.href = new URL(value, location).href; }
+    getAttribute(name) { return name === 'href' ? this.rawHref : null; }
+    setAttribute(name, value) { if (name === 'href') { this.rawHref = value; this.href = new URL(value, location).href; } }
     closest() { return this; }
   }
   const anchors = [
@@ -27,7 +29,7 @@ test('contact links retain only their source path and keep bounded enquiry click
   ];
   const events = [];
   const listeners = new Map();
-  runInNewContext(script, {
+  const run = () => runInNewContext(script, {
     URL, Element: Anchor,
     window: { location, umami: { track: (name, data) => events.push({ name, data }) } },
     document: {
@@ -35,6 +37,7 @@ test('contact links retain only their source path and keep bounded enquiry click
       addEventListener: (name, handler) => listeners.set(name, handler),
     },
   });
+  run();
   for (const anchor of anchors.slice(0, 2)) {
     const target = new URL(anchor.href);
     assert.equal(target.searchParams.get('source'), '/pricing/');
@@ -53,4 +56,14 @@ test('contact links retain only their source path and keep bounded enquiry click
   ]);
   assert.equal(JSON.stringify(events).includes('private'), false);
   assert.equal(JSON.stringify(events).includes('Delete'), false);
+
+  location.href = 'https://registrystack.org/contact/?type=question&context=Registry+Studio&source=%2Fproducts%2Fstudio%2F';
+  const skip = new Anchor('#main-content', 'Skip to main content');
+  anchors.splice(0, anchors.length, skip);
+  events.length = 0;
+  run();
+  assert.equal(skip.getAttribute('href'), '#main-content');
+  assert.equal(new URL(skip.href).search, location.search);
+  listeners.get('click')({ target: skip });
+  assert.equal(events.length, 0, 'same-document contact navigation is not an enquiry');
 });

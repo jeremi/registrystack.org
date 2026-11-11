@@ -1,8 +1,8 @@
 ---
 title: 'What must a reviewer reconstruct after registry access?'
-description: 'A review checklist for connecting the request, authority, policy, source consultation, disclosure, outcome, and retained audit evidence.'
+description: 'Review who requested information, what was disclosed and which evidence remains. Includes a checklist and historical audit examples.'
 publishedAt: 2026-07-30
-updatedAt: 2026-11-05
+updatedAt: 2026-11-11
 author: 'Jeremi Joslin'
 audience: 'Security reviewers, auditors, data-protection teams, registry owners, and funders'
 category: 'Review guide'
@@ -12,7 +12,7 @@ featured: true
 status: published
 ---
 
-> **Note, October 2026.** Registry Relay was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. The Relay-specific audit fields and review packet below are historical and must not be used as current implementation guidance. Evidence Gateway continues, and the general reconstruction method still applies.
+> **Note, October 2026.** Registry Relay was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. The Relay-specific audit fields and the illustrated review views below are historical and must not be used as current implementation guidance. Audit formats have also changed since publication; use the operating documentation for the version you deploy. Evidence Gateway continues, and the general reconstruction method still applies.
 
 “Every request is logged” sounds reassuring. It is not yet a review method.
 
@@ -186,12 +186,15 @@ service does not have the requested evidence.
 
 ### 7. Test retention and integrity claims
 
-Registry Stack can write keyed, chained audit envelopes. Each envelope binds
-its identifier, timestamp, previous hash, event record, and record hash. With
-the deployment secret protected, rewriting an interior record without
-detection becomes harder.
+Use the audit format and operating instructions for the version you deploy.
+The current [Evidence audit guide](https://docs.registrystack.org/operate/evidence-audit/)
+explains admitted-operation records, refusal behavior and shipping to append-only
+storage. Access control, retention, backup and recovery remain operator
+responsibilities.
 
-That statement has boundaries:
+Earlier Evidence releases and the retired Relay used keyed, chained audit
+envelopes. The historical example below refers to that design. A local chain
+was useful evidence, with these boundaries:
 
 - A valid local chain does not prove that the application made the correct
   policy decision.
@@ -205,8 +208,9 @@ That statement has boundaries:
 - In the retired Relay design, Relay and Evidence Gateway used separate audit keys and chains. Reusing secrets or
   storage across trust domains weakens the boundary.
 
-Ask the operator to demonstrate chain verification, off-host handling, and
-recovery. Do not accept the phrase “tamper-proof log” as evidence.
+Ask the operator to demonstrate the integrity and retention controls for the
+deployed format, including off-host handling and recovery. Do not accept the
+phrase “tamper-proof log” as evidence.
 
 ## A sanitized reconstruction example
 
@@ -274,17 +278,18 @@ Programme decision record:
 
 ## What the evidence cannot prove by itself
 
-A careful review ends with non-guarantees:
+A careful review records what the evidence cannot establish:
 
 - **Source truth:** In the retired Relay design, Relay reported what the configured source consultation
   produced. It does not prove that the source record is factually correct or
   current.
 - **Legal authority:** Configuration can encode reviewed rules. It cannot
   establish the legal basis or institutional mandate that justified them.
-- **Consumer behaviour:** A minimized response does not prove that the
+- **Consumer behavior:** A minimized response does not prove that the
   consuming service used it properly or deleted its own retained data.
-- **Complete history:** A local chain needs protected keys, retention, and
-  appropriate off-host evidence to support stronger continuity claims.
+- **Complete history:** Audit records need protected storage, retention, and
+  appropriate off-host evidence to support continuity claims. Historical local
+  chains alone do not establish a complete history.
 - **Secure operation:** Key custody, transport security, rate limiting,
   monitoring, backup, tenant separation, and incident response remain
   deployment responsibilities.
@@ -296,26 +301,27 @@ from being asked to prove more than it contains.
 
 ## The minimum review packet
 
-For a pilot, request these eight items:
+For a pilot, agree these eight items using the deployed version’s contracts.
+The historical Relay field names above are not a current configuration recipe:
 
 1. The approved registry-question worksheet.
 2. The source authority and consuming-service decision owner.
-3. The compiled route, consultation, claim, and disclosure configuration
+3. The reviewed source request, authorization and disclosure configuration
    relevant to the scenario.
 4. One allowed request and one denial.
 5. One `no_match`, ambiguity, or source-failure path where the scenario permits
    safe testing.
-6. The corresponding audit records (Evidence Gateway, and Relay if the deployment still runs the retired product), sanitized through the
-   approved review process.
-7. Evidence that the retained chains verify and that the deployment's shipping
-   or anchoring posture matches its claim.
+6. The corresponding product audit records, sanitized through the approved
+   review process, with any separately retained source records needed for the review.
+7. Evidence that the audit format, shipping, retention and integrity controls
+   match the deployed version and the operator’s claims.
 8. The consumer's own decision record showing how the evidence was used.
 
 If a project cannot assemble this packet with synthetic data, it is not ready
 to claim reviewable operation with real registry records.
 
 For the implementation details, read the [Registry Stack security
-model](https://docs.registrystack.org/spec/rs-sec-g/), [evidence issuance
-explanation](https://docs.registrystack.org/explanation/evidence-issuance/),
+model](https://docs.registrystack.org/spec/rs-sec-g/), [current Evidence audit
+guide](https://docs.registrystack.org/operate/evidence-audit/),
 and [known limitations
 inventory](https://docs.registrystack.org/explanation/known-limitations/).

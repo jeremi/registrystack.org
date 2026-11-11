@@ -94,8 +94,8 @@ for (const relativePath of ['src/data/products.ts', ...markdownLinkFiles]) {
   }
 }
 
-// 2. Homepage orientation: start from the service, explain customization and
-// an example journey, then ownership, products, adoption and developer paths.
+// 2. Homepage orientation: service choices and adoption/ownership precede
+// technical evaluation. Section IDs separately preserve inbound destinations.
 const homeSource = readSource('src/pages/index.astro');
 const productSource = readSource('src/data/products.ts');
 const heroMatch = homeSource.match(/<section class="hero[^"]*"[\s\S]*?<\/section>/);
@@ -110,34 +110,38 @@ if (!heroMatch || !heroMatch[0].includes('href="/solutions/"') ||
     !heroMatch[0].includes('data-journey="service-inquiry"')) {
   failures.push('homepage hero is missing its solution route or needs-first service inquiry');
 }
-// `how-it-works` and `start-testing` are kept for inbound links to the
-// former product and developer anchors.
+// `how-it-works`, `start-testing` and `customization` preserve older inbound
+// destinations. The last now holds the AI entry; its name is not a content claim.
 for (const anchor of ['registers', 'customization', 'how-a-register-runs', 'shared-work', 'open-source', 'products', 'how-it-works', 'get-started', 'developers', 'start-testing', 'project-status']) {
   if (!homeSource.includes(`id="${anchor}"`)) failures.push(`homepage is missing the ${anchor} destination`);
 }
-const buyerEntryIndexes = ['registers', 'customization'].map((id) => homeSource.indexOf(`id="${id}"`));
+const buyerEntryIndexes = ['registers', 'open-source'].map((id) => homeSource.indexOf(`id="${id}"`));
 const evaluationIndexes = ['products', 'developers'].map((id) => homeSource.indexOf(`id="${id}"`));
 if (buyerEntryIndexes.some((index) => index < 0) || evaluationIndexes.some((index) => index < 0) ||
     Math.max(...buyerEntryIndexes) > Math.min(...evaluationIndexes)) {
-  failures.push('homepage must introduce solutions and customization before product and technical evaluation');
+  failures.push('homepage must introduce service choices and adoption before technical evaluation');
 }
-if (!homeSource.includes('home-solution-grid') || !homeSource.includes('developer-tutorial')) {
+const adoptionSource = homeSource.match(/<section\b[^>]*id="open-source"[\s\S]*?<\/section>/)?.[0] ?? '';
+if (!adoptionSource.includes('href="/pricing/"') || !/Apache[- ]2\.0/.test(adoptionSource)) {
+  failures.push('homepage adoption section must expose the paid delivery route and core licence');
+}
+if (!homeSource.includes('home-product-links') || !homeSource.includes('developer-tutorial')) {
   failures.push('homepage is missing its product choices or developer tutorials');
 }
-// The three core products are equal cards on the homepage, each with its own page.
-const homeProductCards = homeSource.match(/class="home-solution-card"/g) ?? [];
-if (homeProductCards.length !== productPages.length ||
-    productPages.some(({ route }) => !homeSource.includes(`href="${route}"`))) {
-  failures.push(`homepage must show ${productPages.length} product cards, one for each product page`);
+// Product details remain reachable without repeating the capability inventory.
+if (!homeSource.includes('products.map') || !homeSource.includes('href={product.href}')) {
+  failures.push('homepage must link each maintained product in its technical evaluation section');
 }
-if (!homeSource.includes('registerFamilies') || !homeSource.includes('href="/starters/"') || !homeSource.includes('area.audience')) {
-  failures.push('homepage is missing its register families, their audience lines, or the link to the starters catalogue');
+if (!homeSource.includes('registerFamilies') || !readSource('src/components/SiteHeader.astro').includes("'https://marketplace.registrystack.org/'") || !homeSource.includes('area.audience')) {
+  failures.push('homepage is missing its register families, their audience lines, or the marketplace evaluation route');
 }
 if (/US\$/.test(homeSource)) failures.push('homepage repeats a price; prices belong on the pricing page');
 // The homepage headline, the default page title, and the social image agree.
 const homeHeadline = homeSource.match(/<h1 id="hero-title">([^<]+)<\/h1>/)?.[1]?.trim() ?? '';
-const ogHeadline = (readSource('scripts/build-og.mjs').match(/<h1>([\s\S]*?)<\/h1>/)?.[1] ?? '')
+const ogSource = readSource('scripts/build-og.mjs');
+const ogCardHeadline = (file) => (ogSource.match(new RegExp(`file: '${file}',[\\s\\S]*?headline: '([^']*)'`))?.[1] ?? '')
   .replace(/<br\s*\/?>/g, ' ').replace(/\s+/g, ' ').trim();
+const ogHeadline = ogCardHeadline('public/og-image.png');
 if (!homeHeadline || homeHeadline !== ogHeadline) {
   failures.push(`homepage H1 "${homeHeadline}" and scripts/build-og.mjs headline "${ogHeadline}" differ (update the script and run npm run build:og)`);
 }
@@ -171,7 +175,7 @@ for (const route of [
   '/architecture/headless/',
   '/digital-public-infrastructure/',
   '/data-spaces/',
-  '/starters/',
+  'https://marketplace.registrystack.org/',
   '/blog/',
   '/security/',
   '/faq/',
@@ -197,7 +201,7 @@ for (const [label, source] of [['header', headerSource], ['footer', footerSource
   if (!source.includes("from '../data/products'") || !source.includes('product.href') || !source.includes('product.name')) {
     failures.push(`${label} does not build its product entries from products.ts by product name`);
   }
-  if (!source.includes("'/starters/'")) failures.push(`${label} is missing the starting configurations`);
+  if (!source.includes("'https://marketplace.registrystack.org/'")) failures.push(`${label} is missing the starting configurations`);
   if (!source.includes('Shared capabilities')) {
     failures.push(`${label} does not group the cross-cutting solution areas under "Shared capabilities"`);
   }
@@ -205,7 +209,7 @@ for (const [label, source] of [['header', headerSource], ['footer', footerSource
 if (!headerSource.includes('href="/solutions/"') || !headerSource.includes('All solutions')) {
   failures.push('the Solutions menu must open with all solutions');
 }
-for (const route of ['/starters/', '/#developers', 'https://docs.registrystack.org/']) {
+for (const route of ['https://marketplace.registrystack.org/', '/#developers', 'https://docs.registrystack.org/']) {
   if (!headerSource.includes(`href: '${route}'`)) failures.push(`the Products menu is missing ${route}`);
 }
 for (const route of ['/ai/', '/pricing/']) {
@@ -220,7 +224,7 @@ if (!footerSource.includes('href: describeServiceHref()') || !footerSource.inclu
 if (/mailto:|contactEmail/.test(footerSource)) {
   failures.push('footer must not bypass the contact form with a direct email link');
 }
-for (const route of ['/solutions/', '/ai/', '/customization/', '/architecture/headless/', '/digital-public-infrastructure/', '/data-spaces/', '/starters/', '/blog/', '/security/', '/faq/']) {
+for (const route of ['/solutions/', '/ai/', '/customization/', '/architecture/headless/', '/digital-public-infrastructure/', '/data-spaces/', 'https://marketplace.registrystack.org/', '/blog/', '/security/', '/faq/']) {
   if (!footerSource.includes(`href: '${route}'`)) failures.push(`footer is missing ${route}`);
 }
 
@@ -394,18 +398,19 @@ for (const starter of catalogueStarters) {
 // access through the native form or shared contact route and never links the zip.
 const starterPageSource = readSource('src/pages/starters/[id].astro');
 if (starterPageSource.includes('href={starter.download.path}')) failures.push('starter page links the zip; access to starters is available on request');
-if (!starterPageSource.includes('data-journey="starter-request"')) failures.push('starter page is missing the starter request action');
-if (!starterPageSource.includes('const requestFormEnabled = Boolean(starterRequestEndpoint)') ||
-    starterPageSource.includes("starter.id === 'professional-licensing'") ||
-    !starterPageSource.includes('starterId={starter.id}') ||
-    !starterPageSource.includes('starterTitle={starter.title}') ||
-    !starterPageSource.includes('sourcePage={`/starters/${starter.id}/`}')) {
-  failures.push('every starter page must use the configured native form with its actual identity and source route');
+if (!starterPageSource.includes('marketplacePackHref(starter.id)') ||
+    !starterPageSource.includes('data-journey="marketplace-current-configuration"')) {
+  failures.push('each archived reference must lead to its exact current marketplace configuration');
+}
+if (starterPageSource.includes('<StarterRequestForm')) failures.push('archived references must not request access to an outdated snapshot locally');
+if (!starterPageSource.includes('startersSource.breg.version') || !starterPageSource.includes('model snapshot')) {
+  failures.push('archived references must identify the catalogue snapshot being described');
 }
 const startersIndexSource = readSource('src/pages/starters/index.astro');
-if (!/not public yet[\s\S]*request access/i.test(startersIndexSource)) {
-  failures.push('starters catalogue must offer access requests for unpublished starter configurations');
+if (!startersIndexSource.includes('registerFamilies.map') || !startersIndexSource.includes('marketplaceCollectionHref(area.key)')) {
+  failures.push('the former catalogue index must retain all seven service-area handoffs to matching marketplace collections');
 }
+if (startersIndexSource.includes('<StarterCard')) failures.push('the former catalogue index must not repeat marketplace pack listings');
 const startersUpstream = JSON.parse(readSource('src/upstream/starters.json') || '{}');
 if (startersUpstream.starterCount !== catalogueStarters.length) {
   failures.push(`src/upstream/starters.json starterCount ${startersUpstream.starterCount} does not match the ${catalogueStarters.length} starters in src/data/starters.json`);
@@ -441,9 +446,15 @@ const handoffExempt = new Set([
 for (const relativePath of sweptFiles) {
   if (!relativePath.startsWith('src/pages/') || handoffExempt.has(relativePath)) continue;
   const source = readSource(relativePath);
-  const hasBuyerHandoff = /data-journey="service-inquiry"/.test(source) &&
-    /<section class="final-cta"[\s\S]*?href="\/pricing\//.test(source);
-  if (!/DocsHandoff|<Product|<Article/.test(source) && !hasBuyerHandoff) {
+  const hasBuyerHandoff = (/data-journey="service-inquiry"/.test(source) &&
+    /<section class="final-cta"[\s\S]*?href="\/pricing\//.test(source)) ||
+    // An unreleased authoring tool offers a contextual question and a delivery
+    // route, rather than implying it is included in runtime pilot pricing.
+    (/askQuestionHref\('[^']+'\)/.test(source) &&
+      /<section class="final-cta"[\s\S]*?href="\/customization\//.test(source));
+  const hasSecurityHandoff = relativePath === 'src/pages/security.astro' &&
+    /href=\{securityDocsHref\}/.test(source) && /href=\{askQuestionHref\(/.test(source);
+  if (!/DocsHandoff|<Product|<Article/.test(source) && !hasBuyerHandoff && !hasSecurityHandoff) {
     failures.push(`${relativePath} is missing a docs or buyer delivery handoff`);
   }
 }
@@ -494,7 +505,7 @@ for (const relativePath of sweptFiles) {
 // The FAQ routes product, solution, starter, and provider questions to the pages
 // that answer them, and closes on the light "Ask a question" action.
 const faqSource = readSource('src/pages/faq.astro');
-for (const route of ['/solutions/', '/solutions/#products', '/starters/', '/imprint/']) {
+for (const route of ['/solutions/', '/solutions/#products', 'https://marketplace.registrystack.org/', '/imprint/']) {
   if (!faqSource.includes(`"href": "${route}"`)) failures.push(`FAQ is missing its link to ${route}`);
 }
 if (!/<DocsHandoff[\s\S]*?primaryHref=\{askQuestionHref\(\)\}[\s\S]*?\/>/.test(faqSource)) {
@@ -538,9 +549,22 @@ for (const relativePath of listAstroFiles('src/pages')) {
 // buyer can use today.
 const customizationSource = readSource('src/pages/customization.astro');
 const studioSection = customizationSource.match(/<section\b[^>]*id="studio"[\s\S]*?<\/section>/)?.[0] ?? '';
-if (!/Registry Studio/i.test(studioSection) ||
-    !/\b(planned|in development|developing|future|not (?:yet|currently) available)\b/i.test(studioSection)) {
-  failures.push('customization page must identify Registry Studio as planned or in development');
+if (studioSection && (!/Registry Studio/i.test(studioSection) ||
+    !/\b(planned|in development|developing|future|not (?:yet|currently) available)\b/i.test(studioSection))) {
+  failures.push('a marketed Studio section must identify its planned or in-development status');
+}
+
+// The assistant channel states its maturity and the limit of what an
+// assistant can do, on the page that offers it.
+const citizenAccessSource = readSource('src/pages/ai/citizen-access.astro');
+if (!/\bPreview\b/.test(citizenAccessSource) || !/outside the compatibility promise/.test(citizenAccessSource)) {
+  failures.push('citizen access page must label the assistant integration as a Preview outside the compatibility promise');
+}
+if (!/cannot submit a request, approve it or change a record/.test(citizenAccessSource)) {
+  failures.push('citizen access page must state that the assistant cannot submit a request, approve it or change a record');
+}
+if (!citizenAccessSource.includes('href="/security/"') && !citizenAccessSource.includes("href: '/security/'")) {
+  failures.push('citizen access page must link to the security page');
 }
 
 // 5. Social sharing: the layout declares a large-image card, so it must point
@@ -556,6 +580,50 @@ if (!layoutSource.includes('og-image.png')) {
 }
 if (!existsSync(resolve('public/og-image.png'))) {
   failures.push('public/og-image.png is missing (run npm run build:og)');
+}
+// The AI pages share their own card, and its headline agrees with the AI
+// overview H1.
+const aiOverviewSource = readSource('src/pages/ai/index.astro');
+const aiHeadline = aiOverviewSource.match(/<h1\b[^>]*>([^<]+)<\/h1>/)?.[1]?.trim() ?? '';
+const aiOgHeadline = ogCardHeadline('public/og-ai.png');
+if (!aiHeadline || aiHeadline !== aiOgHeadline) {
+  failures.push(`AI overview H1 "${aiHeadline}" and scripts/build-og.mjs headline "${aiOgHeadline}" differ (update the script and run npm run build:og)`);
+}
+if (!existsSync(resolve('public/og-ai.png'))) {
+  failures.push('public/og-ai.png is missing (run npm run build:og)');
+}
+// The overview routes distinct reader jobs; the runtime restriction belongs to
+// its citizen-access card, not a universal claim about every use of AI.
+for (const route of ['/ai/service-design/', '/customization/', '/ai/citizen-access/', '/products/studio/']) {
+  if (!aiOverviewSource.includes(`href="${route}"`)) failures.push(`AI overview is missing its ${route} path`);
+}
+// The destination protects the substantive runtime boundary above. The
+// overview's section relevance and scoped wording require editorial review;
+// do not pin a second literal safety sentence here.
+const studioSource = readSource('src/pages/products/studio.astro');
+if (!/In development/.test(studioSource) || !/separate licensing terms/.test(studioSource)) {
+  failures.push('Studio must distinguish its in-development availability and separate commercial terms from the core runtime');
+}
+// The team's track record has one source, so its figures cannot drift between
+// pages or be restated as Registry Stack deployments.
+const teamRecordSource = readSource('src/data/team.ts');
+for (const file of ['src/pages/ai/index.astro', 'src/pages/index.astro']) {
+  if (!/\bteamRecord(Short|Full)\b/.test(readSource(file))) {
+    failures.push(`${file} must take the team track record from src/data/team.ts`);
+  }
+}
+for (const file of ['src/pages/ai/index.astro', 'src/pages/index.astro']) {
+  if (/\b\d+\s+countries\b|\bmillion people\b/.test(readSource(file))) {
+    failures.push(`${file} restates track record figures; use the wording in src/data/team.ts`);
+  }
+}
+if (!/\bteam\b/i.test(teamRecordSource.match(/teamRecordShort = '([^']*)'/)?.[1] ?? '')) {
+  failures.push('the short track record must describe the team, not Registry Stack deployments');
+}
+for (const file of ['src/pages/ai/index.astro', 'src/pages/ai/service-design.astro', 'src/pages/ai/citizen-access.astro', 'src/pages/customization.astro']) {
+  if (!readSource(file).includes('ogImagePath="/og-ai.png"')) {
+    failures.push(`${file} does not use the AI social card`);
+  }
 }
 if (!layoutSource.includes('type="application/rss+xml"')) {
   failures.push('layout does not advertise the RSS feed with a rel="alternate" link');

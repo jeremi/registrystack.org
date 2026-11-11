@@ -5,38 +5,47 @@ import { readFile } from 'node:fs/promises';
 import { transform } from '@astrojs/compiler';
 
 const root = new URL('../', import.meta.url);
-const pageUrl = new URL('src/pages/starters/[id].astro', root);
+const archiveUrl = new URL('src/pages/starters/[id].astro', root);
+const contactUrl = new URL('src/pages/contact.astro', root);
 const formUrl = new URL('src/components/StarterRequestForm.astro', root);
 const privacyUrl = new URL('src/pages/privacy.astro', root);
 
-test('every starter page uses the native request form when its endpoint is configured', async () => {
-  const page = await readFile(pageUrl, 'utf8');
+test('archived starter pages hand current access requests to the exact marketplace pack', async () => {
+  const page = await readFile(archiveUrl, 'utf8');
+  await transform(page, { filename: archiveUrl.pathname });
+
+  assert.match(page, /starters\.map\(\(starter\)/);
+  assert.match(page, /marketplacePackHref\(starter\.id\)/);
+  assert.match(page, /href=\{marketplaceHref\}[^>]*data-journey="marketplace-current-configuration"/);
+  assert.match(page, /Reference model/);
+  assert.match(page, /startersSource\.breg\.version/);
+  assert.match(page, /model snapshot/);
+  assert.doesNotMatch(page, /StarterRequestForm|data-starter-request-form|requestActionHref/);
+});
+
+test('the contact page owns native request forms and validates both endpoint variants', async () => {
+  const page = await readFile(contactUrl, 'utf8');
   const form = await readFile(formUrl, 'utf8');
 
   await Promise.all([
-    transform(page, { filename: pageUrl.pathname }),
+    transform(page, { filename: contactUrl.pathname }),
     transform(form, { filename: formUrl.pathname }),
   ]);
 
-  assert.match(page, /const requestFormEnabled = Boolean\(starterRequestEndpoint\)/);
-  assert.doesNotMatch(page, /starter\.id === 'professional-licensing'/);
-  assert.match(page, /requestFormEnabled \? '#starter-request-form' : requestHref/);
   assert.match(page, /parseStarterRequestEndpoint\(import\.meta\.env\.PUBLIC_STARTER_REQUEST_ENDPOINT, 'kiosk'\)/);
   assert.match(page, /parseStarterRequestEndpoint\(import\.meta\.env\.PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT, 'consented'\)/);
-  assert.match(page, /starterRequestTrackedEndpoint && !starterRequestEndpoint/);
+  assert.match(page, /trackedEndpoint && !endpoint/);
   assert.match(page, /kioskUrl\.origin !== trackedUrl\.origin/);
   assert.match(page, /searchParams\.get\('formId'\) === trackedUrl\.searchParams\.get\('formId'\)/);
-  assert.match(page, /requestFormEnabled && starterRequestEndpoint && \(\s*<StarterRequestForm/);
-  assert.match(page, /trackedEndpoint=\{starterRequestTrackedEndpoint\}/);
-  assert.match(page, /starterId=\{starter\.id\}/);
-  assert.match(page, /starterTitle=\{starter\.title\}/);
-  assert.match(page, /sourcePage=\{`\/starters\/\$\{starter\.id\}\/`\}/);
-  assert.match(page, /requestType="starter"/);
-  assert.match(page, /requestContext=\{starter\.title\}/);
-  assert.equal(
-    page.match(/href=\{requestActionHref\}[^>]*data-journey="starter-request"/g)?.length,
-    2,
-  );
+  assert.match(page, /<StarterRequestForm[\s\S]*?endpoint=\{endpoint\}/);
+  assert.match(page, /trackedEndpoint=\{trackedEndpoint\}/);
+  assert.match(page, /requestType="question"/);
+  assert.match(page, /requestContext=""/);
+  assert.match(page, /requestFromUrl/);
+  assert.doesNotMatch(page, /starterId=/);
+  assert.match(form, /panel\.dataset\.requestFromUrl === 'true'/);
+  assert.match(form, /type = isContactRequestType\(urlType\) \? urlType : 'question'/);
+  assert.match(form, /requestSourcePage\(params\.get\('source'\) \?\? undefined\) \?\? '\/contact\/'/);
 
   for (const field of ['email', 'organization', 'role', 'message']) {
     assert.match(form, new RegExp(`name=["']${field}["']`));

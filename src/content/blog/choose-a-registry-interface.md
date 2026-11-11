@@ -2,6 +2,7 @@
 title: 'Do you need the records, or just the answer?'
 description: 'Three short questions that decide whether a service should maintain a registry, publish from one, or ask it a question.'
 publishedAt: 2026-09-16
+updatedAt: 2026-11-11
 author: 'Jeremi Joslin'
 audience: 'Programme and service owners, architects, integrators, and registry teams'
 category: 'Decision guide'
@@ -70,7 +71,7 @@ to whom: a yes or no, a value, or a few fields, each released only to callers
 entitled to it.
 
 *A civil registry is asked whether a person is registered as a parent of a
-child.* Most callers get yes or no. A caller the registry has authorised also
+child.* Most callers get yes or no. A caller the registry has authorized also
 gets the recorded parent identifiers. One registered birth, two answers, decided
 in advance by the registry rather than at the time by the caller.
 
@@ -85,10 +86,11 @@ that check it and its withdrawal are a separate programme. The
 [credential tutorial](https://docs.registrystack.org/tutorials/request-evidence-as-sd-jwt-vc/)
 shows the boundary.
 
-**So the test for an answer: it contains what the service needs to act, and
-nothing the service would then have to protect.** A question written too
-generously fails that test, which is why reviewing the question is where the
-effort goes. What the service does with the answer stays with the service.
+**The test for an answer: it contains only what the service needs for the
+agreed task.** Even a yes-or-no answer can be personal or sensitive information.
+The receiving service must protect it and agree how it may be used and retained.
+Reviewing the question sets that disclosure boundary; responsibility for the
+service decision stays with the service.
 
 ## Design for "cannot answer"
 

@@ -41,7 +41,7 @@ freshness:
   maximum_acceptable_age: ""
   consumer_check: ""
 
-failure_states:
+failure_states: # Record internal distinctions; public responses may combine states to avoid disclosure.
   matched_false: ""
   no_match: ""
   ambiguous: ""
@@ -70,7 +70,7 @@ audit:
 
 acceptance_tests:
   - allowed_request_returns_only_the_permitted_answer
-  - denied_request_reads_no_source_data
+  - authorization_refusal_is_checked_before_source_access
   - no_match_is_not_collapsed_to_false
-  - ambiguous_and_unavailable_are_distinct
+  - uncertainty_is_not_collapsed_to_a_negative_fact
   - excluded_information_never_appears_in_response_or_logs

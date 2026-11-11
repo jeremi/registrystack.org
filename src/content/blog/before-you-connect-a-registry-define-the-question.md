@@ -1,10 +1,10 @@
 ---
 title: 'Before you connect a registry, define the question'
-description: 'A practical worksheet for agreeing who may ask, for which service, what the registry may answer, and what must remain undisclosed.'
+description: 'Agree who may ask, what the register may answer and what stays private. Includes a worksheet and historical Relay examples.'
 publishedAt: 2026-07-30
-updatedAt: 2026-11-05
+updatedAt: 2026-11-11
 author: 'Jeremi Joslin'
-audience: 'Program owners, registry owners, policy teams, and integrators'
+audience: 'Programme owners, registry owners, policy teams, and integrators'
 category: 'Field guide'
 readingMinutes: 12
 order: 1
@@ -148,7 +148,7 @@ worksheet produces a smaller and more testable contract:
 | Reviewer must reconstruct | Requester, purpose, claim and policy version, source consultation, disclosure mode, decision, and failure code                        |
 
 The evidence is one input to the voucher programme. The programme remains
-responsible for eligibility rules, prioritisation, budget, approval, and
+responsible for eligibility rules, prioritization, budget, approval, and
 payment. A positive registry answer is not, by itself, a voucher decision.
 
 The distinction around failure states is equally important. `no_match` does not
@@ -168,7 +168,7 @@ path.
 | Return a configured aggregate                                      | Registry Relay (retired) served the declared aggregate route; the deployment still needed to consider repeated-query disclosure because Relay did not provide a longitudinal privacy budget |
 | Return a boolean or bounded value instead of a record              | Evidence Gateway evaluates the configured evidence claim and applies the claim's disclosure policy (this article's original design used a compiler-pinned Relay consultation, now retired)                                   |
 | Issue a portable credential from registry-backed evidence          | Evidence Gateway can issue the configured SD-JWT VC profile and deliver it to a wallet through a separate OID4VCI service; external wallet and verifier compatibility must be tested for the intended pilot |
-| Describe datasets, policies, and evidence offerings for discovery  | [Registry Manifest](https://docs.registrystack.org/products/registry-manifest/) is a metadata description format, not a Registry Stack product; publishing it grants no access and enforces no policy |
+| Describe datasets, policies, and evidence offerings for discovery  | [Registry Manifest](https://docs.registrystack.org/products/registry-manifest/) validates a metadata description and renders portable catalogue files; publishing those files grants no access and enforces no policy |
 
 In the retired Relay design, Relay and Evidence Gateway wrote separate audit records because they owned
 different boundaries. Relay owned source access and adaptation. Evidence

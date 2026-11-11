@@ -1,7 +1,8 @@
-// Generates the social-sharing card at public/og-image.png (1200x630).
+// Generates the social-sharing cards in public/ (1200x630 each): the default
+// card and the card shared by the AI pages.
 // The brand fonts are embedded as base64 so the render is fully offline and
-// reproducible. Re-run with `npm run build:og` whenever the headline, wordmark,
-// or brand colours change; the produced PNG is committed to the repo.
+// reproducible. Re-run with `npm run build:og` whenever a headline, the wordmark,
+// or brand colours change; the produced PNGs are committed to the repo.
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
@@ -12,7 +13,20 @@ const sans800 = fontData('node_modules/@fontsource/public-sans/files/public-sans
 const sans400 = fontData('node_modules/@fontsource/public-sans/files/public-sans-latin-400-normal.woff2');
 const mono500 = fontData('node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2');
 
-const html = `<!doctype html>
+const cards = [
+  {
+    file: 'public/og-image.png',
+    kicker: 'Open-source software for public registers',
+    headline: 'Public registers and services,<br>built around your rules.',
+  },
+  {
+    file: 'public/og-ai.png',
+    kicker: 'AI for public services',
+    headline: 'Design, adapt and access<br>public services with AI.',
+  },
+];
+
+const html = ({ kicker, headline }) => `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -79,8 +93,8 @@ const html = `<!doctype html>
       <span class="wordmark">Registry Stack</span>
     </div>
     <div>
-      <p class="kicker">Open-source software for public registers</p>
-      <h1>Public registers and services,<br>built around your rules.</h1>
+      <p class="kicker">${kicker}</p>
+      <h1>${headline}</h1>
     </div>
     <div class="foot">
       <span class="url">registrystack.org</span>
@@ -90,10 +104,12 @@ const html = `<!doctype html>
 </html>`;
 
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
-await page.setContent(html);
-await page.evaluate(() => document.fonts.ready);
-await page.screenshot({ path: resolve('public/og-image.png') });
+for (const card of cards) {
+  const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
+  await page.setContent(html(card));
+  await page.evaluate(() => document.fonts.ready);
+  await page.screenshot({ path: resolve(card.file) });
+  await page.close();
+  console.log(`og image written to ${card.file} (1200x630)`);
+}
 await browser.close();
-
-console.log('og image written to public/og-image.png (1200x630)');

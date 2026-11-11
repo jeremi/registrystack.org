@@ -9,12 +9,11 @@ const releaseSource = 'https://github.com/registrystack/registry-stack/tree/v0.4
 const adapterExample = `${releaseSource}/adapter/examples/dhis2-consultation`;
 const evidenceExample = `${releaseSource}/evidence/examples/standalone`;
 const registryEvidenceExample = `${releaseSource}/breg/evidence`;
-const odrlGuide = 'https://github.com/registrystack/registry-stack/blob/v0.46.0/products/breg/odrl-export.md';
 ---
 
 <Base title="Data spaces and authoritative registers | Registry Stack" description="Use an authoritative register, connect an existing system or offer signed answers through a data space. Agree what each participant may access.">
   <SiteHeader current="data-spaces" />
-  <main>
+  <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="data-spaces-title">
       <div class="hero-inner"><div class="hero-copy">
         <p class="eyebrow">Data spaces</p>
@@ -33,7 +32,6 @@ const odrlGuide = 'https://github.com/registrystack/registry-stack/blob/v0.46.0/
         <div class="section-heading">
           <h2 id="data-space-meaning-title">Agree how organizations will share and use data.</h2>
           <p>A data space brings organizations together under shared rules and technical arrangements. The bodies governing the space set the rules for joining, requesting and using data. Each data holder decides what it can offer under those rules. An organization can provide data, use data from others or do both.</p>
-          <p>Common European Data Spaces bring together governance and infrastructure in areas such as health, mobility and public administration. The Data Spaces Support Centre explains the roles and building blocks a programme can choose. <a href="https://digital-strategy.ec.europa.eu/en/policies/data-spaces">European Commission overview</a> · <a href="https://blueprint.dssc.eu/">Data Spaces Support Centre blueprint</a></p>
         </div>
         <div class="editorial-callout">
           <h3>Start from a specific need</h3>
@@ -82,26 +80,19 @@ const odrlGuide = 'https://github.com/registrystack/registry-stack/blob/v0.46.0/
           </article>
           <article>
             <h3>Describe what others can request</h3>
-            <p>Registry Manifest can produce portable descriptions for a catalogue. Registry Discovery can index approved descriptions of Evidence providers. The implementation connects the metadata to the catalogue the space uses. The receiving service applies its own trust rules before calling a provider.</p>
+            <p>Registry Manifest produces portable descriptions of registers and information offerings. Your implementation connects those descriptions to the catalogue the data space uses, so other participants can find what your institution offers.</p>
             <a class="inline-cta" href="https://docs.registrystack.org/products/registry-manifest/">Explore Registry Manifest <span aria-hidden="true">↗</span></a>
           </article>
         </div>
-        <p class="section-note">If partners need to request changes, the source institution defines the allowed actions. Registry Casework can record a required staff decision. Base Registry Engine checks who is allowed to apply that decision before updating the register.</p>
       </div>
     </section>
 
     <section class="section section-muted" id="exchange" aria-labelledby="exchange-integration-title">
-      <div class="section-inner approach-split">
-        <div class="section-heading">
+      <div class="section-inner">
+        <div class="section-heading compact">
           <p class="eyebrow">Participation and integration</p>
           <h2 id="exchange-integration-title">Connect the service to the data space’s exchange infrastructure.</h2>
           <p>The data space sets its rules for membership, identity, agreements and use of data. Your integration team connects the participant’s API to the connector or exchange network the space requires and agrees how the provider will verify the caller’s identity. The provider’s service enforces its access rules on each request.</p>
-          <p>X-Road is one example. Its Security Servers carry signed requests and responses between participants’ systems. Connecting a Registry Stack API to an institution’s Security Server is part of the integration. NIIS describes support for data space protocols in its X-Road 8 release plan. Check which version and features your programme uses. <a href="https://x-road.global/data-exchange">How X-Road exchanges data</a> · <a href="https://www.niis.org/blog/2026/11/4/x-road-8-spaceship-is-cleared-for-launch">NIIS’s X-Road 8 release plan</a></p>
-        </div>
-        <div class="editorial-callout">
-          <h3>Review policy alongside the integration</h3>
-          <p>Base Registry Engine can export a partial description of configured read permissions in the Open Digital Rights Language (ODRL). Operators review the export and the list of omissions before sharing it. A connector such as Eclipse Dataspace Components needs its own policy configuration and tested mapping. Base Registry Engine checks each live request to the register against its own access rules.</p>
-          <a class="inline-cta" href={odrlGuide}>Read the policy export scope <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </section>

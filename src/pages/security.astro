@@ -2,7 +2,6 @@
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import DocsHandoff from '../components/DocsHandoff.astro';
 import { askQuestionHref } from '../data/contact';
 
 const pageTitle = 'Security | Registry Stack';
@@ -24,22 +23,17 @@ const properties = [
   {
     title: 'Limit what each service receives',
     body:
-      'Evidence Gateway checks permission for a predefined question before consulting its source. Your organization defines the permitted recipient, purpose, source, and answer.',
+      'Evidence Gateway checks permission for a predefined question before consulting its source. It records authorized source access and disclosure before releasing the answer. Your organization defines the permitted recipient, purpose, source, and answer.',
   },
   {
     title: 'Verify where an answer came from',
     body:
-      'Evidence Gateway signs its answers. A receiving service can check that the answer came from a trusted issuer, has not been altered, and meets the expected purpose and validity requirements.',
+      'Evidence Gateway signs its answers so a receiving service can verify the issuer, integrity, intended use and validity. The source owner remains responsible for the information’s accuracy; the receiving service makes its own decision.',
   },
   {
     title: 'Keep human decisions attributable',
     body:
       'Registry Casework records who reviewed each item and who decided. Applying a change is a separate step. The register checks the permission of the person or service applying it and records who made the change.',
-  },
-  {
-    title: 'Retain activity for review',
-    body:
-      'Record history and audit events support later review. Evidence Gateway records authorized source access and disclosure before releasing an answer. Your team protects and retains these records for review.',
   },
 ];
 
@@ -52,7 +46,7 @@ const responsibilities = [
   {
     title: 'Your operator runs the deployment',
     body:
-      'Your organization or an operator it appoints runs the software in an environment it controls. The operator manages database and source access, credentials, audit logs, monitoring, updates, backups, and incident response. The software does not send your records or audit logs to Aubex.',
+      'Your organization or an operator it appoints runs the software in an environment it controls. The operator manages database and source access, credentials, audit logs, monitoring, updates, backups, and incident response. Your team controls the systems to which the deployment connects.',
   },
 ];
 
@@ -88,7 +82,7 @@ const evidence = [
 <Base title={pageTitle} description={pageDescription}>
   <SiteHeader current="security" />
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <section class="hero" aria-labelledby="security-hero-title">
       <div class="hero-inner">
         <div class="hero-copy">
@@ -150,32 +144,7 @@ const evidence = [
       </div>
     </section>
 
-    <section class="section" aria-labelledby="assertion-protection-title">
-      <div class="section-inner split">
-        <div class="section-heading compact">
-          <p class="eyebrow">Understanding a signed answer</p>
-          <h2 id="assertion-protection-title">A service can verify the answer before using it.</h2>
-        </div>
-        <div class="security-explanation">
-          <p>
-            In an illustrative procurement check, Evidence Gateway consults the configured
-            business register and signs an answer about a supplier&rsquo;s registration status.
-            The procurement service checks the issuer, signature, intended use, and validity
-            before relying on that answer.
-          </p>
-          <p>
-            The signature establishes the origin and integrity of the answer. The register
-            owner remains responsible for the source information, including its factual accuracy
-            and current status. A valid signature does not establish that a fact is correct or
-            that a person is legally entitled to something. The procurement service remains
-            responsible for its purchasing decision.
-          </p>
-          <a class="inline-cta" href="/products/evidence-gateway/">Explore Evidence Gateway &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="security-verify-title">
+    <section class="section" aria-labelledby="security-verify-title">
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">For governance, security, and technical review</p>
@@ -200,7 +169,7 @@ const evidence = [
       </div>
     </section>
 
-    <section class="section" aria-labelledby="security-report-title">
+    <section class="section section-muted" aria-labelledby="security-report-title">
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">Coordinated disclosure</p>
@@ -221,13 +190,6 @@ const evidence = [
     </section>
   </main>
 
-  <DocsHandoff
-    eyebrow="For your security team"
-    heading="Review the detailed security model with your technical team."
-    primaryLabel="Read the security docs"
-    primaryHref={securityDocsHref}
-    emphasis="docs"
-  />
   <SiteFooter />
 </Base>
 
@@ -246,8 +208,7 @@ const evidence = [
     margin-top: 0;
   }
 
-  .quiet-card p:last-child,
-  .security-explanation p:last-child {
+  .quiet-card p:last-child {
     margin-bottom: 0;
   }
 
@@ -256,11 +217,6 @@ const evidence = [
     margin: clamp(24px, 3vw, 32px) auto 0;
     max-width: 760px;
     text-align: center;
-  }
-
-  .security-explanation {
-    border-top: 2px solid var(--registry-ink);
-    padding-top: 18px;
   }
 
   .security-disclosure-extra {

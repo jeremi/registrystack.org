@@ -255,45 +255,17 @@ export const solutionAreas: readonly SolutionArea[] = [
   },
 ] as const;
 
-// Questions every register family page asks after its own, before the
-// closing band. The answers stay true for any register a family groups.
+// Shared adoption handoff after domain questions; detailed terms live on the FAQ.
 export const sharedFamilyFaq: readonly { q: string; a: string; link?: { href: string; label: string } }[] = [
   {
-    q: 'What can an implementation include?',
-    a: 'An implementation can include configuration, applicant and staff screens, sign-in, hosting, data migration and connections to existing systems. A written scope states what the delivery team provides, what your institution provides and how you will check that the service meets your requirements.',
-    link: { href: '/pricing/', label: 'See implementation and support options' },
+    q: 'How do we plan an implementation?',
+    a: 'Start with one service. Agree the records, staff tasks, screens, integrations and migration it needs. A written scope identifies who delivers, hosts and operates it, including access, backups and handover.',
+    link: { href: '/faq/', label: 'Ownership, delivery and operating questions' },
   },
   {
-    q: 'What does it cost?',
-    a: 'The core open-source Registry Stack components are Apache-2.0 licensed and carry no software licence fee. Implementation, support, hosting and other applications may have separate commercial terms. Integration, migration and operating costs depend on the service.',
-    link: { href: '/pricing/', label: 'See the published prices' },
-  },
-  {
-    q: 'Where does it run, and who runs it?',
-    a: 'It can run on infrastructure your institution controls or with a provider you choose. The written scope identifies who hosts and operates the service, manages user access, keeps backups and retains audit records.',
-    link: { href: '/security/', label: 'Who is responsible for what' },
-  },
-  {
-    q: 'What do our staff use day to day?',
-    a: 'Staff can use screens delivered with the implementation or an existing application connected to Registry Stack. Some starting configurations include example staff screens. We agree the tasks, staff permissions and public access the service needs before delivery.',
-  },
-  {
-    q: 'Can another team operate the service if we change provider?',
-    a: 'Yes. Another capable team can operate and adapt the Apache-2.0 core components. Your institution keeps its records and their history, whether in an existing system or in the database used by Base Registry Engine. The contract should define handover arrangements and the licence and ownership of any custom screens, integrations or configuration.',
-  },
-  {
-    q: 'What does a first step look like?',
-    a: 'Tell us about one service: who applies or asks for a change, what staff decide, which record must stay current and which systems people use today. We can identify a useful starting configuration and explain how Registry Stack could fit.',
-  },
-  {
-    q: 'How can our technical team test a check against an existing register?',
-    a: 'Start with the Evidence Gateway tutorial. It answers a yes-or-no question from sample data and verifies the result on a laptop. Your team can then assess how to connect your existing register.',
-    link: { href: 'https://docs.registrystack.org/tutorials/first-evidence-assertion/', label: 'Run the information-check tutorial' },
-  },
-  {
-    q: 'How can our technical team test building a register?',
-    a: 'Start with the Base Registry Engine tutorial to create records and inspect their history. Then explore a starting configuration for the kind of register you need.',
-    link: { href: 'https://docs.registrystack.org/tutorials/first-breg/', label: 'Run the registry tutorial' },
+    q: 'How can our technical team evaluate the software?',
+    a: 'Use the component tutorials and current limitations to test core behavior with sample data. A complete service still needs its own rules, connected applications and end-to-end testing.',
+    link: { href: '/#developers', label: 'Technical evaluation and current limitations' },
   },
 ];
 

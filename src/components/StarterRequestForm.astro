@@ -62,7 +62,7 @@ const recoveryHref = requestHref ?? (requestFromUrl
 ---
 
 <section
-  class="starter-request-panel"
+  class:list={['starter-request-panel', { 'email-contact-panel': !endpoint }]}
   id="starter-request-form"
   aria-labelledby="starter-request-title"
   data-request-panel
@@ -136,7 +136,7 @@ const recoveryHref = requestHref ?? (requestFromUrl
     </form>}
 
     <p class="starter-request-fallback">
-      {endpoint ? 'If the form does not work, ' : 'The form is unavailable. '}
+      {endpoint ? 'If the form does not work, ' : 'Contact us by email: '}
       <a href={recoveryHref} data-request-recovery>Email {contactEmail}</a>.
     </p>
 </section>
@@ -283,6 +283,8 @@ const recoveryHref = requestHref ?? (requestFromUrl
     margin: 30px 0 40px;
     padding: clamp(24px, 4vw, 40px);
   }
+
+  .email-contact-panel { grid-template-columns: 1fr; max-width: 720px; margin-inline: auto; }
 
   .starter-request-intro h2,
   .starter-request-intro h3 {

@@ -17,7 +17,7 @@ const pythonExampleHref =
 <Base title={pageTitle} description={pageDescription}>
   <SiteHeader current="headless" />
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="headless-title">
       <div class="hero-inner">
         <div class="hero-copy">
@@ -29,7 +29,7 @@ const pythonExampleHref =
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href={adoptionDocsHref}>Review the adoption paths</a>
-            <a class="button button-secondary" href="/digital-public-infrastructure/">See how it fits within DPI</a>
+            <a class="button button-secondary" href="/customization/">Plan your implementation</a>
           </div>
           <p class="hero-note">Add or change an interface while keeping the same register and access rules.</p>
         </div>
@@ -57,7 +57,7 @@ const pythonExampleHref =
               <ul>
                 <li>Existing citizen portal</li>
                 <li>Staff casework screens</li>
-                <li>Approved compatible assistant</li>
+                <li>Approved assistant</li>
               </ul>
             </section>
             <span class="map-arrow" aria-hidden="true">&rarr;</span>
@@ -113,34 +113,7 @@ const pythonExampleHref =
       </div>
     </section>
 
-    <section class="section" aria-labelledby="catalogue-seam-title">
-      <div class="section-inner approach-split">
-        <div class="section-heading">
-          <p class="eyebrow">From description to effect</p>
-          <h2 id="catalogue-seam-title">Keep discovery, requests, and decisions in their proper place.</h2>
-          <p>
-            Public metadata can describe a service, its channels, and the institution responsible
-            for it. Description helps people and software understand what exists. It does not grant
-            access or perform the service.
-          </p>
-          <p>
-            An HTTP client or MCP tool carries an authenticated request to a product. The product
-            checks its current rules and state before reading information, recording a decision,
-            or making a change.
-          </p>
-        </div>
-        <div class="editorial-callout" aria-labelledby="seam-summary-title">
-          <h3 id="seam-summary-title">Three separate responsibilities</h3>
-          <ol>
-            <li><strong>Catalogue metadata</strong> describes the service and available channels.</li>
-            <li><strong>HTTP or MCP</strong> carries a request through a bounded interface.</li>
-            <li><strong>The product runtime</strong> authorizes and records the result it owns.</li>
-          </ol>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="python-example-title">
+    <section class="section" aria-labelledby="python-example-title">
       <div class="section-inner approach-split">
         <div class="section-heading">
           <p class="eyebrow">A public source example</p>
@@ -157,22 +130,8 @@ const pythonExampleHref =
           <a class="inline-cta" href={pythonExampleHref}>Inspect the v0.46.0 Python reference application <span aria-hidden="true">&rarr;</span></a>
         </div>
         <div class="editorial-callout" aria-labelledby="proof-limit-title">
-          <h3 id="proof-limit-title">From example to deployment</h3>
-          <p>Inspect the reference code and its local tests for review, separate credentials and retry handling. Configure your own callers and policies, then test the complete journey against your running services.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="headless-choice-title">
-      <div class="section-inner">
-        <div class="section-heading center">
-          <h2 id="headless-choice-title">Plan how people will use the service.</h2>
-        </div>
-        <div class="section-links headless-links" aria-label="Related architecture and AI pages">
-          <a class="inline-cta" href="/ai/citizen-access/">Follow a request prepared in chat <span aria-hidden="true">&rarr;</span></a>
-          <a class="inline-cta" href="/ai/">Explore AI for public services <span aria-hidden="true">&rarr;</span></a>
-          <a class="inline-cta" href="/digital-public-infrastructure/">Plan reusable capabilities within DPI <span aria-hidden="true">&rarr;</span></a>
-          <a class="inline-cta" href="/data-spaces/">Connect a source to a data space <span aria-hidden="true">&rarr;</span></a>
+          <h3 id="proof-limit-title">Who builds the interface?</h3>
+          <p>Your own team, Aubex or another delivery partner can build or adapt the screens, connect sign-in and implement recovery when a request fails. Agree this work as part of the implementation scope.</p>
         </div>
       </div>
     </section>
@@ -231,15 +190,13 @@ const pythonExampleHref =
     text-transform: uppercase;
   }
 
-  .channel-map-grid ul,
-  .editorial-callout ol {
+  .channel-map-grid ul {
     line-height: 1.6;
     margin-bottom: 0;
     padding-left: 1.2rem;
   }
 
-  .channel-map-grid li + li,
-  .editorial-callout li + li {
+  .channel-map-grid li + li {
     margin-top: 8px;
   }
 
@@ -254,10 +211,6 @@ const pythonExampleHref =
     font-size: var(--type-sm);
     line-height: 1.6;
     margin-top: 24px;
-  }
-
-  .headless-links {
-    justify-content: center;
   }
 
   @media (max-width: 920px) {

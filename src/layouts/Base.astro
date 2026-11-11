@@ -20,7 +20,7 @@ interface Props {
 const {
   title = 'Registry Stack | Public registers and services, built around your rules',
   description =
-    'Open-source software for public registers and services, with AI-assisted implementation and optional access through compatible assistants.',
+    'Open-source registry software for national, regional and local government, with AI-assisted design and implementation support.',
   noindex = false,
   type = 'website',
   publishedAt,
@@ -137,6 +137,8 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
       };
 
       document.querySelectorAll('a[href]').forEach((anchor) => {
+        // Same-document navigation must keep its query and keyboard focus.
+        if (anchor.getAttribute('href')?.startsWith('#')) return;
         try {
           const url = new URL(anchor.href);
           // strict-origin intentionally hides the referring page path. Carry
@@ -162,7 +164,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
         try {
           const url = new URL(anchor.href);
           const isContact = url.origin === window.location.origin &&
-            (url.pathname === '/contact/' ||
+            ((url.pathname === '/contact/' && !anchor.getAttribute('href')?.startsWith('#')) ||
               (anchor.dataset.journey === 'starter-request' &&
                 url.pathname === window.location.pathname && url.hash === '#starter-request-form'));
           const targetSite = journeyTargets.get(url.hostname) ||

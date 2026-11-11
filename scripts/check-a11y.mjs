@@ -1,4 +1,5 @@
-import { existsSync } from 'node:fs';
+import { marketplaceMigrationEnabled } from '../src/lib/marketplace-routes.mjs';
+import { existsSync, readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
@@ -37,6 +38,7 @@ await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen
 const { port } = server.address();
 
 const browser = await chromium.launch();
+const migrationEnabled = marketplaceMigrationEnabled(process.env.PUBLIC_MARKETPLACE_MIGRATION_ENABLED, process.env.MARKETPLACE_INDEXING_DECISION);
 const failures = [];
 
 const paths = [
@@ -45,6 +47,7 @@ const paths = [
   '/products/evidence-gateway/',
   '/products/casework/',
   '/solutions/',
+  '/products/studio/',
   '/ai/',
   '/ai/service-design/',
   '/ai/citizen-access/',
@@ -64,11 +67,11 @@ const paths = [
   '/solutions/review-changes/',
   '/solutions/verifiable-credentials/',
   '/starters/',
-  '/starters/professional-licensing/',
-  '/starters/health-facilities/',
-  '/starters/public-funding-state-aid/',
+  ...JSON.parse(readFileSync(resolve('src/data/starters.json'), 'utf8')).starters.map(({ id }) => `/starters/${id}/`),
   '/blog/',
   '/blog/before-you-connect-a-registry-define-the-question/',
+  '/blog/choose-a-registry-interface/',
+  '/blog/reconstruct-registry-access/',
   '/security/',
   '/pricing/',
   '/contact/',
@@ -79,11 +82,14 @@ const paths = [
   '/terms/',
   '/imprint/',
   '/404.html',
-];
+].filter((path) => !migrationEnabled || !path.startsWith('/starters/'));
 for (const path of paths) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
   const page = await context.newPage();
-  await page.goto(`http://127.0.0.1:${port}${path}`);
+  const response = await page.goto(`http://127.0.0.1:${port}${path}`);
+  if (response?.status() !== 200) failures.push(`- ${path} did not serve its built page`);
+  if (await page.locator('main').count() !== 1 || await page.locator('main h1').count() !== 1) failures.push(`- ${path} must have one main landmark and primary heading`);
+  if (await page.locator('.site-header').count() && await page.locator('main#main-content[tabindex="-1"]').count() !== 1) failures.push(`- ${path} missing keyboard skip destination`);
 
   const results = await new AxeBuilder({ page }).analyze();
   const missingLabels = await page.locator('[aria-labelledby]').evaluateAll((elements) =>
@@ -93,6 +99,11 @@ for (const path of paths) {
   for (const violation of results.violations) {
     failures.push(`- ${path} ${violation.id} (${violation.impact}): ${violation.help}`);
   }
+  // Every generated description is exercised at mobile width too; screenshots
+  // use representative templates, not 84 near-identical full-page images.
+  await page.setViewportSize({ width: 390, height: 844 });
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
+  if (overflow) failures.push(`- ${path} horizontal overflow at 390px`);
   await context.close();
 }
 

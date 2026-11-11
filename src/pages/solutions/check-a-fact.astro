@@ -78,7 +78,7 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
       },
       {
         q: 'Can the answer be a status or category?',
-        a: 'Yes. It can be a value from a list your institution defines, such as a registration status or region. A service that needs record details, such as a legal name, needs separate access to the register. Evidence Gateway provides answers to predefined questions, rather than general access to record fields.',
+        a: 'Yes. It can be a value from a list your institution defines, such as a registration status or region. Each predefined question specifies the information the register owner agrees to return and which services may ask for it.',
         link: { href: 'https://docs.registrystack.org/tutorials/return-a-governed-value/', label: 'Run the governed value tutorial' },
       },
     ]}
@@ -89,6 +89,7 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
     body="Tell us which register holds the information, which service needs it and what that service needs to know. We can help define the first question and connect both systems."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
+    note="The core software is Apache-2.0 open source. Aubex offers paid implementation and support; your team or another provider can also operate it."
     emphasis="docs"
   />
 </Solution>

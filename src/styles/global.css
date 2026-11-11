@@ -70,6 +70,19 @@ dd a {
   outline-offset: 3px;
 }
 
+.skip-link {
+  position: fixed;
+  inset: 8px auto auto 8px;
+  z-index: 100;
+  background: var(--registry-white);
+  color: var(--registry-blue);
+  border: 2px solid currentColor;
+  padding: 12px 18px;
+  font-weight: 700;
+  transform: translateY(-150%);
+}
+.skip-link:focus { transform: translateY(0); }
+
 /* Masthead rule: a strong ink line under the site name, in the manner of a
    broadsheet nameplate. */
 .site-header {
@@ -349,6 +362,9 @@ h2 {
   max-width: 860px;
   text-wrap: balance;
 }
+
+/* Keeps each sentence of a two-sentence heading together, so a line break falls between the sentences. */
+.heading-sentence { display: inline-block; }
 
 h3 {
   color: var(--registry-ink);
@@ -1559,7 +1575,7 @@ code {
     flex-direction: column;
     gap: 10px;
     padding: 12px 16px;
-    position: static;
+    position: relative;
   }
 
   .section {
@@ -1569,15 +1585,21 @@ code {
   .top-nav {
     gap: 2px 18px;
     justify-content: flex-start;
+    position: relative;
+    width: 100%;
   }
 
-  /* In the stacked header the product panel opens in flow, not floating. */
+  /* Keep the navigation triggers together while the selected menu scrolls
+     below the complete row, including when that row wraps on mobile. */
+  .nav-group { position: static; }
   .nav-group-panel {
     left: 0;
+    right: 0;
+    top: calc(100% + 10px);
     min-width: 0;
-    max-height: none;
-    overflow-y: visible;
-    position: static;
+    max-height: calc(100dvh - 180px);
+    overflow-y: auto;
+    position: absolute;
     transform: none;
   }
 

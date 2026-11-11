@@ -1,150 +1,51 @@
 ---
+// Reader: a programme or service owner choosing where AI could help their team.
 import Base from '../../layouts/Base.astro';
-import AiLandingHero from '../../components/AiLandingHero.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
-import SolutionFaq from '../../components/SolutionFaq.astro';
 import { describeServiceHref } from '../../data/contact';
-
+import { teamRecordFull } from '../../data/team';
 const context = 'AI-assisted public services';
 ---
-
-<Base
-  title="AI for public services | Registry Stack"
-  description="Design a service people can try, build it with our team on open-source software, and evaluate guided access through a compatible AI assistant."
->
+<Base title="AI for public services | Registry Stack" description="Design a service, adapt its rules or let people prepare requests with an approved assistant. Explore three uses of AI, with review and approval by your institution." ogImagePath="/og-ai.png" ogImageAlt="Registry Stack: Design, adapt and access public services with AI.">
   <SiteHeader current="ai" />
-  <main>
-    <AiLandingHero
-      eyebrow="AI for public services"
-      heading="Design and deliver public services with AI."
-      lead="Turn forms and research into a service brief with AI. Build the service with our team in a scoped pilot. Test an experimental integration for starting selected requests in chat."
-      context={context}
-      exampleHref="#ai-jobs"
-      exampleLabel="Explore the three uses"
-    >
-      <p class="ai-example-label">One registry service</p>
-      <p class="ai-example-title">Update a contact address</p>
-      <ol class="address-flow" aria-label="Design, implementation and access for an address correction">
-        <li><span class="flow-number" aria-hidden="true">01</span><div><span class="ai-example-label">Service design</span><strong>Find out what the applicant needs to provide</strong></div></li>
-        <li><span class="flow-number" aria-hidden="true">02</span><div><span class="ai-example-label">Implementation</span><strong>Set who can review and update the address</strong></div></li>
-        <li><span class="flow-number" aria-hidden="true">03</span><div><span class="ai-example-label">Citizen access</span><strong>Help the applicant prepare a draft in chat</strong></div></li>
-      </ol>
-    </AiLandingHero>
+  <main id="main-content" tabindex="-1">
+    <section class="hero hero-cover" aria-labelledby="ai-title"><div class="hero-inner"><div class="hero-copy">
+      <p class="eyebrow">AI for public services</p>
+      <h1 id="ai-title">Design, adapt and access public services with AI.</h1>
+      <p class="hero-lead">Use AI to help define a service, prepare implementation changes or help people make a request. Your institution approves the rules and the changes to its service.</p>
+      <div class="hero-actions"><a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="#uses">Explore the three uses</a></div>
+    </div></div></section>
 
-    <section class="section" id="ai-jobs" aria-labelledby="jobs-title">
-      <div class="section-inner">
-        <div class="section-heading">
-          <h2 id="jobs-title">Where AI helps your service team</h2>
-        </div>
-        <div class="ai-job-grid">
-          <article>
-            <p class="availability">Design method</p>
-            <h3>Design a service people can try</h3>
-            <p>Use your forms and research to draft a service brief. Test the proposed steps with applicants and staff before committing to a build.</p>
-            <a class="inline-cta" href="/ai/service-design/">Explore service design <span aria-hidden="true">→</span></a>
-          </article>
-          <article class="pilot">
-            <p class="availability">Available through a scoped pilot</p>
-            <h3>Build and adapt one service</h3>
-            <p>Work with our team to adapt records, forms and review steps. Check the proposed changes against your rules and try them on realistic cases.</p>
-            <a class="inline-cta" href="/customization/">Explore implementation <span aria-hidden="true">→</span></a>
-          </article>
-          <article>
-            <p class="availability">Experimental integration</p>
-            <h3>Help people start a request in chat</h3>
-            <p>Let a signed-in person prepare a correction with an approved assistant. They review and submit the draft on your service website.</p>
-            <a class="inline-cta" href="/ai/citizen-access/">Explore citizen access <span aria-hidden="true">→</span></a>
-          </article>
-        </div>
+    <section class="section" id="uses" aria-labelledby="uses-title"><div class="section-inner">
+      <div class="section-heading"><h2 id="uses-title">Where would AI help your service?</h2></div>
+      <div class="ai-paths">
+        <article><p class="eyebrow">Service design</p><h3>Prepare a brief and test a prototype</h3><p>Use research, forms and procedures to work through the service with staff and applicants. Give your delivery team a reviewed brief.</p><p class="path-status">A scoped engagement, mainly through our partners.</p><a class="inline-cta" href="/ai/service-design/">Explore service design <span aria-hidden="true">→</span></a></article>
+        <article><p class="eyebrow">Implementation</p><h3>Adapt a service to your rules</h3><p>Our team uses AI to draft configuration, test cases and guidance. We check the drafts; your team approves the changes before release.</p><p class="path-status">A paid implementation pilot with Aubex.</p><a class="inline-cta" href="/customization/">See how implementation works <span aria-hidden="true">→</span></a></article>
+        <article id="citizen-access"><p class="eyebrow">Citizen access</p><h3>Help people prepare a request</h3><p>An assistant you approve reads the details you allow and prepares a draft. The person checks and submits it on your official website. The assistant cannot submit, approve or change a record.</p><p class="path-status">Available in a pilot for a configured Base Registry Engine service.</p><a class="inline-cta" href="/ai/citizen-access/">See the citizen access example <span aria-hidden="true">→</span></a></article>
       </div>
-    </section>
+    </div></section>
 
-    <section class="section section-muted" aria-labelledby="control-title">
-      <div class="section-inner approach-split">
-        <div class="section-heading">
-          <h2 id="control-title">Your institution sets the rules</h2>
-          <p>Your team approves service changes and decides what each person or connected system can see and do. The registry applies those permissions when it receives a request.</p>
-          <a class="inline-cta" href="/architecture/headless/">See how Registry Stack fits behind your interfaces <span aria-hidden="true">→</span></a>
-        </div>
-        <div class="editorial-callout">
-          <h3>Use the channels that suit your service</h3>
-          <p>The configured service can run without an AI model. Keep an existing portal or staff application and add an assistant for a selected task when it fits.</p>
-        </div>
-      </div>
-    </section>
+    <section class="section section-muted" aria-labelledby="control-title"><div class="section-inner approach-split">
+      <div class="section-heading"><h2 id="control-title">Your team sets the rules.</h2><p>AI can propose a design or draft a change. Your institution confirms the service rules, and reviews and approves implementation changes.</p><p>The configured registry service runs without an AI model. For citizen access, you choose which assistants may connect and what they can read and prepare.</p><a class="inline-cta" href="/architecture/headless/">How it fits your existing systems <span aria-hidden="true">→</span></a></div>
+      <div class="editorial-callout"><p class="eyebrow">Authoring tool · In development</p><h3>Registry Studio</h3><p>A workspace for reviewing records, service steps and proposed changes with your technical team. Its local prototype also uses existing documents to prepare a draft brief for review.</p><a class="inline-cta" href="/products/studio/">Explore Registry Studio <span aria-hidden="true">→</span></a></div>
+    </div></section>
 
-    <SolutionFaq
-      heading="Planning your first service"
-      items={[
-        {
-          q: 'Can we start with a service we already run?',
-          a: 'Yes. Bring the forms and procedures you use today. We can assess what can stay in place and which parts would need configuring or connecting.',
-        },
-        {
-          q: 'What does an implementation pilot cover?',
-          a: 'We agree the service, what to test, who operates each part and what your team receives. Pricing and responsibilities depend on the written scope.',
-          link: { href: '/pricing/', label: 'See implementation and support options' },
-        },
-        {
-          q: 'Can we evaluate the assistant channel on its own?',
-          a: 'You can evaluate it for a selected task on a configured Base Registry Engine service. Start with one correction and agree what the assistant can see and prepare.',
-          link: { href: '/ai/citizen-access/', label: 'See the address correction example' },
-        },
-      ]}
-    />
+    <section class="section" aria-labelledby="team-title"><div class="section-inner approach-split">
+      <div class="section-heading"><h2 id="team-title">Built on ten years of registry work</h2><p>{teamRecordFull}</p><p>The core runtime software is Apache-2.0 open source. Your institution can inspect, adapt and operate it with its own team or another provider. Aubex offers paid implementation and support.</p></div>
+      <div class="editorial-callout"><h3>Inspect the software and its boundaries</h3><ul class="check-links"><li><a href="https://github.com/registrystack/registry-stack">Source code and releases</a></li><li><a href="https://docs.registrystack.org/security/#an-ai-assistant-acting-for-a-citizen">Security model for citizen assistants</a></li><li><a href="/pricing/">Implementation and support options</a></li></ul></div>
+    </div></section>
 
-    <section class="final-cta" aria-labelledby="next-title">
-      <div class="section-inner">
-        <h2 id="next-title">Choose one service to improve</h2>
-        <p>Bring a form, a process or a request people make often. We’ll discuss what you want to change and what your team can evaluate first.</p>
-        <div class="section-links">
-          <a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a>
-          <a class="button button-secondary" href="/pricing/">View implementation options</a>
-        </div>
-      </div>
-    </section>
-  </main>
-  <SiteFooter />
+    <section class="final-cta" aria-labelledby="next-title"><div class="section-inner"><h2 id="next-title">Start with one service.</h2><p>Bring a form, a process or a request people make often. We’ll agree what to evaluate, who reviews it and what your team receives.</p><div class="section-links"><a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="/pricing/">View implementation options</a></div></div></section>
+  </main><SiteFooter />
 </Base>
-
 <style>
-  .address-flow { display: grid; gap: 12px; list-style: none; margin: 0; padding: 0; }
-  .address-flow li {
-    align-items: start;
-    background: var(--registry-white);
-    border: 1px solid var(--registry-paper-rule);
-    border-radius: 4px;
-    display: grid;
-    gap: 12px;
-    grid-template-columns: auto minmax(0, 1fr);
-    padding: 11px 12px;
-  }
-  .address-flow strong { display: block; font-size: var(--type-body-sm); line-height: 1.35; }
-  .flow-number {
-    background: var(--registry-blue-tint);
-    border-radius: 3px;
-    color: var(--registry-blue);
-    font: 600 var(--type-sm)/1.4 var(--registry-mono);
-    padding: 6px 7px;
-  }
-  .ai-job-grid { display: grid; gap: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .ai-job-grid article {
-    background: var(--registry-paper-half);
-    border: 1px solid var(--registry-paper-rule);
-    border-top: 3px solid var(--registry-blue);
-    display: flex;
-    flex-direction: column;
-    padding: clamp(20px, 3vw, 28px);
-  }
-  .ai-job-grid .pilot { background: var(--registry-blue-tint); border-color: var(--registry-blue-rule); border-top-color: var(--registry-blue); }
-  .ai-job-grid h3 { font-size: var(--type-xl); }
-  .ai-job-grid .inline-cta { align-self: start; margin-top: auto; }
-  .availability {
-    color: var(--registry-blue);
-    font: 600 var(--type-xs)/1.5 var(--registry-mono);
-    margin: 0 0 16px;
-    text-transform: uppercase;
-  }
-  @media (max-width: 820px) { .ai-job-grid { grid-template-columns: minmax(0, 1fr); } }
+  .ai-paths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 48px); }
+  .ai-paths article { border-top: 2px solid var(--registry-blue); display: flex; flex-direction: column; align-items: start; padding-top: 24px; }
+  .ai-paths h3 { font-size: var(--type-xl); }
+  .ai-paths .path-status { font-size: var(--type-sm); }
+  .ai-paths .inline-cta { margin-top: auto; }
+  .check-links { list-style: none; margin: 0; padding: 0; }
+  .check-links li { border-top: 1px solid var(--registry-rule); padding: 14px 0; }
+  @media (max-width: 820px) { .ai-paths { grid-template-columns: 1fr; } }
 </style>

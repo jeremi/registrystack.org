@@ -6,13 +6,13 @@ import { contactHref } from '../data/contact';
 
 const pageTitle = 'Terms of use | Registry Stack';
 const pageDescription =
-  'Website terms for registrystack.org: content provided as-is, product code licensed under Apache-2.0, trademarks, external links, liability, and governing law.';
+  'Website terms for registrystack.org: content provided as-is, core software licensed under Apache-2.0, trademarks, external links, liability, and governing law.';
 ---
 
 <Base title={pageTitle} description={pageDescription}>
   <SiteHeader current="terms" />
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <section class="hero" aria-labelledby="terms-hero-title">
       <div class="hero-inner">
         <div class="hero-copy">
@@ -39,10 +39,12 @@ const pageDescription =
           <h2 id="terms-license-title">Product licensing</h2>
           <p>
             Base Registry Engine, Evidence Gateway, Registry Casework, the starters, and the related command-line tools are open source, released under the
-            Apache License 2.0. The starters also carry record definitions from PublicSchema
-            under the Creative Commons Attribution 4.0 licence. The Apache-2.0 license,
+            Apache License 2.0. Registry Studio is a commercial authoring tool with separate
+            licensing terms; the core software’s Apache-2.0 licence does not cover it. The starters
+            also carry record definitions from PublicSchema
+            under the Creative Commons Attribution 4.0 licence. The Apache-2.0 licence,
             not this page, governs your use of that code. Where the two say different things about
-            the software itself, the license text prevails.
+            the software itself, the licence text prevails.
           </p>
 
           <h2 id="terms-commercial-title">Commercial services and pilots</h2>
@@ -71,7 +73,7 @@ const pageDescription =
           <p>
             To the extent the law allows, Aubex Consulting LLC is not liable for any damage or
             loss arising from your use of this website or your reliance on its content. Use of the
-            open-source products is governed separately by the Apache-2.0 license, which carries
+            open-source products is governed separately by the Apache-2.0 licence, which carries
             its own limitation of liability.
           </p>
 
@@ -86,7 +88,7 @@ const pageDescription =
             Questions about these terms: <a href={contactHref('terms', 'website terms')}>use the terms contact form</a>.
           </p>
 
-          <p class="legal-effective">Effective date: July 4, 2026.</p>
+          <p class="legal-effective">Effective date: November 11, 2026.</p>
         </div>
       </div>
     </section>

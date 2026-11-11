@@ -1,0 +1,40 @@
+---
+// HTTP servers never receive fragments; map known old family bookmarks here.
+import { registerFamilies } from '../data/solutions';
+import { MARKETPLACE_ORIGIN, marketplaceCollectionHref } from '../lib/marketplace-routes.mjs';
+interface Props {
+  destination?: string;
+  title?: string;
+  fragmentIds?: string[];
+}
+const { destination, title, fragmentIds = [] } = Astro.props;
+const marketplaceRoot = `${MARKETPLACE_ORIGIN}/`;
+const collectionLinks = Object.fromEntries(registerFamilies.map((area) => [area.key, marketplaceCollectionHref(area.key)]));
+const fallback = destination ?? marketplaceRoot;
+const heading = destination ? `${title} has moved to the marketplace.` : 'Starting configurations have moved to the marketplace.';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={fallback} />
+    <title>Starting configurations have moved | Registry Stack</title>
+    <script is:inline define:vars={{ collectionLinks, marketplaceRoot, destination, fragmentIds }}>
+      const family = window.location.hash.slice(1);
+      const target = destination
+        ? destination + (fragmentIds.includes(family) ? '#' + family : '')
+        : Object.prototype.hasOwnProperty.call(collectionLinks, family) ? collectionLinks[family] : marketplaceRoot;
+      window.location.replace(target);
+    </script>
+    <noscript><meta http-equiv="refresh" content={`0;url=${fallback}`} /></noscript>
+  </head>
+  <body>
+    <main id="main-content" tabindex="-1">
+      <h1>{heading}</h1>
+      <p><a href={fallback}>{destination ? 'Open this configuration in the marketplace' : 'Open the Registry Stack Marketplace'}</a>.</p>
+      {!destination && <ul>{registerFamilies.map((area) => <li><a href={marketplaceCollectionHref(area.key)}>{area.name}</a></li>)}</ul>}
+    </main>
+  </body>
+</html>

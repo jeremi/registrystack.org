@@ -4,6 +4,13 @@ Use this checklist for one named service question and one bounded request path.
 It complements the Registry Stack field note, "What must a reviewer reconstruct
 after registry access?"
 
+Use the audit format and operating documentation for the version you deploy.
+The article includes historical Registry Relay and chained-log examples; they
+are not instructions for a current deployment. Current Evidence audit guidance:
+https://docs.registrystack.org/operate/evidence-audit/
+Relay retirement decision:
+https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/
+
 ## 1. Service context
 
 - [ ] The public service or administrative procedure is named.
@@ -15,24 +22,24 @@ after registry access?"
 
 - [ ] The authentication mode is identified.
 - [ ] The requester system or role is identified through the approved review view.
-- [ ] The exact scopes exercised are retained.
+- [ ] The authorization grant or scope used by the deployed version can be identified.
 - [ ] The access mode is understood: machine, subject-bound, representative, or delegated.
 - [ ] Raw subject identifiers do not spread through review exports.
 
 ## 3. Purpose and policy
 
 - [ ] The request purpose is retained.
-- [ ] The requested route or claim is identifiable.
+- [ ] The requested operation or evidence question is identifiable.
 - [ ] The policy identifier, version, or hash is retained.
 - [ ] The permit or denial can be explained.
-- [ ] The disclosure mode and any redacted fields are identifiable.
+- [ ] The permitted response and any withheld information are identifiable.
 - [ ] Policy and configuration changes have a named approval owner.
 
 ## 4. Source consultation
 
-- [ ] The dataset and declared route or consultation are identifiable.
+- [ ] The configured source request is identifiable.
 - [ ] The source binding and freshness expectation are known.
-- [ ] The approved filters and projections can be inspected.
+- [ ] The approved lookup and permitted source response can be inspected.
 - [ ] Match, no match, ambiguity, denial, and source failure remain distinct.
 - [ ] Evidence Gateway records and the source consultations they relied on can be correlated without joining on a raw subject identifier.
 
@@ -52,8 +59,8 @@ after registry access?"
 
 ## 7. Audit continuity and operation
 
-- [ ] Evidence Gateway uses approved audit keys and chains.
-- [ ] Retained chains verify using the deployment procedure.
+- [ ] Evidence Gateway uses the audit format and key controls documented for the deployed version.
+- [ ] Retained audit records can be interpreted using that version’s operating procedure.
 - [ ] The off-host shipping or anchoring posture matches the stated threat model.
 - [ ] Retention, access control, backup, and recovery owners are named.
 - [ ] Protected routes expected to fail closed on audit failure are verified.
@@ -63,6 +70,6 @@ after registry access?"
 
 - [ ] Audit evidence is not presented as proof that the source is factually correct.
 - [ ] Configuration is not presented as proof of legal authority.
-- [ ] A minimized answer is not presented as proof of proper consumer behaviour.
+- [ ] A minimized answer is not presented as proof of proper consumer behavior.
 - [ ] A local hash chain is not presented as proof that no tail was removed.
 - [ ] Standards-shaped output is not presented as external certification.

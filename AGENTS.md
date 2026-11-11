@@ -19,6 +19,9 @@ It is the maintained audience policy for this site.
 - Lead with the reader's problem, practical outcomes, fit with existing
   systems, and adoption decisions. Explain technical concepts when they help
   that decision; route implementation instructions to the documentation.
+- Apply the README’s page-purpose and section-selection tests before retaining
+  optional material or proposing a new topic. Review final renders for relevance
+  as well as factual correctness and layout.
 - Review entry pages as a programme or service owner without implementation
   knowledge: can they understand why this matters, whether it fits their needs,
   and what to do next? For a page serving a narrower audience, check that its

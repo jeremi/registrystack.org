@@ -48,28 +48,28 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Updated catalogue published',
-    ...weekProduct('manifest'),
-    title: 'The catalogue is published',
-    text: 'The team publishes a catalogue that describes the list and its new version. Connected registers and services can retrieve the change from this maintained source.',
-    card: { kind: 'document', documentType: 'Published catalogue', format: 'DCAT', title: 'Administrative areas, version 2027-01', fields: [
+    when: 'Current list published',
+    product: 'Your publication service',
+    title: 'Connected services retrieve the current list',
+    text: 'The team publishes the current list through an agreed service or export. Catalogue metadata describes the list, its version and where it can be retrieved.',
+    card: { kind: 'document', documentType: 'Published code list', format: 'JSON', title: 'Administrative areas, version 2027-01', fields: [
       { label: 'Entries', value: '312' },
       { label: 'Changed', value: 'NR-07 closed, NR-05 extended' },
-      { label: 'Status', value: 'Current version published' },
-    ], footnote: 'Readable by any service that follows the catalogue standard' },
+      { label: 'Status', value: 'Current list published' },
+    ], footnote: 'Publication and update handling are configured for connected services' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Maintain the shared lists and classifications other services rely on."
+  heading="Maintain the lists other services rely on."
   description="Review and publish changes to place names, organization directories, classifications and code lists. Connected services can retrieve the current version, while records that use an earlier code still refer to a known entry."
 >
-  <section class="section" id="example" aria-labelledby="reference-week-title">
+  <section class="section" id="example" aria-labelledby="reference-example-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="reference-week-title">Review and publish one code-list change.</h2>
+        <h2 id="reference-example-title">Review and publish one code-list change.</h2>
       </div>
       <RegisterWeek
         id="reference-week"
@@ -87,21 +87,17 @@ const steps: WeekStep[] = [
       </div>
       <div class="product-facts">
         <article><h3>Use the same code for the same place</h3><p>Each entry contains its official code, its parent where there is one, and the dates it applies. The address register and the statistics office can retrieve entries from the same list.</p><a class="inline-cta" href="/products/base-registry/">How the register serves other services <span aria-hidden="true">→</span></a></article>
-        <article><h3>Only your team changes the list</h3><p>Your staff record every change, whether a new district, a renamed ministry or a withdrawn tax regime. Other teams read; they do not edit.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
-        <article><h3>Publish a catalogue that other services can retrieve</h3><p>The catalogue describes what the list contains and identifies its current version. It uses open formats supported by public data portals.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/publishing-pipeline/">How publication works <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Control who changes the list</h3><p>Your office decides who may add, rename or close an entry. Connected services can be given read access while authorized staff or systems record changes.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
+        <article><h3>Help other services find the current list</h3><p>Publish entries through an agreed service or export. Catalogue metadata describes that source and its version so other teams know where to retrieve the list.</p><a class="inline-cta" href="https://docs.registrystack.org/products/registry-manifest/">How catalogue descriptions are published <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
-  <SolutionStarters
-    area={area}
-    heading="Start from a reference register like yours."
-    intro="A starting configuration can model a directory, code list or catalogue, including who may propose and approve changes. It is adapted to your publication process and the services that use the list."
-  />
+  <SolutionStarters area={area} />
   <SolutionFaq
     items={[
       {
         q: 'Does this replace the spreadsheet we send out?',
-        a: 'It can replace the spreadsheet copies your team sends out. Your team maintains the list in the register, and connected services retrieve the current version instead of keeping separate copies.',
+        a: 'It can replace emailed spreadsheet copies with a maintained source. Connected services retrieve entries through an agreed service or export and follow agreed rules for adopting a new version.',
         link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'How it sits beside existing systems' },
       },
       {
@@ -110,17 +106,12 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Does the list hold the district boundaries too?',
-        a: 'No. The list holds the codes, names and dates; boundary maps stay in the mapping system the list refers to.',
+        a: 'The example list holds codes, names and dates. Keep boundary maps in the mapping system and connect entries by their official codes.',
       },
       {
         q: 'Who can change the list?',
         a: 'Only the people your office names. Your office decides who may record a new entry, who may close one, and who may only read; every change is kept with who made it and when.',
         link: { href: '/security/', label: 'Who is responsible for what' },
-      },
-      {
-        q: 'What is a starter, exactly?',
-        a: 'A starter is a starting configuration for a particular kind of shared list. You can request free access to it, and it must be adapted to your change process, publication needs and existing systems. You can begin by describing your service without selecting a starter first.',
-        link: { href: '/starters/#reference-registers', label: 'Browse the reference register starters' },
       },
       ...sharedFamilyFaq,
     ]}
@@ -131,6 +122,7 @@ const steps: WeekStep[] = [
     body="Tell us which shared list you maintain, who approves changes and which services depend on it. We can show how Registry Stack could publish one current version while preserving earlier entries."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
+    note="The core software is Apache-2.0 open source. Aubex offers paid implementation and support; your team or another provider can also operate it."
     emphasis="docs"
   />
 </Solution>

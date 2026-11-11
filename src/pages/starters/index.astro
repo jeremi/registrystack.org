@@ -1,231 +1,74 @@
 ---
-// The starters catalogue, grouped by register family in the order of
-// solutions.ts. Everything a card states comes from the catalogue data.
+// Keep useful category bookmarks; the marketplace owns configuration browsing.
 import Base from '../../layouts/Base.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
-import StarterCard from '../../components/StarterCard.astro';
+import MarketplaceCatalogueRedirect from '../../components/MarketplaceCatalogueRedirect.astro';
 import { registerFamilies } from '../../data/solutions';
-import { products } from '../../data/products';
 import { describeServiceHref } from '../../data/contact';
-import { featuredStarterForArea, starterById, starterCount, starterRequestHref, startersForArea, startersSource } from '../../data/starters';
+import { MARKETPLACE_ORIGIN, marketplaceCollectionHref, marketplaceMigrationEnabled } from '../../lib/marketplace-routes.mjs';
 
-const baseRegistry = products.find((p) => p.key === 'base-registry')!;
-const groups = registerFamilies.map((area) => ({ area, starters: startersForArea(area) }));
-const featured = registerFamilies.flatMap((area) => {
-  const starter = featuredStarterForArea(area);
-  return starter ? [{ area, starter }] : [];
-});
+const migrateStarters = marketplaceMigrationEnabled(process.env.PUBLIC_MARKETPLACE_MIGRATION_ENABLED, process.env.MARKETPLACE_INDEXING_DECISION);
 
-const pageTitle = 'Starters | Registry Stack';
-const pageDescription = 'Browse examples of public registers and find a starting configuration to adapt. Request free access to the configuration files.';
+const pageTitle = 'Starting configurations | Registry Stack';
+const pageDescription = 'Browse starting configurations in the Registry Stack Marketplace, grouped by service area. Free access is available on request.';
 const discussHref = describeServiceHref('a registry service');
-const requestHref = starterRequestHref('a starter not selected yet');
 ---
 
-<Base title={pageTitle} description={pageDescription}>
+{migrateStarters ? <MarketplaceCatalogueRedirect /> : <Base title={pageTitle} description={pageDescription}>
   <SiteHeader current="starters" />
-  <main>
+  <main id="main-content" tabindex="-1">
     <section class="hero" aria-labelledby="starters-title">
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="eyebrow">Starters</p>
-          <h1 id="starters-title">Find a starting point for your register.</h1>
-          <p class="hero-lead">Browse {starterCount} register examples, including professional licences, companies and land parcels. Each page describes a starting configuration and the records and staff actions it covers. Request free access to the configuration files.</p>
+          <p class="eyebrow">Starting configurations</p>
+          <h1 id="starters-title">Find a starting configuration in the marketplace.</h1>
+          <p class="hero-lead">Browse models for public registers, see what each configuration contains and request free access. Choose a service area below, or describe your service to us first.</p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href={discussHref}>Discuss your service</a>
-            <a class="button button-secondary" href={requestHref}>Request access to a starter</a>
+            <a class="button button-primary" href={`${MARKETPLACE_ORIGIN}/`}>Open the marketplace</a>
+            <a class="button button-secondary" href={discussHref}>Describe your service</a>
           </div>
-          <nav class="starter-contents-nav hero-note" aria-label="On this page">
-            <p>On this page:</p>
-            <ul>
-              <li><a href="#start-here">Start here</a></li>
-              {groups.map(({ area }) => <li><a href={`#${area.key}`}>{area.name}</a></li>)}
-              <li><a href="#whats-in-a-starter">What is included</a></li>
-            </ul>
-          </nav>
         </div>
       </div>
     </section>
 
-    <section class="section" id="start-here" aria-labelledby="start-here-title">
+    <section class="section" aria-labelledby="configuration-areas-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <p class="eyebrow">Start here</p>
-          <h2 id="start-here-title">Selected starting configurations.</h2>
-          <p>Choose an example to read about the records, staff actions and access roles it covers.</p>
+          <h2 id="configuration-areas-title">Browse by service area.</h2>
+          <p>The marketplace holds the models, configuration details and access requests. A starting configuration needs to be adapted to your institution's rules, systems and service.</p>
         </div>
-        <div class="starter-grid">
-          {featured.map(({ area, starter }) => <StarterCard starter={starter} featured eyebrow={area.name} />)}
-        </div>
-        <p class="starter-cards-legend">Each card names the starter and what it records. Some starters also come with parts the starter page lists: staff-screen definitions, an Evidence Gateway companion, client definitions, statistics, reusable modules.</p>
-      </div>
-    </section>
-
-    {groups.map(({ area, starters }, index) => {
-      const featuredStarter = featuredStarterForArea(area);
-      const openFirst = (area.openFirst ?? []).flatMap((id) => { const starter = starterById(id); return starter ? [starter] : []; });
-      const rest = starters.filter((starter) => starter.id !== featuredStarter?.id);
-      return (
-      <section class:list={['section', 'starter-family', { 'section-muted': index % 2 === 1 }]} id={area.key} aria-labelledby={`${area.key}-title`}>
-        <div class="section-inner">
-          <div class="section-heading compact">
-            <p class="eyebrow">{starters.length === 1 ? '1 starter' : `${starters.length} starters`}</p>
-            <h2 id={`${area.key}-title`}><a href={area.slug}>{area.name}</a></h2>
-            <p>{area.intent}.</p>
-            {featuredStarter && <p class="starter-open-first">Open first: <a href={`/starters/${featuredStarter.id}/`}>{featuredStarter.title}</a></p>}
-            {!featuredStarter && openFirst.length > 0 && <p class="starter-open-first">Open first: {openFirst.map((starter, index) => <Fragment>{index > 0 && ", or "}<a href={`/starters/${starter.id}/`}>{starter.title}</a></Fragment>)}</p>}
-          </div>
-          {rest.length > 0 && (
-            <div class="starter-grid">
-              {rest.map((starter) => <StarterCard starter={starter} />)}
-            </div>
-          )}
-        </div>
-      </section>
-      );
-    })}
-
-    <section class="section" id="whats-in-a-starter" aria-labelledby="starter-contents-title">
-      <div class="section-inner starter-contents">
-        <div class="section-heading compact">
-          <p class="eyebrow">What is included</p>
-          <h2 id="starter-contents-title">A reviewed model and project configuration.</h2>
-          <p>Each starter is free. Its page shows the available record types, actions, access roles, configuration values, and optional companion definitions. Request access to a configuration when it is useful to your evaluation. You can also discuss the service you need before selecting a starter.</p>
-          <p>The core registry configuration defines records, actions, and access. Some starters also have a separate staff-screen definition for an application to implement. Neither is a deployed service. Your institution still needs to review the model against its law, policy, operating process, identity system, existing data, integrations, screens, hosting, and support arrangements.</p>
-          <p>The models draw on public registers that publish their structure. Those references are models, not customer examples or endorsements.</p>
-        </div>
-        <dl>
-          <dt>Access on request</dt>
-          <dd>The registry model and configuration shown on the starter page, plus any companion definitions that page marks as included.</dd>
-          <dt>To generate a project</dt>
-          <dd>A developer generates the project with the {baseRegistry.name} command-line tools. <a href={baseRegistry.tutorialHref}>{baseRegistry.tutorialLabel}</a> to install the tools and create a first registry.</dd>
-          <dt>Licences</dt>
-          <dd>The starter configurations are provided under the Apache 2.0 licence. The record definitions draw on <a href={startersSource.publicschema.repository}>PublicSchema</a> {startersSource.publicschema.version}, available under the Creative Commons Attribution 4.0 licence (CC BY 4.0).</dd>
-        </dl>
-      </div>
-    </section>
-
-    <section class="section section-muted" aria-labelledby="project-status-title">
-      <div class="section-inner">
-        <div class="section-heading compact">
-          <h2 id="project-status-title">Where the project stands</h2>
-          <p>The Registry Stack source and software releases are public under Apache 2.0. The starter repository and release are not public yet. You can request access to any of the {starterCount} available configurations. Registry Stack is pre-1.0: interfaces may change before 1.0, and the documentation keeps a list of <a href="https://docs.registrystack.org/explanation/known-limitations/">known limitations</a>.</p>
+        <div class="configuration-areas">
+          {registerFamilies.map((area) => (
+            <article id={area.key} aria-labelledby={`${area.key}-title`}>
+              <h3 id={`${area.key}-title`}>{area.name}</h3>
+              <p>{area.intent}.</p>
+              <a class="inline-cta" href={marketplaceCollectionHref(area.key)} aria-label={`Browse configurations for ${area.name.toLowerCase()}`}>Browse configurations <span aria-hidden="true">→</span></a>
+              <a class="configuration-service-link" href={area.slug}>Explore the service area</a>
+            </article>
+          ))}
         </div>
       </div>
     </section>
 
     <DocsHandoff
       eyebrow="Discuss your service"
-      heading="Discuss the register your service needs."
-      body="Tell us about your service. We can help identify a starting point and discuss the changes, screens and system connections you need."
+      heading="Begin with the service you need."
+      body="You do not need to select a configuration before contacting us. Tell us who uses the service, what it needs to do and which existing systems it must connect."
       primaryLabel="Describe your service"
       primaryHref={discussHref}
       emphasis="docs"
     />
   </main>
   <SiteFooter />
-</Base>
+</Base>}
 
 <style>
-  .starter-family h2 a {
-    color: inherit;
-  }
-
-  .starter-family h2 a:hover {
-    color: var(--registry-blue);
-  }
-
-  .starter-contents-nav p {
-    margin: 0 0 4px;
-  }
-
-  .starter-contents-nav ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 18px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .starter-cards-legend {
-    border-top: 1px solid var(--registry-rule);
-    color: var(--registry-muted);
-    font-size: var(--type-sm);
-    margin: 32px 0 0;
-    padding-top: 14px;
-  }
-
-  .starter-open-first a {
-    font-weight: 700;
-    text-decoration: underline;
-  }
-
-  .starter-version {
-    padding-top: 0;
-  }
-
-  .starter-version summary {
-    color: var(--registry-muted);
-    cursor: pointer;
-    font-family: var(--registry-mono);
-    font-size: var(--type-xs);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .starter-version p {
-    margin: 10px 0 0;
-    max-width: 760px;
-  }
-
-  .starter-grid {
-    display: grid;
-    gap: 16px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .starter-contents {
-    display: grid;
-    gap: 40px;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-
-  .starter-contents dl {
-    margin: 0;
-  }
-
-  .starter-contents dt {
-    color: var(--registry-ink);
-    font-weight: 700;
-    margin-bottom: 5px;
-  }
-
-  .starter-contents dd {
-    border-bottom: 1px solid var(--registry-rule);
-    line-height: 1.55;
-    margin: 0 0 20px;
-    padding-bottom: 18px;
-  }
-
-  .starter-contents dd:last-child {
-    margin-bottom: 0;
-  }
-
-  @media (max-width: 900px) {
-    .starter-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 700px) {
-    .starter-grid,
-    .starter-contents {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-  }
+  .configuration-areas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .configuration-areas article { border-top: 1px solid var(--registry-rule); padding-block: 24px; scroll-margin-top: 100px; }
+  .configuration-areas h3 { margin-block: 0 12px; }
+  .configuration-areas p { max-width: 58ch; }
+  .configuration-service-link { display: block; width: fit-content; margin-top: 12px; }
+  @media (max-width: 640px) { .configuration-areas { grid-template-columns: 1fr; } }
 </style>

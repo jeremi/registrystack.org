@@ -65,11 +65,11 @@ const steps: WeekStep[] = [
   heading="Manage asset records and their changes."
   description="Registrars review applications and record approved changes to parcels, buildings, vehicles, vessels or public assets. Connected services receive only the information your office allows. Existing maps, deeds and specialist records can stay in their current systems."
 >
-  <section class="section" id="example" aria-labelledby="land-week-title">
+  <section class="section" id="example" aria-labelledby="land-example-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="land-week-title">Follow a property transfer.</h2>
+        <h2 id="land-example-title">Follow a property transfer.</h2>
       </div>
       <RegisterWeek
         id="land-week"
@@ -87,22 +87,17 @@ const steps: WeekStep[] = [
       </div>
       <div class="product-facts">
         <article><h3>Record who holds each right</h3><p>Staff record each right or keeper against the relevant parcel, building, vehicle or vessel, including the share and the period it applies. A valuation office reads holder and share as your register holds them.</p><a class="inline-cta" href="/products/base-registry/">How the register serves other services <span aria-hidden="true">→</span></a></article>
-        <article><h3>Your law decides what is public</h3><p>Your office sets which entries are public and which only named roles may look up. The starters begin with holders restricted; public transport stops begin open to all.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
+        <article><h3>Your law decides what is public</h3><p>Your office decides which details are public and which require staff or connected-service permission. Access is configured for the register and the responsibilities of each reader.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
         <article><h3>Reproduce an extract when another copy is needed</h3><p>When given the same issue details, Registry Render reproduces the extract so the later copy matches the original. The institution’s service controls when an extract may be issued and what legal effect it has.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/">How Registry Render reproduces a document <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
-  <SolutionStarters
-    area={area}
-    heading="Start from an asset register like yours."
-    intro="A starting configuration can provide a model for land, buildings, vehicles, vessels or places. It is adapted to your law, terminology, decision process and existing mapping or document systems."
-    featuredNote="The cadastre starting configuration records the parcel right. Your team decides whether the valuation office’s service may read holder and share information."
-  />
+  <SolutionStarters area={area} />
   <SolutionFaq
     items={[
       {
         q: 'Does this replace our cadastre system?',
-        a: 'No. Your mapping system keeps parcel boundaries and your document store keeps deeds and plans. Base Registry Engine is for the register of rights you build new, or decide to move. If that register stays in its current system, the current system must provide its details; Registry Stack does not publish fields from a register it does not hold.',
+        a: 'Your mapping and document systems can stay in place. Use Base Registry Engine for a new register of rights or one you decide to migrate. If the official register stays in its current system, the implementation connects to that system for the information other services need.',
         link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'How it sits beside existing systems' },
       },
       {
@@ -120,11 +115,6 @@ const steps: WeekStep[] = [
         a: 'Your office decides who may record a right, who may look up a holder and for what reason. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
-      {
-        q: 'What is a starter, exactly?',
-        a: 'A starter is a starting configuration for a particular kind of register. You can request free access to it, and it must be adapted to your law, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
-        link: { href: '/starters/#land-property-and-assets', label: 'Browse the land, property and vehicle starters' },
-      },
       ...sharedFamilyFaq,
     ]}
   />
@@ -134,6 +124,7 @@ const steps: WeekStep[] = [
     body="Tell us which asset register you want to improve, who maintains the official record and which mapping, document or valuation systems staff use today. We can show how Registry Stack could fit."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
+    note="The core software is Apache-2.0 open source. Aubex offers paid implementation and support; your team or another provider can also operate it."
     emphasis="docs"
   />
 </Solution>

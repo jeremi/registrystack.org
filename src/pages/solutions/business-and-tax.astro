@@ -59,18 +59,18 @@ const steps: WeekStep[] = [
 <Solution
   area={area}
   heading="Manage business registrations and changes."
-  description="Businesses submit registrations and changes. Registrars review each filing and record the approved information in the business register. A bank, procurement system or other approved service can check a permitted fact without receiving the filing file."
+  description="Businesses submit registrations and changes. Registrars review each filing and record the approved information in the business register. A bank, procurement system or other approved service can check a permitted fact without receiving the filing documents."
 >
-  <section class="section" id="example" aria-labelledby="business-week-title">
+  <section class="section" id="example" aria-labelledby="business-example-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="business-week-title">Follow a company address change.</h2>
+        <h2 id="business-example-title">Follow a company address change.</h2>
       </div>
       <RegisterWeek
         id="business-week"
         kicker="Business BR-20417, one request"
-        heading="Follow the registration."
+        heading="Follow the address change."
         steps={steps}
       />
     </div>
@@ -88,11 +88,7 @@ const steps: WeekStep[] = [
       </div>
     </div>
   </section>
-  <SolutionStarters
-    area={area}
-    heading="Start from a business or tax register like yours."
-    intro="A starting configuration can provide a model for one register of businesses, taxpayers, filings or financial rights. It is adapted to your rules, the services people use and the systems that must connect."
-  />
+  <SolutionStarters area={area} />
   <SolutionFaq
     items={[
       {
@@ -112,17 +108,12 @@ const steps: WeekStep[] = [
       },
       {
         q: 'What if our office is a central bank or financial supervisor?',
-        a: 'The bank account, credit and collateral starters follow the same rules, with lookups limited to named roles and no balances or repayments recorded.',
-        link: { href: '/starters/#business-and-tax', label: 'Browse the business and tax starters' },
-      },
-      {
-        q: 'What is a starter, exactly?',
-        a: 'A starter is a starting configuration for a particular kind of register. You can request free access to it, and it must be adapted to your rules, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
-        link: { href: '/starters/#business-and-tax', label: 'Browse the business and tax starters' },
+        a: 'The marketplace includes starting configurations for bank-account, credit and collateral registers. Your implementation defines the reporting, access and information checks required by the supervisor.',
+        link: { href: 'https://marketplace.registrystack.org/collections/business-and-tax/', label: 'Browse the business and tax starters' },
       },
       {
         q: 'Can we still sell certificates and extracts?',
-        a: 'Yes. Your institution keeps control of any fees and issuance rules. When given the same issue details, Registry Render reproduces the certificate so a later copy matches the original. The service application decides when issuance is authorized.',
+        a: 'Yes. Your institution sets the fees and issuance rules. The service applies those rules before issuing a certificate or extract.',
         link: { href: 'https://docs.registrystack.org/explanation/render-determinism/', label: 'How deterministic rendering works' },
       },
       ...sharedFamilyFaq,
@@ -134,6 +125,7 @@ const steps: WeekStep[] = [
     body="Tell us which registration or filing service you want to improve, who submits changes, who decides and which systems staff use today. We can show how Registry Stack could fit."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
+    note="The core software is Apache-2.0 open source. Aubex offers paid implementation and support; your team or another provider can also operate it."
     emphasis="docs"
   />
 </Solution>

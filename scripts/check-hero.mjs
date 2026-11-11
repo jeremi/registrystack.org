@@ -1,3 +1,4 @@
+import { marketplaceMigrationEnabled } from '../src/lib/marketplace-routes.mjs';
 import { existsSync, readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { resolve } from 'node:path';
@@ -37,6 +38,7 @@ const { port } = server.address();
 const url = `http://127.0.0.1:${port}/`;
 
 const browser = await chromium.launch();
+const migrationEnabled = marketplaceMigrationEnabled(process.env.PUBLIC_MARKETPLACE_MIGRATION_ENABLED, process.env.MARKETPLACE_INDEXING_DECISION);
 const failures = [];
 
 const products = [
@@ -44,11 +46,12 @@ const products = [
   { path: '/products/evidence-gateway/', name: 'Evidence Gateway', tutorial: '/tutorials/first-evidence-assertion/' },
   { path: '/products/casework/', name: 'Registry Casework', tutorial: '/tutorials/review-breg-changes-in-casework/' },
 ];
-// The Products menu lists the three product pages and the evaluation routes.
-// Each core product also has an equal card on the homepage.
+// The Products menu lists the three core products, the authoring tool and evaluation routes.
+// Each core product also has a concise detail link in the homepage evaluation section.
 const productMenuHrefs = [
   ...products.map((product) => product.path),
-  '/starters/',
+  '/products/studio/',
+  'https://marketplace.registrystack.org/',
   '/#developers',
   'https://docs.registrystack.org/',
 ];
@@ -106,6 +109,12 @@ for (const options of [
   const page = await context.newPage();
   const mode = options.javaScriptEnabled === false ? 'no JavaScript' : 'reduced motion';
   const fail = (message) => failures.push(`${mode}: ${message}`);
+  await page.goto(url);
+  await page.keyboard.press('Tab');
+  const skip = page.getByRole('link', { name: 'Skip to main content', exact: true });
+  if (!await skip.evaluate((link) => link === document.activeElement)) fail('the first keyboard stop must skip repeated navigation');
+  await page.keyboard.press('Enter');
+  if (!await page.locator('main').evaluate((main) => main === document.activeElement)) fail('the skip link must focus the main content without JavaScript');
   // Buyers can enter through customization, programme-level DPI, or a local
   // service without choosing a starter or relying on JavaScript.
   for (const route of ['/customization/', '/digital-public-infrastructure/', '/data-spaces/', '/solutions/local-government/']) {
@@ -151,6 +160,7 @@ for (const options of [
         ['/ai/service-design/', '/customization/'],
         ['/customization/', '/pricing/'],
         ['/ai/citizen-access/', 'https://docs.registrystack.org/configure/breg-mcp/'],
+        ['/products/studio/', '/customization/'],
         ['/architecture/headless/', 'https://docs.registrystack.org/start/adopt/'],
       ]) {
         await page.goto(new URL('/ai/', url).href);
@@ -169,7 +179,7 @@ for (const options of [
     }
   }
   for (const [route, exampleTarget, inquiryContext] of [
-    ['/ai/', '#ai-jobs', 'AI-assisted public services'],
+    ['/ai/', '#uses', 'AI-assisted public services'],
     ['/ai/service-design/', '#worked-example', 'AI-assisted service design'],
     ['/customization/', '#change-example', 'AI-assisted implementation'],
     ['/ai/citizen-access/', '#correction-example', 'AI for citizen access'],
@@ -177,8 +187,8 @@ for (const options of [
     const landingUrl = new URL(route, url).href;
     await page.goto(landingUrl);
     const hero = page.locator('main .hero');
-    const figure = hero.locator('figure figcaption').filter({ hasText: 'Illustrative example' });
-    if (await figure.count() !== 1 || !await figure.isVisible()) {
+    const figure = hero.locator('figure figcaption').filter({ hasText: 'Fictional example' });
+    if (route !== '/ai/' && (await figure.count() !== 1 || !await figure.isVisible())) {
       fail(`${route} must show a labelled illustration in its hero`);
     }
 
@@ -194,20 +204,10 @@ for (const options of [
     }
     await followAnchor(hero.locator('a.button-secondary'), exampleTarget, `${route} hero example`);
   }
-  for (const route of ['/digital-public-infrastructure/', '/architecture/headless/']) {
-    await page.goto(new URL(route, url).href);
-    const dataSpaces = page.locator('main a[href="/data-spaces/"]');
-    if (await dataSpaces.count() !== 1 || !await dataSpaces.isVisible()) {
-      fail(`${route} must lead readers to data spaces`);
-      continue;
-    }
-    await dataSpaces.click();
-    if (new URL(page.url()).pathname !== '/data-spaces/' || !await page.locator('main h1').isVisible()) {
-      fail(`the data spaces link from ${route} must open the data spaces page`);
-      continue;
-    }
-    await followAnchor(page.locator('.hero .hero-actions a').first(), '#example', 'data spaces example');
-  }
+  // Verify the specialist page's own example rather than requiring an
+  // unrelated interface-choice page to advertise it.
+  await page.goto(new URL('/data-spaces/', url).href);
+  await followAnchor(page.locator('.hero .hero-actions a').first(), '#example', 'data spaces example');
   await page.goto(url);
 
   const heroPrimary = page.locator('.hero .hero-actions a').first();
@@ -219,7 +219,9 @@ for (const options of [
     if (new URL(page.url()).pathname !== '/solutions/' || !await page.locator('main h1').isVisible()) {
       fail('hero primary action did not open the solutions page');
     } else {
-      await followAnchor(page.locator('.hero .hero-actions a').first(), '#registers', 'solution finder');
+      if (await page.locator('#registers .solution-area-grid a').count() !== familySolutionHrefs.size) {
+        fail('the solutions directory must retain every service family');
+      }
       const licensing = page.locator('#registers a[href="/solutions/licensing/"]');
       if (await licensing.count() !== 1) {
         fail('the service catalogue must offer a route to licensing');
@@ -278,27 +280,41 @@ for (const options of [
           fail(`${route} must offer a contextual service inquiry`);
         }
         if (familySolutionHrefs.has(route)) {
-          for (const tutorial of ['first-breg', 'first-evidence-assertion']) {
-            // Cross-site attribution adds query parameters when JavaScript runs.
-            if (await page.locator(`main a[href^="https://docs.registrystack.org/tutorials/${tutorial}/"]`).count() === 0) {
-              fail(`${route} must link to the ${tutorial} evaluation route`);
-            }
+          const duplicateIds = await page.locator('[id]').evaluateAll(elements => {
+            const ids = elements.map(element => element.id);
+            return ids.filter((id, index) => ids.indexOf(id) !== index);
+          });
+          if (duplicateIds.length) fail(`${route} has duplicate IDs: ${duplicateIds.join(', ')}`);
+          const key = route.split('/').filter(Boolean).at(-1);
+          const collection = `https://marketplace.registrystack.org/collections/${key}/`;
+          if (await page.locator(`#starters a[href="${collection}"]`).count() !== 1 ||
+              await page.locator('main a[href^="/starters/"]').count() !== 0) {
+            fail(`${route} must hand configuration browsing to its matching marketplace collection`);
+          }
+          if (!await page.locator('main a[href="/#developers"]').count()) {
+            fail(`${route} must retain the technical evaluation route`);
           }
         }
       }
     }
   }
   await page.goto(url);
+  // Check visible choices and adoption facts, not the historical #customization
+  // identifier, which is retained as an inbound anchor for the AI entry.
   const homeOrder = await page.evaluate(() => {
     const sections = [...document.querySelectorAll('main > section')];
-    return Object.fromEntries(['registers', 'customization', 'products', 'developers'].map((id) => {
-      const target = document.getElementById(id);
-      return [id, sections.findIndex((section) => section === target || section.contains(target))];
-    }));
+    const linksTo = (section, path) => [...section.querySelectorAll('a')]
+      .some(link => new URL(link.href).pathname === path);
+    return {
+      services: sections.findIndex(section => linksTo(section, '/solutions/licensing/') && linksTo(section, '/solutions/')),
+      adoption: sections.findIndex(section => linksTo(section, '/pricing/') && /Apache[- ]2\.0/.test(section.innerText) && /Aubex/.test(section.innerText)),
+      technical: sections.findIndex(section => [...section.querySelectorAll('a')]
+        .some(link => new URL(link.href).hostname === 'docs.registrystack.org' && new URL(link.href).pathname.startsWith('/tutorials/'))),
+    };
   });
-  if (Object.values(homeOrder).some((index) => index < 0) ||
-      Math.max(homeOrder.registers, homeOrder.customization) > Math.min(homeOrder.products, homeOrder.developers)) {
-    fail('homepage must introduce solutions and customization before product and technical evaluation');
+  if (Object.values(homeOrder).some(index => index < 0) ||
+      Math.max(homeOrder.services, homeOrder.adoption) >= homeOrder.technical) {
+    fail('homepage must show actual service choices and adoption/ownership before technical tutorials');
   }
   // The register-day sequence keeps all four steps readable: the highlight
   // moves, the text never changes. The pause control only exists when the
@@ -390,7 +406,7 @@ for (const options of [
     return `${origin}${pathname}${hash}`;
   });
   if (menuLinks.length !== expectedProductLinks.length || expectedProductLinks.some((href) => !menuLinks.includes(href))) {
-    fail(`the Products menu must list the three products, starters, developer tutorials and documentation (found ${menuLinks.join(', ')})`);
+    fail(`the Products menu must list the three core products, Studio, marketplace, developer tutorials and documentation (found ${menuLinks.join(', ')})`);
   }
   if (options.javaScriptEnabled !== false && await solutionsMenu.evaluate((menu) => menu.open)) {
     fail('opening the Products menu must close the Solutions menu');
@@ -408,19 +424,16 @@ for (const options of [
   await productsMenu.locator('summary').click();
   if (options.javaScriptEnabled === false) await solutionsMenu.locator('summary').click();
 
-  const cardLinks = await page.locator('.home-solution-card').evaluateAll(
-    (cards) => cards.map((card) => [...card.querySelectorAll('a')].map((link) => link.getAttribute('href'))),
-  );
-  if (cardLinks.length !== products.length || products.some((product) =>
-    cardLinks.filter((links) => links.length === 1 && links[0] === product.path).length !== 1)) {
-    fail('each product card must lead to its own product page');
+  const productLinks = page.locator('.home-product-links a');
+  if (await productLinks.count() !== products.length) {
+    fail('homepage must retain one product detail link per maintained product');
   }
 
   // Follow the actual product links, then verify both next steps on the page
   // they open. Merely checking hrefs would miss a stale or broken destination.
   for (const product of products) {
     await page.goto(url);
-    const link = page.locator(`.home-solution-card a[href="${product.path}"]`).first();
+    const link = page.locator(`.home-product-links a[href="${product.path}"]`).first();
     if (!await link.isVisible()) {
       fail(`homepage is missing its ${product.name} product link`);
       continue;
@@ -508,64 +521,23 @@ for (const options of [
     fail('pricing page is missing the self-service developer path');
   }
 
-  // A representative catalogue detail stays honest about availability: the
-  // page is inspectable, while the unpublished file has a complete request
-  // journey whether the inline form is configured or the shared contact form is used.
+  // The migration gate verifies redirected routes separately, without sending
+  // browser fixtures to the live marketplace.
+  if (!migrationEnabled) {
+  await page.goto(`${url}starters/`);
+  const collectionLinks = await page.locator('main .configuration-areas a[href^="https://marketplace.registrystack.org/collections/"]').evaluateAll((links) => links.map((a) => a.href));
+  const expectedCollections = [...familySolutionHrefs].map((route) => `https://marketplace.registrystack.org/collections/${route.split('/').filter(Boolean).at(-1)}/`);
+  if (collectionLinks.length !== expectedCollections.length || expectedCollections.some((href) => !collectionLinks.includes(href))) fail('the former catalogue must retain seven exact collection handoffs');
+  if (await page.locator('main .starter-card').count()) fail('the former catalogue must not repeat the marketplace pack listing');
+
+  // Old bookmarks remain readable, while current models and access requests
+  // have one home in the marketplace.
   await page.goto(`${url}starters/professional-licensing/`);
-  if (!await page.locator('main h1').isVisible()) fail('representative professional-licensing starter is missing');
-  const starterRequest = page.locator('main .hero a[data-journey="starter-request"]');
-  if (await starterRequest.count() !== 1 || !await starterRequest.isVisible()) {
-    fail('representative starter must offer a visible request near its introduction');
-  } else {
-    const requestHref = await starterRequest.getAttribute('href');
-    if (isContactRoute(requestHref, 'starter', 'Professional licensing')) {
-      if (await page.locator('#starter-request-form').count() !== 0) {
-        fail('unconfigured representative starter must use the shared contact journey');
-      }
-    } else if (requestHref === '#starter-request-form') {
-      await starterRequest.click();
-      const requestPanel = page.locator('#starter-request-form');
-      if (new URL(page.url()).hash !== '#starter-request-form' ||
-          await requestPanel.count() !== 1 || !await requestPanel.isVisible()) {
-        fail('configured representative starter request did not reach its visible form');
-      } else {
-        const form = requestPanel.locator('form[data-starter-request-form]');
-        const email = form.locator('input[name="email"]');
-        const submit = form.locator('button[type="submit"]');
-        const fallback = requestPanel.locator('.starter-request-fallback a[href^="mailto:contact@registrystack.org?"]');
-        const completeForm = await form.count() === 1 && await email.count() === 1 && await submit.count() === 1;
-        if (!completeForm) {
-          fail('configured representative starter must render a complete inline request form');
-        }
-        if (await fallback.count() !== 1 ||
-            (options.javaScriptEnabled === false ? !await fallback.isVisible() : await fallback.isVisible())) {
-          fail('configured representative starter must expose email recovery only without JavaScript or after an error');
-        }
-        if (completeForm) {
-          if (options.javaScriptEnabled === false) {
-            if (!await submit.isDisabled()) {
-              fail('configured representative starter must keep submission disabled without JavaScript');
-            }
-          } else {
-            if (await submit.isDisabled()) {
-              fail('configured representative starter must enable submission after enhancement');
-            }
-            if (await form.evaluate((element) => element.checkValidity())) {
-              fail('configured representative starter must require an email address');
-            }
-            await email.fill('hero-check@example.invalid');
-            if (!await form.evaluate((element) => element.checkValidity())) {
-              fail('configured representative starter must accept valid inline request fields');
-            }
-          }
-        }
-      }
-    } else {
-      fail('representative starter request must use the contact or inline form journey');
-    }
-  }
-  if (await page.locator('main a[download], main a[href$=".zip"]').count()) {
-    fail('representative starter must not offer an unpublished zip download');
+  if (!await page.locator('main h1').isVisible()) fail('the archived reference must remain readable');
+  const currentConfiguration = page.locator('main .hero a[data-journey="marketplace-current-configuration"]');
+  if (await currentConfiguration.count() !== 1 || await currentConfiguration.getAttribute('href') !== 'https://marketplace.registrystack.org/packs/professional-licensing/') fail('the archived reference must lead to its exact current pack');
+  if (await page.locator('main [data-starter-request-form], main a[download], main a[href$=".zip"]').count()) fail('archived references must not offer outdated local access or downloads');
+
   }
 
   await page.goto(`${url}contact/`);
@@ -573,6 +545,17 @@ for (const options of [
   if (await currentContact.count() !== 1 || !await currentContact.isVisible()) {
     fail('contact page must highlight Contact in the main navigation');
   }
+
+  // Contact source attribution must not rewrite a same-document skip link,
+  // reload the page or replace the referring service's source query.
+  await page.goto(`${url}contact/?type=question&context=Registry+Studio&source=%2Fproducts%2Fstudio%2F`);
+  const contactBeforeSkip = new URL(page.url());
+  const contactSkip = page.getByRole('link', { name: 'Skip to main content', exact: true });
+  if (await contactSkip.getAttribute('href') !== '#main-content') fail('contact skip link must remain a fragment');
+  await contactSkip.focus();
+  await page.keyboard.press('Enter');
+  if (new URL(page.url()).search !== contactBeforeSkip.search ||
+      !await page.locator('main').evaluate((main) => main === document.activeElement)) fail('contact skip navigation must preserve source and focus');
 
   for (const [from, to] of redirects) {
     await page.goto(new URL(from, url).href);

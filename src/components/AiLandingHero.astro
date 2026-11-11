@@ -9,16 +9,22 @@ interface Props {
   exampleHref: string;
   exampleLabel: string;
   note?: string;
+  exampleNote?: string;
 }
 
-const { eyebrow, heading, lead, context, exampleHref, exampleLabel, note } = Astro.props;
+const {
+  eyebrow, heading, lead, context, exampleHref, exampleLabel, note,
+  exampleNote = 'Fictional example. Rules and screens are configured for your service.',
+} = Astro.props;
+// A heading of two sentences breaks between them, not inside the second one.
+const headingSentences = heading.split(/(?<=\.)\s+/);
 ---
 
 <section class="hero hero-cover ai-hero" aria-labelledby="ai-hero-title">
   <div class="hero-inner">
     <div class="hero-copy">
       <p class="eyebrow">{eyebrow}</p>
-      <h1 id="ai-hero-title">{heading}</h1>
+      <h1 id="ai-hero-title">{headingSentences.map((sentence, index) => <>{index > 0 && ' '}<span class="heading-sentence">{sentence}</span></>)}</h1>
       <p class="hero-lead">{lead}</p>
       <div class="hero-actions">
         <a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a>
@@ -27,13 +33,8 @@ const { eyebrow, heading, lead, context, exampleHref, exampleLabel, note } = Ast
       {note && <p class="hero-note">{note}</p>}
     </div>
     <figure class="ai-hero-example">
-      <figcaption>
-        <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-          <path d="M4 2.75h8l4 4v10.5H4zM12 2.75v4h4M7 10h6m-6 3h6" />
-        </svg>
-        Illustrative example
-      </figcaption>
       <div class="ai-example-content"><slot /></div>
+      <figcaption>{exampleNote}</figcaption>
     </figure>
   </div>
 </section>
@@ -46,7 +47,8 @@ const { eyebrow, heading, lead, context, exampleHref, exampleLabel, note } = Ast
     padding-block: clamp(48px, 7vw, 94px);
   }
   .ai-hero .hero-copy { text-align: start; }
-  .ai-hero h1 { text-wrap: pretty; }
+  .ai-hero h1 { font-size: clamp(2.25rem, 4.3vw, 3.375rem); text-wrap: pretty; }
+  .ai-hero h1 .heading-sentence { text-wrap: balance; }
   .ai-hero .hero-lead { font-size: clamp(1.125rem, 1.7vw, 1.3125rem); }
   .ai-hero .hero-actions { justify-content: start; }
   .ai-hero-example {
@@ -59,16 +61,13 @@ const { eyebrow, heading, lead, context, exampleHref, exampleLabel, note } = Ast
     min-width: 0;
   }
   .ai-hero-example figcaption {
-    align-items: center;
     background: var(--registry-white);
-    border-bottom: 1px solid var(--registry-paper-rule);
-    border-radius: 8px 8px 0 0;
-    color: var(--registry-blue);
-    display: flex;
-    font: 600 var(--type-xs)/1.4 var(--registry-mono);
-    gap: 8px;
+    border-top: 1px solid var(--registry-paper-rule);
+    border-radius: 0 0 8px 8px;
+    color: var(--registry-body);
+    font-size: var(--type-xs);
+    line-height: 1.5;
     padding: 12px clamp(16px, 2.4vw, 28px);
-    text-transform: uppercase;
   }
   .ai-example-content { padding: clamp(16px, 2.4vw, 28px); }
   .ai-example-content :global(.ai-example-label) {
@@ -91,6 +90,24 @@ const { eyebrow, heading, lead, context, exampleHref, exampleLabel, note } = Ast
     padding: 11px 0;
   }
   .ai-example-content :global(.ai-example-rows > div:last-child) { padding-bottom: 0; }
+  .ai-example-content :global(.ai-example-rows dt) {
+    color: var(--registry-body);
+    font: inherit;
+    font-size: var(--type-sm);
+    font-weight: 600;
+    line-height: 1.45;
+    margin: 0 0 2px;
+    text-transform: none;
+  }
+  .ai-example-content :global(.ai-example-status) {
+    border-top: 1px solid var(--registry-paper-rule);
+    color: var(--registry-ink);
+    font-size: var(--type-body-sm);
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 11px 0 0;
+    padding-top: 11px;
+  }
   .ai-example-content :global(.ai-example-rows dd) {
     color: var(--registry-ink);
     font-size: var(--type-body-sm);

@@ -61,11 +61,11 @@ const steps: WeekStep[] = [
   heading="Maintain producer, holding, establishment and permit records."
   description="Staff can review registrations and record approved changes to holdings, establishments and permits. Authorized programmes can check information such as registration status without receiving the full record. Your institution sets the register’s rules and access."
 >
-  <section class="section" id="example" aria-labelledby="agriculture-week-title">
+  <section class="section" id="example" aria-labelledby="agriculture-example-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="agriculture-week-title">Review and record one holding registration.</h2>
+        <h2 id="agriculture-example-title">Review and record one holding registration.</h2>
       </div>
       <RegisterWeek
         id="agriculture-week"
@@ -84,21 +84,16 @@ const steps: WeekStep[] = [
       <div class="product-facts">
         <article><h3>Link each permit to the site it covers</h3><p>Each farm, establishment or site has its own record, and each registration or permit links to it. If one food business operates two establishments, each establishment can have its own registration and recorded status.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
         <article><h3>Keep earlier statuses when a permit changes</h3><p>A suspension or withdrawal is recorded with the name of the officer and the date. Staff can see which status the register showed on the day of an inspection.</p><a class="inline-cta" href="/solutions/review-changes/">How a decision reaches the register <span aria-hidden="true">→</span></a></article>
-        <article><h3>Publish seasonal counts without farmers’ details</h3><p>Your authority can publish counts, such as registered holdings per district, while suppressing small counts and excluding individual records.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/">How statistical releases work <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Publish district-level registration counts</h3><p>Configure seasonal counts with small-count suppression and rounding, then publish reviewed releases without exposing the records behind them.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/">How statistical releases work <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
-  <SolutionStarters
-    area={area}
-    heading="Start from an agriculture, food, or environment register like yours."
-    intro="A starting configuration can provide a model for holdings, animals, establishments, permits or natural resources. It is adapted to your rules, field operations and existing sector systems."
-    featuredNote="The farmer registry starter records the farm and the registration; the question a programme asks is set up in Evidence Gateway, which the starter does not include."
-  />
+  <SolutionStarters area={area} />
   <SolutionFaq
     items={[
       {
         q: 'Does this replace our farm register or animal identification system?',
-        a: 'Not necessarily. Evidence Gateway can answer from the register you run today, through a connection your technical team sets up. The Base Registry Engine is for a register you build or move off spreadsheets.',
+        a: 'You can keep the register you run today and connect Evidence Gateway to answer agreed questions from it. Use Base Registry Engine when you need a new register or decide to migrate one, including a register maintained in spreadsheets.',
         link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'How it sits beside existing systems' },
       },
       {
@@ -111,11 +106,6 @@ const steps: WeekStep[] = [
         a: 'Your office decides, role by role: who may record a registration, who may record a permit, who may look one up, and for what reason. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
-      {
-        q: 'What is a starter, exactly?',
-        a: 'A starter is a starting configuration for a particular kind of register. You can request free access to it, and it must be adapted to your rules, field operations and existing systems. You can begin by describing your service without selecting a starter first.',
-        link: { href: '/starters/#agriculture-food-and-environment', label: 'Browse the agriculture, food and environment starters' },
-      },
       ...sharedFamilyFaq,
     ]}
   />
@@ -125,6 +115,7 @@ const steps: WeekStep[] = [
     body="Tell us which producer, establishment or permit service you want to improve, who records field information and what other programmes need to check. We can show how Registry Stack could fit."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
+    note="The core software is Apache-2.0 open source. Aubex offers paid implementation and support; your team or another provider can also operate it."
     emphasis="docs"
   />
 </Solution>

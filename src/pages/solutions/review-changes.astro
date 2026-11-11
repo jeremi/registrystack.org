@@ -40,7 +40,7 @@ const casework = products.find((p) => p.key === 'casework')!;
       </div>
       <div id="what-your-office-calls-it" class="product-note">
         <h3>Other requests your team could review</h3>
-        <p>A correction to a land record, an objection to a household’s recorded details or a request to change a professional’s permitted activities. The review process, required evidence and decision rules are configured for the institution’s work.</p>
+        <p>The same approach can support a land-record correction or an objection to household details. The evidence and decision rules are configured for each institution.</p>
       </div>
     </div>
   </section>
@@ -78,7 +78,7 @@ const casework = products.find((p) => p.key === 'casework')!;
       },
       {
         q: 'Where does our technical team start?',
-        a: 'The reviewed-change tutorial shows how to connect Base Registry Engine to Casework, submit a proposed change, review it and apply an approved result. Applicant and staff applications are connected as part of the service implementation.',
+        a: 'The tutorial covers authoring and package verification for a reviewed register change. Use it to check the pairing; your implementation also connects and tests submission, staff review and the authorized register update.',
         link: { href: 'https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/', label: 'Configure a reviewed register change' },
       },
     ]}
@@ -89,6 +89,7 @@ const casework = products.find((p) => p.key === 'casework')!;
     body="Tell us which requests staff review, who decides and how an approved change is applied. We can show how staff screens, review assignments and the register can work together."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
+    note="The core software is Apache-2.0 open source. Aubex offers paid implementation and support; your team or another provider can also operate it."
     emphasis="docs"
   />
 </Solution>

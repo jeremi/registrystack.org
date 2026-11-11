@@ -61,11 +61,11 @@ const steps: WeekStep[] = [
   heading="Maintain people, household and enrollment records."
   description="Record identity, household relationships, enrollment or status for a population register, social registry or programme your institution runs. Staff review applications and corrections; authorized services can check specific information without receiving the full file. Each institution remains responsible for its eligibility rules and decisions."
 >
-  <section class="section" id="example" aria-labelledby="people-week-title">
+  <section class="section" id="example" aria-labelledby="people-example-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="people-week-title">Follow a household enrollment application.</h2>
+        <h2 id="people-example-title">Follow a household enrollment application.</h2>
       </div>
       <RegisterWeek
         id="people-week"
@@ -86,20 +86,14 @@ const steps: WeekStep[] = [
         <article><h3>Limit checks to the person a service needs to ask about</h3><p>Your institution can allow a programme to check a known person’s status while preventing it from listing everyone in the register. The implementation defines permissions and audit coverage for each connection.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
         <article><h3>Issue a credential confirming programme enrollment</h3><p>An implementation can use Evidence Gateway to issue a digital credential stating whether someone is enrolled. The implementation connects and tests the wallet that receives it and the service that accepts it.</p><a class="inline-cta" href="/solutions/verifiable-credentials/">Explore verifiable credentials <span aria-hidden="true">→</span></a></article>
       </div>
-      <p class="product-note">The enrollment starter records who is enrolled. A social registry of assessed households also needs the household record used by its intake process.</p>
     </div>
   </section>
-  <SolutionStarters
-    area={area}
-    heading="Start from a register of people like yours."
-    intro="Starting configurations cover population, identity, education, immigration, voting and social programme records. Choose according to the service, the information it needs and which institution is responsible for each decision."
-    featuredNote="The enrollment starter records the enrollment; the question a programme asks is set up in Evidence Gateway, which the starter does not include."
-  />
+  <SolutionStarters area={area} />
   <SolutionFaq
     items={[
       {
         q: 'Does this replace our population register or social registry?',
-        a: 'No. Evidence Gateway can answer programmes’ questions from a register you already run, through a connection your technical team sets up. Base Registry Engine is for a register you build new, or decide to move.',
+        a: 'You can keep the register you already run and connect Evidence Gateway to answer agreed questions from it. Use Base Registry Engine when you need a new register or decide to migrate an existing one.',
         link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'How it sits beside existing systems' },
       },
       {
@@ -109,17 +103,12 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Does it assess eligibility or calculate benefits?',
-        a: 'No. A programme that receives an answer decides what it means for its applicant under its own rules. The register records the decision made by the organization responsible for that record.',
+        a: 'Your programme remains responsible for eligibility assessment and benefit calculations. A receiving programme applies its own rules to the answer it receives; the register records the decision made by the responsible organization.',
       },
       {
         q: 'Who can see a person’s record?',
         a: 'Your office decides who may record a person, change a household or look someone up, and for what reason. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
-      },
-      {
-        q: 'What is a starter, exactly?',
-        a: 'A starter is a starting configuration for a particular kind of register. You can request free access to it, and it must be adapted to your rules, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
-        link: { href: '/starters/#people-and-social-programmes', label: 'Browse the starters for registers of people' },
       },
       ...sharedFamilyFaq,
     ]}
@@ -130,6 +119,7 @@ const steps: WeekStep[] = [
     body="Tell us which service and people records you want to improve, who makes each decision and which systems need to exchange information. We can show how Registry Stack could fit while sharing only what each service needs."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
+    note="The core software is Apache-2.0 open source. Aubex offers paid implementation and support; your team or another provider can also operate it."
     emphasis="docs"
   />
 </Solution>

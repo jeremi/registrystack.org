@@ -6,7 +6,7 @@ import RegisterWeek from '../../components/RegisterWeek.astro';
 import SolutionStarters from '../../components/SolutionStarters.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
-import { solutionAreas, sharedFamilyFaq } from '../../data/solutions';
+import { solutionAreas } from '../../data/solutions';
 import { describeServiceHref } from '../../data/contact';
 import { weekProduct, type WeekStep } from '../../data/register-week';
 const area = solutionAreas.find((a) => a.key === 'licensing')!;
@@ -27,7 +27,7 @@ const steps: WeekStep[] = [
     when: 'Review and decision',
     ...weekProduct('casework'),
     title: 'An officer reviews the renewal',
-    text: 'M. Okafor reviews the renewal and closes that review with changes requested because a certificate is unreadable. The application service shows the request to the holder, accepts the replacement and sends the revised application into a new review. The officer approves the complete application.',
+    text: 'An officer requests a clearer copy of a certificate. The application service accepts the replacement and sends the revised application into a new review. The officer approves the complete application.',
     card: { kind: 'history', items: [
       { state: 'Review 1', note: 'Completed: changes requested' },
       { state: 'Application service', note: 'Replacement accepted and resubmitted' },
@@ -57,13 +57,13 @@ const steps: WeekStep[] = [
 <Solution
   area={area}
   heading="Manage licence applications and renewals."
-  description="Applicants submit information and replace missing supporting evidence. Officers review each application and record a decision. A staff member or connected service with permission then updates the licence register. Employers and other approved services can check a defined licence status without receiving the application file."
+  description="Keep licence applications, staff decisions and the licence record connected. Adapt the service to your authority’s rules, retain the history of renewals and suspensions, and let approved services check a licence status without receiving the application file."
 >
-  <section class="section" id="example" aria-labelledby="licensing-week-title">
+  <section class="section" id="example" aria-labelledby="licensing-example-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">One request, start to finish</p>
-        <h2 id="licensing-week-title">Follow a licence renewal.</h2>
+        <h2 id="licensing-example-title">Follow a licence renewal.</h2>
       </div>
       <RegisterWeek
         id="licensing-week"
@@ -78,7 +78,7 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="licensing-change-title">Separate the decision from the register update.</h2>
+        <h2 id="licensing-change-title">Keep the licensing history clear.</h2>
       </div>
       <div class="product-facts">
         <article><h3>Applicants can replace missing supporting evidence</h3><p>When an officer requests changes, the application service shows what is missing. The applicant can provide a replacement and submit the revised application for another review. The institution decides what evidence its rules require.</p><a class="inline-cta" href="/customization/">How a service is adapted <span aria-hidden="true">→</span></a></article>
@@ -87,11 +87,7 @@ const steps: WeekStep[] = [
       </div>
     </div>
   </section>
-  <SolutionStarters
-    area={area}
-    heading="Start from a licence register like yours."
-    intro="A starting configuration can provide a model for one common kind of licence, including the information held and the changes staff may make. Browse if useful, or tell us about your licensing service and we will help identify a suitable starting point."
-  />
+  <SolutionStarters area={area} />
   <SolutionFaq
     items={[
       {
@@ -119,11 +115,10 @@ const steps: WeekStep[] = [
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
       {
-        q: 'What is a starter, exactly?',
-        a: 'A starter is a starting configuration for a particular kind of register. You can request free access to it, and it must be adapted to the authority’s rules, service channels and existing systems. You can begin by describing your service without selecting a starter first.',
-        link: { href: '/starters/#licensing', label: 'Browse the licensing starters' },
+        q: 'How can our technical team evaluate the software?',
+        a: 'Start with the component tutorials and current limitations. They use sample data to test core behavior; they are not a complete licensing application. Your implementation must connect the application service, staff review and register update, and test the complete journey.',
+        link: { href: '/#developers', label: 'Technical evaluation and current limitations' },
       },
-      ...sharedFamilyFaq,
     ]}
   />
   <DocsHandoff
@@ -132,6 +127,7 @@ const steps: WeekStep[] = [
     body="Tell us which licensing service you want to improve, who applies, who decides and which systems must connect. We can identify a useful starting configuration and scope the screens, identity, hosting and integrations with you."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
+    note="The core software is Apache-2.0 open source. Aubex offers paid implementation and support; your team or another provider can also operate it."
     emphasis="docs"
   />
 </Solution>

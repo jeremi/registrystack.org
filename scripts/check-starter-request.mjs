@@ -36,18 +36,22 @@ function successfulMauticResponse(data) {
 }
 const build = spawnSync('npm', ['run', 'build', '--', '--outDir', dist], {
   cwd: root, encoding: 'utf8',
-  env: { ...process.env, PUBLIC_STARTER_REQUEST_ENDPOINT: endpoint, PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: '', PUBLIC_UMAMI_WEBSITE_ID: '', PUBLIC_MAUTIC_URL: '' },
+  env: { ...process.env, PUBLIC_MARKETPLACE_MIGRATION_ENABLED: '', MARKETPLACE_INDEXING_DECISION: '', PUBLIC_STARTER_REQUEST_ENDPOINT: endpoint, PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: '', PUBLIC_UMAMI_WEBSITE_ID: '', PUBLIC_MAUTIC_URL: '' },
 });
 assert.equal(build.status, 0, build.stderr || build.stdout);
 const unconfiguredBuild = spawnSync('npm', ['run', 'build', '--', '--outDir', unconfiguredDist], {
   cwd: root, encoding: 'utf8',
-  env: { ...process.env, PUBLIC_STARTER_REQUEST_ENDPOINT: '', PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: '', PUBLIC_UMAMI_WEBSITE_ID: '', PUBLIC_MAUTIC_URL: '' },
+  env: { ...process.env, PUBLIC_MARKETPLACE_MIGRATION_ENABLED: '', MARKETPLACE_INDEXING_DECISION: '', PUBLIC_STARTER_REQUEST_ENDPOINT: '', PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: '', PUBLIC_UMAMI_WEBSITE_ID: '', PUBLIC_MAUTIC_URL: '' },
 });
 assert.equal(unconfiguredBuild.status, 0, unconfiguredBuild.stderr || unconfiguredBuild.stdout);
 const umamiBuild = spawnSync('npm', ['run', 'build', '--', '--outDir', umamiDist], {
   cwd: root, encoding: 'utf8',
   env: {
     ...process.env,
+    // Keep fixture builds in the uncut-over website mode; form regressions use
+    // the real contact page. Candidate redirects are checked by check:marketplace.
+    PUBLIC_MARKETPLACE_MIGRATION_ENABLED: '',
+    MARKETPLACE_INDEXING_DECISION: '',
     PUBLIC_STARTER_REQUEST_ENDPOINT: endpoint,
     PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT: '',
     PUBLIC_UMAMI_WEBSITE_ID: '00000000-0000-4000-8000-000000000001',
@@ -71,7 +75,7 @@ await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 await new Promise(resolve => unconfiguredServer.listen(0, '127.0.0.1', resolve));
 const origin = `http://127.0.0.1:${server.address().port}`;
 const unconfiguredOrigin = `http://127.0.0.1:${unconfiguredServer.address().port}`;
-const path = '/starters/professional-licensing/';
+const starterContactPath = '/contact/?type=starter&context=Professional+licensing';
 const browser = await chromium.launch();
 try {
   // Optional analytics must not delay the form module. Hold the fully
@@ -118,7 +122,7 @@ try {
   umamiPage.on('pageerror', error => umamiErrors.push(error.message));
   try {
     const statsRequest = umamiPage.waitForRequest(umamiScriptUrl);
-    await umamiPage.goto('https://registrystack.org/starters/professional-licensing/', {
+    await umamiPage.goto(`https://registrystack.org${starterContactPath}`, {
       waitUntil: 'commit',
     });
     await statsRequest;
@@ -161,8 +165,7 @@ try {
     submissions.push(data);
     await route.fulfill({ json: successfulMauticResponse(data), headers: { 'access-control-allow-origin': origin } });
   });
-  await page.goto(`${origin}${path}?utm_source=example&email=never-forward@example.invalid`);
-  await page.locator('.hero-actions [data-journey="starter-request"]').click();
+  await page.goto(`${origin}${starterContactPath}&utm_source=example&email=never-forward@example.invalid`);
   const form = page.locator('[data-starter-request-form]');
   await form.getByRole('textbox', { name: 'Email address' }).fill('visitor@example.invalid');
   await form.getByRole('textbox', { name: 'Organization' }).fill('Licensing office');
@@ -177,8 +180,8 @@ try {
     'mauticform[organization]': 'Licensing office',
     'mauticform[role]': 'Service owner',
     'mauticform[message]': 'Record professional licences.',
-    'mauticform[starter_id]': 'professional-licensing',
-    'mauticform[source_page]': '/starters/professional-licensing/',
+    'mauticform[starter_id]': '',
+    'mauticform[source_page]': '/contact/',
     'mauticform[request_token]': '<uuid>',
     'mauticform[request_type]': 'starter',
     'mauticform[request_context]': 'Professional licensing',
@@ -224,9 +227,17 @@ try {
     await page.setViewportSize({ width, height: 900 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   }
-  await page.goto(`${origin}/starters/health-facilities/`);
-  assert.equal(await page.locator('[data-starter-request-form]').count(), 1);
-  assert.equal(await page.locator('.hero-actions [data-journey="starter-request"]').getAttribute('href'), '#starter-request-form');
+  // Archived model pages hand current access requests to the exact pack;
+  // they must not reintroduce a duplicate local request form.
+  for (const starterId of ['professional-licensing', 'health-facilities']) {
+    await page.goto(`${origin}/starters/${starterId}/`);
+    assert.equal(await page.locator('[data-starter-request-form]').count(), 0);
+    assert.equal(
+      await page.locator('.hero-actions [data-journey="marketplace-current-configuration"]').getAttribute('href'),
+      `https://marketplace.registrystack.org/packs/${starterId}/`,
+    );
+    assert.match(await page.locator('.starter-hero-terms').textContent(), /0\.42\.0.*snapshot/);
+  }
 
   // A same-origin contact link records its path explicitly because the site's
   // strict referrer policy intentionally omits it.
@@ -308,7 +319,7 @@ try {
     return route.fulfill({ json: successfulMauticResponse(disabledSubmission), headers: { 'access-control-allow-origin': origin } });
   });
   const disabledPage = await disabledTracking.newPage();
-  await disabledPage.goto(`${origin}${path}`);
+  await disabledPage.goto(`${origin}${starterContactPath}`);
   await disabledPage.getByRole('textbox', { name: 'Email address' }).fill('disabled@example.invalid');
   await disabledPage.getByRole('button', { name: 'Request access' }).click();
   await disabledPage.locator('[data-starter-request-success]').waitFor({ state: 'visible' });
@@ -320,8 +331,9 @@ try {
 
   const noJs = await browser.newContext({ javaScriptEnabled: false });
   const fallback = await noJs.newPage();
-  await fallback.goto(`${origin}${path}`);
-  assert.equal(await fallback.getByRole('button', { name: 'Request access' }).isDisabled(), true);
+  await fallback.goto(`${origin}${starterContactPath}`);
+  assert.equal(await fallback.locator('[data-starter-request-submit]').isDisabled(), true);
+  assert.equal(new URL(await fallback.locator('[data-request-recovery]').getAttribute('href')).searchParams.get('subject'), 'Contact Registry Stack');
   assert.match(await fallback.locator('.starter-request-fallback a').getAttribute('href'), /^mailto:/);
   await noJs.close();
 
@@ -348,7 +360,7 @@ try {
   assert.equal(neutralRecovery.searchParams.get('subject'), 'Contact Registry Stack');
   assert.match(neutralRecovery.searchParams.get('body'), /Request type .*Relevant starter .*Source page:/s);
   await unconfiguredNoJs.close();
-  console.log('Enquiry browser checks passed: starter and contact payloads, no consent/cookies/tracking, safe context, failure recovery, accessibility, mobile and no-JS fallback.');
+  console.log('Enquiry browser checks passed: archived pack handoffs, contextual starter enquiries and contact payloads, no consent/cookies/tracking, safe context, failure recovery, accessibility, mobile and no-JS fallback.');
 } finally {
   await browser.close();
   server.closeAllConnections();

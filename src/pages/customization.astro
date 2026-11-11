@@ -10,35 +10,38 @@ const context = 'AI-assisted implementation';
 
 <Base
   title="Implement and adapt a public service | Registry Stack"
-  description="Adapt open-source registry software to your forms, rules and systems. Work with our team to configure and test one service in a scoped pilot."
+  description="Adapt open-source registry software to your forms, rules and systems. Our team uses AI to configure and test one government service with you in a pilot."
+  ogImagePath="/og-ai.png"
+  ogImageAlt="Registry Stack: Design, adapt and access public services with AI."
 >
   <SiteHeader current="customization" />
-  <main>
+  <main id="main-content" tabindex="-1">
     <AiLandingHero
       eyebrow="AI-assisted implementation"
       heading="Build a service around your rules."
-      lead="Adapt open-source registry software to your forms, rules and review steps. Our team uses AI to help prepare changes your institution can review and test before approving them."
+      lead="Adapt open-source registry software to your forms, rules and review steps. Our team uses AI to draft the configuration and test cases. Your institution reviews, tests and approves each change."
       context={context}
       exampleHref="#change-example"
       exampleLabel="See a change example"
       note="Available through a scoped implementation pilot."
     >
-      <p class="ai-example-label">Proposed change</p>
+      <p class="ai-example-label">Example: proposed change</p>
       <p class="ai-example-title">Open enrolment to five-year-olds</p>
       <dl class="ai-example-rows">
-        <div><dt class="ai-example-label">Entry age</dt><dd>6 years to <strong>5 years</strong></dd></div>
-        <div><dt class="ai-example-label">Turns five by the cut-off</dt><dd>Meets the age rule</dd></div>
-        <div><dt class="ai-example-label">Turns five after the cut-off</dt><dd>Does not meet the age rule</dd></div>
+        <div><dt>Entry age</dt><dd>6 years to <strong>5 years</strong></dd></div>
+        <div><dt>Turns five by the cut-off</dt><dd>Meets the age rule</dd></div>
+        <div><dt>Turns five after the cut-off</dt><dd>Does not meet the age rule</dd></div>
       </dl>
+      <p class="ai-example-status">Drafted with AI. Tests pass. Waiting for your approval.</p>
     </AiLandingHero>
 
     <section class="section section-muted" id="change-example" aria-labelledby="change-title">
       <div class="section-inner approach-split">
         <div class="section-heading">
-          <p class="eyebrow">Illustrative school enrolment</p>
+          <p class="eyebrow">Example: school enrolment</p>
           <h2 id="change-title">Change one rule across the whole service</h2>
           <p>An education authority lowers the entry age for pre-primary school. That affects what the service checks, what staff tell parents and what appears in the assignment notice.</p>
-          <p>Our team can use AI to help draft the changes. The education authority reviews the proposed behavior and test results before approving a release.</p>
+          <p>Our team uses AI to draft the changes. The education authority reviews the proposed behavior and the test results, then approves the release.</p>
         </div>
         <div class="editorial-callout">
           <h3>What the team checks before release</h3>
@@ -52,7 +55,30 @@ const context = 'AI-assisted implementation';
       </div>
     </section>
 
-    <section class="section" id="how-customization-works" aria-labelledby="pilot-title">
+    <section class="section" id="change-checks" aria-labelledby="checks-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <h2 id="checks-title">Each change is tested before release</h2>
+        </div>
+        <div class="value-grid">
+          <article>
+            <h3>Your rules are files your team keeps</h3>
+            <p>The service reads its configuration from files kept in version control. Before release, a comparison lists each change from the version in use and marks the changes that need review.</p>
+          </article>
+          <article>
+            <h3>Test cases for allowed and refused requests</h3>
+            <p>Each service keeps test cases: requests that must be allowed and requests that must be refused. They run again on every change.</p>
+          </article>
+          <article>
+            <h3>A failed check stops the release</h3>
+            <p>The service refuses to start with a configuration that fails its checks. Your team approves the change after the checks pass.</p>
+          </article>
+        </div>
+        <p class="section-note">For technical teams: <a href="https://docs.registrystack.org/operate/breg/#check-test-package">read how a configuration is checked, tested and packaged</a>.</p>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="how-customization-works" aria-labelledby="pilot-title">
       <div class="section-inner">
         <div class="section-heading">
           <h2 id="pilot-title">What you agree in an implementation pilot</h2>
@@ -68,25 +94,25 @@ const context = 'AI-assisted implementation';
           </article>
           <article>
             <h3>What your team will take over</h3>
-            <p>Agree which configuration, tests and operating instructions your team receives, and who will run the service and maintain each connection. The configured service can run without an AI model.</p>
+            <p>Agree which configuration, tests and operating instructions your team receives, and who will run the service and maintain each connection. The service your team takes over runs on its configured rules, with no AI model required.</p>
           </article>
         </div>
-        <p class="section-note">Still defining the service? <a href="/ai/service-design/">See how to prepare a service brief</a>. You can also <a href="/starters/">browse starting configurations</a>.</p>
+        <p class="section-note">Still defining the service? <a href="/ai/service-design/">See how to prepare a service brief</a>. You can also <a href="https://marketplace.registrystack.org/">browse starting configurations</a>.</p>
       </div>
     </section>
 
-    <section class="section section-muted" aria-labelledby="proof-title">
+    <section class="section" aria-labelledby="delivery-title">
       <div class="section-inner approach-split">
         <div class="section-heading">
-          <p class="eyebrow">Released example</p>
-          <h2 id="proof-title">Try a licence status check</h2>
-          <p>In this separate Evidence Gateway example, a request with one matching active licence gets a signed answer. The sample cases show what happens if two licences match or the source is unavailable.</p>
-          <a class="inline-cta" href="https://github.com/registrystack/registry-stack/tree/v0.46.0/products/evidence/examples/standalone/">Explore the runnable example with fictional data <span aria-hidden="true">↗</span></a>
+          <p class="eyebrow">AI in delivery</p>
+          <h2 id="delivery-title">How we use AI in your pilot</h2>
+          <p>Our team works from your forms, rules and fictional example cases. Agree the AI tools and data your institution allows before the pilot starts. Your team reviews the proposed changes and test results before approving a release.</p>
         </div>
         <section id="studio" class="editorial-callout" aria-labelledby="studio-title">
           <p class="eyebrow">In development</p>
           <h3 id="studio-title">Registry Studio</h3>
-          <p>We’re building a workspace for reviewing suggested requirements and tracking questions for your team. An assistant for proposing changes directly in Studio is planned.</p>
+          <p>An authoring workspace for reviewing records, service steps and proposed changes.</p>
+          <a class="inline-cta" href="/products/studio/">Explore Registry Studio <span aria-hidden="true">→</span></a>
         </section>
       </div>
     </section>
@@ -94,7 +120,7 @@ const context = 'AI-assisted implementation';
     <section class="final-cta" aria-labelledby="next-title">
       <div class="section-inner">
         <h2 id="next-title">Scope one implementation pilot</h2>
-        <p>Bring a public form and a fictional example of what you need to change. We’ll discuss what to build and test. Tell us about any limits on AI tools or data use.</p>
+        <p>Bring a public form and a fictional example of what you need to change. We’ll discuss what to build and test. Tell us which AI tools and data your institution allows, and we will work within them.</p>
         <div class="section-links">
           <a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a>
           <a class="button button-secondary" href="/pricing/">View implementation options</a>

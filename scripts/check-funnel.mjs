@@ -49,7 +49,7 @@ const server = createServer(async (request, response) => {
 await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen));
 const { port } = server.address();
 // The homepage gives a service-owner outline and one illustrative journey,
-// then introduces the three products. The detailed service-answer figure
+// then links to product details and technical evaluation. The detailed service-answer figure
 // remains on its own page.
 const homeUrl = `http://127.0.0.1:${port}/`;
 const url = `http://127.0.0.1:${port}${figureRoute}`;
@@ -201,9 +201,9 @@ const failures = [];
   });
   failures.push(...homeOverviewFailures);
 
-  const solutionCards = await page.locator('.home-solution-card').count();
+  const solutionCards = await page.locator('.home-product-links a').count();
   if (solutionCards !== 3) {
-    failures.push(`expected 3 homepage product cards, found ${solutionCards}`);
+    failures.push(`expected 3 homepage product detail links, found ${solutionCards}`);
   }
 
   await context.close();

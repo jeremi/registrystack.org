@@ -1,8 +1,10 @@
+import { marketplaceMigrationEnabled } from '../src/lib/marketplace-routes.mjs';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
 
+const migrationEnabled = marketplaceMigrationEnabled(process.env.PUBLIC_MARKETPLACE_MIGRATION_ENABLED, process.env.MARKETPLACE_INDEXING_DECISION);
 const htmlPath = resolve('dist/index.html');
 const outputDir = resolve('test-results');
 
@@ -14,13 +16,13 @@ if (!existsSync(htmlPath)) {
 mkdirSync(outputDir, { recursive: true });
 
 // The header has two menus: Solutions opens with "All solutions", followed
-// by service areas and shared capabilities. Products lists every core product plus
+// by service areas and shared capabilities. Products lists every core product, Studio and
 // starters, developer tutorials and documentation.
 const countMatches = (relativePath, pattern) => (readFileSync(resolve(relativePath), 'utf8').match(pattern) ?? []).length;
 const expectedCapabilities = countMatches('src/data/solutions.ts', /kind: 'cross-cutting'/g);
 const expectedMenuLinks = [
   1 + countMatches('src/data/solutions.ts', /slug: '\/solutions\//g),
-  3 + countMatches('src/data/products.ts', /href: '\/products\//g),
+  4 + countMatches('src/data/products.ts', /href: '\/products\//g),
 ];
 
 const server = createServer(async (request, response) => {
@@ -61,6 +63,7 @@ const routes = [
   { name: 'evidence-gateway', path: '/products/evidence-gateway/' },
   { name: 'casework', path: '/products/casework/' },
   { name: 'solutions', path: '/solutions/' },
+  { name: 'studio', path: '/products/studio/' },
   { name: 'ai', path: '/ai/' },
   { name: 'ai-service-design', path: '/ai/service-design/' },
   { name: 'ai-citizen-access', path: '/ai/citizen-access/' },
@@ -84,13 +87,20 @@ const routes = [
   { name: 'starter-health-facilities', path: '/starters/health-facilities/' },
   { name: 'starter-public-funding-state-aid', path: '/starters/public-funding-state-aid/' },
   { name: 'blog', path: '/blog/' },
+  { name: 'blog-question', path: '/blog/before-you-connect-a-registry-define-the-question/' },
+  { name: 'blog-interface', path: '/blog/choose-a-registry-interface/' },
+  { name: 'blog-audit', path: '/blog/reconstruct-registry-access/' },
+  { name: 'privacy', path: '/privacy/' },
+  { name: 'terms', path: '/terms/' },
+  { name: 'imprint', path: '/imprint/' },
+  { name: 'not-found', path: '/404.html' },
   { name: 'security', path: '/security/' },
   { name: 'pricing', path: '/pricing/' },
   { name: 'contact', path: '/contact/' },
   { name: 'contact-proposal', path: '/contact/?type=proposal' },
   { name: 'contact-privacy', path: '/contact/?type=privacy&context=delete+tracked+information' },
   { name: 'faq', path: '/faq/' },
-];
+].filter((route) => !migrationEnabled || !route.path.startsWith('/starters/'));
 
 const failures = [];
 const browser = await chromium.launch();
@@ -249,24 +259,6 @@ for (const viewport of viewports) {
     await solutionsMenu.locator('summary').click();
   }
 
-  // On desktop the three homepage product cards should read as a balanced row.
-  if (route.path === '/' && viewport.name === 'desktop') {
-    const align = await page.evaluate(() => {
-      const cards = [...document.querySelectorAll('.home-solution-card')];
-      const cardHeights = cards.map((card) => Math.round(card.getBoundingClientRect().height));
-      return { count: cards.length, cardHeights };
-    });
-
-    if (align.count !== 3) {
-      failures.push(`desktop: expected 3 homepage product cards, found ${align.count}`);
-    } else {
-      const heightSpread = Math.max(...align.cardHeights) - Math.min(...align.cardHeights);
-      if (heightSpread > 2) {
-        failures.push(`desktop: homepage product cards have unequal heights (spread ${heightSpread}px)`);
-      }
-    }
-  }
-
   await page.close();
 }
 }
@@ -342,6 +334,43 @@ for (const [index, name] of ['Solutions', 'Products'].entries()) {
   }
 }
 await page.close();
+// At the stacked-header breakpoint, changing sections must not require
+// finding a trigger halfway down another menu's expanded content.
+for (const viewport of [{ width: 390, height: 844 }, { width: 768, height: 720 }, { width: 768, height: 1200 }]) {
+  for (const javaScriptEnabled of [true, false]) {
+    const context = await browser.newContext({ viewport, javaScriptEnabled });
+    const menuPage = await context.newPage();
+    await menuPage.goto(`http://127.0.0.1:${port}/`);
+    for (const [index, name] of ['Solutions', 'Products'].entries()) {
+      const menu = menuPage.locator('.nav-group').nth(index);
+      await menu.locator('summary').click();
+      const panel = menu.locator('.nav-group-panel');
+      const bounds = await panel.boundingBox();
+      const triggers = await menuPage.locator('.top-nav > a, .nav-group summary').evaluateAll((elements) => elements.map((element) => element.getBoundingClientRect().bottom));
+      if (!bounds || triggers.some((bottom) => bottom > bounds.y + 1) || bounds.x < -1 || bounds.x + bounds.width > viewport.width + 1 || bounds.y + bounds.height > viewport.height + 1) {
+        failures.push(`${viewport.width}x${viewport.height} JS=${javaScriptEnabled}: ${name} must open below all triggers and fit inside the viewport`);
+      }
+      await menu.locator('summary').focus();
+      const links = panel.locator('a');
+      for (let i = 0; i < await links.count(); i++) await menuPage.keyboard.press('Tab');
+      const lastReachable = await links.last().evaluate((link) => {
+        const rect = link.getBoundingClientRect();
+        return link === document.activeElement && rect.top >= 0 && rect.bottom <= window.innerHeight;
+      });
+      if (!lastReachable) failures.push(`${viewport.width} JS=${javaScriptEnabled}: the last ${name} link must be reachable within its scroll panel`);
+      const paintedAboveContent = await links.last().evaluate((link) => {
+        const rect = link.getBoundingClientRect();
+        const hit = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
+        return hit && link.closest('.nav-group-panel').contains(hit);
+      });
+      if (!paintedAboveContent) failures.push(`${viewport.width} JS=${javaScriptEnabled}: ${name} panel is obscured by page content`);
+      await menuPage.screenshot({ path: resolve(outputDir, `responsive-${name.toLowerCase()}-${viewport.width}x${viewport.height}-${javaScriptEnabled ? 'js' : 'no-js'}.png`), fullPage: false });
+      await menu.locator('summary').click();
+      if (await menu.evaluate((element) => element.open)) failures.push(`${viewport.width}: ${name} must close from its trigger`);
+    }
+    await context.close();
+  }
+}
 await browser.close();
 server.close();
 

@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import AiLandingHero from '../../components/AiLandingHero.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
+import SolutionFaq from '../../components/SolutionFaq.astro';
 import { describeServiceHref } from '../../data/contact';
 
 const context = 'AI for citizen access';
@@ -10,85 +11,131 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
 ---
 
 <Base
-  title="Citizen access through an AI assistant | Registry Stack"
-  description="Let people prepare a registry correction in chat, then review and submit it on your service website. Explore an experimental integration for selected tasks."
+  title="AI assistants for citizen services | Registry Stack"
+  description="People prepare a change to their details with an AI assistant you approve, then check and submit it on your official website. Available in a pilot, using Model Context Protocol (MCP)."
+  ogImagePath="/og-ai.png"
+  ogImageAlt="Registry Stack: Design, adapt and access public services with AI."
 >
   <SiteHeader current="ai-citizen-access" />
-  <main>
+  <main id="main-content" tabindex="-1">
     <AiLandingHero
-      eyebrow="AI for citizen access"
-      heading="Help people start a registry request in chat."
-      lead="Give people a guided way to prepare a correction with an approved assistant. They review and submit the request on your service website."
+      eyebrow="AI for citizen services"
+      heading="Let people update their details with help from an AI assistant."
+      lead="People ask an assistant you approve to prepare a change, then check it and submit it on your official website. The assistant reads only the details you allow. It cannot submit a request, approve it or change a record."
       context={context}
       exampleHref="#correction-example"
-      exampleLabel="See the address example"
-      note="Experimental integration with Base Registry Engine."
+      exampleLabel="See the change of address example"
+      note="Available in a pilot for a register built on Base Registry Engine."
     >
       <div class="assistant-preview">
-        <p class="ai-example-label">Approved assistant · Alex signed in</p>
+        <p class="ai-example-label">Example · Alex asks an AI assistant</p>
         <p class="question-bubble">“Can I update my contact address?”</p>
-        <p class="reply-bubble">“Your draft is ready to review on the service website.”</p>
+        <p class="reply-bubble">“Your change is ready. Check it and submit it on the official website.”</p>
       </div>
-      <p class="handoff-label"><span aria-hidden="true">↓</span> Review link</p>
+      <p class="handoff-label"><span aria-hidden="true">↓</span> Alex opens the link</p>
       <div class="review-preview">
         <div class="review-heading">
-          <p class="ai-example-label">Service website</p>
-          <span class="draft-label">Draft</span>
+          <p class="ai-example-label">Official website</p>
+          <span class="draft-label">Not submitted yet</span>
         </div>
-        <p class="ai-example-title">Review address change</p>
+        <p class="ai-example-title">Check your change of address</p>
         <dl class="address-fields">
           <div><dt>Current</dt><dd>6 Station Road</dd></div>
-          <div><dt>Proposed</dt><dd>18 Market Street</dd></div>
+          <div><dt>New</dt><dd>18 Market Street</dd></div>
         </dl>
+        <p class="mock-submit">Submit change</p>
       </div>
     </AiLandingHero>
 
     <section class="section section-muted" id="correction-example" aria-labelledby="example-title">
-      <div class="section-inner approach-split">
+      <div class="section-inner">
+        <div class="section-heading"><p class="eyebrow">Example: a change of address</p><h2 id="example-title">From a conversation to an official request</h2><p>Alex has moved. An assistant helps prepare the change; Alex checks and submits it on the official website.</p></div>
+        <figure class="ai-film"><video controls playsinline preload="none" width="1280" height="720" poster="/films/registry-stack-ai-film-poster.jpg" aria-describedby="film-note"><source src="/films/registry-stack-ai-film-720.mp4" type="video/mp4" /></video><figcaption id="film-note">Fictional change of address. Film: 1 minute 25 seconds, music without speech. The steps below describe the same example in text. <a href="/films/registry-stack-ai-film-720.mp4">Download the film (MP4, 4.5 MB)</a>.</figcaption></figure>
+        <ol class="approach-steps"><li><strong>The assistant prepares</strong><span>After Alex signs in, the assistant reads the allowed details from Alex’s own record and prepares a draft change.</span></li><li><strong>Alex checks and submits</strong><span>Alex signs in on the official website, compares the draft with the current record and chooses whether to submit it.</span></li><li><strong>The institution applies its rules</strong><span>The register checks the request. Staff review the cases the institution chooses. Alex can ask the assistant for progress if that option is enabled.</span></li></ol>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="limits-title">
+      <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">Illustrative address correction</p>
-          <h2 id="example-title">From a conversation to an official request</h2>
-          <p>Alex has moved and needs to correct a contact address. After signing in, Alex can describe the change to the approved assistant and prepare a draft using the details the register permits.</p>
-          <p>Alex signs in separately on the institution’s website to check the draft and choose whether to submit it.</p>
+          <h2 id="limits-title">The assistant prepares the request. The person submits it.</h2>
         </div>
-        <div class="editorial-callout">
-          <h3>What Alex can do</h3>
-          <ol class="approach-steps">
-            <li><strong>Prepare the change</strong><span>Confirm the new address and get a link to the draft.</span></li>
-            <li><strong>Review and submit</strong><span>Compare the proposed address with the current record on the service website.</span></li>
-            <li><strong>Check progress</strong><span>After submitting, ask the assistant for the status if the institution has enabled that option.</span></li>
-          </ol>
+        <div class="value-grid">
+          <article>
+            <h3>What the assistant can do</h3>
+            <p>Explain the service, read the details you allow from the signed-in person’s own record, prepare or edit a draft, give a link to the page where the person checks it and, if your institution allows it, report the status of a request.</p>
+          </article>
+          <article>
+            <h3>What the assistant cannot do</h3>
+            <p>The assistant cannot submit a request, approve it or change a record. The connection has no tool to submit, cancel or apply a request, and Base Registry Engine checks every assistant request it receives against the permissions your institution grants.</p>
+          </article>
+          <article>
+            <h3>What the person and your institution decide</h3>
+            <p>The person signs in on your official website, compares the draft with the current record and chooses whether to submit it. Your rules decide what happens next, including any staff review.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="fit-title">
+    <section class="section section-muted" aria-labelledby="fit-title">
       <div class="section-inner">
         <div class="section-heading">
           <h2 id="fit-title">Add an assistant for one task at a time</h2>
         </div>
         <div class="value-grid">
           <article>
-            <h3>Keep your existing routes open</h3>
-            <p>People can continue using your portal or another supported route. The configured service can run without an AI model.</p>
+            <h3>People can still use your website and front desk</h3>
+            <p>People who do not use an assistant continue as they do today. The assistant is one more way to reach the same service, under the same rules.</p>
           </article>
           <article>
             <h3>Choose the task and the details it needs</h3>
-            <p>Approve the assistant, the fields it can read and the changes it can help draft. The register checks access when it receives a request.</p>
+            <p>Approve the details the assistant can read and the changes it can help prepare. The register checks permission each time it receives a request.</p>
           </article>
           <article>
-            <h3>Keep review under your rules</h3>
-            <p>Your institution decides who reviews the request. The register checks that the person or service applying an approved change has permission.</p>
+            <h3>Choose the assistant</h3>
+            <p>The connection uses Model Context Protocol (MCP), an open standard. Your institution can register one or more assistants that support MCP and meet the sign-in requirements in the integration guide, from one AI provider or several.</p>
           </article>
         </div>
-        <p class="section-note">For technical teams, the <a href={mcpDocsHref}>Model Context Protocol (MCP) integration guide</a> covers sign-in, the separate service that grants access to each draft, and the review website. See also <a href="/architecture/headless/">how Registry Stack connects to your existing interfaces</a>.</p>
+        <p class="section-note">For technical teams, the <a href={mcpDocsHref}>Model Context Protocol (MCP) integration guide</a> covers sign-in, the separate service that grants access to each draft, and the review website. See also <a href="/architecture/headless/">how Registry Stack connects to your existing interfaces</a> and <a href="/security/">how it handles access and accountability</a>. The integration is a Preview, outside the compatibility promise. The documentation lists it as an experimental surface: read <a href="https://docs.registrystack.org/reference/api-stability/#experimental-surfaces">what the compatibility promise covers</a>.</p>
       </div>
     </section>
+
+    <SolutionFaq
+      heading="Questions from data protection and security teams"
+      items={[
+        {
+          q: 'What information does the assistant receive?',
+          a: 'The details your institution allows, from the signed-in person’s own record, and what the person types in the conversation. Your institution writes a statement of what the assistant will see, and the service gives that statement to the assistant with the service description. The assistant provider handles the conversation under its own terms, outside Registry Stack. Check those terms before you approve an assistant.',
+        },
+        {
+          q: 'Which assistants can connect?',
+          a: 'The assistants your institution registers. Each one supports Model Context Protocol (MCP) and signs people in through your identity provider. The service refuses requests from any other assistant.',
+        },
+        {
+          q: 'What is recorded?',
+          a: 'The connection between the assistant and your register logs each assistant action and its result. The log uses pseudonyms, not names, for people and assistants, and it does not contain the content of records. Base Registry Engine keeps its own record of each request.',
+          link: { href: 'https://docs.registrystack.org/security/#an-ai-assistant-acting-for-a-citizen', label: 'Read the security model for an assistant acting for a citizen' },
+        },
+        {
+          q: 'What does our institution provide?',
+          a: 'Your identity provider signs people in and must support token exchange. A service you operate grants and withdraws the assistant’s access to each draft. You run the two connection services behind your own TLS proxy. Sign-in and access decisions stay in your systems, and we scope this work with you in a pilot.',
+        },
+        {
+          q: 'Does the service depend on an AI model?',
+          a: 'No. Registry Stack contains no AI model, and the service runs on its configured rules. The AI model is part of the assistant, and your institution chooses the assistant. You can change or remove the assistant and the service continues to run.',
+        },
+        {
+          q: 'Can we use this in a pilot today?',
+          a: 'Yes. The assistant tools and the review page are released and documented. They are a Preview, outside the compatibility promise, so a minor release may change or remove an interface without a deprecation period. Start with one task, and agree with us when to connect real records.',
+          link: { href: 'https://docs.registrystack.org/reference/api-stability/#experimental-surfaces', label: 'Read what the compatibility promise covers' },
+        },
+      ]}
+    />
 
     <section class="final-cta" aria-labelledby="next-title">
       <div class="section-inner">
         <h2 id="next-title">Choose a request people can try</h2>
-        <p>Tell us which task people need help with, which details it needs, and where they should review the draft. We’ll discuss how to evaluate it with your team.</p>
+        <p>Tell us which task people need help with, which details it needs, and where they should check the draft. We’ll discuss how to evaluate it with your team.</p>
         <div class="section-links">
           <a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a>
           <a class="button button-secondary" href="/pricing/">View implementation options</a>
@@ -100,6 +147,11 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
 </Base>
 
 <style>
+  .ai-film { margin: 0 0 28px; max-width: 880px; }
+  .ai-film video { aspect-ratio: 16 / 9; background: var(--registry-paper); border: 1px solid var(--registry-paper-rule); display: block; height: auto; width: 100%; }
+  .ai-film figcaption a { text-decoration: underline; text-underline-offset: 3px; }
+  .ai-film figcaption { font-size: var(--type-sm); line-height: 1.5; margin-top: 10px; }
+
   .assistant-preview, .review-preview {
     background: var(--registry-white);
     border: 1px solid var(--registry-paper-rule);
@@ -133,6 +185,17 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
     text-transform: uppercase;
   }
   .review-preview .ai-example-title { margin: 6px 0 12px; }
+  .mock-submit {
+    background: var(--registry-blue);
+    border-radius: 4px;
+    color: var(--registry-white);
+    font-size: var(--type-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 14px 0 0;
+    padding: 7px 14px;
+    width: fit-content;
+  }
   .address-fields {
     border-top: 1px solid var(--registry-paper-rule);
     display: grid;

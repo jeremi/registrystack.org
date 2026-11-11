@@ -32,7 +32,7 @@ const secondary = Astro.props.secondary ?? (isFamily
 ---
 <Base title={area.pageTitle + ' | Registry Stack'} description={area.description ?? description}>
   <SiteHeader current={area.key} />
-  <main class="solution-page">
+  <main id="main-content" tabindex="-1" class="solution-page">
     <section class="hero" aria-labelledby="solution-title">
       <div class="hero-inner">
         <div class="hero-copy">

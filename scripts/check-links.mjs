@@ -128,11 +128,15 @@ for (const file of htmlFiles) {
   }
 }
 
-for (const type of ["question", "service", "proposal", "starter", "privacy", "terms"]) {
+// Current configuration requests live in the marketplace. The main contact
+// form still accepts old starter query links, but archives must not advertise
+// an access request for the superseded snapshot.
+for (const type of ["question", "service", "proposal", "privacy", "terms"]) {
   if (!contactTypes.has(type)) failures.push(`missing contextual contact route for request type ${type}`);
 }
 
 const requiredExternal = [
+  "https://marketplace.registrystack.org/",
   "https://docs.registrystack.org/",
   "https://github.com/registrystack/registry-stack",
   "https://github.com/registrystack/registry-stack/security/advisories/new",

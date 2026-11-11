@@ -18,7 +18,7 @@ const groups = [
     "items": [
       {
         "q": "What does Registry Stack help us do?",
-        "a": "Registry Stack is open-source software (Apache-2.0), built and supported by Aubex Consulting LLC. Institutions use it to maintain registers, review requests that need a staff decision, and let other services check information. For example, a licensing authority can maintain licence records, assign renewal requests to officers and let another service check a licence's recorded status.",
+        "a": "Registry Stack’s core software is open source (Apache-2.0), built and supported by Aubex Consulting LLC. Institutions use it to maintain registers, review requests that need a staff decision, and let other services check information. For example, a licensing authority can maintain licence records, assign renewal requests to officers and let another service check a licence's recorded status.",
         "link": {
           "label": "Explore the solution areas",
           "href": "/solutions/"
@@ -71,7 +71,7 @@ const groups = [
     "items": [
       {
         "q": "Who controls our records?",
-        "a": "Your institution sets the access rules: who may view, add or change records, and what other services may receive. You or a provider you appoint runs the software. The core software does not send your records or audit logs to Aubex.",
+        "a": "Your institution sets the access rules: who may view, add or change records, and what other services may receive. You or a provider you appoint runs the software. Your team controls the systems to which the deployment connects.",
         "link": {
           "label": "Read about security and responsibilities",
           "href": "/security/"
@@ -127,15 +127,15 @@ const groups = [
         "a": "A starting configuration, also called a starter, defines the records, permitted changes and access roles for one kind of register. Your team can adapt it to your institution's rules. It provides a starting point for a service; the screens, system connections and operating arrangements still need to be supplied.",
         "link": {
           "label": "Browse starting configurations",
-          "href": "/starters/"
+          "href": "https://marketplace.registrystack.org/"
         }
       },
       {
         "q": "How do we access a starting configuration?",
-        "a": "Access to starting configurations is free. Use the access request form on a starter page, or tell us what you need if you are unsure which one fits. Our team will review your request and reply.",
+        "a": "Access to starting configurations is free. Use the access request on a configuration’s marketplace page, or tell us what you need if you are unsure which one fits. Our team will review your request and reply.",
         "link": {
           "label": "Find a starting configuration",
-          "href": "/starters/"
+          "href": "https://marketplace.registrystack.org/"
         }
       },
       {
@@ -193,7 +193,7 @@ const groups = [
       },
       {
         "q": "Can AI help us design or adapt a service?",
-        "a": "AI can help your team turn research and existing forms into a service brief. In an implementation pilot, we use AI to help adapt records, forms and review steps, then test the result with you. Your institution approves the rules and the service can run without an AI model. Registry Studio is in development, with a direct assistant for proposing changes planned.",
+        "a": "Yes. AI helps your team turn research and existing forms into a service brief. In an implementation pilot, we use AI to draft changes to records, forms and review steps, then test the result with you. Your institution approves the rules, and the service runs on them with no AI model required. Registry Studio, an authoring workspace in development, includes document-assisted drafting in its local prototype.",
         "link": {
           "label": "See where AI fits in public services",
           "href": "/ai/"
@@ -201,7 +201,7 @@ const groups = [
       },
       {
         "q": "Can someone use an AI assistant to make a request?",
-        "a": "For a configured Base Registry Engine service, an authorized assistant can help a signed-in person prepare a change request and check its status. The person reviews and submits the request on the institution's site. The institution chooses which assistants and actions to allow.",
+        "a": "Yes, in a preview integration for a configured Base Registry Engine service. An approved assistant helps a signed-in person prepare a change request and check its status. The person reviews and submits the request on the institution's site. The assistant cannot submit a request, approve it or change a record. The institution chooses which assistants and actions to allow.",
         "link": {
           "label": "Explore citizen access through an assistant",
           "href": "/ai/citizen-access/"
@@ -232,7 +232,7 @@ const faqSchema = {
 <Base title={pageTitle} description={pageDescription}>
   <SiteHeader current="faq" />
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
     <section class="hero" aria-labelledby="faq-hero-title">
       <div class="hero-inner">

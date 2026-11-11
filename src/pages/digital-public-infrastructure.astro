@@ -1,5 +1,5 @@
 ---
-// Reader: a funder, national digital team or partner considering reuse across services.
+// Reader: a programme owner assessing one register or connection and how to deliver it.
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -7,48 +7,38 @@ import { describeServiceHref } from '../data/contact';
 ---
 <Base title="Registries for digital public infrastructure | Registry Stack" description="Build reusable registry capabilities for digital public infrastructure with open-source software, documented interfaces and institutional control.">
   <SiteHeader current="dpi" />
-  <main>
+  <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="dpi-title"><div class="hero-inner"><div class="hero-copy">
       <p class="eyebrow">Digital public infrastructure</p>
       <h1 id="dpi-title">One register can support many public services.</h1>
-      <p class="hero-lead">Build reusable registry capabilities with open-source software and documented interfaces. Let institutions maintain their records while other services access the information they are permitted to use.</p>
-      <div class="hero-actions"><a class="button button-primary" href={describeServiceHref('a DPI programme')} data-journey="service-inquiry">Discuss your programme</a><a class="button button-secondary" href="#shared-capabilities">Explore the approach</a></div>
+      <p class="hero-lead">Connect public services to records maintained by the responsible institution. Use Registry Stack’s open-source components with your team, or work with Aubex to implement and support a service.</p>
+      <div class="hero-actions"><a class="button button-primary" href={describeServiceHref('a DPI programme')} data-journey="service-inquiry">Discuss your programme</a><a class="button button-secondary" href="#shared-capabilities">See how it fits</a></div>
       <p class="hero-note">For digital-government teams, funders and implementation partners.</p>
     </div></div></section>
 
     <section class="section" id="shared-capabilities" aria-labelledby="reuse-title"><div class="section-inner">
-      <div class="section-heading"><p class="eyebrow">Shared capabilities, local responsibility</p><h2 id="reuse-title">Invest in capabilities that more than one service can use.</h2><p>A facility register can support licensing, oversight and service planning. Each service can use permitted information from the responsible institution, without maintaining a separate copy of every record.</p></div>
-      <div class="value-grid">
-        <article><h3>Maintain authoritative records</h3><p>Define the information, relationships and permitted changes. Keep access controls and change history with the institution responsible for the register.</p><a class="inline-cta" href="/products/base-registry/">Manage the register <span aria-hidden="true">→</span></a></article>
-        <article><h3>Share the information needed</h3><p>Give an authorized service an answer to a predefined question. The receiving service applies its own rules to that information.</p><a class="inline-cta" href="/products/evidence-gateway/">Connect services to source information <span aria-hidden="true">→</span></a></article>
-        <article><h3>Give the next team a starting point</h3><p>Fund one service and agree which configuration, tests and instructions the institution will keep. A team adapting it for another service can see where local rules and permissions need to change.</p><a class="inline-cta" href="/customization/">Adapt a solution <span aria-hidden="true">→</span></a></article>
+      <div class="section-heading"><p class="eyebrow">Fit with your programme</p><h2 id="reuse-title">Build a register or connect an existing source.</h2></div>
+      <div class="value-grid dpi-adoption-grid">
+        <article><h3>Use the records you already maintain</h3><p>Connect an existing register so authorized services can ask defined questions and receive digitally signed answers. The institution responsible for the source controls what it shares.</p><a class="inline-cta" href="/products/evidence-gateway/">Connect an existing register <span aria-hidden="true">→</span></a></article>
+        <article><h3>Establish a register where one is needed</h3><p>Define the records, access rules and permitted changes. Keep the current information and its history, and connect the applications that use it.</p><a class="inline-cta" href="/products/base-registry/">Manage records and history <span aria-hidden="true">→</span></a></article>
       </div>
+      <p class="dpi-example">For example, a health authority can maintain a facility register while a licensing service checks its recorded status. The health authority controls the information it shares; the licensing service applies its own rules. <a href="/solutions/health-and-safety/">Explore facility and oversight services</a>.</p>
     </div></section>
 
-    <section class="section section-muted" aria-labelledby="fit-title"><div class="section-inner approach-split">
-      <div class="section-heading"><p class="eyebrow">Fit within your digital architecture</p><h2 id="fit-title">Connect the capabilities you already have.</h2><p>Registry Stack can provide a register, a review process or controlled answers from an existing source. Your programme connects these capabilities to identity, payment, exchange and service systems as needed.</p><p>Start with one service. Establish who maintains the information, who may use it and how the service will operate before expanding to further uses.</p><div class="section-links"><a class="inline-cta" href="/architecture/headless/">See how to keep your existing interfaces <span aria-hidden="true">→</span></a><a class="inline-cta" href="/data-spaces/">Share data through a data space <span aria-hidden="true">→</span></a></div></div>
-      <div class="editorial-callout"><h3>Open source and deployment choice</h3><p>The core software is available under Apache-2.0. Institutions can inspect and adapt it, choose infrastructure and contract their own implementation or operating provider.</p><p><a href="https://github.com/registrystack/registry-stack">Inspect the source and releases</a> or <a href="https://docs.registrystack.org/">explore the technical documentation</a>.</p></div>
-    </div></section>
-
-    <section class="section" id="discoverable-services" aria-labelledby="discoverable-title"><div class="section-inner">
-      <div class="section-heading">
-        <p class="eyebrow">Illustrative architecture</p>
-        <h2 id="discoverable-title">Help people find services for a life event.</h2>
-        <p>Someone moving home may need a water connection and a school place. A catalogue could bring those services together so a person can find the requirements and the right place to apply.</p>
+    <section class="section section-muted" aria-labelledby="fit-title"><div class="section-inner">
+      <div class="approach-split">
+        <div class="section-heading"><p class="eyebrow">Implementation and support</p><h2 id="fit-title">Work with Aubex on the first service.</h2><p>We adapt and test one defined service with your team. A written pilot scope sets out the records, screens, connections, hosting and handover work, with responsibilities agreed before delivery.</p><a class="inline-cta" href="/customization/">How implementation works <span aria-hidden="true">→</span></a></div>
+        <div class="editorial-callout"><h3>Choose your delivery and operating team</h3><p>The core software is Apache-2.0 open source. Your institution can inspect, adapt and operate it, using its own team or another provider.</p><p>Aubex offers paid implementation and support. <a href="/pricing/">View the delivery and support options</a>.</p></div>
       </div>
-      <div class="value-grid">
-        <article><h3>The catalogue describes</h3><p>Each authority publishes what its service does, what a person needs and how to start. A catalogue can group those descriptions around moving home.</p></article>
-        <article><h3>The channel helps people act</h3><p>A portal, a front-desk officer or a compatible assistant can explain the next step. Each channel can use the operations the institution permits.</p></article>
-        <article><h3>The service handles the request</h3><p>The water provider handles the connection request and the education authority handles enrolment. Each service checks access and applies its own rules.</p></article>
-      </div>
-      <p class="section-note"><a href="https://docs.registrystack.org/products/registry-manifest/">Registry Manifest</a> can publish static service descriptions. Connecting a catalogue, channels and services across institutions would be a programme integration.</p>
+      <p class="dpi-technical">For technical teams: <a href="https://docs.registrystack.org/start/adopt/">review the adoption paths</a>.</p>
     </div></section>
 
-    <section class="section section-muted" aria-labelledby="context-title"><div class="section-inner">
-      <div class="section-heading"><p class="eyebrow">Registries within DPI</p><h2 id="context-title">Connect service delivery to long-term public infrastructure.</h2><p>The OECD identifies core government data registries as part of digital public infrastructure, alongside identity, payments and data sharing. Registry Stack provides software for this registry and information-sharing role.</p><p>A DPI programme also needs institutional mandates, governance, safeguards, funding and operating capacity. The software supports the responsibilities your programme establishes.</p><p><a href="https://www.oecd.org/content/dam/oecd/en/publications/reports/2024/12/digital-public-infrastructure-for-digital-governments_11fe17d9/ff525dc8-en.pdf">Read the OECD report on digital public infrastructure (PDF)</a>.</p></div>
-      <div class="editorial-callout standards-note"><h3>Interoperability and standards</h3><p>Evaluate the documented interfaces and supported profiles against your architecture. The <a href="https://docs.registrystack.org/reference/standards/">standards register</a> explains each claim and its scope. Registry Stack does not currently claim GovStack certification or compliance.</p></div>
-    </div></section>
-
-    <section class="final-cta" aria-labelledby="programme-title"><div class="section-inner"><p class="eyebrow">From programme to implementation</p><h2 id="programme-title">Identify a service and a reusable foundation.</h2><p>Discuss the first service, the systems it must connect and the capabilities you want to reuse.</p><div class="hero-actions"><a class="button button-primary" href="/pricing/#inquiry">Discuss an implementation</a><a class="button button-secondary" href="/solutions/">Explore solution areas</a></div></div></section>
+    <section class="final-cta" aria-labelledby="programme-title"><div class="section-inner"><p class="eyebrow">From programme to implementation</p><h2 id="programme-title">Discuss your first programme service.</h2><p>Tell us which records you maintain, which services need them and what you want to change.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref('a DPI programme')} data-journey="service-inquiry">Discuss your programme</a><a class="button button-secondary" href="/pricing/">Implementation and support</a></div></div></section>
   </main><SiteFooter />
 </Base>
+<style>
+  .dpi-adoption-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dpi-example { max-width: 860px; margin: 28px 0 0; font-size: var(--type-body-sm); }
+  .dpi-technical { margin: 28px 0 0; font-size: var(--type-base); }
+  @media (max-width: 700px) { .dpi-adoption-grid { grid-template-columns: 1fr; } }
+</style>
