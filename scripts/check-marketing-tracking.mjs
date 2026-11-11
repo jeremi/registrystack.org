@@ -37,6 +37,7 @@ const mobileViewport = { width: 390, height: 844 };
 const consentKey = 'registrystack.shared-marketing-tracking.v2';
 const localRefusalKey = 'registrystack.tracking-local-refusal.v2';
 const identityKey = 'registrystack.shared-mautic-identity.v2';
+const ownerKey = 'registrystack.shared-mautic-bootstrap-owner.v1';
 const marketplaceEnrollmentKey = 'registrystack.marketplace-tracking-enrollment.v1';
 const nativeIdentityKeys = ['mtc_id', 'mautic_device_id'];
 const legacyConsentKey = 'registrystack.marketing-tracking';
@@ -270,6 +271,30 @@ function deferred() {
 
 function delay(milliseconds) {
   return new Promise(resolvePromise => setTimeout(resolvePromise, milliseconds));
+}
+
+async function seedTrackingState(context, { consent, owner, identity, rawDevice }) {
+  const page = await context.newPage();
+  await page.goto(`${mainOrigin}/__acceptance/storage-seed`);
+  await page.evaluate(({ keys, consent, owner, identity, rawDevice }) => {
+    localStorage.setItem(keys.consent, JSON.stringify(consent));
+    if (identity) localStorage.setItem(keys.identity, JSON.stringify(identity));
+    if (rawDevice) {
+      localStorage.setItem('mtc_id', 'legacy-contact');
+      localStorage.setItem('mautic_device_id', rawDevice);
+    }
+    if (owner) localStorage.setItem(keys.owner, JSON.stringify(owner));
+  }, { keys: { consent: consentKey, owner: ownerKey, identity: identityKey }, consent, owner, identity, rawDevice });
+  return page;
+}
+
+async function readSharedValue(context, key) {
+  // Refusal legitimately removes bridge frames. Inspect persisted main-origin
+  // state through the test context without creating another tracking page.
+  const state = await context.storageState();
+  const raw = state.origins.find(origin => origin.origin === mainOrigin)
+    ?.localStorage.find(item => item.name === key)?.value;
+  return raw ? JSON.parse(raw) : null;
 }
 
 async function advanceOutageClock(page) {
@@ -1095,17 +1120,16 @@ async function runAmbiguousPageviewRecoveryScenario(browser, engine, surface) {
 
     const seededAt = Date.now();
     const accepted = {
-      version: 2,
+      version: 3,
       choice: 'accepted',
       generation: '00000000-0000-4000-8000-000000000003',
       expiresAt: seededAt + 300_000,
       revision: seededAt,
     };
-    const sharedStorage = await context.newPage();
-    await sharedStorage.goto(`${mainOrigin}/__acceptance/storage-seed`);
-    await sharedStorage.evaluate(([key, value]) => {
-      localStorage.setItem(key, JSON.stringify(value));
-    }, [consentKey, accepted]);
+    const sharedStorage = await seedTrackingState(context, {
+      consent: accepted,
+      owner: { version: 1, generation: accepted.generation, origin: surface === 'main' ? mainOrigin : docsOrigin },
+    });
     await sharedStorage.close();
 
     const page = await context.newPage();
@@ -1405,17 +1429,16 @@ async function runRetainedLocalRefusalScenario(browser, engine) {
     }, { mainOrigin, docsOrigin });
     const seededAt = Date.now();
     const accepted = {
-      version: 2,
+      version: 3,
       choice: 'accepted',
       generation: '00000000-0000-4000-8000-000000000001',
       expiresAt: seededAt + 60_000,
       revision: seededAt,
     };
-    const sharedStorage = await context.newPage();
-    await sharedStorage.goto(`${mainOrigin}/__acceptance/storage-seed`);
-    await sharedStorage.evaluate(([key, value]) => {
-      localStorage.setItem(key, JSON.stringify(value));
-    }, [consentKey, accepted]);
+    const sharedStorage = await seedTrackingState(context, {
+      consent: accepted,
+      owner: { version: 1, generation: accepted.generation, origin: mainOrigin },
+    });
 
     const docsPage = await context.newPage();
     await docsPage.goto(`${docsOrigin}/__acceptance/storage-seed`);
@@ -1528,6 +1551,85 @@ async function runDocsConsentPointerScenario(browser, engine) {
       assert.deepEqual(records.blocked, [], `${engine}: ${width}px refusal made an unexpected request.`);
     } finally {
       await context.close();
+    }
+  }
+}
+
+async function runLegacyConsentMigrationScenario(browser, engine) {
+  console.log(`${engine}: checking legacy consent migration on main and docs.`);
+  for (const surface of ['main', 'docs']) {
+    for (const action of ['accept', 'reject', 'reuse-ready']) {
+      const records = createRecords(`${engine}-${surface}-legacy-${action}`);
+      const context = await browser.newContext({ serviceWorkers: 'block' });
+      try {
+        await configureContext(context, records, { bridgeControl: { instrument: true } });
+        const seededAt = Date.now();
+        const legacy = { version: 2, choice: 'accepted',
+          generation: '00000000-0000-4000-8000-000000000003',
+          expiresAt: seededAt + 300_000, revision: seededAt };
+        const savedDevice = 'z'.repeat(23);
+        const seed = await seedTrackingState(context, {
+          consent: legacy,
+          ...(action === 'reuse-ready' ? {
+            identity: { version: 2, generation: legacy.generation, status: 'ready', deviceId: savedDevice },
+            rawDevice: savedDevice,
+          } : {}),
+        });
+        await seed.close();
+        const origin = surface === 'main' ? mainOrigin : docsOrigin;
+        const page = await context.newPage();
+        const panel = page.locator(surface === 'main'
+          ? '[data-tracking-preferences]' : '[data-registry-shared-tracking]');
+        await page.goto(`${origin}${surface === 'main' ? '/solutions/licensing/' : '/start/concepts/'}`);
+        if (action === 'reuse-ready') {
+          await waitFor(() => records.pageviews.length === 1, `${engine}: ${surface} did not reuse the confirmed legacy device.`);
+          assert.equal(await panel.isVisible(), false);
+          assert.equal(records.pageviews[0].deviceId, savedDevice);
+          assert.equal(records.nextDevice, 0, `${engine}: ${surface} replaced a confirmed legacy device.`);
+          assert.deepEqual(await readSharedValue(context, consentKey), legacy, `${engine}: ${surface} renewed legacy expiry/revision.`);
+          assert.equal(await readSharedValue(context, ownerKey), null);
+          assert.equal(records.bridgeRequests.includes('choose'), false);
+          if (surface === 'docs') await assertNoIdentityInDocs(page, records, [savedDevice]);
+        } else {
+          await panel.waitFor({ state: 'visible' });
+          await waitFor(async () => (await readSharedValue(context, consentKey))?.choice === null,
+            `${engine}: ${surface} did not renew unidentified legacy consent.`);
+          const migrated = await readSharedValue(context, consentKey);
+          assert.equal(migrated.version, 2);
+          assert.notEqual(migrated.generation, legacy.generation);
+          assert.ok(migrated.revision > legacy.revision);
+          assert.equal(migrated.expiresAt, null);
+          assert.equal(await readSharedValue(context, ownerKey), null);
+          assert.equal(await readSharedValue(context, identityKey), null);
+          assert.equal(records.nativeRequests.length, 0, `${engine}: ${surface} loaded SDK before a renewed choice.`);
+          assert.equal(records.pageviews.length, 0);
+          assert.equal(records.bridgeRequests.includes('choose'), false, 'migration must not invent a consent choice');
+          assert.equal(await panel.locator('[data-tracking-error]').isVisible(), false);
+          await panel.getByRole('button', { name: action === 'accept' ? 'Accept optional cookies' : 'Reject optional cookies' }).click();
+          await panel.waitFor({ state: 'hidden' });
+          if (action === 'reject') {
+            assert.equal(records.nativeRequests.length, 0);
+            assert.equal(records.pageviews.length, 0);
+            await waitFor(async () => (await readSharedValue(context, consentKey))?.choice === 'rejected',
+              `${engine}: ${surface} did not retain the renewed refusal.`);
+            assert.equal((await readSharedValue(context, consentKey)).version, 2);
+          } else {
+            await waitFor(() => records.pageviews.length === 1, `${engine}: ${surface} renewed acceptance did not track.`);
+            await waitFor(async () => (await readSharedValue(context, identityKey))?.status === 'ready',
+              `${engine}: ${surface} renewed acceptance did not confirm its device.`);
+            const accepted = await readSharedValue(context, consentKey);
+            assert.equal(accepted.version, 3);
+            assert.equal(accepted.choice, 'accepted');
+            assert.notEqual(accepted.generation, migrated.generation);
+            assert.deepEqual(await readSharedValue(context, ownerKey), { version: 1, generation: accepted.generation, origin });
+            assert.equal(records.nativeEventRequests, 1);
+            assert.equal(records.nextDevice, 1);
+          }
+        }
+        assert.equal(records.formSubmissions.length, 0);
+        assert.deepEqual(records.errors, []);
+        assert.deepEqual(records.blocked, []);
+      } finally { await context.close(); }
     }
   }
 }
@@ -1950,6 +2052,7 @@ async function runEngine(engine, browserType) {
     assert.deepEqual(records.errors, [], `${engine}: uncaught page errors were observed.`);
     await context.close();
 
+    await runLegacyConsentMigrationScenario(browser, engine);
     await runBridgeRecoveryScenario(browser, engine);
     await runSlowReplacementAssociationScenario(browser, engine);
     await runSplitStartupBudgetScenario(browser, engine);
@@ -1996,7 +2099,7 @@ for (const engine of requestedBrowsers) {
 // Keep the enrollment regression independently reproducible while the default
 // command still runs every shared-tracking scenario.
 const selectedScenario = process.env.TRACKING_SCENARIO?.trim() || 'all';
-assert.ok(['all', 'marketplace-enrollment'].includes(selectedScenario), `Unsupported tracking scenario: ${selectedScenario}`);
+assert.ok(['all', 'marketplace-enrollment', 'legacy-migration'].includes(selectedScenario), `Unsupported tracking scenario: ${selectedScenario}`);
 if (selectedScenario === 'marketplace-enrollment') {
   assert.ok(marketplaceDist, 'The marketplace enrollment scenario requires MARKETPLACE_TRACKING_DIST.');
 }
@@ -2006,13 +2109,16 @@ for (const engine of requestedBrowsers) {
     await runEngine(engine, browserType);
   } else {
     const browser = await browserType.launch();
-    try { await runMarketplaceEnrollmentScenario(browser, engine); }
+    try {
+      if (selectedScenario === 'legacy-migration') await runLegacyConsentMigrationScenario(browser, engine);
+      else await runMarketplaceEnrollmentScenario(browser, engine);
+    }
     finally { await browser.close(); }
   }
 }
 
 console.log(
-  `${selectedScenario === 'all' ? 'Shared tracking' : 'Marketplace enrollment'} browser checks passed in ${requestedBrowsers.join(', ')} (` +
+  `${selectedScenario === 'all' ? 'Shared tracking' : selectedScenario === 'legacy-migration' ? 'Legacy consent migration' : 'Marketplace enrollment'} browser checks passed in ${requestedBrowsers.join(', ')} (` +
   `${docsDist ? 'canonical Registry Docs build' : 'shared-client docs fixture'}, ` +
   `${marketplaceDist ? 'canonical marketplace build' : 'marketplace journey skipped'}).`,
 );

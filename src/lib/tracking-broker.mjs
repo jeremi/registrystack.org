@@ -11,7 +11,7 @@ import {
   trackingRequestId,
 } from './tracking-protocol.mjs';
 
-const CONSENT_RECORD_VERSION = 2;
+const CONSENT_RECORD_VERSION = 3;
 const IDENTITY_RECORD_VERSION = 2;
 const NATIVE_IDENTITY_KEYS = ['mtc_id', 'mautic_device_id'];
 const DEVICE_ID_PATTERN = /^[a-z0-9]{23}$/;
@@ -20,6 +20,7 @@ const BOOTSTRAP_LOCK_NAME = 'registrystack-mautic-device-v2';
 const MARKETPLACE_ORIGIN = 'https://marketplace.registrystack.org';
 const MARKETPLACE_ENROLLMENT_RECORD_VERSION = 1;
 export const MARKETPLACE_ENROLLMENT_STORAGE_KEY = 'registrystack.marketplace-tracking-enrollment.v1';
+export const BOOTSTRAP_OWNER_STORAGE_KEY = 'registrystack.shared-mautic-bootstrap-owner.v1';
 const BROKER_ALLOWED_ORIGINS = Object.freeze([...TRACKING_ALLOWED_ORIGINS, MARKETPLACE_ORIGIN]);
 const MAX_SEEN_REQUEST_IDS = 1000;
 const INTERNAL_UTM = {
@@ -61,7 +62,7 @@ function parseConsentRecord(raw) {
   try {
     const value = JSON.parse(raw);
     if (!exactKeys(value, ['version', 'choice', 'generation', 'expiresAt', 'revision'])) return null;
-    if (value.version !== CONSENT_RECORD_VERSION || !Number.isSafeInteger(value.revision) || value.revision <= 0) {
+    if (![2, CONSENT_RECORD_VERSION].includes(value.version) || !Number.isSafeInteger(value.revision) || value.revision <= 0) {
       return null;
     }
     if (!isUuid(value.generation)) return null;
@@ -239,6 +240,7 @@ export function createTrackingBroker({
   );
   const connectedParents = new Map();
   const seenRequestIds = new Set();
+  const bootstrapWaiters = new Set();
   let stopped = false;
   let lastPublishedState = initialState();
   let nativeRuntimeInvalidationPending = false;
@@ -277,6 +279,18 @@ export function createTrackingBroker({
       reportFailure('Shared tracking storage could not be saved. Tracking remains off.');
       return false;
     }
+  }
+
+  function bootstrapOwner() {
+    const raw = safeGet(BOOTSTRAP_OWNER_STORAGE_KEY);
+    if (!raw) return null;
+    try {
+      const record = JSON.parse(raw);
+      if (exactKeys(record, ['version', 'generation', 'origin']) && record.version === 1 &&
+          isUuid(record.generation) && enrolledOrigins.includes(record.origin)) return record;
+    } catch (_error) { /* Malformed browser state never grants bootstrap ownership. */ }
+    safeRemove(BOOTSTRAP_OWNER_STORAGE_KEY);
+    return null;
   }
 
   function marketplaceEnrollment() {
@@ -340,6 +354,10 @@ export function createTrackingBroker({
     return Math.max(Math.trunc(now()), previous.revision + 1, 1);
   }
 
+  function notifyBootstrapWaiters() {
+    for (const check of [...bootstrapWaiters]) check();
+  }
+
   function notifyChanged(state) {
     lastPublishedState = state;
     for (const [source, origin] of connectedParents) {
@@ -354,6 +372,7 @@ export function createTrackingBroker({
         connectedParents.delete(source);
       }
     }
+    notifyBootstrapWaiters();
   }
 
   function markNativeRuntimeInvalid() {
@@ -376,7 +395,7 @@ export function createTrackingBroker({
 
   function writeTombstone(previous) {
     const record = {
-      version: CONSENT_RECORD_VERSION,
+      version: 2,
       choice: null,
       generation: randomUUID(),
       expiresAt: null,
@@ -384,6 +403,7 @@ export function createTrackingBroker({
     };
     const persisted = safeSet(TRACKING_CONSENT_STORAGE_KEY, record);
     safeRemove(MARKETPLACE_ENROLLMENT_STORAGE_KEY);
+    safeRemove(BOOTSTRAP_OWNER_STORAGE_KEY);
     clearNativeIdentity();
     if (previous.choice === 'accepted') markNativeRuntimeInvalid();
     if (!persisted) return initialState();
@@ -412,6 +432,15 @@ export function createTrackingBroker({
     if (record.choice !== null && record.expiresAt <= now()) {
       return expire ? writeTombstone(state) : initialState();
     }
+    if (record.version === 2 && record.choice === 'accepted') {
+      const identity = identityRecord();
+      const rawDevice = safeGet('mautic_device_id');
+      // Legacy consent has no bootstrap owner. Only a confirmed matching device
+      // can resume safely; otherwise ask again rather than race first identity
+      // creation across properties whose browser locks may be isolated.
+      if (identity?.status !== 'ready' || identity.generation !== record.generation ||
+          identity.deviceId !== rawDevice) return writeTombstone(state);
+    }
     return state;
   }
 
@@ -435,22 +464,30 @@ export function createTrackingBroker({
     return state;
   }
 
-  function saveChoice(choice, previous = storedState()) {
+  function saveChoice(choice, previous = storedState(), ownerOrigin) {
+    if (choice === 'accepted' && !enrolledOrigins.includes(ownerOrigin)) return null;
     const revision = nextRevision(previous);
     const record = {
-      version: CONSENT_RECORD_VERSION,
+      version: choice === 'accepted' ? CONSENT_RECORD_VERSION : 2,
       choice,
       generation: randomUUID(),
       expiresAt: revision + TRACKING_CONSENT_LIFETIME_MS,
       revision,
     };
     if (!safeSet(TRACKING_CONSENT_STORAGE_KEY, record)) {
+      safeRemove(BOOTSTRAP_OWNER_STORAGE_KEY);
       clearNativeIdentity();
       return null;
     }
     safeRemove(MARKETPLACE_ENROLLMENT_STORAGE_KEY);
+    safeRemove(BOOTSTRAP_OWNER_STORAGE_KEY);
     clearNativeIdentity();
     if (previous.choice === 'accepted') markNativeRuntimeInvalid();
+    // This marker activates first-bootstrap authority only after the new
+    // consent and all clearing writes. Peers must never race that clearing.
+    if (choice === 'accepted' && !safeSet(BOOTSTRAP_OWNER_STORAGE_KEY, {
+      version: 1, generation: record.generation, origin: ownerOrigin,
+    })) return null;
     const state = publicState(record);
     notifyChanged(state);
     return state;
@@ -507,6 +544,11 @@ export function createTrackingBroker({
     const state = effectiveState();
     const identity = identityRecord();
     const rawDevice = safeGet('mautic_device_id');
+    // A peer may have promoted the same server-issued device after its SDK
+    // persisted the ID but before this callback finished.
+    if (state.choice === 'accepted' && state.generation === generation &&
+        identity?.status === 'ready' && identity.generation === generation &&
+        identity.deviceId === rawDevice) return true;
     if (
       state.choice === 'accepted' &&
       state.generation === generation &&
@@ -516,12 +558,14 @@ export function createTrackingBroker({
       typeof rawDevice === 'string' &&
       DEVICE_ID_PATTERN.test(rawDevice)
     ) {
-      return safeSet(TRACKING_IDENTITY_STORAGE_KEY, {
+      const ready = safeSet(TRACKING_IDENTITY_STORAGE_KEY, {
         version: IDENTITY_RECORD_VERSION,
         generation,
         status: 'ready',
         deviceId: rawDevice,
       });
+      notifyBootstrapWaiters();
+      return ready;
     }
 
     discardStaleNativeResult(state, generation, attemptId);
@@ -543,6 +587,49 @@ export function createTrackingBroker({
     return delivered && remainsReady;
   }
 
+  function bootstrapObservation(generation, requestingOrigin) {
+    const state = effectiveState();
+    if (state.choice !== 'accepted' || state.generation !== generation) return 'denied';
+    if (readyDevice(state)) return 'ready'; // Existing devices need no owner migration.
+    const owner = bootstrapOwner();
+    if (owner?.generation !== generation) return 'waiting';
+    const identity = identityRecord();
+    if (identity?.generation === generation && identity.status === 'pending') {
+      return owner.origin === requestingOrigin &&
+        DEVICE_ID_PATTERN.test(safeGet('mautic_device_id') ?? '') ? 'ready' : 'waiting';
+    }
+    return owner.origin === requestingOrigin ? 'ready' : 'waiting';
+  }
+
+  function observeBootstrap(generation, signal, requestingOrigin) {
+    return new Promise(resolve => {
+      let settled = false;
+      const finish = ready => {
+        if (settled) return;
+        settled = true;
+        bootstrapWaiters.delete(check);
+        signal.removeEventListener('abort', cancel);
+        resolve(ready);
+      };
+      const cancel = () => finish(false);
+      const check = () => {
+        if (stopped || signal.aborted) return finish(false);
+        const observed = bootstrapObservation(generation, requestingOrigin);
+        if (observed !== 'waiting') finish(observed === 'ready');
+      };
+      bootstrapWaiters.add(check);
+      signal.addEventListener('abort', cancel, { once: true });
+      check();
+    });
+  }
+
+  async function observeExistingBootstrap(generation) {
+    const cancellation = new AbortController();
+    const timer = setTimer(() => cancellation.abort(), bootstrapTimeoutMs);
+    try { return await observeBootstrap(generation, cancellation.signal); }
+    finally { clearTimer(timer); }
+  }
+
   async function bootstrapPageview(pageview, generation) {
     if (!locks?.request || !nativePageview) return false;
     const cancellation = new AbortController();
@@ -558,6 +645,12 @@ export function createTrackingBroker({
       }, bootstrapTimeoutMs);
     });
     try {
+      const origin = new URL(pageview.page_url).origin;
+      // Wait outside the lock: in browsers that share it across properties,
+      // a non-owner must not hold the owner out while awaiting its result.
+      const observed = bootstrapObservation(generation, origin);
+      if (observed === 'denied' || (observed === 'waiting' &&
+          !await observeBootstrap(generation, cancellation.signal, origin))) return false;
       const locked = locks.request(BOOTSTRAP_LOCK_NAME, {
         mode: 'exclusive', signal: cancellation.signal,
       }, async () => {
@@ -567,13 +660,20 @@ export function createTrackingBroker({
 
         const existing = identityRecord();
         if (existing?.generation === generation && existing.status === 'pending') {
+          const owner = bootstrapOwner();
+          if (owner?.generation !== generation || owner.origin !== origin) return false;
+          // Only the designated owner, under its lock, may promote a persisted
+          // native ID. Other properties wait for the validated ready record.
           // The native SDK can persist its server-issued ID before its callback
           // completes. Reuse that attempt instead of stranding it or bootstrapping
           // a second identity. A missing ID still requires explicit recovery.
           if (!DEVICE_ID_PATTERN.test(safeGet('mautic_device_id') ?? '') ||
               !await finalizeBootstrap(generation, existing.attemptId)) return false;
         }
-        const deviceId = readyDevice(current);
+        const active = effectiveState();
+        if (expired || stopped || active.choice !== 'accepted' || active.generation !== generation ||
+            (origin === MARKETPLACE_ORIGIN && !marketplaceEnrolled(active))) return false;
+        const deviceId = readyDevice(active);
         if (deviceId) {
           const nativeResult = Promise.resolve().then(() => nativePageview({ pageview, generation, deviceId }));
           const guarded = nativeResult.then(
@@ -583,6 +683,8 @@ export function createTrackingBroker({
           return Promise.race([guarded, timeout]);
         }
 
+        const owner = bootstrapOwner();
+        if (owner?.generation !== generation || owner.origin !== origin) return false;
         clearNativeIdentity();
         const attemptId = randomUUID();
         if (!safeSet(TRACKING_IDENTITY_STORAGE_KEY, {
@@ -643,21 +745,30 @@ export function createTrackingBroker({
       if (request.choice === 'accepted' && browserDeniesTracking()) {
         return failure(request.id, 'not-allowed');
       }
-      const current = effectiveState();
+      let current = effectiveState();
       if (request.expectedRevision !== current.revision) {
         if (request.choice === 'rejected' && current.choice === 'rejected') {
           return success(request.id, current, origin);
         }
         return failure(request.id, 'unavailable');
       }
+      let recoverIncomplete = false;
+      if (request.choice === 'accepted' && current.choice === 'accepted' && !readyDevice(current)) {
+        const generation = current.generation;
+        const completed = await observeExistingBootstrap(generation);
+        current = effectiveState();
+        // An explicit recovery never carries stale authority across a newer
+        // refusal, privacy signal, expiry or another consent generation.
+        if (stopped || browserDeniesTracking() || current.choice !== 'accepted' ||
+            current.generation !== generation || current.revision !== request.expectedRevision) {
+          return failure(request.id, 'unavailable');
+        }
+        recoverIncomplete = !completed;
+      }
       if (origin === MARKETPLACE_ORIGIN && request.choice === 'accepted') {
-        const identity = identityRecord();
-        const interrupted = current.choice === 'accepted' &&
-          identity?.generation === current.generation && identity.status === 'pending' &&
-          !DEVICE_ID_PATTERN.test(safeGet('mautic_device_id') ?? '');
         let accepted = current;
-        if (current.choice !== 'accepted' || interrupted) {
-          accepted = saveChoice('accepted', current);
+        if (current.choice !== 'accepted' || recoverIncomplete) {
+          accepted = saveChoice('accepted', current, origin);
           if (!accepted) return failure(request.id, 'unavailable');
         }
         if (!saveMarketplaceEnrollment(accepted.generation)) {
@@ -666,16 +777,8 @@ export function createTrackingBroker({
         notifyChanged(accepted);
         return success(request.id, accepted, origin);
       }
-      if (current.choice === request.choice) {
-        const identity = identityRecord();
-        const interrupted = current.choice === 'accepted' &&
-          identity?.generation === current.generation && identity.status === 'pending' &&
-          !DEVICE_ID_PATTERN.test(safeGet('mautic_device_id') ?? '');
-        if (!interrupted) return success(request.id, current, origin);
-        // An explicit retry can replace an interrupted native realm. The
-        // revision check above still prevents stale acceptance after refusal.
-      }
-      const saved = saveChoice(request.choice, current);
+      if (current.choice === request.choice && !recoverIncomplete) return success(request.id, current, origin);
+      const saved = saveChoice(request.choice, current, origin);
       return saved ? success(request.id, saved, origin) : failure(request.id, 'unavailable');
     }
     if (request.type === 'associate') {
@@ -734,6 +837,7 @@ export function createTrackingBroker({
   function refresh() {
     const state = effectiveState();
     if (JSON.stringify(state) !== JSON.stringify(lastPublishedState)) notifyChanged(state);
+    notifyBootstrapWaiters();
     return state;
   }
 
@@ -745,6 +849,7 @@ export function createTrackingBroker({
     }
     if (
       event?.key === TRACKING_CONSENT_STORAGE_KEY ||
+      event?.key === BOOTSTRAP_OWNER_STORAGE_KEY ||
       event?.key === TRACKING_IDENTITY_STORAGE_KEY ||
       event?.key === TRACKING_LOCAL_REFUSAL_STORAGE_KEY ||
       NATIVE_IDENTITY_KEYS.includes(event?.key)
@@ -764,6 +869,7 @@ export function createTrackingBroker({
   function stop() {
     if (stopped) return;
     stopped = true;
+    notifyBootstrapWaiters();
     clearTimer(nativeRuntimeInvalidationTimer);
     currentWindow?.removeEventListener?.('message', handleMessage);
     currentWindow?.removeEventListener?.('storage', handleStorage);

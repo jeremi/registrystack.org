@@ -332,6 +332,12 @@ Contact's previously associated history.
 The website records canonical page URLs, titles, referring site origins,
 and bounded campaign labels. Tracking preferences are remembered for 180 days;
 withdrawal rotates the shared consent generation and clears the shared identifiers.
+The wire protocol stays version 2. New acceptances use persisted consent version 3,
+which distinguishes fresh initialization from older saved acceptance. A coherent,
+confirmed version 2 device continues with its original preference and expiry;
+older acceptance without that device asks for a choice again before loading the
+tracker. Refusals and unknown choices retain the compatible version 2 format.
+Enquiries remain available without optional tracking or visit-history linking.
 Other frames observe the change, and suspended pages check again on return. Browser DNT
 and GPC signals keep Mautic tracking off. Umami remains separate aggregate
 analytics and covers outbound links to documentation, demos and GitHub. Internal

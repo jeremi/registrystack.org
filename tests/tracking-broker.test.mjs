@@ -12,6 +12,7 @@ import {
 } from '../src/lib/tracking-protocol.mjs';
 import {
   MARKETPLACE_ENROLLMENT_STORAGE_KEY,
+  BOOTSTRAP_OWNER_STORAGE_KEY,
   createTrackingBroker,
 } from '../src/lib/tracking-broker.mjs';
 
@@ -268,6 +269,12 @@ test('website acceptance does not enroll marketplace, whose explicit acceptance 
   assert.equal(refusedBeforeEnrollment.error, 'not-allowed');
   assert.deepEqual(nativeCalls, []);
 
+  // The website is the explicit bootstrap owner. Complete its first pageview
+  // before asserting that marketplace enrollment reuses that ready generation.
+  const ownerView = await send(request('pageview', pageviewPayload(),
+    '00000000-0000-4000-8000-000000000076'));
+  assert.equal(ownerView.ok, true);
+
   const accepted = await send(
     request('choose', {
       choice: 'accepted',
@@ -289,7 +296,7 @@ test('website acceptance does not enroll marketplace, whose explicit acceptance 
     marketplaceOrigin,
   );
   assert.equal(tracked.ok, true);
-  assert.deepEqual(nativeCalls, [{
+  assert.deepEqual(nativeCalls, [pageview(), {
     page_url: `${marketplaceOrigin}/packs/professional-licensing/`,
     page_title: 'Professional licensing starter',
     page_referrer: mainOrigin,
@@ -378,7 +385,7 @@ test('marketplace enrollment persistence fails closed without undoing valid webs
 test('marketplace enrollment storage events update its projection without changing global revision', async () => {
   const storage = new MemoryStorage();
   storage.setItem(TRACKING_CONSENT_STORAGE_KEY, JSON.stringify({
-    version: 2,
+    version: 3,
     choice: 'accepted',
     generation: firstGeneration,
     expiresAt: now + 1000,
@@ -410,7 +417,7 @@ test('stale or malformed marketplace enrollment cannot authorize a pageview', as
   ]) {
     const storage = new MemoryStorage();
     storage.setItem(TRACKING_CONSENT_STORAGE_KEY, JSON.stringify({
-      version: 2,
+      version: 3,
       choice: 'accepted',
       generation: firstGeneration,
       expiresAt: now + 1000,
@@ -578,6 +585,443 @@ test('the first native event is serialized and a pending generation is never ret
   assert.equal((await firstRequest).ok, false);
   assert.equal((await secondRequest).ok, false);
   assert.equal(nativeCount, 1);
+});
+
+test('unconfirmed legacy accepted consent renews the choice without native effects', async t => {
+  for (const variant of ['no-id','pending','wrong-generation','bad-raw','raw-only']) await t.test(variant,async()=>{
+    const storage=new MemoryStorage();
+    const legacy={version:2,choice:'accepted',generation:firstGeneration,expiresAt:now+60_000,revision:now-1000};
+    storage.setItem(TRACKING_CONSENT_STORAGE_KEY,JSON.stringify(legacy));
+    if(variant==='pending') storage.setItem(TRACKING_IDENTITY_STORAGE_KEY,JSON.stringify({version:2,generation:firstGeneration,status:'pending',attemptId:firstAttempt}));
+    if(variant==='wrong-generation'||variant==='bad-raw') storage.setItem(TRACKING_IDENTITY_STORAGE_KEY,JSON.stringify({version:2,generation:variant==='wrong-generation'?secondGeneration:firstGeneration,status:'ready',deviceId}));
+    if(variant!=='no-id') storage.setItem('mautic_device_id',variant==='bad-raw'?'not-a-device':deviceId);
+    storage.setItem('mtc_id','old-contact');
+    storage.setItem(MARKETPLACE_ENROLLMENT_STORAGE_KEY,JSON.stringify({version:1,generation:firstGeneration}));
+    storage.setItem(BOOTSTRAP_OWNER_STORAGE_KEY,JSON.stringify({version:1,generation:firstGeneration,origin:mainOrigin}));
+    const ids=[secondGeneration,thirdGeneration,firstAttempt];
+    const f=harness({storage,randomUUID:()=>ids.shift()});
+    const read=await f.send(request('read'));
+    assert.equal(read.version,2,'the message protocol does not change');
+    assert.equal(read.state.choice,null);
+    assert.equal(read.state.generation,secondGeneration);
+    assert.ok(read.state.revision>legacy.revision);
+    assert.equal(read.state.expiresAt,null);
+    assert.equal(JSON.parse(storage.getItem(TRACKING_CONSENT_STORAGE_KEY)).version,2);
+    for(const key of [TRACKING_IDENTITY_STORAGE_KEY,BOOTSTRAP_OWNER_STORAGE_KEY,MARKETPLACE_ENROLLMENT_STORAGE_KEY,'mtc_id','mautic_device_id']) assert.equal(storage.getItem(key),null);
+    assert.equal(f.nativeCalls.length,0);
+    const accepted=await f.send(request('choose',{choice:'accepted',expectedRevision:read.state.revision}));
+    assert.equal(accepted.state.generation,thirdGeneration);
+    assert.equal(JSON.parse(storage.getItem(TRACKING_CONSENT_STORAGE_KEY)).version,3);
+    assert.equal((await f.send(request('pageview',pageviewPayload(pageview(),accepted.state.generation)))).ok,true);
+    assert.equal(f.nativeCalls.length,1);
+    f.broker.stop();
+  });
+});
+
+test('coherent legacy ready identity and saved legacy refusals do not renew their expiry or revision',async t=>{
+  for(const choice of ['accepted','rejected',null]) await t.test(String(choice),async()=>{
+    const storage=new MemoryStorage();
+    const legacy={version:2,choice,generation:firstGeneration,expiresAt:choice===null?null:now+60_000,revision:now-1000};
+    const serialized=JSON.stringify(legacy);
+    storage.setItem(TRACKING_CONSENT_STORAGE_KEY,serialized);
+    if(choice==='accepted'){
+      storage.setItem(TRACKING_IDENTITY_STORAGE_KEY,JSON.stringify({version:2,generation:firstGeneration,status:'ready',deviceId}));
+      storage.setItem('mautic_device_id',deviceId);
+    }
+    const f=harness({storage});
+    const read=await f.send(request('read'));
+    assert.deepEqual(read.state,{choice,generation:firstGeneration,expiresAt:legacy.expiresAt,revision:legacy.revision});
+    assert.equal(storage.getItem(TRACKING_CONSENT_STORAGE_KEY),serialized);
+    if(choice==='accepted'){
+      assert.equal((await f.send(request('pageview',pageviewPayload()))).ok,true);
+      assert.equal(storage.getItem('mautic_device_id'),deviceId);
+      assert.equal(storage.getItem(BOOTSTRAP_OWNER_STORAGE_KEY),null);
+      assert.equal(storage.getItem(TRACKING_CONSENT_STORAGE_KEY),serialized);
+    }else assert.equal(f.nativeCalls.length,0);
+    f.broker.stop();
+  });
+});
+
+test('new refusals retain the version2 persisted contract and unchanged repeated choices',async()=>{
+  const storage=new MemoryStorage();
+  const f=harness({storage});
+  const rejected=await f.send(request('choose',{choice:'rejected',expectedRevision:0}));
+  const serialized=storage.getItem(TRACKING_CONSENT_STORAGE_KEY);
+  assert.deepEqual(JSON.parse(serialized),{version:2,...rejected.state});
+  assert.equal(rejected.state.choice,'rejected');
+  const observer=harness({storage});
+  assert.deepEqual((await observer.send(request('read'))).state,rejected.state);
+  assert.deepEqual((await observer.send(request('choose',{choice:'rejected',expectedRevision:rejected.state.revision}))).state,rejected.state);
+  assert.equal(storage.getItem(TRACKING_CONSENT_STORAGE_KEY),serialized);
+  assert.equal(storage.getItem(BOOTSTRAP_OWNER_STORAGE_KEY),null);
+  assert.equal(f.nativeCalls.length+observer.nativeCalls.length,0);
+  f.broker.stop();observer.broker.stop();
+});
+
+test('a current accepted publication gap waits for its owner without migrating consent',async()=>{
+  const storage=new MemoryStorage();
+  const current={version:3,choice:'accepted',generation:firstGeneration,expiresAt:now+60_000,revision:now-1000};
+  const serialized=JSON.stringify(current);
+  storage.setItem(TRACKING_CONSENT_STORAGE_KEY,serialized);
+  const f=harness({storage});
+  const waiting=f.send(request('pageview',pageviewPayload()));
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(f.nativeCalls.length,0);
+  assert.equal(storage.getItem(TRACKING_CONSENT_STORAGE_KEY),serialized);
+  storage.setItem(BOOTSTRAP_OWNER_STORAGE_KEY,JSON.stringify({version:1,generation:firstGeneration,origin:mainOrigin}));
+  f.listeners.get('storage')({key:BOOTSTRAP_OWNER_STORAGE_KEY});
+  assert.equal((await waiting).ok,true);
+  assert.equal(f.nativeCalls.length,1);
+  assert.equal(storage.getItem(TRACKING_CONSENT_STORAGE_KEY),serialized);
+  f.broker.stop();
+});
+
+test('a non-owner property cannot bootstrap an empty shared identity before its owner', async t => {
+  for (const shared of [false, true]) await t.test(shared ? 'shared lock' : 'independent locks', async () => {
+  const sharedLocks = shared ? new SerialLocks() : null;
+  const storage = new MemoryStorage();
+  const started = deferred();
+  const native = deferred();
+  const peerCalls = [];
+  const owner = harness({
+    storage, locks: sharedLocks ?? new SerialLocks(),
+    sendNativePageview: async () => {
+      started.resolve();
+      await native.promise;
+      storage.setItem('mautic_device_id', deviceId);
+    },
+  });
+  const peer = harness({
+    storage, locks: sharedLocks ?? new SerialLocks(),
+    sendNativePageview: async call => {
+      peerCalls.push(call);
+      storage.setItem('mautic_device_id', deviceId);
+    },
+  });
+  try {
+    const accepted = await owner.send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+    const waiting = peer.send(request('pageview', pageviewPayload(pageview(docsOrigin))), docsOrigin);
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(peerCalls.length, 0, 'a property with an independent lock scope must not create the first identity');
+    const first = owner.send(request('pageview', pageviewPayload()));
+    await started.promise;
+    native.resolve();
+    assert.equal((await first).ok, true);
+    peer.listeners.get('storage')({ key: TRACKING_IDENTITY_STORAGE_KEY });
+    assert.equal((await waiting).ok, true);
+    assert.equal(peerCalls.length, 1);
+    assert.equal(peerCalls[0].deviceId, deviceId);
+    assert.equal(peerCalls[0].generation, accepted.state.generation);
+  } finally {
+    native.resolve();
+    owner.broker.stop();
+    peer.broker.stop();
+  }
+  });
+});
+
+test('independent lock scopes wait for a live peer bootstrap and reuse its device', async () => {
+  const storage = new MemoryStorage();
+  const started = deferred();
+  const native = deferred();
+  const peerCalls = [];
+  const owner = harness({
+    storage, locks: new SerialLocks(),
+    sendNativePageview: async () => {
+      started.resolve();
+      await native.promise;
+      storage.setItem('mautic_device_id', deviceId);
+    },
+  });
+  const peer = harness({
+    storage, locks: new SerialLocks(),
+    sendNativePageview: async call => { peerCalls.push(call); },
+  });
+  try {
+    await owner.send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+    const first = owner.send(request('pageview', pageviewPayload()));
+    await started.promise;
+    let peerSettled = false;
+    const waiting = peer.send(request('pageview', pageviewPayload(pageview(docsOrigin))), docsOrigin)
+      .then(response => { peerSettled = true; return response; });
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(peerSettled, false, 'a live peer bootstrap must not be treated as stranded');
+    assert.equal(peerCalls.length, 0, 'the peer must not start another native bootstrap');
+
+    native.resolve();
+    assert.equal((await first).ok, true);
+    peer.listeners.get('storage')({ key: TRACKING_IDENTITY_STORAGE_KEY });
+    assert.equal((await waiting).ok, true);
+    assert.equal(peerCalls.length, 1);
+    assert.equal(peerCalls[0].deviceId, deviceId);
+    assert.equal(peerCalls[0].generation, firstGeneration);
+  } finally {
+    native.resolve();
+    owner.broker.stop();
+    peer.broker.stop();
+  }
+});
+
+test('peer bootstrap waits cancel without native effects or retained observers', async t => {
+  for (const mode of ['withdrawal', 'new-generation', 'stop', 'deadline']) {
+    await t.test(mode, async () => {
+      const storage = new MemoryStorage();
+      const owner = harness({ storage });
+      await owner.send(request('choose', { choice: 'accepted', expectedRevision: 0 }));
+      storage.setItem(TRACKING_IDENTITY_STORAGE_KEY, JSON.stringify({
+        version: 2, generation: firstGeneration, status: 'pending', attemptId: firstAttempt,
+      }));
+      const timers = new Set();
+      let nativeCount = 0;
+      const peer = harness({
+        storage, locks: new SerialLocks(),
+        setTimer(fn) { const timer = { fn }; timers.add(timer); return timer; },
+        clearTimer(timer) { timers.delete(timer); },
+        sendNativePageview: async () => { nativeCount += 1; },
+      });
+      try {
+        let settled = false;
+        const waiting = peer.send(request('pageview', pageviewPayload(pageview(docsOrigin))), docsOrigin)
+          .then(response => { settled = true; return response; });
+        await new Promise(resolve => setImmediate(resolve));
+        assert.equal(settled, false);
+        if (mode === 'withdrawal') {
+          await owner.send(request('choose', { choice: 'rejected', expectedRevision: now },
+            '00000000-0000-4000-8000-000000000091'));
+          peer.listeners.get('storage')({ key: TRACKING_CONSENT_STORAGE_KEY });
+        } else if (mode === 'new-generation') {
+          storage.setItem(TRACKING_CONSENT_STORAGE_KEY, JSON.stringify({
+            version: 3, choice: 'accepted', generation: secondGeneration,
+            expiresAt: now + 60_000, revision: now + 1,
+          }));
+          peer.listeners.get('storage')({ key: TRACKING_CONSENT_STORAGE_KEY });
+        } else if (mode === 'stop') {
+          peer.broker.stop();
+        } else {
+          assert.equal(timers.size, 1);
+          [...timers][0].fn();
+        }
+        assert.equal((await waiting).ok, false);
+        assert.equal(timers.size, 0, 'the existing bootstrap deadline must be cleared');
+        storage.setItem('mautic_device_id', deviceId);
+        storage.setItem(TRACKING_IDENTITY_STORAGE_KEY, JSON.stringify({
+          version: 2, generation: firstGeneration, status: 'ready', deviceId,
+        }));
+        peer.listeners.get('storage')?.({ key: TRACKING_IDENTITY_STORAGE_KEY });
+        await new Promise(resolve => setImmediate(resolve));
+        assert.equal(nativeCount, 0, 'a late peer notification must not resume a canceled operation');
+      } finally {
+        owner.broker.stop();
+        peer.broker.stop();
+      }
+    });
+  }
+});
+
+test('explicit acceptance publishes a strict owner for each allowed property', async t => {
+  for (const origin of [mainOrigin, docsOrigin, marketplaceOrigin]) await t.test(origin, async () => {
+    const f = harness();
+    const accepted = await f.send(request('choose', { choice: 'accepted', expectedRevision: 0 }), origin);
+    assert.deepEqual(JSON.parse(f.storage.getItem(BOOTSTRAP_OWNER_STORAGE_KEY)), {
+      version: 1, generation: accepted.state.generation, origin,
+    });
+    assert.equal((await f.send(request('pageview', pageviewPayload(pageview(origin))), origin)).ok, true);
+    assert.equal(f.nativeCalls.length, 1);
+    f.broker.stop();
+  });
+});
+
+test('owner publication follows consent and clearing, and owner persistence failure fails closed', async () => {
+  class CheckedStorage extends MemoryStorage {
+    failOwner = false;
+    published = 0;
+    setItem(key, value) {
+      if (key === BOOTSTRAP_OWNER_STORAGE_KEY) {
+        const owner = JSON.parse(value);
+        assert.equal(JSON.parse(this.getItem(TRACKING_CONSENT_STORAGE_KEY)).generation, owner.generation);
+        assert.equal(this.getItem(MARKETPLACE_ENROLLMENT_STORAGE_KEY), null);
+        assert.equal(this.getItem(TRACKING_IDENTITY_STORAGE_KEY), null);
+        assert.equal(this.getItem('mautic_device_id'), null);
+        if (this.failOwner) throw new Error('Owner storage blocked');
+        this.published += 1;
+      }
+      super.setItem(key, value);
+    }
+  }
+  const storage = new CheckedStorage();
+  const f = harness({ storage });
+  storage.setItem(MARKETPLACE_ENROLLMENT_STORAGE_KEY, 'old enrollment');
+  storage.setItem('mautic_device_id', deviceId);
+  assert.equal((await f.send(request('choose', { choice: 'accepted', expectedRevision: 0 }))).ok, true);
+  assert.equal(storage.published, 1);
+  const rejected = await f.send(request('choose', { choice: 'rejected', expectedRevision: now },
+    '00000000-0000-4000-8000-000000000087'));
+  assert.equal(storage.getItem(BOOTSTRAP_OWNER_STORAGE_KEY), null);
+  storage.failOwner = true;
+  const failed = await f.send(request('choose', { choice: 'accepted', expectedRevision: rejected.state.revision },
+    '00000000-0000-4000-8000-000000000088'));
+  assert.equal(failed.ok, false);
+  assert.equal(storage.getItem(BOOTSTRAP_OWNER_STORAGE_KEY), null);
+  assert.equal(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY), null);
+  assert.equal(f.nativeCalls.length, 0);
+  f.broker.stop();
+});
+
+test('explicit acceptance observes a live owner instead of rotating its generation', async t => {
+  for (const origin of [mainOrigin, docsOrigin, marketplaceOrigin]) await t.test(origin, async () => {
+    const storage = new MemoryStorage();
+    const started = deferred();
+    const native = deferred();
+    const owner = harness({storage, sendNativePageview: async () => {
+      started.resolve(); await native.promise; storage.setItem('mautic_device_id', deviceId);
+    }});
+    const peer = harness({storage, locks: new SerialLocks()});
+    try {
+      const accepted = await owner.send(request('choose', {choice:'accepted', expectedRevision:0}));
+      const first = owner.send(request('pageview', pageviewPayload()));
+      await started.promise;
+      let settled = false;
+      const choosing = peer.send(request('choose', {choice:'accepted', expectedRevision:accepted.state.revision}), origin)
+        .then(result => {settled=true; return result;});
+      await new Promise(resolve => setImmediate(resolve));
+      assert.equal(settled, false);
+      assert.equal(JSON.parse(storage.getItem(TRACKING_CONSENT_STORAGE_KEY)).generation, accepted.state.generation);
+      native.resolve();
+      assert.equal((await first).ok, true);
+      peer.listeners.get('storage')({key:TRACKING_IDENTITY_STORAGE_KEY});
+      const result = await choosing;
+      assert.equal(result.ok, true);
+      assert.deepEqual(result.state, accepted.state);
+      assert.equal(JSON.parse(storage.getItem(BOOTSTRAP_OWNER_STORAGE_KEY)).origin, mainOrigin);
+      if (origin === marketplaceOrigin) assert.equal(JSON.parse(storage.getItem(MARKETPLACE_ENROLLMENT_STORAGE_KEY)).generation, accepted.state.generation);
+      assert.equal(peer.nativeCalls.length, 0);
+    } finally {native.resolve();owner.broker.stop();peer.broker.stop();}
+  });
+});
+
+test('a consent choice waiting on a peer cannot override a later withdrawal', async () => {
+  const storage = new MemoryStorage();
+  const owner = harness({storage});
+  const accepted = await owner.send(request('choose', {choice:'accepted', expectedRevision:0}));
+  storage.setItem(TRACKING_IDENTITY_STORAGE_KEY, JSON.stringify({version:2,generation:firstGeneration,status:'pending',attemptId:firstAttempt}));
+  const peer = harness({storage});
+  const choosing = peer.send(request('choose', {choice:'accepted',expectedRevision:accepted.state.revision}), docsOrigin);
+  await new Promise(resolve => setImmediate(resolve));
+  const rejected = await owner.send(request('choose', {choice:'rejected',expectedRevision:accepted.state.revision},
+    '00000000-0000-4000-8000-000000000089'));
+  peer.listeners.get('storage')({key:TRACKING_CONSENT_STORAGE_KEY});
+  assert.equal((await choosing).ok, false);
+  assert.equal(JSON.parse(storage.getItem(TRACKING_CONSENT_STORAGE_KEY)).generation, rejected.state.generation);
+  assert.equal(storage.getItem(BOOTSTRAP_OWNER_STORAGE_KEY), null);
+  assert.equal(peer.nativeCalls.length, 0);
+  owner.broker.stop();peer.broker.stop();
+});
+
+test('a non-owner cannot promote a stale raw reply over a newer pending owner', async () => {
+  const storage = new MemoryStorage();
+  const ownerLocks = new SerialLocks();
+  const oldStarted = deferred();
+  const oldRaw = deferred();
+  const oldWritten = deferred();
+  const oldFinish = deferred();
+  const activeStarted = deferred();
+  const activeFinish = deferred();
+  const oldTimers = new Set();
+  const newDevice = 'zyxwvutsrq9876543210abc';
+  const peerCalls = [];
+  const older = harness({storage,locks:ownerLocks,
+    setTimer(fn) {const timer={fn};oldTimers.add(timer);return timer;},
+    clearTimer(timer) {oldTimers.delete(timer);},
+    sendNativePageview: async () => {
+      oldStarted.resolve(); await oldRaw.promise;
+      storage.setItem('mautic_device_id', deviceId);
+      oldWritten.resolve(); await oldFinish.promise;
+    },
+  });
+  const ids = [secondGeneration, thirdGeneration, secondAttempt];
+  const active = harness({storage,locks:ownerLocks,randomUUID:()=>ids.shift(),
+    sendNativePageview: async () => {
+      activeStarted.resolve();await activeFinish.promise;storage.setItem('mautic_device_id',newDevice);
+    },
+  });
+  const peer = harness({storage,locks:new SerialLocks(),sendNativePageview:async call=>{peerCalls.push(call);}});
+  try {
+    const initial = await older.send(request('choose',{choice:'accepted',expectedRevision:0}));
+    const oldRequest = older.send(request('pageview',pageviewPayload()));
+    await oldStarted.promise;
+    [...oldTimers][0].fn();
+    assert.equal((await oldRequest).ok,false);
+    const rejected = await active.send(request('choose',{choice:'rejected',expectedRevision:initial.state.revision}));
+    const accepted = await active.send(request('choose',{choice:'accepted',expectedRevision:rejected.state.revision},
+      '00000000-0000-4000-8000-000000000093'));
+    const currentRequest = active.send(request('pageview',pageviewPayload(pageview(),accepted.state.generation)));
+    await activeStarted.promise;
+    const waiting = peer.send(request('pageview',pageviewPayload(pageview(docsOrigin),accepted.state.generation)),docsOrigin);
+    oldRaw.resolve();await oldWritten.promise;
+    peer.listeners.get('storage')({key:'mautic_device_id'});
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(peerCalls.length,0,'a raw key is not a validated current-generation identity for a non-owner');
+    assert.equal(JSON.parse(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY)).status,'pending');
+    oldFinish.resolve();await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(storage.getItem('mautic_device_id'),null);
+    activeFinish.resolve();
+    assert.equal((await currentRequest).ok,true);
+    peer.listeners.get('storage')({key:TRACKING_IDENTITY_STORAGE_KEY});
+    assert.equal((await waiting).ok,true);
+    assert.equal(peerCalls.length,1);
+    assert.equal(peerCalls[0].deviceId,newDevice);
+  } finally {
+    oldRaw.resolve();oldFinish.resolve();activeFinish.resolve();
+    older.broker.stop();active.broker.stop();peer.broker.stop();
+  }
+});
+
+test('only explicit bounded recovery transfers an incomplete bootstrap owner', async t => {
+  for (const mode of ['pending', 'idle', 'missing-owner']) await t.test(mode, async () => {
+  const storage = new MemoryStorage();
+  const owner = harness({storage});
+  const accepted = await owner.send(request('choose', {choice:'accepted',expectedRevision:0}));
+  if (mode === 'pending') storage.setItem(TRACKING_IDENTITY_STORAGE_KEY, JSON.stringify({version:2,generation:firstGeneration,status:'pending',attemptId:firstAttempt}));
+  if (mode === 'missing-owner') storage.removeItem(BOOTSTRAP_OWNER_STORAGE_KEY);
+  const timers = new Set();
+  const ids = [secondGeneration, secondAttempt];
+  const peer = harness({storage, randomUUID:()=>ids.shift(),
+    setTimer(fn) {const timer={fn};timers.add(timer);return timer;},
+    clearTimer(timer) {timers.delete(timer);},
+  });
+  const choosing = peer.send(request('choose', {choice:'accepted',expectedRevision:accepted.state.revision}), docsOrigin);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(JSON.parse(storage.getItem(BOOTSTRAP_OWNER_STORAGE_KEY))?.origin, mode === 'missing-owner' ? undefined : mainOrigin);
+  assert.equal(peer.nativeCalls.length, 0);
+  assert.equal(timers.size, 1);
+  [...timers][0].fn();
+  const recovered = await choosing;
+  assert.equal(recovered.ok, true);
+  assert.equal(recovered.state.generation, secondGeneration);
+  assert.equal(JSON.parse(storage.getItem(BOOTSTRAP_OWNER_STORAGE_KEY)).origin, docsOrigin);
+  assert.equal(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY), null);
+  assert.equal(peer.nativeCalls.length, 0, 'explicit consent recovery does not itself retry native I/O');
+  assert.equal(timers.size, 0);
+  owner.broker.stop();peer.broker.stop();
+  });
+});
+
+test('owner state expires with consent while a legacy ready identity remains reusable', async () => {
+  const storage = new MemoryStorage();
+  let clock = now;
+  const f = harness({storage, now:()=>clock});
+  const accepted = await f.send(request('choose', {choice:'accepted',expectedRevision:0}));
+  assert.equal((await f.send(request('pageview', pageviewPayload()))).ok, true);
+  storage.removeItem(BOOTSTRAP_OWNER_STORAGE_KEY);
+  assert.equal((await f.send(request('pageview', pageviewPayload(pageview(docsOrigin)),
+    '00000000-0000-4000-8000-000000000090'), docsOrigin)).ok, true);
+  assert.equal(storage.getItem('mautic_device_id'), deviceId);
+  storage.setItem(BOOTSTRAP_OWNER_STORAGE_KEY, JSON.stringify({version:1,generation:accepted.state.generation,origin:mainOrigin}));
+  clock = accepted.state.expiresAt + 1;
+  await f.send(request('read', {}, '00000000-0000-4000-8000-000000000092'));
+  assert.equal(storage.getItem(BOOTSTRAP_OWNER_STORAGE_KEY), null);
+  assert.equal(storage.getItem(TRACKING_IDENTITY_STORAGE_KEY), null);
+  f.broker.stop();
 });
 
 test('a timed-out bootstrap promotes an existing native device without creating another identity', async () => {
@@ -1073,7 +1517,7 @@ test('a root-origin fallback refusal is persisted when the broker next reads it'
 test('failed expiry tombstone persistence still clears pending and raw native identity', () => {
   const storage = new MemoryStorage();
   storage.setItem(TRACKING_CONSENT_STORAGE_KEY, JSON.stringify({
-    version: 2,
+    version: 3,
     choice: 'accepted',
     generation: firstGeneration,
     expiresAt: now - 1,

@@ -86,6 +86,37 @@ marketplace enrollment and the shared identity. Accepting again on the website
 or documentation does not re-enroll the marketplace. Other open frames observe
 storage changes, and suspended pages refresh their state on return.
 
+### Consent persistence migration
+
+The browser message protocol remains version 2. New persisted acceptances use
+version 3 so a fresh accepted record awaiting its bootstrap-owner marker is not
+mistaken for an older session. The property where the visitor accepts owns
+first tracker initialization; other properties await its confirmed identity.
+Ownership activates after consent and identity clearing. There is no automatic
+ownership transfer or retry of an unconfirmed native attempt.
+
+For an existing version 2 acceptance, a coherent ready identity with the same
+generation and matching native device remains usable. Its original preference,
+revision and expiry are preserved. A saved refusal remains refused. Version2
+acceptance with no confirmed coherent device is conservatively changed to an
+unknown choice: unconfirmed identifiers, owner and marketplace enrollment are
+cleared, and no tracker loads until the visitor chooses again. This gives the
+first initialization a known owner across browser storage partitions. A fresh version 3 publication gap
+is handled by the normal bounded wait instead of this migration.
+
+The existing optional-tracking controls obtain that choice. Rejecting, leaving
+it unanswered or using an unlinked enquiry remains possible. Acceptance creates
+a fresh generation with the ordinary 180-day lifetime; no stored acceptance or
+refusal is silently extended. The privacy policy explains that an update may
+ask for another choice.
+
+During rollout, an already-open page may still contain the older broker. It
+keeps tracking off when it encounters a version 3 acceptance. Refresh that page,
+then choose again to resume optional tracking; refusals remain readable by both
+versions and enquiries remain available. Verify recovery to one shared device
+after refresh. No client protocol or production setting change is required by
+the persisted-format migration.
+
 Only the bridge loads the native tracker and stores its identity. Documentation
 and the marketplace do not receive or persist a device identifier. The main website can request
 one for an immediate form submission with the expected consent generation.
