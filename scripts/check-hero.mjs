@@ -308,6 +308,7 @@ for (const options of [
     return {
       services: sections.findIndex(section => linksTo(section, '/solutions/licensing/') && linksTo(section, '/solutions/')),
       adoption: sections.findIndex(section => linksTo(section, '/pricing/') && /Apache[- ]2\.0/.test(section.innerText) && /Aubex/.test(section.innerText)),
+      ai: sections.findIndex(section => linksTo(section, '/ai/')),
       technical: sections.findIndex(section => [...section.querySelectorAll('a')]
         .some(link => new URL(link.href).hostname === 'docs.registrystack.org' && new URL(link.href).pathname.startsWith('/tutorials/'))),
     };
@@ -316,7 +317,10 @@ for (const options of [
       Math.max(homeOrder.services, homeOrder.adoption) >= homeOrder.technical) {
     fail('homepage must show actual service choices and adoption/ownership before technical tutorials');
   }
-  // The register-day sequence keeps all four steps readable: the highlight
+  if (Math.max(homeOrder.services, homeOrder.adoption) >= homeOrder.ai) {
+    fail('homepage must explain service fit and ownership before the AI overview route');
+  }
+  // The licensing detail sequence keeps all four steps readable: the highlight
   // moves, the text never changes. The pause control only exists when the
   // script is allowed to move the highlight.
   const checkWeek = async (label) => {
@@ -331,7 +335,6 @@ for (const options of [
       fail(`${label}: the working-week pause control must not appear without JavaScript or with reduced motion`);
     }
   };
-  await checkWeek('home');
   const heroInquiry = page.locator('.hero .hero-actions a').nth(1);
   if (!isContactRoute(await heroInquiry.getAttribute('href'), 'service', 'Registry Stack') || !await heroInquiry.isVisible()) {
     fail('hero secondary action must be a visible contextual "Discuss your service" form route');
@@ -370,9 +373,17 @@ for (const options of [
   if (/\bBReg\b/.test(await page.locator('body').innerText())) {
     fail('homepage exposes the internal product abbreviation');
   }
-  if (!await page.locator('.service-outline').isVisible()) fail('service outline is hidden');
-  if (!await page.locator('#service-outline-caption').isVisible()) fail('service outline caption is missing');
-  if (!await page.locator('#register-day-caption').isVisible()) fail('example journey caption is missing');
+  // The designed service remains readable without JavaScript and with reduced motion.
+  const mockup = page.locator('figure.home-service-mockup');
+  if (!await mockup.isVisible() || !await mockup.locator('figcaption').isVisible()) {
+    fail('the designed service and its illustrative caption must remain visible');
+  }
+  for (const part of ['.application-content', '.staff-review', '.register-panel']) {
+    if (!await mockup.locator(part).isVisible()) fail(`service mockup is missing visible ${part}`);
+  }
+  if (await mockup.locator('button, input, select, textarea, [role="button"]').count()) {
+    fail('the static service illustration must not expose nonfunctional controls');
+  }
 
   // Solutions first, then Products; opening one menu leaves the other closed.
   await page.goto(url);

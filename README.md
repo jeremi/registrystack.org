@@ -220,8 +220,9 @@ a lighter question. The pricing inquiry includes optional budget and timing.
 Print the email address beside mailto buttons so readers without an email app
 can still contact the team. The header Contact link opens the general contact page.
 
-The homepage starts with use cases and customization. Product choices and
-technical evaluation follow. The main site explains service fit; the configuration
+The homepage starts with a clearly illustrative configured service and service
+areas, followed by ownership and implementation. AI and technical evaluation
+follow the core service story. The main site explains service fit; the configuration
 marketplace owns pack browsing, model detail and access requests. Keep service
 categories here and link each to its corresponding marketplace collection.
 The old `/starters/` index offers seven collection handoffs. Its 84 detail pages

@@ -99,11 +99,8 @@ for (const relativePath of ['src/data/products.ts', ...markdownLinkFiles]) {
 const homeSource = readSource('src/pages/index.astro');
 const productSource = readSource('src/data/products.ts');
 const heroMatch = homeSource.match(/<section class="hero[^"]*"[\s\S]*?<\/section>/);
-if (!homeSource.includes('<ServiceOutline')) {
-  failures.push('homepage is missing its service-owner outline');
-}
-if (!homeSource.includes('<RegisterDay')) {
-  failures.push('homepage is missing the example journey from request to current record');
+if (!homeSource.includes('<HomeServiceMockup')) {
+  failures.push('homepage is missing its illustrative configured-service mockup');
 }
 if (!heroMatch || !heroMatch[0].includes('href="/solutions/"') ||
     !heroMatch[0].includes('href={describeServiceHref()}') ||
@@ -120,6 +117,9 @@ const evaluationIndexes = ['products', 'developers'].map((id) => homeSource.inde
 if (buyerEntryIndexes.some((index) => index < 0) || evaluationIndexes.some((index) => index < 0) ||
     Math.max(...buyerEntryIndexes) > Math.min(...evaluationIndexes)) {
   failures.push('homepage must introduce service choices and adoption before technical evaluation');
+}
+if (homeSource.indexOf('id="customization"') < homeSource.indexOf('id="open-source"')) {
+  failures.push('homepage must explain the core service and implementation before its AI entry');
 }
 const adoptionSource = homeSource.match(/<section\b[^>]*id="open-source"[\s\S]*?<\/section>/)?.[0] ?? '';
 if (!adoptionSource.includes('href="/pricing/"') || !/Apache[- ]2\.0/.test(adoptionSource)) {

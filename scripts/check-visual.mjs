@@ -181,6 +181,7 @@ for (const viewport of viewports) {
             parts: [...item.querySelectorAll('a > span')].map(bounds),
           })),
         })),
+        capabilities: [...document.querySelectorAll('#shared-work li')].map((item) => ({ ...bounds(item), marker: getComputedStyle(item).listStyleType })),
         developers: [...document.querySelectorAll('.developer-grid > article')].map(bounds),
       };
     });
@@ -202,11 +203,10 @@ for (const viewport of viewports) {
       }
     };
 
-    if (layouts.registers.length !== 2) {
-      failures.push(`${label}: expected both homepage solution and capability link groups`);
+    if (layouts.registers.length !== 1) {
+      failures.push(`${label}: expected one homepage solution link group`);
     } else {
       checkArrangement('solution', layouts.registers[0].items, 3, viewport.name !== 'desktop');
-      checkArrangement('capability', layouts.registers[1].items, expectedCapabilities, viewport.name !== 'desktop');
       for (const [index, group] of layouts.registers.entries()) {
         for (const [itemIndex, item] of group.items.entries()) {
           const name = `homepage link group ${index + 1}, item ${itemIndex + 1}`;
@@ -217,6 +217,9 @@ for (const viewport of viewports) {
           }
         }
       }
+    }
+    if (layouts.capabilities.length !== expectedCapabilities || layouts.capabilities.some(item => item.marker !== 'none')) {
+      failures.push(`${label}: related capability links are missing or have default markers`);
     }
     checkArrangement('developer tutorial', layouts.developers, 2, viewport.name === 'mobile');
 

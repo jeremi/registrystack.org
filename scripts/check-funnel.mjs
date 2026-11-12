@@ -48,7 +48,7 @@ const server = createServer(async (request, response) => {
 
 await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen));
 const { port } = server.address();
-// The homepage gives a service-owner outline and one illustrative journey,
+// The homepage gives one designed service illustration,
 // then links to product details and technical evaluation. The detailed service-answer figure
 // remains on its own page.
 const homeUrl = `http://127.0.0.1:${port}/`;
@@ -173,29 +173,28 @@ const failures = [];
 
   const homeOverviewFailures = await page.evaluate(() => {
     const issues = [];
-    const outline = document.querySelector('figure.service-outline');
-    if (!outline || document.querySelectorAll('figure.service-outline').length !== 1) {
-      issues.push('expected exactly one service outline on the homepage');
+    const mockup = document.querySelector('figure.home-service-mockup');
+    if (!mockup || document.querySelectorAll('figure.home-service-mockup').length !== 1) {
+      issues.push('expected exactly one designed service illustration on the homepage');
     } else {
-      const labelledBy = outline.getAttribute('aria-labelledby')?.split(/\s+/) ?? [];
-      if (labelledBy.length < 2 || labelledBy.some((id) => !document.getElementById(id)?.textContent.trim())) {
-        issues.push('service outline must reference its visible title and illustrative caption');
+      for (const attribute of ['aria-labelledby', 'aria-describedby']) {
+        const references = mockup.getAttribute(attribute)?.split(/\s+/) ?? [];
+        if (!references.length || references.some((id) => !document.getElementById(id)?.textContent.trim())) {
+          issues.push(`service illustration needs a visible ${attribute} reference`);
+        }
       }
-      if (outline.querySelectorAll('ol > li').length !== 4) {
-        issues.push('service outline must show the four roles from application to permitted check');
+      const application = mockup.querySelector('.application-panel');
+      const review = application?.querySelector('.staff-review');
+      const record = mockup.querySelector('.register-panel');
+      if (!application || !review || !record || application.contains(record)) {
+        issues.push('service illustration must distinguish application review from the register entry');
+      }
+      if (mockup.querySelector('button, input, select, textarea, [role="button"]')) {
+        issues.push('static illustration contains a nonfunctional control');
       }
     }
-    const journey = document.querySelector('figure.register-week');
-    if (!journey || document.querySelectorAll('figure.register-week').length !== 1) {
-      issues.push('expected exactly one example journey on the homepage');
-    } else {
-      const describedBy = journey.getAttribute('aria-describedby')?.split(/\s+/) ?? [];
-      if (describedBy.length !== 1 || describedBy.some((id) => !document.getElementById(id)?.textContent.trim())) {
-        issues.push('example journey must reference its fictional-record caption');
-      }
-      if (journey.querySelectorAll('.day-step').length !== 4) {
-        issues.push('example journey must keep request, review, update and check as separate steps');
-      }
+    if (document.querySelector('figure.register-week')) {
+      issues.push('homepage repeats the service illustration with a second animated journey');
     }
     return issues;
   });

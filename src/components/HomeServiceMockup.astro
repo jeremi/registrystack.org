@@ -1,0 +1,164 @@
+---
+// Designed service illustration, not a product screenshot or an interactive demo.
+// Grounded in the licensing journey and the maintained product concepts:
+// Casework records the officer's decision; the register separately authorizes
+// application of the change. Screens and service rules belong to implementation.
+---
+
+<figure class="home-service-mockup" aria-labelledby="home-service-title" aria-describedby="home-service-caption">
+  <div class="application-panel">
+    <header class="application-header">
+      <svg class="document-mark" viewBox="0 0 24 28" fill="none" aria-hidden="true">
+        <path d="M4 1h10l6 6v20H4V1Z" stroke="currentColor" stroke-width="1.5" />
+        <path d="M14 1v7h6M8 13h8M8 18h8M8 23h5" stroke="currentColor" stroke-width="1.5" />
+      </svg>
+      <div>
+        <h2 id="home-service-title">Example · First licence application</h2>
+        <p class="application-reference">APP-2093</p>
+      </div>
+    </header>
+
+    <div class="application-content">
+      <dl class="application-details">
+        <div><dt>Applicant</dt><dd>Example applicant</dd></div>
+        <div><dt>Licence type</dt><dd>Professional licence</dd></div>
+      </dl>
+      <div class="supporting-document">
+        <svg viewBox="0 0 20 22" fill="none" aria-hidden="true">
+          <path d="M4 1h8l5 5v15H4V1Z" stroke="currentColor" stroke-width="1.3" />
+          <path d="M12 1v5h5M7 11h7M7 15h7" stroke="currentColor" stroke-width="1.3" />
+        </svg>
+        <div><span class="document-label">Supporting document</span><strong>Qualification certificate</strong></div>
+        <span class="document-state">Submitted</span>
+      </div>
+    </div>
+
+    <section class="staff-review" aria-labelledby="home-review-title">
+      <div class="review-heading">
+        <h3 id="home-review-title">Staff review</h3>
+        <span class="approval-state"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" /></svg>Approved</span>
+      </div>
+      <p>An officer records the decision.</p>
+    </section>
+  </div>
+
+  <section class="register-panel" aria-labelledby="home-register-title">
+    <div class="register-heading">
+      <div><p class="register-label">Register entry</p><h3 id="home-register-title">Professional licence</h3></div>
+      <span class="licence-reference">LIC-2093</span>
+    </div>
+    <dl class="register-details">
+      <div><dt>Status</dt><dd><span class="active-dot" aria-hidden="true"></span>Active</dd></div>
+      <div><dt>Entry</dt><dd>First licence</dd></div>
+    </dl>
+    <p class="register-authority"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" /></svg>Applied by authorized staff</p>
+  </section>
+
+  <figcaption id="home-service-caption">Fictional example. Rules and screens are configured for your service.</figcaption>
+</figure>
+
+<style>
+  .home-service-mockup {
+    width: 100%;
+    max-width: 480px;
+    margin: 0;
+    color: var(--registry-ink);
+    font-family: var(--registry-font);
+    text-align: left;
+  }
+  .application-panel {
+    margin-right: 20px;
+    overflow: hidden;
+    background: var(--registry-white);
+    border: 1px solid var(--registry-blue-rule);
+    border-radius: 4px;
+    box-shadow: var(--offset-lg);
+  }
+  .application-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 22px 24px 20px;
+    border-bottom: 1px solid var(--registry-rule);
+  }
+  .document-mark { flex: 0 0 25px; width: 25px; height: 30px; color: var(--registry-blue); }
+  .application-header h2 {
+    margin: 0;
+    color: var(--registry-blue);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+  }
+  .application-reference { margin: 5px 0 0; color: var(--registry-muted); font: 12px/1.4 var(--registry-mono); }
+  .application-content { padding: 22px 24px; }
+  .application-details { display: grid; gap: 16px; margin: 0 0 22px; }
+  .application-details div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; }
+  dt { color: var(--registry-muted); font-size: 13px; line-height: 1.5; }
+  dd { margin: 0; color: var(--registry-ink); font-size: 14px; font-weight: 600; line-height: 1.5; }
+  .supporting-document {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 11px;
+    padding: 14px 12px;
+    background: var(--registry-paper-half);
+    border: 1px solid var(--registry-paper-rule);
+    border-radius: 3px;
+  }
+  .supporting-document > svg { width: 20px; height: 22px; color: var(--registry-body); }
+  .document-label { display: block; margin-bottom: 2px; color: var(--registry-muted); font-size: 11px; line-height: 1.4; }
+  .supporting-document strong { display: block; color: var(--registry-body); font-size: 13px; font-weight: 600; line-height: 1.4; }
+  .document-state { color: var(--registry-body); font-size: 11px; line-height: 1.4; }
+  .staff-review { padding: 18px 24px 28px; border-top: 1px solid var(--registry-rule); }
+  .review-heading { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+  .review-heading h3 { margin: 0; color: var(--registry-ink); font-size: 14px; line-height: 1.5; }
+  .approval-state { display: inline-flex; align-items: center; gap: 4px; color: var(--registry-blue); font-size: 12px; font-weight: 600; line-height: 1.5; }
+  .approval-state svg, .register-authority svg { width: 16px; height: 16px; flex: 0 0 16px; }
+  .staff-review > p { margin: 5px 0 0; color: var(--registry-body); font-size: 13px; line-height: 1.5; }
+  .register-panel {
+    position: relative;
+    margin: -10px 0 0 36px;
+    padding: 20px 22px 0;
+    background: var(--registry-paper);
+    border: 1px solid var(--registry-paper-rule);
+    border-top: 3px solid var(--registry-blue);
+    border-radius: 3px;
+    box-shadow: var(--offset-md);
+  }
+  .register-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .register-label { margin: 0 0 3px; color: var(--registry-body); font: 11px/1.5 var(--registry-mono); text-transform: uppercase; letter-spacing: 0.05em; }
+  .register-heading h3 { margin: 0; color: var(--registry-ink); font-size: 17px; line-height: 1.4; }
+  .licence-reference { padding-top: 3px; color: var(--registry-blue); font: 11px/1.5 var(--registry-mono); white-space: nowrap; }
+  .register-details { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 18px 0; }
+  .register-details dt { font-size: 12px; margin-bottom: 3px; }
+  .register-details dd { display: flex; align-items: center; gap: 7px; }
+  .active-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--registry-blue); }
+  .register-authority {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 12px 0;
+    border-top: 1px solid var(--registry-paper-rule);
+    color: var(--registry-body);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  figcaption { margin-top: 19px; color: var(--registry-white); font-size: 14px; line-height: 1.6; }
+  @media (max-width: 600px) {
+    .home-service-mockup { max-width: 440px; }
+    .application-panel { margin-right: 12px; }
+    .application-header { padding: 20px; gap: 12px; }
+    .application-header h2 { font-size: 15px; }
+    .application-content { padding: 20px; }
+    .application-details div { grid-template-columns: 86px minmax(0, 1fr); gap: 10px; }
+    .supporting-document { grid-template-columns: 20px minmax(0, 1fr); gap: 10px; }
+    .document-state { grid-column: 2; }
+    .staff-review { padding: 17px 20px 26px; }
+    .register-panel { margin-left: 20px; padding: 18px 18px 0; }
+    .register-heading { display: block; }
+    .licence-reference { display: block; margin-top: 5px; padding-top: 0; }
+    .register-details { gap: 12px; }
+  }
+</style>
