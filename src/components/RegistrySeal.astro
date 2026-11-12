@@ -1,29 +1,38 @@
 ---
 // A circular seal in the tradition of notary and registry stamps: serrated
 // outer ring, circular microtext, monogram center. Decorative only; always
-// rendered with aria-hidden by the page that places it. The text ring turns
-// very slowly, and stays still under a reduced-motion preference.
+// hidden from assistive technology. A page can customize the decorative text
+// and use a static instance. The default ring turns slowly, with reduced motion.
 // The ring text is fitted to its circle (2 x pi x 54 = 339.3 units).
 interface Props {
   size?: number;
+  ringText?: string;
+  monogram?: string;
+  animated?: boolean;
+  pathId?: string;
 }
 
-const { size = 150 } = Astro.props;
-const ringText = 'REGISTRY STACK · SIGNED ANSWERS · OPEN SOURCE · ';
+const {
+  size = 150,
+  ringText = 'REGISTRY STACK · SIGNED ANSWERS · OPEN SOURCE · ',
+  monogram = 'RS',
+  animated = true,
+  pathId = 'seal-text-path',
+} = Astro.props;
 ---
 
-<span class="registry-seal" style={`width:${size}px;height:${size}px`}>
+<span class:list={['registry-seal', { 'is-static': !animated }]} style={`width:${size}px;height:${size}px`} aria-hidden="true">
   <svg viewBox="0 0 150 150" role="presentation" focusable="false">
     <circle class="seal-serration" cx="75" cy="75" r="71" />
     <circle class="seal-ring" cx="75" cy="75" r="64" />
     <g class="seal-text-ring">
-      <path id="seal-text-path" d="M 21 75 a 54 54 0 1 1 108 0 a 54 54 0 1 1 -108 0" fill="none" />
+      <path id={pathId} d="M 21 75 a 54 54 0 1 1 108 0 a 54 54 0 1 1 -108 0" fill="none" />
       <text class="seal-text">
-        <textPath href="#seal-text-path" startOffset="0" textLength="339.3" lengthAdjust="spacing">{ringText}</textPath>
+        <textPath href={`#${pathId}`} startOffset="0" textLength="339.3" lengthAdjust="spacing">{ringText}</textPath>
       </text>
     </g>
     <circle class="seal-ring seal-ring-inner" cx="75" cy="75" r="36" />
-    <text class="seal-monogram" x="75" y="83" text-anchor="middle">RS</text>
+    <text class="seal-monogram" x="75" y="83" text-anchor="middle">{monogram}</text>
   </svg>
 </span>
 
@@ -76,6 +85,10 @@ const ringText = 'REGISTRY STACK · SIGNED ANSWERS · OPEN SOURCE · ';
     animation: seal-turn 90s linear infinite;
     transform-box: view-box;
     transform-origin: 50% 50%;
+  }
+
+  .registry-seal.is-static .seal-text-ring {
+    animation: none;
   }
 
   @media (prefers-reduced-motion: reduce) {

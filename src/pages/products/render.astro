@@ -1,5 +1,6 @@
 ---
 import Product from '../../layouts/Product.astro';
+import RegistrySeal from '../../components/RegistrySeal.astro';
 import { products } from '../../data/products';
 const product = products.find((p) => p.key === 'render')!;
 ---
@@ -37,11 +38,35 @@ const product = products.find((p) => p.key === 'render')!;
             <dl>
               <div><dt>Licence reference</dt><dd>LIC-2093</dd></div>
               <div><dt>Valid until</dt><dd>31 October 2029</dd></div>
-              <div><dt>Digital seal</dt><dd>Example licensing authority</dd></div>
             </dl>
+            <div class="licence-marks">
+              <div class="institution-mark">
+                <RegistrySeal size={100} ringText="EXAMPLE LICENSING AUTHORITY · " monogram="EX" animated={false} pathId="render-example-seal-text" />
+                <p class="mark-caption">Example licensing authority</p>
+              </div>
+              <div class="status-mark">
+                {/* Lucide qr-code, ISC. Notice: /licenses/lucide-ISC.txt. Schematic only; no encoded URL. */}
+                <svg class="qr-illustration" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <rect width="5" height="5" x="3" y="3" rx="1" />
+                  <rect width="5" height="5" x="16" y="3" rx="1" />
+                  <rect width="5" height="5" x="3" y="16" rx="1" />
+                  <path d="M21 16h-3a2 2 0 0 0-2 2v3" />
+                  <path d="M21 21v.01" />
+                  <path d="M12 7v3a2 2 0 0 1-2 2H7" />
+                  <path d="M3 12h.01" />
+                  <path d="M12 3h.01" />
+                  <path d="M12 16v.01" />
+                  <path d="M16 12h1" />
+                  <path d="M21 12v.01" />
+                  <path d="M12 21v-1" />
+                </svg>
+                <p class="mark-caption">QR illustration</p>
+                <p class="status-label">Check licence status</p>
+              </div>
+            </div>
           </div>
         </section>
-        <figcaption id="render-example-caption">A fictional licence document with an institutional digital seal. Render generates and signs the PDF; the licensing service owns the decision and retains the document.</figcaption>
+        <figcaption id="render-example-caption">Fictional licence with a decorative seal and an illustrative QR symbol. PDF signature validation checks the seal; a configured Evidence check page reports licence status. The licensing service retains the document.</figcaption>
       </figure>
     </div>
   </section>
@@ -99,6 +124,11 @@ const product = products.find((p) => p.key === 'render')!;
   .licence-document h3 { margin: 0 0 8px; color: var(--registry-blue); font-size: clamp(22px, 2.5vw, 28px); }
   .holder-name { margin: 0 0 24px; font-size: var(--type-lg); }
   .licence-document dl div { grid-template-columns: 1fr; gap: 4px; }
+  .licence-marks { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 20px; margin-top: 18px; padding-top: 22px; border-top: 1px solid var(--registry-paper-rule); }
+  .institution-mark, .status-mark { min-width: 0; text-align: center; }
+  .mark-caption { margin: 12px 0 0; color: var(--registry-body); font-size: var(--type-base); line-height: 1.5; }
+  .qr-illustration { display: block; width: 84px; height: 84px; margin: 8px auto; color: var(--registry-blue); }
+  .status-label { margin: 3px 0 0; color: var(--registry-blue); font-size: var(--type-base); font-weight: 600; line-height: 1.5; }
   figcaption { grid-column: 1 / -1; margin: 0; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.6; }
   @media (max-width: 700px) { .render-example { grid-template-columns: 1fr; gap: 20px; } .source-panel, .document-panel { padding: 20px; } }
 </style>
