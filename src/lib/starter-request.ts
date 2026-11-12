@@ -41,22 +41,22 @@ export function contactRequestPresentation(type: ContactRequestType): {
       return {
         eyebrow: 'Free of charge',
         heading: 'Request access to this starter',
-        intro: 'Leave your contact details to request access to the configuration. You can also add context so our team can understand what you are planning.',
+        intro: 'Leave your contact details to request access to the configuration. You can also add context so we can understand what you are planning.',
         messageLabel: 'What are you trying to do?',
         submitLabel: 'Request access',
-        successMessage: 'Access request received. Our team will review it.',
+        successMessage: 'Access request received. We will review it.',
         privacyCopy: 'We use these details to review your request and reply. You can request access without accepting tracking. If you accept tracking, we may link your visits to this request. There is no marketing signup.',
       };
     case 'service':
-      return { eyebrow: 'Service enquiry', heading: 'Discuss your service', intro: 'Describe the service, who will use it and what it needs to do. Our team will review your message and reply.', messageLabel: 'Your service and what you need', submitLabel: 'Send message', successMessage: 'Message received. Our team will review it and reply.', privacyCopy: sharedPrivacy };
+      return { eyebrow: 'Service enquiry', heading: 'Discuss your service', intro: 'Describe the service, who will use it and what it needs to do. We will review your message and reply.', messageLabel: 'Your service and what you need', submitLabel: 'Send message', successMessage: 'Message received. We will review it and reply.', privacyCopy: sharedPrivacy };
     case 'proposal':
-      return { eyebrow: 'Implementation', heading: 'Request a proposal', intro: 'Describe the service and implementation support you want us to price. We will reply to clarify the scope.', messageLabel: 'What should the proposal cover?', submitLabel: 'Request a proposal', successMessage: 'Request received. Our team will review it and reply.', privacyCopy: sharedPrivacy };
+      return { eyebrow: 'Implementation', heading: 'Request a proposal', intro: 'Describe the service and implementation support you want us to price. We will reply to clarify the scope.', messageLabel: 'What should the proposal cover?', submitLabel: 'Request a proposal', successMessage: 'Request received. We will review it and reply.', privacyCopy: sharedPrivacy };
     case 'privacy':
-      return { eyebrow: 'Privacy', heading: 'Send a privacy request', intro: 'Tell us what personal data request you want us to review and how we can identify the relevant correspondence or visit history.', messageLabel: 'Your privacy request', submitLabel: 'Send privacy request', successMessage: 'Privacy request received. Our team will review it and reply.', privacyCopy: 'We use these details to handle your privacy request and reply. We do not use this request to link your current browser to your message. There is no marketing signup.' };
+      return { eyebrow: 'Privacy', heading: 'Send a privacy request', intro: 'Tell us what personal data request you want us to review and how we can identify the relevant correspondence or visit history.', messageLabel: 'Your privacy request', submitLabel: 'Send privacy request', successMessage: 'Privacy request received. We will review it and reply.', privacyCopy: 'We use these details to handle your privacy request and reply. We do not use this request to link your current browser to your message. There is no marketing signup.' };
     case 'terms':
-      return { eyebrow: 'Website terms', heading: 'Ask about the terms', intro: 'Tell us which part of the website terms you are asking about. Our team will review your message and reply.', messageLabel: 'Your question', submitLabel: 'Send question', successMessage: 'Question received. Our team will review it and reply.', privacyCopy: sharedPrivacy };
+      return { eyebrow: 'Website terms', heading: 'Ask about the terms', intro: 'Tell us which part of the website terms you are asking about. We will review your message and reply.', messageLabel: 'Your question', submitLabel: 'Send question', successMessage: 'Question received. We will review it and reply.', privacyCopy: sharedPrivacy };
     case 'question':
-      return { eyebrow: 'Contact Registry Stack', heading: 'Ask a question', intro: 'Tell us what you need. Our team will review your message and reply.', messageLabel: 'Your question', submitLabel: 'Send question', successMessage: 'Question received. Our team will review it and reply.', privacyCopy: sharedPrivacy };
+      return { eyebrow: 'Contact Registry Stack', heading: 'Ask a question', intro: 'Tell us what you need. We will review your message and reply.', messageLabel: 'Your question', submitLabel: 'Send question', successMessage: 'Question received. We will review it and reply.', privacyCopy: sharedPrivacy };
   }
 }
 

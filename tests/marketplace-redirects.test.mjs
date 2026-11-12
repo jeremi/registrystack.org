@@ -4,7 +4,7 @@ import { registerFamilies, startersData } from '../scripts/marketplace-inputs.mj
 import { MARKETPLACE_ORIGIN, assertMarketplaceIndexingDecision, inspectMarketplace, marketplaceCollectionHref, marketplaceMigrationEnabled, marketplacePackHref, marketplacePageMetadata, marketplaceRedirects } from '../src/lib/marketplace-routes.mjs';
 
 const ids = startersData.starters.map((starter) => starter.id);
-const keys = ['licensing', 'business-and-tax', 'people-and-social-programmes', 'land-property-and-assets', 'agriculture-food-and-environment', 'health-and-safety', 'reference-registers'];
+const keys = ['licensing', 'business-and-tax', 'agriculture-food-and-environment', 'people-and-social-programmes', 'land-property-and-assets', 'health-and-safety', 'reference-registers'];
 
 test('migration defaults off and true requires an explicit indexing decision', () => {
   for (const value of [undefined, '', 'false', 'TRUE', '1']) assert.equal(marketplaceMigrationEnabled(value), false);

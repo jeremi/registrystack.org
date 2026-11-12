@@ -1,50 +1,19 @@
 # Registry Stack public website guidance
 
-This repository owns the public website for organizations evaluating Registry
-Stack. Read the [README audience and editorial direction](README.md#audience-and-editorial-direction)
-before writing or reviewing pages, navigation, calls to action, or metadata.
-It is the maintained audience policy for this site.
+Before writing or reviewing pages, navigation, calls to action or metadata, read:
 
-## Audience and review
+1. [README.md](README.md): how the site is built and run, data ownership and commands.
+2. The Apps workspace's private `registry-internal`: `current/website.md` holds
+   content, voice, claims and page contracts; `runbooks/website-content.md` holds
+   the repeatable workflow. Read them from the verified workspace, not an assumed
+   sibling of this worktree.
+3. Current owning product documentation for actual behavior, maturity and terms.
 
-- Address organizations managing registries. National, regional and local
-  government are the current primary focus and source of examples. Keep general
-  navigation organized by service area; a single government level should not
-  define the site's scope. General explanations also apply to other organizations,
-  including NGOs and banks.
-- Write primarily for decision makers, programme and service owners, data
-  stewards, and governance teams. Technical evaluators and implementers are an
-  important secondary audience. Developer experience is a product requirement;
-  it does not set the default audience for public website content.
-- Lead with the reader's problem, practical outcomes, fit with existing
-  systems, and adoption decisions. Explain technical concepts when they help
-  that decision; route implementation instructions to the documentation.
-- Check the README’s product scope against the page’s implied starting
-  condition, including shared enquiries: new services and existing-service
-  adaptations are both supported. Narrow integration pages can retain a
-  deliberate existing-system audience.
-- Apply the README’s page-purpose and section-selection tests before retaining
-  optional material or proposing a new topic. Review final renders for relevance
-  as well as factual correctness and layout.
-- Review entry pages as a programme or service owner without implementation
-  knowledge: can they understand why this matters, whether it fits their needs,
-  and what to do next? For a page serving a narrower audience, check that its
-  purpose and route from the wider site are clear.
-- Keep sector examples and claims grounded. A possible application does not
-  establish a deployment, compliance claim, or readiness for that sector.
+Keep website strategy, private process, deployment details, buyer information
+and findings out of this public repository. Do not create another skill or voice
+guide to duplicate project truth. Preserve unrelated work and obey the task's
+publication boundary.
 
-## Sources and scope
-
-Use the README for site structure and commands, current site source for routes,
-and maintained public product docs for behavior claims. Older site plans are
-historical where they conflict with current maintained guidance. Keep private
-planning, deployment details, and review findings out of public content.
-
-## Verification
-
-Use `npm` and the applicable checks in `package.json`. Automated content checks
-cover selected copy and structural rules, not whether the writing suits its
-audience. Perform the reader review as well.
-Use the broader `npm run check` for changes affecting site behavior or layout.
-For guidance-only edits, review wording, links, and the diff without requiring
-a site build or visual checks.
+Use the applicable `npm` checks in package.json. Layout or behavior changes use
+`npm run check` plus actual desktop/mobile inspection. For guidance-only edits,
+review wording, references and the diff; a site build does not validate strategy.

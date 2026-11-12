@@ -15,21 +15,21 @@ const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environme
 
 const steps: WeekStep[] = [
   {
-    when: 'Registration submitted',
-    product: 'Your registration drive',
-    title: 'A farmer registers a holding',
-    text: 'A farmer registers a holding at the district office. The register does not change until an officer decides.',
-    card: { kind: 'record', recordType: 'Registration request', recordId: 'REG-2290', icon: 'data', fields: [
-      { label: 'Holding', value: 'Plot 14, Northern district' },
-      { label: 'Crops', value: 'Maize, beans' },
-      { label: 'Submitted at', value: 'District office' },
+    when: 'Before the first application',
+    ...weekProduct('base-registry'),
+    title: 'The ministry decides what the register records',
+    text: 'A ministry given a new mandate to register farmers has no form and no register yet. It decides what a farmer record and a holding record contain, which fields are required, and which roles may record or change them.',
+    card: { kind: 'record', recordType: 'Farmer register', recordId: 'Definition', icon: 'data', fields: [
+      { label: 'Records', value: 'Farmer, holding' },
+      { label: 'Required for a holding', value: 'District, crops' },
+      { label: 'May record changes', value: 'Registration officers' },
     ] },
   },
   {
-    when: 'Review and decision',
+    when: 'Application and review',
     ...weekProduct('casework'),
-    title: 'An officer decides',
-    text: 'The request enters the registrations queue. D. Mwangi checks that the holding is not already registered under another name and approves the application.',
+    title: 'A farmer applies and an officer decides',
+    text: 'A farmer applies at the district office. The request enters the registrations queue. D. Mwangi checks that the holding is not already registered under another name and approves the application. The register does not change until the officer decides.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Registrations' },
       { state: 'Claimed', note: 'Held by D. Mwangi' },
@@ -37,10 +37,10 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Producer record updated',
+    when: 'First register entry',
     ...weekProduct('base-registry'),
     title: 'The officer records the holding and its history',
-    text: 'The officer records the holding. The register records the officer’s name and retains each earlier status when the record changes.',
+    text: 'The officer records the holding as the first entry for this farmer. The register records the officer’s name and retains each earlier status when the record changes.',
     card: { kind: 'record', recordType: 'Holding record', recordId: 'HLD-5582', icon: 'data', fields: [
       { label: 'Status', value: 'Registered' },
       { label: 'District', value: 'Northern' },
@@ -64,13 +64,15 @@ const steps: WeekStep[] = [
   <section class="section" id="example" aria-labelledby="agriculture-example-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">One request, start to finish</p>
-        <h2 id="agriculture-example-title">Review and record one holding registration.</h2>
+        <p class="eyebrow">A new register, start to finish</p>
+        <h2 id="agriculture-example-title">Set up a farmer register and record its first holding.</h2>
+        <p>A fictional ministry establishes a farmer register under a new mandate, with no earlier form or register. The example shows the register definition, the application and staff decision, the first entry, and a programme checking it.</p>
       </div>
       <RegisterWeek
         id="agriculture-week"
-        kicker="Holding HLD-5582, one request"
-        heading="Follow the producer registration."
+        kicker="A new farmer register, first holding HLD-5582"
+        heading="Follow the first registration."
+        caption="A new register, from its definition to its first permitted check. The records are fictional."
         steps={steps}
       />
     </div>
@@ -84,7 +86,7 @@ const steps: WeekStep[] = [
       <div class="product-facts">
         <article><h3>Link each permit to the site it covers</h3><p>Each farm, establishment or site has its own record, and each registration or permit links to it. If one food business operates two establishments, each establishment can have its own registration and recorded status.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
         <article><h3>Keep earlier statuses when a permit changes</h3><p>A suspension or withdrawal is recorded with the name of the officer and the date. Staff can see which status the register showed on the day of an inspection.</p><a class="inline-cta" href="/solutions/review-changes/">How a decision reaches the register <span aria-hidden="true">→</span></a></article>
-        <article><h3>Publish district-level registration counts</h3><p>Configure seasonal counts with small-count suppression and rounding, then publish reviewed releases without exposing the records behind them.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/">How statistical releases work <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Publish district-level registration counts</h3><p>Publish monthly or quarterly counts by district in reviewed releases, with small counts hidden and the rest rounded.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/">How statistical releases work <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>

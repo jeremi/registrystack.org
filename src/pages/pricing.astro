@@ -14,20 +14,15 @@ const brief = [
   'Budget range and currency, if you can share it (optional).',
 ];
 const proposalRoute = proposalHref();
-const nextSteps = [
-  'We review your needs and follow up with any questions.',
-  'We discuss the service steps, existing systems and responsibilities, then propose a suitable way to start.',
-  'We prepare a written proposal with the work and fee for your procurement team to review.',
-];
 ---
 
-<Base title="Pricing | Registry Stack" description="Compare starting prices for Registry Stack implementation pilots and annual support. Discuss your service and request a proposal for the work you need.">
+<Base title="Implementation and pricing | Registry Stack" description="See how Registry Stack implementation works and compare starting prices for pilot register implementation and annual support. Discuss your service and request a proposal.">
   <SiteHeader current="pricing" />
   <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="pricing-title">
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="eyebrow">Pricing</p>
+          <p class="eyebrow">Implementation and pricing</p>
           <h1 id="pricing-title">Implementation and support for your service.</h1>
           <p class="hero-lead">Work with us to configure and test a service, or get annual technical support while your team leads the implementation.</p>
           <div class="hero-actions" aria-label="Primary actions">
@@ -43,28 +38,29 @@ const nextSteps = [
         <div class="section-heading">
           <p class="eyebrow">Two ways we can help</p>
           <h2 id="options-title">Starting prices</h2>
-          <p>We agree the work, each team's responsibilities and a fixed fee with you in writing before starting.</p>
+          <p>We agree the work, who does what and a fixed fee with you in writing before starting.</p>
         </div>
         <div class="service-options">
           <article id="pilot" aria-labelledby="implementation-title">
             <p class="option-label">Hands-on delivery</p>
-            <h3 id="implementation-title">Implementation pilot</h3>
+            <h3 id="implementation-title">Pilot register implementation</h3>
             <p class="starting-fee"><span>From</span> <strong>US$20,000</strong></p>
-            <p class="fee-basis">Per pilot, with an agreed scope</p>
-            <p>Adapt and test one defined service with your team. The proposal states whether the pilot is for evaluation or includes a live deployment.</p>
+            <p class="fee-basis">Per register, with an agreed scope</p>
+            <p>We implement one register and its service with your team, configured to your rules and tested with your staff. The proposal states whether your pilot register runs with test data or live records.</p>
             <h4>What we agree before work starts</h4>
             <p>Agree the screens, sign-in, integrations, data preparation, hosting and handover, who does each part and how your team will evaluate the result. The scope lists the configuration, tests, instructions and service-specific code you receive, with licensing and maintenance terms.</p>
-            <p>The fee depends on the service steps, connections, data preparation and deployment work. See <a href="/customization/">how implementation works</a>.</p>
+            <p>The fee depends on the service steps, connections, data preparation and deployment work. See <a href="#process">how implementation works</a>.</p>
           </article>
           <article id="support" aria-labelledby="support-title">
             <p class="option-label">Your team leads</p>
             <h3 id="support-title">Annual support</h3>
             <p class="starting-fee"><span>From</span> <strong>US$7,500</strong> <span>/ year</span></p>
             <p class="fee-basis">For teams implementing and operating Registry Stack</p>
-            <p>Your team implements and operates the solution. Support can cover technical questions, upgrade planning and troubleshooting for the Registry Stack products and versions you run. The contract states the coverage and each team's responsibilities.</p>
+            <p>Your team implements and operates the solution. Support can cover technical questions, upgrade planning and troubleshooting for the Registry Stack products and versions you run. The contract states the coverage and who is responsible for what.</p>
             <p>Your proposal lists the deployments covered, how to contact support, when support is available and the agreed response times.</p>
           </article>
         </div>
+        <p class="hosting-note">We can also host and operate the service for you, priced separately in your proposal.</p>
         <p class="options-next"><a class="inline-cta" href="#inquiry">Discuss your needs <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
@@ -91,13 +87,16 @@ const nextSteps = [
       </div>
     </section>
 
-    <section class="section" id="next-steps" aria-labelledby="next-steps-title">
+    <section class="section" id="process" aria-labelledby="process-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <p class="eyebrow">After you contact us</p>
-          <h2 id="next-steps-title">What happens next</h2>
+          <p class="eyebrow">Implementation process</p>
+          <h2 id="process-title">How implementation works</h2>
           <ol class="next-steps">
-            {nextSteps.map((step) => <li>{step}</li>)}
+            <li>Discuss your needs. We review your service and follow up with any questions.</li>
+            <li>Agree the scope, who does what and a fixed fee in writing, in a proposal your procurement team can review.</li>
+            <li>Configure and test with your team. We use AI to draft configuration and test cases; your team reviews and approves each change. The configured service needs no AI model to run. <a href="/customization/">See how we use AI</a>.</li>
+            <li>Hand over. Your team or a provider you appoint runs the service, or we run it for you. <a href="#support">Annual support</a> is available when your team runs it.</li>
           </ol>
         </div>
       </div>
@@ -127,6 +126,7 @@ const nextSteps = [
   .starting-fee span { font-size: var(--type-md); }
   .starting-fee strong { font-size: var(--type-2xl); line-height: 1.2; }
   .fee-basis { color: var(--registry-muted); font-size: var(--type-sm); line-height: 1.5; min-height: 40px; margin: 8px 0 18px; }
+  .hosting-note { font-size: var(--type-md); line-height: 1.6; margin: 24px 0 0; }
   .options-next { margin: 24px 0 0; }
   .pilot-brief { background: var(--registry-white); border-top: 3px solid var(--registry-blue); padding: clamp(20px, 3vw, 28px); }
   .pilot-brief h3 { font-size: var(--type-2xl); }
@@ -140,6 +140,7 @@ const nextSteps = [
   .next-steps { line-height: 1.6; margin: 20px 0 0; padding-left: 22px; }
   .next-steps li { margin-bottom: 12px; padding-left: 4px; }
   .next-steps li::marker { color: var(--registry-stamp); font-family: var(--registry-mono); }
+  .next-steps a { text-decoration: underline; }
   @media (max-width: 700px) {
     .service-options { grid-template-columns: 1fr; }
     .fee-basis { min-height: 0; }

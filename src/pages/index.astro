@@ -10,7 +10,7 @@ import { registerFamilies, solutionAreas } from '../data/solutions';
 import { describeServiceHref } from '../data/contact';
 import { teamRecordFull } from '../data/team';
 
-const featured = registerFamilies.filter((area) => ['licensing', 'business-and-tax', 'health-and-safety'].includes(area.key));
+const featured = registerFamilies.filter((area) => ['licensing', 'business-and-tax', 'agriculture-food-and-environment'].includes(area.key));
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 ---
 <Base>
@@ -21,13 +21,13 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
         <div class="hero-top">
           <div class="hero-copy">
             <p class="eyebrow">Open-source software for public registers and services</p>
-            <h1 id="hero-title">Public registers and services, built around your rules.</h1>
-            <p class="hero-lead">Create a register or public service, or adapt one you already run. Configure records and review steps around your institution’s rules, and connect them to existing systems.</p>
+            <h1 id="hero-title">Software for official registers and the services that use them.</h1>
+            <p class="hero-lead">Create a register or adapt one you already run. Registry Stack keeps the records, staff reviews and change history, and works beside your portals and ID systems. The core is open source: no licence fee, and your institution keeps control of its data.</p>
             <div class="hero-actions" aria-label="Primary actions">
               <a class="button button-primary" href="/solutions/">Explore solutions</a>
               <a class="button button-secondary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a>
             </div>
-            <p class="hero-note">Start with one service and a <a href="/pricing/">scoped implementation pilot</a>.</p>
+            <p class="hero-note">Start with a <a href="/pricing/#pilot">pilot register</a>: we implement it with your team.</p>
           </div>
           <div class="hero-figure"><HomeServiceMockup /></div>
         </div>
@@ -64,11 +64,11 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
       <div class="section-inner" id="get-started">
         <div class="section-heading">
           <p class="eyebrow">Open-source software. Commercial implementation and support.</p>
-          <h2 id="ownership-title">Build with your team or work with ours.</h2>
+          <h2 id="ownership-title">Build with your team or work with us.</h2>
         </div>
         <div class="value-grid adoption-grid">
           <article><h3>Use and adapt the software</h3><p>The core software is Apache-2.0 open source. Your team or a provider you choose can inspect, adapt and operate it. Your institution decides where it runs and who can use its records.</p><a class="inline-cta" href="/faq/">Ownership, licensing and hosting <span aria-hidden="true">→</span></a></article>
-          <article><h3>Work with Aubex</h3><p>Aubex builds and supports Registry Stack. Bring one service: we agree the configuration, screens, integrations and responsibilities in a written pilot scope. Implementation and ongoing support are paid services.</p><a class="inline-cta" href="/pricing/">Implementation and support <span aria-hidden="true">→</span></a></article>
+          <article><h3>Work with Aubex</h3><p>Aubex builds and supports Registry Stack. Bring one service: we agree the configuration, screens, integrations and responsibilities in a written scope for your institution’s pilot register. Implementation and ongoing support are paid services.</p><a class="inline-cta" href="/pricing/">Implementation and support <span aria-hidden="true">→</span></a></article>
         </div>
         <p class="team-record"><strong>Experience across previous registry projects.</strong> {teamRecordFull}</p>
       </div>
@@ -90,7 +90,7 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
         <div class="section-heading"><p class="eyebrow">For technical teams</p><h2 id="developers-title">Inspect the software. Run an example.</h2><p>Use a local tutorial with sample data to evaluate the core capabilities.</p></div>
         <div id="products"><div id="how-it-works" class="home-product-links" aria-label="Product details">{products.map((product) => <a href={product.href}>{product.name}</a>)}</div></div>
         <div class="developer-grid">{products.filter((product) => product.featured).map((product) => (<article><h3>{product.solution}</h3><p>{product.firstResult}</p><a class="inline-cta developer-tutorial" href={product.tutorialHref}>{product.tutorialLabel} <span aria-hidden="true">↗</span></a></article>))}</div>
-        <p class="developer-note" id="project-status">The core software is available for self-hosted pilots. Read the <a href="https://docs.registrystack.org/explanation/known-limitations/">current limitations</a>, <a href="https://docs.registrystack.org/">documentation</a> and <a href="https://github.com/registrystack/registry-stack">source and releases</a>.</p>
+        <p class="developer-note" id="project-status">Read the <a href="https://docs.registrystack.org/">documentation</a> and browse the <a href="https://github.com/registrystack/registry-stack">source and releases</a>.</p>
       </div>
     </section>
 

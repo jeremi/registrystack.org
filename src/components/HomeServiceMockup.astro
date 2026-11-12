@@ -17,6 +17,7 @@
         <p class="application-reference">APP-2093</p>
       </div>
     </header>
+    <p class="step-owner">Provided by: your existing portal, or a new form</p>
 
     <div class="application-content">
       <dl class="application-details">
@@ -39,6 +40,7 @@
         <span class="approval-state"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" /></svg>Approved</span>
       </div>
       <p>An officer records the decision.</p>
+      <p class="step-owner">Provided by: Registry Casework</p>
     </section>
   </div>
 
@@ -51,10 +53,11 @@
       <div><dt>Status</dt><dd><span class="active-dot" aria-hidden="true"></span>Active</dd></div>
       <div><dt>Entry</dt><dd>First licence</dd></div>
     </dl>
+    <p class="step-owner">Provided by: Base Registry Engine</p>
     <p class="register-authority"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" /></svg>Applied by authorized staff</p>
   </section>
 
-  <figcaption id="home-service-caption">Fictional example. Rules and screens are configured for your service.</figcaption>
+  <figcaption id="home-service-caption">A fictional first-licence application, from the applicant’s form to staff review and the register entry.</figcaption>
 </figure>
 
 <style>
@@ -145,6 +148,9 @@
     font-size: 12px;
     line-height: 1.5;
   }
+  .step-owner { margin: 0; padding: 8px 24px; border-top: 1px solid var(--registry-rule); color: var(--registry-muted); font: 11px/1.5 var(--registry-mono); }
+  .register-panel .step-owner { padding: 10px 0 0; border-top: 1px solid var(--registry-paper-rule); }
+  .staff-review .step-owner { padding: 8px 0 0; border: 0; }
   figcaption { margin-top: 19px; color: var(--registry-white); font-size: 14px; line-height: 1.6; }
   @media (max-width: 600px) {
     .home-service-mockup { max-width: 440px; }

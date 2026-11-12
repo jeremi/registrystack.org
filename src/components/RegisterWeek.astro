@@ -16,9 +16,11 @@ interface Props {
   kicker: string;
   heading: string;
   steps: WeekStep[];
+  // Names what the figure shows and marks the records as fictional.
+  caption: string;
 }
 
-const { id = 'register-week', kicker, heading, steps } = Astro.props;
+const { id = 'register-week', kicker, heading, steps, caption } = Astro.props;
 const titleId = `${id}-title`;
 const captionId = `${id}-caption`;
 ---
@@ -63,7 +65,7 @@ const captionId = `${id}-caption`;
       </li>
     ))}
   </ol>
-  <figcaption id={captionId}>Illustrative journey using fictional records. Screens, rules and connections are configured for your service.</figcaption>
+  <figcaption id={captionId}>{caption}</figcaption>
 </figure>
 
 <style>

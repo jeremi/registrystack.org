@@ -100,6 +100,7 @@ const routes = [
   { name: 'contact-proposal', path: '/contact/?type=proposal' },
   { name: 'contact-privacy', path: '/contact/?type=privacy&context=delete+tracked+information' },
   { name: 'faq', path: '/faq/' },
+  { name: 'about', path: '/about/' },
 ].filter((route) => !migrationEnabled || !route.path.startsWith('/starters/'));
 
 const failures = [];
@@ -150,6 +151,14 @@ for (const viewport of viewports) {
       const rect = element.getBoundingClientRect();
       return rect.right > document.documentElement.clientWidth + 1 || rect.left < -1;
     }),
+    // A closing call to action with a start-aligned heading starts its buttons
+    // on the same edge, so the actions read as part of that block.
+    misalignedCtaActions: [...document.querySelectorAll('.final-cta')].filter((section) => {
+      const heading = section.querySelector('h2');
+      const action = section.querySelector('.hero-actions > a, .hero-actions > button');
+      if (!heading || !action || !['start', 'left'].includes(getComputedStyle(heading).textAlign)) return false;
+      return Math.abs(action.getBoundingClientRect().left - heading.getBoundingClientRect().left) > 2;
+    }).length,
   }));
 
   if (metrics.scrollWidth > metrics.clientWidth + 1) {
@@ -163,6 +172,9 @@ for (const viewport of viewports) {
   }
   if (metrics.overlappingText) {
     failures.push(`${label}: text extends outside viewport`);
+  }
+  if (metrics.misalignedCtaActions > 0) {
+    failures.push(`${label}: closing call-to-action buttons do not start on the heading's edge`);
   }
 
   // Homepage link titles, descriptions and audiences must remain separate

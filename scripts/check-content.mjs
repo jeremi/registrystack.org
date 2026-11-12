@@ -544,13 +544,132 @@ for (const relativePath of listAstroFiles('src/pages')) {
   }
 }
 
-// Planned product and standards work stays clearly distinguished from what a
-// buyer can use today.
+// Registry Studio carries its status label wherever it is marketed, so it
+// stays distinguished from the core runtime.
 const customizationSource = readSource('src/pages/customization.astro');
 const studioSection = customizationSource.match(/<section\b[^>]*id="studio"[\s\S]*?<\/section>/)?.[0] ?? '';
-if (studioSection && (!/Registry Studio/i.test(studioSection) ||
-    !/\b(planned|in development|developing|future|not (?:yet|currently) available)\b/i.test(studioSection))) {
-  failures.push('a marketed Studio section must identify its planned or in-development status');
+if (studioSection && (!/Registry Studio/i.test(studioSection) || !/\bPreview\b/.test(studioSection))) {
+  failures.push('a marketed Studio section must show its Preview status');
+}
+
+// Buyer pages present the software as ready to adopt. Maturity is a status
+// label (Preview) on the product it applies to, and "pilot" describes the
+// institution's register, never the software or the offer. Interface
+// stability notes and detailed limits live in the documentation.
+const notReadyFraming = [
+  [/\bBeta\b/, 'Beta'],
+  [/\bself-hosted pilots?\b/i, 'self-hosted pilot'],
+  [/\binstitutional pilots?\b/i, 'institutional pilot'],
+  [/\bin development\b/i, 'in development'],
+  [/\blocal prototype\b/i, 'local prototype'],
+  [/\bimplementation pilots?\b/i, 'implementation pilot'],
+  [/\bpilot-level\b/i, 'pilot-level'],
+  [/\bcurrent limitations\b/i, 'current limitations'],
+  [/\bcurrently (?:cannot|can't|has no|does not|doesn't)\b/i, 'currently cannot'],
+];
+for (const relativePath of [
+  ...sweptFiles,
+  ...listAstroFiles('src/layouts'),
+  'src/data/solutions.ts',
+  'src/data/products.ts',
+  'public/llms.txt',
+]) {
+  const source = readSource(relativePath);
+  for (const [pattern, phrase] of notReadyFraming) {
+    if (pattern.test(source)) failures.push(`${relativePath} frames the product as not ready ("${phrase}")`);
+  }
+}
+
+// Aubex is one person, so copy in Aubex's voice says "we", never "our team".
+// FAQ questions are in the reader's voice and may name the reader's team.
+const readerVoiceTeam = ['What will our team need to do?'];
+for (const relativePath of [
+  ...sweptFiles,
+  ...listAstroFiles('src/layouts'),
+  'src/data/solutions.ts',
+  'src/data/products.ts',
+  'src/data/team.ts',
+  'src/lib/starter-request.ts',
+  'public/llms.txt',
+]) {
+  let source = readSource(relativePath);
+  for (const phrase of readerVoiceTeam) source = source.replaceAll(phrase, '');
+  if (/\bour team\b/i.test(source)) failures.push(`${relativePath} says "our team"; Aubex is one person, so write "we"`);
+}
+
+// Focus order: licensing, then business and agricultural registers, lead the
+// solution lists and the homepage selection; every register family stays.
+const focusOrder = ['licensing', 'business-and-tax', 'agriculture-food-and-environment'];
+const solutionKeys = [...readSource('src/data/solutions.ts').matchAll(/^\s*key: '([^']+)'/gm)].map(([, key]) => key);
+if (focusOrder.some((key, index) => solutionKeys[index] !== key)) {
+  failures.push(`src/data/solutions.ts must start with the focus order: ${focusOrder.join(', ')}`);
+}
+const featuredSelection = homeSource.match(/const featured = [^;]*/)?.[0] ?? '';
+for (const key of focusOrder) {
+  if (!featuredSelection.includes(`'${key}'`)) failures.push(`homepage featured registers must include ${key}`);
+}
+
+// Documentation is one click from every page, and the paid route is named
+// for what it covers.
+const headerDirectLinks = headerSource.match(/const links = \[([\s\S]*?)\];/)?.[1] ?? '';
+if (!headerDirectLinks.includes("href: 'https://docs.registrystack.org/'")) {
+  failures.push('header direct links are missing the documentation');
+}
+if (!headerDirectLinks.includes("href: '/pricing/', label: 'Implementation and pricing'")) {
+  failures.push('header must name the /pricing/ route "Implementation and pricing"');
+}
+if (!/<section\b[^>]*id="process"/.test(pricingSource) || !/\btitle="Implementation and pricing\b/.test(pricingSource)) {
+  failures.push('pricing page must carry its implementation process section (#process) and an "Implementation and pricing" title');
+}
+
+// The company page names the company and its lead, and takes the track
+// record from its single source. The lead's name may arrive through that
+// record.
+const aboutSource = readSource('src/pages/about.astro');
+const aboutRecord = aboutSource.match(/\b(teamRecord(?:Short|Full))\b/)?.[1];
+const aboutRecordText = aboutRecord
+  ? readSource('src/data/team.ts').match(new RegExp(`${aboutRecord} =\\s*'([^']+)'`))?.[1] ?? ''
+  : '';
+if (!/Aubex Consulting LLC/.test(aboutSource) || !/Jeremi Joslin/.test(aboutSource + aboutRecordText) || !aboutRecord) {
+  failures.push('about page must name Aubex Consulting LLC and Jeremi Joslin, and take the track record from src/data/team.ts');
+}
+if (!readSource('src/components/SiteFooter.astro').includes("href: '/about/'")) {
+  failures.push('footer must link the about page');
+}
+
+// Each illustrative example names what it shows. A stock caption sentence
+// repeated across examples reads as a disclaimer rather than a description.
+// The short sentence that marks records as fictional may repeat; the sentence
+// that describes the example may not.
+const fictionalMarkers = new Set(['The records are fictional.']);
+const captionSentences = new Map();
+const captionSources = [
+  'src/components/HomeServiceMockup.astro',
+  'src/components/AiLandingHero.astro',
+  'src/components/RegisterWeek.astro',
+  ...listAstroFiles('src/pages'),
+];
+for (const file of captionSources) {
+  const captions = [...readSource(file).matchAll(/<figcaption\b[^>]*>([^<{]+)<|(?:exampleNote|caption) = '([^']+)'|\b(?:exampleNote|caption)="([^"]+)"/g)]
+    .map(([, figcaption, note, attribute]) => (figcaption ?? note ?? attribute).trim());
+  for (const sentence of captions.flatMap((caption) => caption.split(/(?<=\.)\s+/))) {
+    if (fictionalMarkers.has(sentence)) continue;
+    if (!captionSentences.has(sentence)) captionSentences.set(sentence, new Set());
+    captionSentences.get(sentence).add(file);
+  }
+}
+for (const [sentence, files] of captionSentences) {
+  if (files.size > 1 && sentence.split(/\s+/).length > 3) {
+    failures.push(`example caption sentence "${sentence}" is repeated in ${[...files].join(', ')}`);
+  }
+}
+
+// A figure shared by several pages takes its caption from each page, so one
+// stock caption cannot repeat under different examples.
+for (const component of ['RegisterWeek']) {
+  if (/\bcaption = '/.test(readSource(`src/components/${component}.astro`))) {
+    failures.push(`${component} must not declare a default caption; each page passes its own`);
+  }
 }
 
 // The assistant channel states its maturity and the limit of what an
@@ -600,24 +719,27 @@ for (const route of ['/ai/service-design/', '/customization/', '/ai/citizen-acce
 // overview's section relevance and scoped wording require editorial review;
 // do not pin a second literal safety sentence here.
 const studioSource = readSource('src/pages/products/studio.astro');
-if (!/In development/.test(studioSource) || !/separate licensing terms/.test(studioSource)) {
-  failures.push('Studio must distinguish its in-development availability and separate commercial terms from the core runtime');
+if (!/\bPreview\b/.test(studioSource) || !/separate licensing terms/.test(studioSource)) {
+  failures.push('Studio must show its Preview status and separate commercial terms from the core runtime');
 }
-// The team's track record has one source, so its figures cannot drift between
-// pages or be restated as Registry Stack deployments.
+// The track record has one source, so its figures cannot drift between pages
+// or be restated as Registry Stack deployments. It is Jeremi Joslin's own
+// record from roles before Aubex.
 const teamRecordSource = readSource('src/data/team.ts');
 for (const file of ['src/pages/ai/index.astro', 'src/pages/index.astro']) {
   if (!/\bteamRecord(Short|Full)\b/.test(readSource(file))) {
     failures.push(`${file} must take the team track record from src/data/team.ts`);
   }
 }
-for (const file of ['src/pages/ai/index.astro', 'src/pages/index.astro']) {
+for (const file of ['src/pages/ai/index.astro', 'src/pages/index.astro', 'src/pages/about.astro']) {
   if (/\b\d+\s+countries\b|\bmillion people\b/.test(readSource(file))) {
     failures.push(`${file} restates track record figures; use the wording in src/data/team.ts`);
   }
 }
-if (!/\bteam\b/i.test(teamRecordSource.match(/teamRecordShort = '([^']*)'/)?.[1] ?? '')) {
-  failures.push('the short track record must describe the team, not Registry Stack deployments');
+const teamRecords = [...teamRecordSource.matchAll(/export const (teamRecord\w*) =\s*'([^']+)'/g)];
+if (teamRecords.length < 2) failures.push('src/data/team.ts must export teamRecordShort and teamRecordFull as single-quoted strings');
+for (const [, name, text] of teamRecords) {
+  if (!text.startsWith('Before Aubex')) failures.push(`${name} must attribute the record to Jeremi Joslin's roles before Aubex`);
 }
 for (const file of ['src/pages/ai/index.astro', 'src/pages/ai/service-design.astro', 'src/pages/ai/citizen-access.astro', 'src/pages/customization.astro']) {
   if (!readSource(file).includes('ogImagePath="/og-ai.png"')) {

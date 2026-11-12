@@ -22,7 +22,7 @@ const columns: { title: string; links: FooterEntry[] }[] = [
     { heading: 'Shared capabilities' },
     ...crossCutting.map((area) => ({ href: area.slug, label: area.name })),
   ] },
-  { title: 'Products', links: [...productEntries.map((product) => ({ href: product.href, label: product.name })), { heading: 'Authoring' }, { href: '/products/studio/', label: 'Registry Studio · In development' }] },
+  { title: 'Products', links: [...productEntries.map((product) => ({ href: product.href, label: product.name })), { heading: 'Authoring' }, { href: '/products/studio/', label: 'Registry Studio · Preview' }] },
   { title: 'Explore', links: [
     { href: 'https://marketplace.registrystack.org/', label: 'Configuration marketplace' },
     { href: '/ai/', label: 'AI for public services' },
@@ -40,8 +40,9 @@ const columns: { title: string; links: FooterEntry[] }[] = [
     { href: repoHref, label: 'Source and releases' },
   ] },
   { title: 'Work with us', links: [
-    { href: '/pricing/', label: 'Implementation pilots' },
+    { href: '/pricing/', label: 'Implementation and pricing' },
     { href: '/pricing/#support', label: 'Support contracts' },
+    { href: '/about/', label: 'About Aubex' },
     { href: describeServiceHref(), label: 'Discuss your service' },
     { href: askQuestionHref(), label: 'Ask a question' },
   ] },
@@ -52,7 +53,7 @@ const columns: { title: string; links: FooterEntry[] }[] = [
     <div class="footer-brand">
       <a class="footer-brand-name" href="/">Registry Stack</a>
       <p>Public registers and services for national, regional and local government.</p>
-      <p>Built and supported by Aubex.</p>
+      <p>Built and supported by <a href="/about/">Aubex</a>.</p>
     </div>
     <nav class="footer-nav" aria-label="Footer">
       {columns.map((column) => (

@@ -1,173 +1,7 @@
 # registrystack.org
 
-Static Astro site for `registrystack.org`, the public website for organizations
-evaluating Registry Stack. Follow [AGENTS.md](AGENTS.md) when changing this site.
-
-## Audience and editorial direction
-
-Write first for institutional decision makers, programme and service owners,
-data stewards and governance teams. Government is the primary audience and
-source of examples, at national, regional and local levels. General
-entry pages should reflect that breadth; local-government services are one
-application area. Organize general navigation by service area and show examples
-from different government levels together. Technical evaluators and implementers
-have dedicated product, starter and documentation paths.
-
-The website helps a reader assess a new register or service, an adaptation to
-an existing one, or a capability added beside an existing system; understand
-what must be configured or integrated; and choose a delivery route and next step. Lead with the
-service or problem. Explain open source, interoperability and reusable
-components through the choices they give the institution. DPI is relevant to
-funders, national digital teams and implementation partners; define the term
-before using the abbreviation.
-
-- Use concrete nouns, short sentences and familiar verbs. Avoid idioms,
-  metaphors, clever slogans and unexplained technical vocabulary. Assume many
-  readers use English as an additional language.
-- Address the person evaluating the service. Keep editorial instructions,
-  sales strategy and internal acceptance criteria in code comments or private
-  working documents, never in visible copy.
-- Let readers describe their needs before selecting a product or starting
-  configuration. Browsing configurations is an optional evaluation path.
-- Use the AI overview to orient readers among service design, implementation
-  and citizen access. Put the three jobs and their deliverables before any deep
-  example. Keep runtime permissions and assistant logging claims scoped to
-  citizen access; they are not guarantees about third-party design tools.
-- Write the AI pages in the words a ministry adviser would say aloud: "your
-  staff", "another government system", "the details you allow", "your official
-  website", "check and submit". Keep product and engineering terms (fields,
-  callers, permitted, review page) for the maintained documentation.
-- Label an example card "Example" and name what it shows. Put the fictional
-  marking in the caption under the card ("Fictional example. Rules and screens
-  are configured for your service."), not in a bar above the visual.
-- Present AI-assisted implementation as a scoped engagement with our team,
-  service design as a method offered mainly through partners, and citizen access
-  through an approved assistant as available in a pilot for a configured Base
-  Registry Engine service. The citizen access page states that the integration
-  is a Preview outside the compatibility promise and that a release may change
-  or remove it. The overview and the homepage do not repeat that note. The
-  person reviews and submits the request on the institution's site. The
-  assistant cannot submit a request, approve it or change a record. The
-  institution approves service rules and proposed implementation changes. The
-  configured service runs with no AI model required. Registry Studio is an
-  authoring tool in development. Its local prototype
-  includes document-assisted drafting; this does not establish public access
-  or a general conversational editing assistant. Studio has separate commercial
-  terms and is not covered by the core runtime’s Apache-2.0 licence.
-- State what AI does and who decides as plain positive claims. Do not undersell:
-  state maturity in positive terms ("Available in a pilot") and give readers
-  statements that are true by design. Keep interface stability notes and
-  detailed limits on the page that describes the feature and in the maintained
-  documentation. Use "an assistant you approve" for an assistant the institution
-  has registered, and say that the connection uses Model Context Protocol (MCP),
-  an open standard.
-- Take the team's track record from `src/data/team.ts`. It describes registries
-  the team has built across separate customer projects. Never present it as
-  Registry Stack deployments, and name no product or customer.
-- Explain headless architecture through the choice to use an existing portal,
-  staff application or integration. Explain the access and operation scope of
-  the interface being offered; link to maintained contracts for implementation
-  detail.
-- Sell a configured solution and the work to deliver it without presenting
-  every component as a complete application. A written implementation scope
-  agrees screens, integrations, migration, hosting, operation and handover.
-- Describe current capabilities accurately. Illustrations are fictional
-  examples, not product screenshots, live demonstrations or customer evidence.
-  No unsupported deployment, efficiency, compliance or certification claims.
-- Explain a limitation where it affects an adoption decision. Do not turn every
-  section into a warning or require a blanket Beta banner. Keep technical
-  maturity and operational detail in the maintained documentation.
-- Present the core software as Apache-2.0 open source. Do not imply that every
-  current or future companion product, private support service or Studio
-  offering has that licence. Open source does not include a free delivery team.
-- Keep Aubex as the provider attribution. Prices belong on `/pricing/`: scoped
-  implementation pilots from US$20,000 and annual support from US$7,500.
-  Do not invent package inclusions, turnaround times or service levels.
-- Use “register” for the records an institution maintains and the full product
-  names for software. Use “starting configuration” before introducing
-  “starter”. Keep “licence” and “programme”; otherwise use American spelling.
-- Put code, configuration instructions and deployment procedures in the docs.
-  Link to a relevant tutorial instead of making the public website a manual.
-
-Base Registry Engine manages records, permissions, changes and history.
-Registry Casework coordinates review work; a decision does not by itself
-change a register. Evidence Gateway returns approved answers to predefined
-questions; a digital signature establishes origin and integrity, not whether
-the source information is true. Use independent products or combine them as
-needed. [Registry Relay is retired](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/)
-and must not be marketed as current software.
-
-Review existing copy before reusing it. Name the actor, task and object, then
-explain the useful result. For staff reviews, use “Review requests and record
-decisions” and explain assignment and due dates with a concrete request. For
-information checks, use “Check information from another register” and name a
-question a connected service needs answered. A procurement system checking a
-supplier’s registration is clearer than “share a limited answer.” Keep these
-meanings consistent across cards, menus and metadata; adapt the sentence to the
-reader rather than repeating a slogan.
-
-For verifiable credentials, explain what information the institution issues,
-who receives it and which service will accept it. The implementation connects
-and tests the wallet and receiving service. Keep credential validity, source
-freshness and the receiving service's decision distinct; issuance alone does
-not establish a complete wallet service.
-
-Product pages follow the same buyer-first approach: describe the institutional
-task, show a concrete example, explain practical capabilities and describe how
-the product fits existing systems. Keep the technical-team handoff short and
-link to maintained tutorials. Protocol names, configuration contracts and
-command-line instructions belong in the documentation. Explain approvals,
-access, source freshness and implementation responsibilities in plain language
-where they affect the buyer's decision.
-
-## Product scope for website messaging
-
-Registry Stack supplies configurable software for creating public registers and
-services, adapting existing ones, and adding record, review or information-check
-capabilities beside systems an institution keeps. A new service does not require
-an existing digital service or register. The institution defines its records,
-rules and responsibilities; an implementation supplies or adapts screens,
-sign-in and integrations. These components are not complete, ready-made sector
-applications. Core runtime software is Apache-2.0; implementation and support
-are commercial services, and Studio has separate terms and availability.
-
-This scope follows the maintained [product concepts](https://docs.registrystack.org/start/concepts/)
-(“What runs” and “What no product owns”), the component descriptions below, and
-the implementation responsibilities on this site. It is a scope statement, not
-copy to repeat on every page. Use an existing-system example where it helps;
-do not make possession of that system a condition of a general enquiry.
-
-## Page purpose and section selection
-
-- Name one reader, their decision and the useful next step before drafting.
-  An independent reviewer checks final renders, including optional content,
-  against that task before considering the implementation rationale.
-- Check the page's implied starting condition against the product scope above.
-  For a general entry or enquiry, can an institution with no existing digital
-  service recognize a route as readily as one adapting a service? For a focused
-  integration page, is the existing-system condition deliberate and clear?
-  Review headings, examples, shared CTAs, contact states and metadata together.
-  A neutral headline does not excuse a narrower next step. Do not force a
-  “create and improve” formula into every heading or remove necessary limits.
-- For each section ask: if it disappeared, which decision would be unanswered
-  or which material misunderstanding would become likely? Accuracy alone does
-  not earn space. An accordion does not make an unrelated topic relevant.
-- Use current capabilities and bounded examples to support the offer. A possible
-  service catalogue is a new topic on a registry implementation page. A separate
-  guide needs its own reader task, maintained owner and approved scope first.
-- Qualify the specific claim a reader could materially misinterpret, beside that
-  claim. Preserve assistant permissions, independent register updates and the
-  distinction between a signature and source accuracy. Do not add accreditation
-  denials or general limitations where no related promise is made.
-- Finish the agreed page job before proposing another topic, audience or guide.
-  Stop for explicit scope approval before adding one. Reviewer requests are input,
-  not permission to grow the brief; record adopted cuts as well as additions.
-- An unresolved material off-purpose or unsupported-claim finding from the
-  independent reviewer blocks readiness. Resolve it with an edit or an explicit
-  owner decision on scope; passing automated checks does not clear that finding.
-
-Automated checks establish navigation and selected factual boundaries. The
-section-to-reader-decision review establishes whether the content belongs.
+Static Astro site for `registrystack.org`, the public website for Registry Stack.
+Contributors follow [AGENTS.md](AGENTS.md).
 
 ## Site implementation
 
@@ -185,15 +19,13 @@ npm run sync:starters -- EXPORT_DIR --release TAG --repo PATH
 Use a compatible catalogue export from the owning starters repository;
 `scripts/sync-starters.mjs` defines the required input files.
 `src/upstream/starters.json` records the upstream release, revision and catalogue
-digest. Until that release is publicly downloadable, starter
-pages offer access requests with an email fallback, not a working-download claim. Do
-not regenerate the catalogue just to change website prose.
+digest. The local detail pages are versioned reference snapshots; current
+configuration access belongs to the marketplace. Catalogue metadata does not
+establish current download availability. Do not regenerate it for a prose edit.
 
-A starter is a starting configuration, not a complete service or evidence of
-readiness. Summaries come from the upstream `display.description`; technical
-identifiers belong in expandable details. Public source registers are modelling
-references and do not imply adoption or endorsement. The shared starter wording
-and request journeys are covered by tests.
+Starter summaries come from the upstream `display.description`; technical
+identifiers belong in expandable details. The shared starter wording and archive
+handoffs are covered by tests.
 
 ### Website enquiries
 
@@ -205,14 +37,14 @@ native Mautic form:
 PUBLIC_STARTER_REQUEST_ENDPOINT='https://mautic.example.org/form/submit?formId=1&privacy=kiosk'
 ```
 
-When the variable is unset, the contact and starter flows show their email
-recovery instead. The form works without accepting visit tracking. It records
-the canonical source page, a bounded request type, a short page-specific
-context, and the starter ID when the enquiry comes from a specific starter
-page. A catalogue invitation can carry starter context without claiming a
-specific starter ID. See
-[server/README.md](server/README.md) for the two Mautic forms, narrow proxy
-routes, deployment, and verification setup.
+When the variable is unset, the contact flow shows email recovery. The form
+works without accepting visit tracking and records the canonical source page,
+a bounded request type and short page-specific context. The current contact
+form leaves `starter_id` blank. Legacy starter-type invitations can retain
+catalogue context; this compatibility is not permission to restore archive
+forms. Archived detail pages send configuration access to the exact marketplace
+pack. See [server/README.md](server/README.md) for the two Mautic forms, narrow
+proxy routes, deployment and verification setup.
 
 All general contact links use `src/data/contact.ts`. `describeServiceHref`
 invites the service, its users and the result needed. `askQuestionHref` supports
@@ -220,19 +52,11 @@ a lighter question. The pricing inquiry includes optional budget and timing.
 Print the email address beside mailto buttons so readers without an email app
 can still contact the team. The header Contact link opens the general contact page.
 
-The homepage starts with a clearly illustrative configured service and service
-areas, followed by ownership and implementation. AI and technical evaluation
-follow the core service story. The main site explains service fit; the configuration
-marketplace owns pack browsing, model detail and access requests. Keep service
-categories here and link each to its corresponding marketplace collection.
 The old `/starters/` index offers seven collection handoffs. Its 84 detail pages
 remain indexable reference snapshots, labelled with their catalogue version and
 linked to the exact current marketplace configuration. They do not collect
 requests for the archived model. Do not change live marketplace indexing as
-part of website content work. Shared figures must identify their
-illustrative purpose, keep fields inside the record they describe and distinguish stored
-information from disclosed answers. Preserve no-JavaScript and reduced-motion
-access. A hosted legacy lab is not evidence of the current product journey.
+part of website content work. Preserve no-JavaScript and reduced-motion access.
 
 Preserve the civic-print design: civic-blue cover, quiet paper backgrounds,
 Public Sans and IBM Plex Mono, ink text, stamp red and restrained brass on dark
@@ -241,49 +65,9 @@ layouts that work from mobile through desktop.
 
 ## Pages
 
-- `/`: service outcomes, the team's track record, solution areas, how AI uses a
-  register under the institution's rules, an example journey, ownership and
-  reuse, the open-source/commercial relationship and technical evaluation paths.
-- `/solutions/` and `/solutions/<area>/`: service-specific problems, capabilities,
-  examples, relevant configurations and next steps.
-- `/solutions/local-government/`: municipal services and an implementation path.
-- `/ai/`: orientation among three uses: service design, implementation and
-  citizen access, with scoped institutional control and routes to detail.
-- `/products/studio/`: authoring and review of registry and service definitions,
-  document-assisted drafting in the local prototype, handover and availability.
-  Distinguish Studio's commercial terms from the core runtime licence.
-- `/ai/service-design/`: a design method and an example school enrolment
-  brief with scenarios for the implementation team to test.
-- `/customization/`: scoped implementation, an example of adapting a service,
-  how each change is tested before release, how AI is used in a pilot and
-  Registry Studio in development.
-- `/ai/citizen-access/`: access through an assistant the institution approves,
-  available in a pilot, what the assistant can and cannot do, a documented
-  handoff to the institution's review and submission page, and the Preview
-  stability note in its FAQ and technical note.
-- `/architecture/headless/`: connect your own interface through documented APIs
-  or use an optional assistant channel for selected operations.
-- `/digital-public-infrastructure/`: the choice to connect an existing source or
-  establish a register, one facility example, and delivery and operating choices.
-- `/data-spaces/`: participant roles, authoritative registers, API mappings and
-  signed answers, with separate responsibilities for the space and its connector.
-- `https://marketplace.registrystack.org/`: configuration browsing, model detail
-  and access requests; the seven service categories link to matching collections.
-- `/starters/`: a compatibility handoff to the seven marketplace collections.
-- `/starters/<id>/`: versioned reference models retained during migration, with
-  current configuration and access requests linked to the matching marketplace pack.
-- `/products/base-registry/`, `/products/evidence-gateway/` and
-  `/products/casework/`: component capabilities, boundaries and tutorials.
-- `/pricing/`: implementation and support prices, responsibilities, inquiry and
-  the open-source self-service option.
-- `/security/` and `/faq/`: questions that affect evaluation and adoption.
-- `/blog/`: published field guides, with historical notices on retired product
-  material and an RSS feed at `/rss.xml`.
-
-Keep former routes as redirects in `astro.config.mjs`. `/ai/` serves the AI
-overview and links to `/customization/` for the implementation offer. `/pilot/`
-preserves known section links into `/pricing/` and has a no-JavaScript fallback.
-Historical plans do not override this structure.
+Routes, navigation and solution and product memberships live in
+`src/data/solutions.ts`, `src/data/products.ts`, `src/components/SiteHeader.astro`
+and `src/components/SiteFooter.astro`. Redirects live in `astro.config.mjs`.
 
 ## Commands
 
@@ -298,6 +82,10 @@ build, internal links, accessibility, responsive layout, keyboard navigation,
 data-sharing illustrations and buyer/developer journeys. Journey coverage
 includes no JavaScript and reduced motion. Inspect rendered pages as well as
 these automated results.
+
+`npm run report:repetition` lists sentences and phrases repeated across the
+built pages in `dist/`; run it after a build. It only reports and is not part of
+`npm run check`.
 
 When the homepage headline or branding changes, update `scripts/build-og.mjs`
 and run `npm run build:og` before the final build. Commit the generated social

@@ -1442,6 +1442,11 @@ code {
   letter-spacing: -0.015em;
 }
 
+/* The closing actions start on the heading's edge, like the text above them. */
+.final-cta .hero-actions {
+  justify-content: flex-start;
+}
+
 /* The footer is a deep ink band, bookending the civic-blue cover: the site
    opens on the cover and closes on the ledger. */
 .site-footer {

@@ -426,7 +426,7 @@ for (const options of [
     const { origin, pathname, hash } = new URL(link.href);
     return { origin, pathname, hash };
   }));
-  for (const href of ['/ai/', '/pricing/', '/contact/']) {
+  for (const href of ['/ai/', '/pricing/', 'https://docs.registrystack.org/', '/contact/']) {
     const target = new URL(href, url);
     const index = navLinks.findIndex((link) => link.origin === target.origin &&
       link.pathname === target.pathname && link.hash === target.hash);

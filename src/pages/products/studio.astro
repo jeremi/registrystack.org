@@ -5,15 +5,14 @@ import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { askQuestionHref } from '../../data/contact';
 ---
-<Base title="Registry Studio | Registry Stack" description="Review and configure registries and services with your technical team. Registry Studio is an authoring workspace in development, with a local prototype.">
+<Base title="Registry Studio | Registry Stack" description="Review and configure registries and services with your technical team. Registry Studio is an authoring workspace available as a Preview.">
   <SiteHeader current="studio" />
   <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="studio-title"><div class="hero-inner"><div class="hero-copy">
-      <p class="eyebrow">Registry Studio · In development</p>
+      <p class="eyebrow">Registry Studio · Preview</p>
       <h1 id="studio-title">Review and configure registries and services together.</h1>
       <p class="hero-lead">An authoring workspace for programme teams and implementers. Understand the records and service steps, review proposed changes and prepare a version for your technical team to run.</p>
       <div class="hero-actions"><a class="button button-primary" href={askQuestionHref('Registry Studio')}>Ask about Studio</a><a class="button button-secondary" href="#workspace">Explore the workspace</a></div>
-      <p class="hero-note">A local prototype. Contact Aubex to discuss evaluation and access.</p>
     </div></div></section>
 
     <section class="section" id="workspace" aria-labelledby="model-title"><div class="section-inner">
@@ -23,9 +22,9 @@ import { askQuestionHref } from '../../data/contact';
 
     <section class="section section-muted" id="fit" aria-labelledby="review-title"><div class="section-inner approach-split">
       <div class="section-heading"><h2 id="review-title">Review a change before handing it over.</h2><p>Check proposed edits against the product’s checks and save a version. Prepare the product files and handover information for the team responsible for running the service.</p><p>Studio authors the configuration. Your operating team remains responsible for deploying and operating the service.</p></div>
-      <div class="editorial-callout"><h3>Start a draft from existing documents</h3><p>The local prototype includes AI-assisted drafting. Use source documents to prepare a draft brief, review the questions and findings, and confirm what the service should do.</p><p>The draft is a starting point for review, not an approved service definition.</p><a class="inline-cta" href="/ai/service-design/">See the service design approach <span aria-hidden="true">→</span></a></div>
+      <div class="editorial-callout"><h3>Start a draft from existing documents</h3><p>Studio includes AI-assisted drafting. Use source documents to prepare a draft brief, review the questions and findings, and confirm what the service should do.</p><p>The draft is a starting point for review, not an approved service definition.</p><a class="inline-cta" href="/ai/service-design/">See the service design approach <span aria-hidden="true">→</span></a></div>
     </div></section>
 
-    <section class="final-cta" aria-labelledby="access-title"><div class="section-inner"><h2 id="access-title">Discuss Studio with Aubex.</h2><p>Studio is in development. Contact us to discuss evaluation and access. It is a commercial authoring tool with separate licensing terms; the core runtime software’s Apache-2.0 licence does not cover Studio.</p><div class="section-links"><a class="button button-primary" href={askQuestionHref('Registry Studio')}>Ask about Studio</a><a class="button button-secondary" href="/customization/">Explore implementation support</a></div></div></section>
+    <section class="final-cta" aria-labelledby="access-title"><div class="section-inner"><h2 id="access-title">Discuss Studio with Aubex.</h2><p>Studio is available as a Preview. Contact Aubex about access. It is a commercial authoring tool with separate licensing terms; the core runtime software’s Apache-2.0 licence does not cover Studio. You do not need Studio to run or change a service: it writes the same configuration files your team can review and edit without it.</p><div class="section-links"><a class="button button-primary" href={askQuestionHref('Registry Studio')}>Ask about Studio</a><a class="button button-secondary" href="/customization/">Explore implementation support</a></div></div></section>
   </main><SiteFooter />
 </Base>

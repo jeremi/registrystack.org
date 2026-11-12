@@ -17,7 +17,7 @@ const cards = [
   {
     file: 'public/og-image.png',
     kicker: 'Open-source software for public registers',
-    headline: 'Public registers and services,<br>built around your rules.',
+    headline: 'Software for official registers<br>and the services that use them.',
   },
   {
     file: 'public/og-ai.png',
