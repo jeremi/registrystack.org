@@ -2,75 +2,144 @@
 import RegistrySeal from './RegistrySeal.astro';
 ---
 
-<figure class="licence-illustration" aria-labelledby="render-licence-caption">
+<figure class="licence-illustration" aria-labelledby="render-licence-caption" data-render-licence data-motion="paused">
   <div class="illustration-composition">
-    <div class="document-flow">
-      <div class="input-description"><p class="flow-owner">Your licensing service</p><p>Approved record<br />Document template</p></div>
-      <svg class="licence-flow-arrow" viewBox="0 0 48 24" fill="none" aria-hidden="true"><path d="M1 12h43M36 4l8 8-8 8" stroke="currentColor" stroke-width="1.5" /></svg>
-      <div class="render-description"><p class="flow-owner">Registry Render</p><p>Generates and signs<br />the document</p></div>
+    <div class="licence-source">
+      <p class="licence-source-owner">Your licensing service</p>
+      <div class="licence-input-stack">
+        <div class="licence-template-sheet"><span>Document template</span><i></i><i></i><i></i></div>
+        <div class="licence-input-record"><p>Approved record</p><span>LIC-2093</span><strong>Maya Chen</strong><p>Architecture</p></div>
+      </div>
     </div>
 
-    <article class="licence-paper" aria-label="Professional licence for Maya Chen">
-      <header class="licence-masthead"><p>Professional<br />Licensing Authority</p><span>Professional<br />register</span></header>
-      <h3>Professional licence</h3>
-      <div class="licence-holder"><p>Issued to</p><strong>Maya Chen</strong></div>
-      <dl class="licence-facts">
-        <div><dt>Licence number</dt><dd class="licence-number">LIC-2093</dd></div>
-        <div><dt>Category</dt><dd>Architecture</dd></div>
-        <div class="licence-validity"><dt>Valid until</dt><dd>31 October 2029</dd></div>
-      </dl>
-      <footer class="licence-endorsements">
-        <div class="licence-seal"><RegistrySeal size={68} ringText="PROFESSIONAL LICENSING AUTHORITY · " monogram="PLA" animated={false} pathId="render-licence-seal" /><p>Digital seal</p></div>
-        <div class="licence-check"><img src="/illustrations/example-licence-qr.svg" width="68" height="68" alt="" /><p>Check licence status</p></div>
-      </footer>
-    </article>
+    <div class="licence-render-handoff">
+      <p>Registry Render</p>
+      <svg class="licence-handoff-right" viewBox="0 0 72 24" fill="none" aria-hidden="true"><path d="M1 12h66M59 4l8 8-8 8" stroke="currentColor" stroke-width="1.5" /></svg>
+      <span>Generates<br />and signs</span>
+      <svg class="licence-handoff-down" viewBox="0 0 24 40" fill="none" aria-hidden="true"><path d="M12 1v34M5 28l7 7 7-7" stroke="currentColor" stroke-width="1.5" /></svg>
+    </div>
+
+    <div class="licence-output">
+      <article class="licence-paper" aria-label="Professional licence for Maya Chen">
+        <header class="licence-masthead"><p>Professional<br />Licensing Authority</p></header>
+        <h3>Professional licence</h3>
+        <div class="licence-holder"><p>Issued to</p><strong>Maya Chen</strong></div>
+        <dl class="licence-facts">
+          <div><dt>Licence number</dt><dd class="licence-number">LIC-2093</dd></div>
+          <div><dt>Category</dt><dd>Architecture</dd></div>
+          <div class="licence-validity"><dt>Valid until</dt><dd>31 October 2029</dd></div>
+        </dl>
+        <footer class="licence-status-check"><img src="/illustrations/example-licence-qr.svg" width="60" height="60" alt="" /><p>Check licence status</p></footer>
+      </article>
+      <div class="licence-corner-seal"><RegistrySeal size={126} ringText="PROFESSIONAL LICENSING AUTHORITY · " monogram="PLA" animated={true} pathId="render-licence-seal" /></div>
+    </div>
   </div>
-  <figcaption id="render-licence-caption">Illustrative professional licence, generated and signed from the service’s approved record.</figcaption>
+  <figcaption class="licence-figure-footer"><span class="licence-caption-text" id="render-licence-caption">Illustrative professional licence, generated and signed from the service’s approved record.</span><button type="button" class="licence-motion-control" data-seal-motion-control hidden>Pause motion</button></figcaption>
 </figure>
 
+<script>
+  document.querySelectorAll<HTMLElement>('[data-render-licence]').forEach((figure) => {
+    const button = figure.querySelector<HTMLButtonElement>('[data-seal-motion-control]');
+    if (!button) return;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let pausedByUser = false;
+    const updateMotion = () => {
+      const running = !reducedMotion.matches && !pausedByUser;
+      figure.dataset.motion = running ? 'running' : 'paused';
+      button.hidden = reducedMotion.matches;
+      button.textContent = running ? 'Pause motion' : 'Play motion';
+      button.setAttribute('aria-label', running ? 'Pause digital seal animation' : 'Play digital seal animation');
+    };
+    button.addEventListener('click', () => { pausedByUser = !pausedByUser; updateMotion(); });
+    reducedMotion.addEventListener('change', updateMotion);
+    updateMotion();
+  });
+</script>
+
 <style>
-  .licence-illustration { max-width: 880px; margin: 0 auto; color: var(--registry-ink); font-family: var(--registry-font); }
-  .illustration-composition { display: grid; grid-template-columns: 190px minmax(0, 420px); justify-content: center; align-items: center; gap: clamp(40px, 6vw, 88px); padding: 16px 0 24px; }
-  .document-flow { padding: 0; }
-  .flow-owner { margin: 0 0 8px; color: var(--registry-blue); font-size: var(--type-md); font-weight: 700; line-height: 1.45; }
-  .document-flow p:not(.flow-owner) { margin: 0; color: var(--registry-body); font-size: var(--type-base); line-height: 1.7; }
-  .licence-flow-arrow { display: block; width: 72px; height: 24px; margin: 22px 0; color: var(--registry-blue); }
-  .licence-paper { display: flex; flex-direction: column; width: 100%; min-width: 0; min-height: 594px; padding: 32px; background: var(--registry-white); border: 1px solid var(--registry-paper-rule); box-shadow: var(--offset-sm); }
-  .licence-masthead { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding-bottom: 20px; border-bottom: 2px solid var(--registry-blue); }
+  .licence-illustration { max-width: 960px; margin: 0 auto; color: var(--registry-ink); font-family: var(--registry-font); }
+  .illustration-composition { display: grid; grid-template-columns: 196px 104px minmax(0, 380px); justify-content: center; align-items: center; gap: 22px; padding: 48px 42px 36px 0; }
+  .licence-source-owner { margin: 0 0 16px; color: var(--registry-blue); font-size: var(--type-md); font-weight: 700; line-height: 1.45; }
+  .licence-input-stack { position: relative; padding-top: 34px; }
+  .licence-template-sheet { position: absolute; top: 0; left: 18px; right: -8px; height: 128px; padding: 13px 15px; background: var(--registry-white); border: 1px solid var(--registry-blue-rule); transform: rotate(-5deg); }
+  .licence-template-sheet span { display: block; margin-bottom: 18px; color: var(--registry-blue); font-size: var(--type-xs); line-height: 1.4; }
+  .licence-template-sheet i { display: block; width: 75%; height: 1px; margin: 9px 0; background: var(--registry-rule); }
+  .licence-template-sheet i:last-child { width: 45%; }
+  .licence-input-record { position: relative; padding: 18px; border: 1px solid var(--registry-paper-rule); border-top: 2px solid var(--registry-blue); background: var(--registry-white); box-shadow: var(--offset-sm); }
+  .licence-input-record p { margin: 0; color: var(--registry-body); font-size: var(--type-base); line-height: 1.5; }
+  .licence-input-record > span { display: block; margin-top: 14px; color: var(--registry-muted); font: var(--type-xs)/1.5 var(--registry-mono); }
+  .licence-input-record strong { display: block; margin: 6px 0 3px; font-size: var(--type-lg); line-height: 1.4; }
+  .licence-render-handoff { text-align: center; }
+  .licence-render-handoff p { margin: 0; color: var(--registry-blue); font-size: var(--type-base); font-weight: 700; line-height: 1.5; }
+  .licence-render-handoff svg { display: block; width: 72px; height: 24px; margin: 13px auto; color: var(--registry-blue); }
+  .licence-render-handoff .licence-handoff-down { display: none; }
+  .licence-render-handoff span { color: var(--registry-body); font-size: var(--type-base); line-height: 1.6; }
+  .licence-output { position: relative; isolation: isolate; }
+  .licence-output::before { position: absolute; z-index: -1; content: ''; inset: 12px -10px -10px 8px; background: var(--registry-blue-tint); border: 1px solid var(--registry-blue-rule); transform: rotate(2deg); }
+  .licence-paper { display: flex; flex-direction: column; position: relative; width: 100%; min-width: 0; min-height: 520px; padding: 28px; background: var(--registry-white); border: 1px solid var(--registry-paper-rule); box-shadow: var(--offset-sm); }
+  .licence-masthead { padding-bottom: 18px; border-bottom: 2px solid var(--registry-blue); }
   .licence-masthead p { margin: 0; color: var(--registry-blue); font-size: var(--type-base); font-weight: 700; line-height: 1.4; }
-  .licence-masthead span { padding-top: 2px; color: var(--registry-muted); font: var(--type-2xs)/1.6 var(--registry-mono); text-align: right; text-transform: uppercase; letter-spacing: 0.03em; }
-  .licence-paper h3 { margin: 30px 0 0; color: var(--registry-blue); font-size: 30px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; }
-  .licence-holder { margin: 28px 0 0; }
+  .licence-paper h3 { margin: 25px 0 0; color: var(--registry-blue); font-size: 28px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; }
+  .licence-holder { margin-top: 24px; }
   .licence-holder p, .licence-facts dt { margin: 0 0 5px; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.5; }
   .licence-holder strong { color: var(--registry-ink); font-size: 25px; font-weight: 600; line-height: 1.3; }
-  .licence-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 20px; margin: 28px 0 26px; padding: 20px 0 0; border-top: 1px solid var(--registry-rule); }
+  .licence-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 16px; margin: 25px 0; }
   .licence-facts dd { margin: 0; color: var(--registry-ink); font-size: var(--type-md); font-weight: 600; line-height: 1.5; }
   .licence-facts .licence-number { font-family: var(--registry-mono); font-size: var(--type-base); font-weight: 500; }
   .licence-validity { grid-column: 1 / -1; }
-  .licence-endorsements { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-top: auto; padding-top: 22px; border-top: 1px solid var(--registry-paper-rule); }
-  .licence-seal, .licence-check { max-width: 116px; text-align: center; }
-  .licence-check img { display: block; width: 68px; height: 68px; margin: 0 auto; }
-  .licence-endorsements p { margin: 9px 0 0; color: var(--registry-body); font-size: var(--type-base); line-height: 1.4; }
-  figcaption { max-width: 640px; margin: 12px auto 0; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.6; text-align: center; }
+  .licence-status-check { display: flex; align-items: center; gap: 14px; margin-top: auto; padding-top: 18px; border-top: 1px solid var(--registry-paper-rule); }
+  .licence-status-check img { display: block; width: 60px; height: 60px; flex: 0 0 60px; }
+  .licence-status-check p { max-width: 110px; margin: 0; color: var(--registry-body); font-size: var(--type-base); line-height: 1.5; }
+  .licence-corner-seal { position: absolute; z-index: 2; top: -34px; right: -34px; width: 126px; height: 126px; background: var(--registry-white); border-radius: 50%; }
+  .licence-figure-footer { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 6px; }
+  .licence-caption-text { display: block; max-width: 660px; margin: 0; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.6; }
+  .licence-motion-control { flex: 0 0 auto; min-height: 36px; padding: 6px 8px; border: 0; border-bottom: 1px solid var(--registry-blue-rule); background: transparent; color: var(--registry-blue); font: inherit; font-size: var(--type-sm); cursor: pointer; }
+  .licence-motion-control[hidden] { display: none; }
+  .licence-motion-control:focus-visible { outline: 2px solid var(--registry-blue); outline-offset: 3px; }
+  .licence-illustration[data-motion="paused"] :global(.seal-text-ring) { animation-play-state: paused; }
+  .licence-illustration[data-motion="running"] :global(.seal-text-ring) { animation-play-state: running; }
+  @media (prefers-reduced-motion: reduce) { .licence-motion-control { display: none; } }
+  @media (max-width: 850px) {
+    .illustration-composition { grid-template-columns: 170px 88px minmax(0, 360px); gap: 18px; padding-right: 32px; }
+    .licence-input-record { padding: 16px; }
+    .licence-corner-seal { top: -28px; right: -28px; width: 112px; height: 112px; }
+    .licence-corner-seal :global(.registry-seal) { width: 112px !important; height: 112px !important; }
+  }
   @media (max-width: 700px) {
-    .illustration-composition { grid-template-columns: minmax(0, 420px); gap: 24px; padding-top: 0; }
-    .document-flow { display: grid; grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr); align-items: center; gap: 12px; }
-    .document-flow p:not(.flow-owner) { font-size: var(--type-sm); line-height: 1.6; }
-    .flow-owner { font-size: var(--type-base); margin-bottom: 4px; }
-    .licence-flow-arrow { width: 30px; height: 24px; margin: 0; }
-    .licence-paper { min-height: 560px; padding: 26px; }
-    .licence-paper h3 { font-size: 28px; margin-top: 27px; }
-    .licence-holder { margin-top: 26px; }
+    .illustration-composition { grid-template-columns: minmax(0, 1fr) 106px; gap: 28px 24px; max-width: 420px; margin: 0 auto; padding: 0 14px 28px 0; }
+    .licence-source { max-width: 220px; }
+    .licence-source-owner { margin-bottom: 12px; font-size: var(--type-base); }
+    .licence-template-sheet { height: 100px; }
+    .licence-input-record { padding: 14px; }
+    .licence-input-record > span { margin-top: 10px; }
+    .licence-input-record strong { font-size: var(--type-body-sm); }
+    .licence-input-record p { font-size: var(--type-sm); }
+    .licence-render-handoff { display: flex; flex-direction: column; align-items: center; align-self: end; padding: 0 0 8px; }
+    .licence-render-handoff span { margin-top: 8px; }
+    .licence-render-handoff .licence-handoff-right { display: none; }
+    .licence-render-handoff .licence-handoff-down { display: block; width: 24px; height: 40px; margin: 12px 0 0; }
+    .licence-output { grid-column: 1 / -1; margin-top: 28px; }
+    .licence-paper { min-height: 510px; padding: 25px; }
+    .licence-paper h3 { font-size: 27px; margin-top: 24px; }
     .licence-holder strong { font-size: 24px; }
-    .licence-masthead { gap: 12px; }
-    .licence-masthead p { font-size: var(--type-sm); }
-    .licence-masthead span { font-size: var(--type-3xs); }
+    .licence-masthead p { max-width: 170px; font-size: var(--type-sm); }
+    .licence-corner-seal { top: -31px; right: -14px; width: 110px; height: 110px; }
+    .licence-corner-seal :global(.registry-seal) { width: 110px !important; height: 110px !important; }
+    .licence-figure-footer { align-items: flex-start; gap: 10px; }
   }
   @media (max-width: 360px) {
-    .licence-paper { padding: 22px; }
-    .licence-paper h3 { font-size: 26px; }
-    .document-flow { grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr); gap: 8px; }
-    .licence-flow-arrow { width: 22px; }
-    .licence-facts { gap: 20px 12px; }
+    .illustration-composition { grid-template-columns: minmax(0, 1fr) 88px; gap: 24px 18px; }
+    .licence-render-handoff p { font-size: var(--type-sm); }
+    .licence-input-record { padding: 12px; }
+    .licence-template-sheet { left: 12px; }
+    .licence-template-sheet span { font-size: var(--type-2xs); }
+    .licence-paper { padding: 21px; }
+    .licence-paper h3 { font-size: 25px; }
+    .licence-masthead p { max-width: 150px; font-size: var(--type-xs); }
+    .licence-corner-seal { width: 94px; height: 94px; }
+    .licence-corner-seal :global(.registry-seal) { width: 94px !important; height: 94px !important; }
+    .licence-facts { gap: 18px 12px; }
+    .licence-figure-footer { display: block; }
+    .licence-motion-control { margin-top: 8px; }
   }
 </style>
