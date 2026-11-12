@@ -1,0 +1,76 @@
+---
+import RegistrySeal from './RegistrySeal.astro';
+---
+
+<figure class="licence-illustration" aria-labelledby="render-licence-caption">
+  <div class="illustration-composition">
+    <div class="document-flow">
+      <div class="input-description"><p class="flow-owner">Your licensing service</p><p>Approved record<br />Document template</p></div>
+      <svg class="licence-flow-arrow" viewBox="0 0 48 24" fill="none" aria-hidden="true"><path d="M1 12h43M36 4l8 8-8 8" stroke="currentColor" stroke-width="1.5" /></svg>
+      <div class="render-description"><p class="flow-owner">Registry Render</p><p>Generates and signs<br />the document</p></div>
+    </div>
+
+    <article class="licence-paper" aria-label="Professional licence for Maya Chen">
+      <header class="licence-masthead"><p>Professional<br />Licensing Authority</p><span>Professional<br />register</span></header>
+      <h3>Professional licence</h3>
+      <div class="licence-holder"><p>Issued to</p><strong>Maya Chen</strong></div>
+      <dl class="licence-facts">
+        <div><dt>Licence number</dt><dd class="licence-number">LIC-2093</dd></div>
+        <div><dt>Category</dt><dd>Architecture</dd></div>
+        <div class="licence-validity"><dt>Valid until</dt><dd>31 October 2029</dd></div>
+      </dl>
+      <footer class="licence-endorsements">
+        <div class="licence-seal"><RegistrySeal size={68} ringText="PROFESSIONAL LICENSING AUTHORITY · " monogram="PLA" animated={false} pathId="render-licence-seal" /><p>Digital seal</p></div>
+        <div class="licence-check"><img src="/illustrations/example-licence-qr.svg" width="68" height="68" alt="" /><p>Check licence status</p></div>
+      </footer>
+    </article>
+  </div>
+  <figcaption id="render-licence-caption">Illustrative professional licence, generated and signed from the service’s approved record.</figcaption>
+</figure>
+
+<style>
+  .licence-illustration { max-width: 880px; margin: 0 auto; color: var(--registry-ink); font-family: var(--registry-font); }
+  .illustration-composition { display: grid; grid-template-columns: 190px minmax(0, 420px); justify-content: center; align-items: center; gap: clamp(40px, 6vw, 88px); padding: 16px 0 24px; }
+  .document-flow { padding: 0; }
+  .flow-owner { margin: 0 0 8px; color: var(--registry-blue); font-size: var(--type-md); font-weight: 700; line-height: 1.45; }
+  .document-flow p:not(.flow-owner) { margin: 0; color: var(--registry-body); font-size: var(--type-base); line-height: 1.7; }
+  .licence-flow-arrow { display: block; width: 72px; height: 24px; margin: 22px 0; color: var(--registry-blue); }
+  .licence-paper { display: flex; flex-direction: column; width: 100%; min-width: 0; min-height: 594px; padding: 32px; background: var(--registry-white); border: 1px solid var(--registry-paper-rule); box-shadow: var(--offset-sm); }
+  .licence-masthead { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding-bottom: 20px; border-bottom: 2px solid var(--registry-blue); }
+  .licence-masthead p { margin: 0; color: var(--registry-blue); font-size: var(--type-base); font-weight: 700; line-height: 1.4; }
+  .licence-masthead span { padding-top: 2px; color: var(--registry-muted); font: var(--type-2xs)/1.6 var(--registry-mono); text-align: right; text-transform: uppercase; letter-spacing: 0.03em; }
+  .licence-paper h3 { margin: 30px 0 0; color: var(--registry-blue); font-size: 30px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; }
+  .licence-holder { margin: 28px 0 0; }
+  .licence-holder p, .licence-facts dt { margin: 0 0 5px; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.5; }
+  .licence-holder strong { color: var(--registry-ink); font-size: 25px; font-weight: 600; line-height: 1.3; }
+  .licence-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 20px; margin: 28px 0 26px; padding: 20px 0 0; border-top: 1px solid var(--registry-rule); }
+  .licence-facts dd { margin: 0; color: var(--registry-ink); font-size: var(--type-md); font-weight: 600; line-height: 1.5; }
+  .licence-facts .licence-number { font-family: var(--registry-mono); font-size: var(--type-base); font-weight: 500; }
+  .licence-validity { grid-column: 1 / -1; }
+  .licence-endorsements { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-top: auto; padding-top: 22px; border-top: 1px solid var(--registry-paper-rule); }
+  .licence-seal, .licence-check { max-width: 116px; text-align: center; }
+  .licence-check img { display: block; width: 68px; height: 68px; margin: 0 auto; }
+  .licence-endorsements p { margin: 9px 0 0; color: var(--registry-body); font-size: var(--type-base); line-height: 1.4; }
+  figcaption { max-width: 640px; margin: 12px auto 0; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.6; text-align: center; }
+  @media (max-width: 700px) {
+    .illustration-composition { grid-template-columns: minmax(0, 420px); gap: 24px; padding-top: 0; }
+    .document-flow { display: grid; grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr); align-items: center; gap: 12px; }
+    .document-flow p:not(.flow-owner) { font-size: var(--type-sm); line-height: 1.6; }
+    .flow-owner { font-size: var(--type-base); margin-bottom: 4px; }
+    .licence-flow-arrow { width: 30px; height: 24px; margin: 0; }
+    .licence-paper { min-height: 560px; padding: 26px; }
+    .licence-paper h3 { font-size: 28px; margin-top: 27px; }
+    .licence-holder { margin-top: 26px; }
+    .licence-holder strong { font-size: 24px; }
+    .licence-masthead { gap: 12px; }
+    .licence-masthead p { font-size: var(--type-sm); }
+    .licence-masthead span { font-size: var(--type-3xs); }
+  }
+  @media (max-width: 360px) {
+    .licence-paper { padding: 22px; }
+    .licence-paper h3 { font-size: 26px; }
+    .document-flow { grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr); gap: 8px; }
+    .licence-flow-arrow { width: 22px; }
+    .licence-facts { gap: 20px 12px; }
+  }
+</style>
