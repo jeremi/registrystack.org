@@ -23,7 +23,11 @@ const expectedCapabilities = countMatches('src/data/solutions.ts', /kind: 'cross
 const expectedMenuLinks = [
   1 + countMatches('src/data/solutions.ts', /slug: '\/solutions\//g),
   5 + countMatches('src/data/products.ts', /href: '\/products\//g),
+  // AI for public services: its overview and three uses.
+  4,
 ];
+const headerMenus = ['Solutions', 'Products', 'AI for public services'];
+const menuSlug = (name) => name.toLowerCase().replaceAll(' ', '-');
 
 const server = createServer(async (request, response) => {
   const { readFile } = await import('node:fs/promises');
@@ -332,10 +336,12 @@ for (const viewport of viewports) {
 }
 }
 
-// A desktop menu must fit inside a short viewport. Keyboard focus should enter
-// at the first link and reach the last link, scrolling the panel when needed.
-const shortDesktop = await browser.newPage({ viewport: { width: 1280, height: 720 } });
-for (const [index, name] of ['Solutions', 'Products'].entries()) {
+// A desktop menu must fit inside a short viewport, including the narrowest
+// unstacked header. Keyboard focus should enter at the first link and reach
+// the last link, scrolling the panel when needed.
+for (const width of [1280, 960]) {
+const shortDesktop = await browser.newPage({ viewport: { width, height: 720 } });
+for (const [index, name] of headerMenus.entries()) {
   await shortDesktop.goto(`http://127.0.0.1:${port}/`);
   const menu = shortDesktop.locator('.nav-group').nth(index);
   const summary = menu.locator('summary');
@@ -346,7 +352,10 @@ for (const [index, name] of ['Solutions', 'Products'].entries()) {
 
   const panelBounds = await panel.boundingBox();
   if (!panelBounds || panelBounds.y + panelBounds.height > 721) {
-    failures.push(`1280x720: ${name} menu extends below the viewport`);
+    failures.push(`${width}x720: ${name} menu extends below the viewport`);
+  }
+  if (!panelBounds || panelBounds.x < -1 || panelBounds.x + panelBounds.width > width + 1) {
+    failures.push(`${width}x720: ${name} menu extends beyond the side of the viewport`);
   }
 
   await shortDesktop.keyboard.press('Tab');
@@ -354,7 +363,7 @@ for (const [index, name] of ['Solutions', 'Products'].entries()) {
     const rect = link.getBoundingClientRect();
     return document.activeElement === link && rect.top >= 0 && rect.bottom <= window.innerHeight;
   });
-  if (!firstReachable) failures.push(`1280x720: keyboard cannot reach the first ${name} menu link`);
+  if (!firstReachable) failures.push(`${width}x720: keyboard cannot reach the first ${name} menu link`);
 
   const linkCount = await links.count();
   for (let position = 1; position < linkCount; position += 1) {
@@ -364,9 +373,10 @@ for (const [index, name] of ['Solutions', 'Products'].entries()) {
     const rect = link.getBoundingClientRect();
     return document.activeElement === link && rect.top >= 0 && rect.bottom <= window.innerHeight;
   });
-  if (!lastReachable) failures.push(`1280x720: keyboard cannot reach the last ${name} menu link`);
+  if (!lastReachable) failures.push(`${width}x720: keyboard cannot reach the last ${name} menu link`);
 }
 await shortDesktop.close();
+}
 
 const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
 await page.goto(`http://127.0.0.1:${port}/`);
@@ -386,9 +396,9 @@ for (let i = 0; i < Math.min(focusableCount, 20); i += 1) {
   }
 }
 // Closing a disclosure from one of its links must leave a usable keyboard
-// position instead of dropping focus back to the page body. Both header menus
-// (Solutions, Products) behave the same way.
-for (const [index, name] of ['Solutions', 'Products'].entries()) {
+// position instead of dropping focus back to the page body. Every header menu
+// behaves the same way.
+for (const [index, name] of headerMenus.entries()) {
   await page.goto(`http://127.0.0.1:${port}/`);
   const menu = page.locator('.nav-group').nth(index);
   await menu.locator('summary').focus();
@@ -410,7 +420,7 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 768, height: 720 }
     const context = await browser.newContext({ viewport, javaScriptEnabled });
     const menuPage = await context.newPage();
     await menuPage.goto(`http://127.0.0.1:${port}/`);
-    for (const [index, name] of ['Solutions', 'Products'].entries()) {
+    for (const [index, name] of headerMenus.entries()) {
       const menu = menuPage.locator('.nav-group').nth(index);
       await menu.locator('summary').click();
       const panel = menu.locator('.nav-group-panel');
@@ -433,7 +443,7 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 768, height: 720 }
         return hit && link.closest('.nav-group-panel').contains(hit);
       });
       if (!paintedAboveContent) failures.push(`${viewport.width} JS=${javaScriptEnabled}: ${name} panel is obscured by page content`);
-      await menuPage.screenshot({ path: resolve(outputDir, `responsive-${name.toLowerCase()}-${viewport.width}x${viewport.height}-${javaScriptEnabled ? 'js' : 'no-js'}.png`), fullPage: false });
+      await menuPage.screenshot({ path: resolve(outputDir, `responsive-${menuSlug(name)}-${viewport.width}x${viewport.height}-${javaScriptEnabled ? 'js' : 'no-js'}.png`), fullPage: false });
       await menu.locator('summary').click();
       if (await menu.evaluate((element) => element.open)) failures.push(`${viewport.width}: ${name} must close from its trigger`);
     }

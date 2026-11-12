@@ -214,8 +214,17 @@ if (!headerSource.includes('href="/solutions/"') || !headerSource.includes('All 
 for (const route of ['https://marketplace.registrystack.org/', '/#developers', 'https://docs.registrystack.org/']) {
   if (!headerSource.includes(`href: '${route}'`)) failures.push(`the Products menu is missing ${route}`);
 }
-for (const route of ['/ai/', '/pricing/']) {
-  if (!headerSource.includes(`href: '${route}'`)) failures.push(`header is missing its direct ${route} route`);
+if (!headerSource.includes("href: '/pricing/'")) failures.push('header is missing its direct /pricing/ route');
+// AI for public services is a menu: its overview first, then one entry per
+// use, in the order the overview presents them.
+if (headerSource.includes("href: '/ai/'") || !headerSource.includes('>AI for public services</summary>') ||
+    !headerSource.includes('href="/ai/"')) {
+  failures.push('AI for public services must be a header menu that opens with its overview');
+}
+const aiMenuRoutes = ['/ai/service-design/', '/customization/', '/ai/citizen-access/'];
+const aiMenuPositions = aiMenuRoutes.map((route) => headerSource.indexOf(`href: '${route}'`));
+if (aiMenuPositions.some((position, index) => position === -1 || (index > 0 && position < aiMenuPositions[index - 1]))) {
+  failures.push(`the AI menu must list ${aiMenuRoutes.join(', ')} in that order`);
 }
 if (!headerSource.includes('href={contactHref()}') || !headerSource.includes('>Contact</a>')) {
   failures.push('header Contact action must lead to the general contact form');

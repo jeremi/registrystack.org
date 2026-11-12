@@ -58,6 +58,9 @@ const productMenuHrefs = [
   '/#developers',
   'https://docs.registrystack.org/',
 ];
+// AI for public services starts with its overview, then the three uses in
+// the order the overview presents them.
+const aiMenuHrefs = ['/ai/', '/ai/service-design/', '/customization/', '/ai/citizen-access/'];
 const solutionMenuHrefs = [
   '/solutions/',
   ...[...readFileSync(resolve('src/data/solutions.ts'), 'utf8').matchAll(/slug: '(\/solutions\/[^']+)'/g)]
@@ -149,11 +152,13 @@ for (const options of [
   };
   await page.goto(url);
 
-  // The old /ai/ entry now serves an overview. Each path leads to a
-  // different next step, including for readers without JavaScript.
-  const aiLink = page.getByRole('navigation', { name: 'Main navigation' }).locator('a[href="/ai/"]');
+  // The AI for public services menu opens with an overview. Each path leads
+  // to a different next step, including for readers without JavaScript.
+  const aiMenu = page.getByRole('navigation', { name: 'Main navigation' }).locator('.nav-group').nth(2);
+  await aiMenu.locator('summary').click();
+  const aiLink = aiMenu.locator('a[href="/ai/"]');
   if (await aiLink.count() !== 1 || !await aiLink.isVisible()) {
-    fail('main navigation must offer one visible AI overview link');
+    fail('the AI for public services menu must offer one visible overview link');
   } else {
     await aiLink.click();
     if (new URL(page.url()).pathname !== '/ai/' || !await page.locator('main h1').isVisible()) {
@@ -429,7 +434,7 @@ for (const options of [
     const { origin, pathname, hash } = new URL(link.href);
     return { origin, pathname, hash };
   }));
-  for (const href of ['/ai/', '/pricing/', 'https://docs.registrystack.org/', '/contact/']) {
+  for (const href of ['/pricing/', 'https://docs.registrystack.org/', '/contact/']) {
     const target = new URL(href, url);
     const index = navLinks.findIndex((link) => link.origin === target.origin &&
       link.pathname === target.pathname && link.hash === target.hash);
@@ -437,6 +442,18 @@ for (const options of [
   }
   await productsMenu.locator('summary').click();
   if (options.javaScriptEnabled === false) await solutionsMenu.locator('summary').click();
+
+  await productsMenu.locator('summary').click();
+  await aiMenu.locator('summary').click();
+  const aiLinks = await aiMenu.locator('a').evaluateAll((links) => links.map((link) => new URL(link.href).pathname));
+  if (aiLinks.join() !== aiMenuHrefs.join() || !await aiMenu.locator('a').first().isVisible()) {
+    fail(`the AI for public services menu must list the overview, service design, implementation and citizen access (found ${aiLinks.join(', ')})`);
+  }
+  if (options.javaScriptEnabled !== false && await productsMenu.evaluate((menu) => menu.open)) {
+    fail('opening the AI for public services menu must close the Products menu');
+  }
+  await aiMenu.locator('summary').click();
+  if (options.javaScriptEnabled === false) await productsMenu.locator('summary').click();
 
   const productLinks = page.locator('.home-product-links a');
   if (await productLinks.count() !== products.length) {
@@ -562,6 +579,19 @@ for (const options of [
   const currentContact = page.locator('.top-nav a[aria-current="page"]').filter({ hasText: 'Contact' });
   if (await currentContact.count() !== 1 || !await currentContact.isVisible()) {
     fail('contact page must highlight Contact in the main navigation');
+  }
+
+  // Each AI page marks the AI menu as current, and its own entry within it.
+  for (const route of aiMenuHrefs) {
+    await page.goto(new URL(route, url).href);
+    const aiMenu = page.locator('.nav-group').nth(2);
+    if (await aiMenu.locator('summary').getAttribute('aria-current') !== 'page') {
+      fail(`${route} must mark the AI for public services menu as current`);
+    }
+    const currentEntries = await aiMenu.locator('a[aria-current="page"]').evaluateAll(
+      (links) => links.map((link) => new URL(link.href).pathname),
+    );
+    if (currentEntries.join() !== route) fail(`${route} must mark only its own AI menu entry as current`);
   }
 
   // Contact source attribution must not rewrite a same-document skip link,

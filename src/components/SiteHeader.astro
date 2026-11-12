@@ -9,8 +9,14 @@ const { current } = Astro.props;
 const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 
+// AI for public services opens with its overview, then one entry per use in
+// the order the overview presents them.
+const aiEntries = [
+  { href: '/ai/service-design/', label: 'Service design', intent: 'Prepare a brief and test a prototype', key: 'ai-service-design' },
+  { href: '/customization/', label: 'Implementation', intent: 'Adapt a service to your rules', key: 'customization' },
+  { href: '/ai/citizen-access/', label: 'Citizen access', intent: 'Help people prepare a request', key: 'ai-citizen-access' },
+];
 const links = [
-  { href: '/ai/', label: 'AI for public services', key: 'ai' },
   { href: '/pricing/', label: 'Implementation and pricing', key: 'pricing' },
   { href: 'https://docs.registrystack.org/', label: 'Docs', key: 'docs' },
 ];
@@ -22,7 +28,7 @@ const evaluationLinks = [
 
 const onSolutionPage = current === 'solutions' || current === 'local-government' || solutionAreas.some((area) => area.key === current);
 const onProductPage = current === 'products' || current === 'studio' || current === 'starters' || products.some((product) => product.key === current);
-const inAiSection = current === 'customization' || Astro.url.pathname.startsWith('/ai/');
+const inAiSection = Astro.url.pathname.startsWith('/ai/') || aiEntries.some((entry) => entry.key === current);
 // The flagship products lead the menu; the data order is otherwise kept.
 const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
 ---
@@ -80,8 +86,21 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
         ))}
       </div>
     </details>
+    <details class="nav-group" name="main-navigation">
+      <summary aria-current={inAiSection ? 'page' : undefined}>AI for public services</summary>
+      <div class="nav-group-panel">
+        <a href="/ai/" aria-current={current === 'ai' ? 'page' : undefined}><span class="nav-entry-name">Three uses of AI</span><span class="nav-entry-blurb">Your institution reviews and approves</span></a>
+        <hr class="nav-group-rule" />
+        {aiEntries.map((entry) => (
+          <a href={entry.href} aria-current={current === entry.key ? 'page' : undefined}>
+            <span class="nav-entry-name">{entry.label}</span>
+            <span class="nav-entry-blurb">{entry.intent}</span>
+          </a>
+        ))}
+      </div>
+    </details>
     {links.map((link) => (
-      <a href={link.href} aria-current={current === link.key ? 'page' : link.key === 'ai' && inAiSection ? 'location' : undefined}>{link.label}</a>
+      <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
     ))}
     <a class="nav-emphasis" href={contactHref()} aria-current={current === 'contact' ? 'page' : undefined}>Contact</a>
   </nav>
