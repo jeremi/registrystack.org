@@ -1,0 +1,127 @@
+---
+// Static service-first adaptation of the Registry Stack explainer diagrams for
+// a service and its parts. Product responsibilities follow maintained v0.46 sources.
+// This is an explanatory composition, not a screenshot or a ready-made app.
+---
+
+<figure class="product-service-journey" aria-labelledby="product-journey-title" aria-describedby="product-journey-caption">
+  <header class="journey-heading">
+    <p class="example-label">Example</p>
+    <h3 id="product-journey-title">Renew a professional licence</h3>
+  </header>
+
+  <div class="service-context">
+    <div><p class="owner-label">Supplied or adapted in your implementation</p><h4>Your licensing service</h4></div>
+    <p>The applicant submits a renewal and supporting documents. Your service connects the review, register and next steps under your institution’s rules.</p>
+  </div>
+
+  <div class="review-and-record">
+    <section class="work-panel review-panel" aria-labelledby="product-journey-review">
+      <header><h4 id="product-journey-review">Staff review</h4><a class="product-owner" href="/products/casework/">Registry Casework</a></header>
+      <p>An officer reviews the application and records a decision.</p>
+      <dl class="review-result"><div><dt>Request</dt><dd>Renewal</dd></div><div><dt>Decision</dt><dd>Approved</dd></div></dl>
+    </section>
+
+    <div class="decision-handoff">
+      <svg viewBox="0 0 48 24" fill="none" aria-hidden="true"><path d="M1 12h43M35 3l9 9-9 9" stroke="currentColor" stroke-width="1.5" /></svg>
+      <p>The decision returns to your service.</p>
+      <p>The register separately authorizes the update.</p>
+    </div>
+
+    <section class="work-panel record-panel" aria-labelledby="product-journey-record">
+      <header><h4 id="product-journey-record">Licence record</h4><a class="product-owner" href="/products/base-registry/">Base Registry Engine</a></header>
+      <p>Authorized staff or a connected service record the new licence term.</p>
+      <dl class="licence-record"><div><dt>Licence</dt><dd>LIC-2093</dd></div><div><dt>Valid until</dt><dd>2029-10-31</dd></div></dl>
+    </section>
+  </div>
+
+  <div class="output-intro"><span aria-hidden="true"></span><p>Connected services request the next step.</p><span aria-hidden="true"></span></div>
+  <div class="service-outputs">
+    <section class="output-panel" aria-labelledby="product-journey-document">
+      <header><h4 id="product-journey-document">Generate a document</h4><a class="product-owner" href="/products/render/">Registry Render</a></header>
+      <div class="document-artifact">
+        <svg viewBox="0 0 24 30" fill="none" aria-hidden="true"><path d="M3 1h11l7 7v21H3V1Z" stroke="currentColor" stroke-width="1.5" /><path d="M14 1v8h7M7 14h10M7 19h10M7 24h6" stroke="currentColor" stroke-width="1.5" /></svg>
+        <div><strong>Licence document</strong><span>PDF</span></div>
+      </div>
+      <p>Your service provides the data and template. Registry Render produces the PDF.</p>
+    </section>
+
+    <section class="output-panel" aria-labelledby="product-journey-notice">
+      <header><h4 id="product-journey-notice">Send a notice</h4><a class="product-owner" href="/products/messaging/">Registry Messaging</a></header>
+      <div class="notice-artifact">
+        <svg viewBox="0 0 28 22" fill="none" aria-hidden="true"><rect x="1" y="1" width="26" height="20" rx="1" stroke="currentColor" stroke-width="1.5" /><path d="m2 3 12 9L26 3" stroke="currentColor" stroke-width="1.5" /></svg>
+        <p>Your licence renewal has been recorded.</p>
+      </div>
+      <p>Your service requests the notice. The operator configures the provider used to send it.</p>
+    </section>
+
+    <section class="output-panel" aria-labelledby="product-journey-check">
+      <header><h4 id="product-journey-check">Check the licence status</h4><a class="product-owner" href="/products/evidence-gateway/">Evidence Gateway</a></header>
+      <div class="answer-artifact"><p>Licence in good standing?</p><strong>Yes <span>· signed answer</span></strong></div>
+      <p>An authorized employer service asks the agreed question and receives the answer.</p>
+    </section>
+  </div>
+  <figcaption id="product-journey-caption">A fictional licence renewal showing staff review, an authorized register update, a generated document, a notice and an employer’s status check. Screens and connections are supplied in the implementation.</figcaption>
+</figure>
+
+<style>
+  .product-service-journey { margin: 0; color: var(--registry-ink); font-family: var(--registry-font); }
+  .journey-heading { margin-bottom: 24px; }
+  .example-label { margin: 0 0 7px; color: var(--registry-blue); font: 600 var(--type-xs)/1.5 var(--registry-mono); text-transform: uppercase; letter-spacing: 0.07em; }
+  .journey-heading h3 { margin: 0; font-size: var(--type-2xl); line-height: 1.3; }
+  .service-context { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 24px; align-items: center; padding: 22px 26px; background: var(--registry-paper); border: 1px solid var(--registry-paper-rule); border-left: 3px solid var(--registry-blue); }
+  .owner-label { margin: 0 0 5px; color: var(--registry-body); font-size: var(--type-base); line-height: 1.5; }
+  h4 { margin: 0; font-size: var(--type-subhead); line-height: 1.35; }
+  .service-context > p { margin: 0; color: var(--registry-body); font-size: var(--type-md); line-height: 1.6; }
+  .review-and-record { display: grid; grid-template-columns: minmax(0, 1fr) 164px minmax(0, 1fr); gap: 24px; align-items: stretch; padding-top: 28px; }
+  .work-panel { padding: 24px; background: var(--registry-white); border: 1px solid var(--registry-blue-rule); border-top: 3px solid var(--registry-blue); }
+  .record-panel { background: var(--registry-paper-half); }
+  .product-owner { display: inline-block; margin-top: 6px; color: var(--registry-blue); font-size: var(--type-base); font-weight: 600; line-height: 1.5; text-underline-offset: 3px; }
+  .work-panel > p, .output-panel > p { margin: 18px 0; color: var(--registry-body); font-size: var(--type-md); line-height: 1.6; }
+  dl { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--registry-rule); }
+  dt { margin: 0 0 4px; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.5; }
+  dd { margin: 0; font-size: var(--type-md); font-weight: 600; line-height: 1.5; }
+  .decision-handoff { align-self: center; color: var(--registry-blue); }
+  .decision-handoff svg { display: block; width: 48px; height: 24px; margin: 0 auto 16px; }
+  .decision-handoff p { margin: 0; color: var(--registry-body); font-size: var(--type-md); line-height: 1.55; text-align: center; }
+  .decision-handoff p + p { margin-top: 12px; }
+  .output-intro { display: flex; align-items: center; gap: 20px; margin: 32px 0 24px; }
+  .output-intro span { flex: 1 1 0; border-top: 1px solid var(--registry-blue-rule); }
+  .output-intro p { margin: 0; color: var(--registry-body); font-size: var(--type-md); line-height: 1.5; text-align: center; }
+  .service-outputs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; }
+  .output-panel { display: flex; flex-direction: column; min-width: 0; padding-top: 18px; border-top: 2px solid var(--registry-blue); }
+  .output-panel h4 { font-size: var(--type-lg); }
+  .output-panel > p { margin: 16px 0 0; }
+  .document-artifact, .notice-artifact, .answer-artifact { display: flex; gap: 14px; align-items: center; min-height: 96px; margin-top: 20px; padding: 17px; border: 1px solid var(--registry-paper-rule); background: var(--registry-white); }
+  .document-artifact { margin-right: 14px; box-shadow: var(--offset-sm); }
+  .document-artifact svg { width: 24px; height: 30px; flex: 0 0 24px; color: var(--registry-blue); }
+  .document-artifact strong { display: block; font-size: var(--type-md); line-height: 1.5; }
+  .document-artifact span { display: block; margin-top: 3px; color: var(--registry-muted); font: var(--type-xs)/1.5 var(--registry-mono); }
+  .notice-artifact { background: var(--registry-paper-half); }
+  .notice-artifact svg { width: 28px; height: 22px; flex: 0 0 28px; color: var(--registry-blue); }
+  .notice-artifact p, .answer-artifact p { margin: 0; color: var(--registry-body); font-size: var(--type-md); line-height: 1.5; }
+  .answer-artifact { display: block; border-left: 3px solid var(--registry-blue); background: var(--registry-paper); }
+  .answer-artifact strong { display: block; margin-top: 7px; color: var(--registry-blue); font-size: var(--type-lg); line-height: 1.4; }
+  .answer-artifact strong span { color: var(--registry-body); font-size: var(--type-base); font-weight: 400; }
+  figcaption { margin-top: 28px; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.6; }
+  @media (max-width: 900px) {
+    .review-and-record { grid-template-columns: minmax(0, 1fr) 136px minmax(0, 1fr); gap: 16px; }
+    .work-panel { padding: 20px; }
+    .service-outputs { gap: 20px; }
+  }
+  @media (max-width: 700px) {
+    .service-context, .review-and-record, .service-outputs { grid-template-columns: 1fr; }
+    .service-context { padding: 20px; gap: 14px; }
+    .review-and-record { padding-top: 22px; gap: 20px; }
+    .decision-handoff { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 14px; align-items: center; padding: 0 14px; }
+    .decision-handoff svg { grid-row: 1 / 3; width: 28px; height: 24px; margin: 0; transform: rotate(90deg); }
+    .decision-handoff p { text-align: left; }
+    .decision-handoff p + p { margin-top: 0; }
+    .output-intro { gap: 12px; margin-top: 28px; }
+    .output-intro p { max-width: 240px; }
+    .service-outputs { gap: 28px; }
+    .output-panel { padding-top: 20px; }
+    .document-artifact, .notice-artifact, .answer-artifact { margin-top: 16px; min-height: 82px; }
+    figcaption { margin-top: 26px; }
+  }
+</style>

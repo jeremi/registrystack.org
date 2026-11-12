@@ -1,0 +1,107 @@
+---
+import Product from '../../layouts/Product.astro';
+import { products } from '../../data/products';
+const product = products.find((p) => p.key === 'messaging')!;
+---
+<Product
+  product={product}
+  heading="Send notices from your public services."
+  description="Registry Messaging sends email and SMS from approved templates through the providers you configure. Your application chooses the recipient and when to send; Messaging prepares the message, dispatches it and records the outcome."
+  note="Open-source messaging for a new service or one you already run."
+>
+  <section id="product-example" class="section section-muted" aria-labelledby="messaging-example-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">One example: a licence document is ready</p>
+        <h2 id="messaging-example-title">Tell the applicant where to find their document.</h2>
+        <p>The licensing service has prepared and stored the licence document. It asks Registry Messaging to send an email from the authority’s approved template. The notice tells the applicant to sign in to the official service to view it.</p>
+      </div>
+      <figure class="messaging-example" aria-labelledby="messaging-example-caption">
+        <section class="request-panel" aria-labelledby="messaging-request-title">
+          <p class="panel-owner">Provided by: your licensing service</p>
+          <h3 id="messaging-request-title">Request a notice</h3>
+          <dl>
+            <div><dt>Recipient</dt><dd>applicant@example.invalid</dd></div>
+            <div><dt>Template</dt><dd>Licence document ready</dd></div>
+            <div><dt>Reference</dt><dd>APP-2093</dd></div>
+          </dl>
+          <p class="panel-note">The application decides when to send and which address to use.</p>
+        </section>
+        <section class="message-panel" aria-labelledby="messaging-message-title">
+          <p class="panel-owner">Prepared by: Registry Messaging</p>
+          <div class="email-message">
+            <p class="message-channel">Email notice</p>
+            <h3 id="messaging-message-title">Your licence document is ready</h3>
+            <p>Sign in to the official licensing service to view your document.</p>
+            <p class="message-reference">Application APP-2093</p>
+          </div>
+          <div class="provider-outcome">
+            <p class="panel-owner">Sent through: your email provider</p>
+            <p><strong>Provider accepted</strong></p>
+            <p>This confirms the handoff, not delivery to the applicant.</p>
+          </div>
+        </section>
+        <figcaption id="messaging-example-caption">A fictional licence-service email, requested by the application and sent through its configured provider. The document stays in the official service.</figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="messaging-capabilities-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">Practical capabilities</p>
+        <h2 id="messaging-capabilities-title">Keep notices consistent and follow their progress.</h2>
+      </div>
+      <div class="product-facts">
+        <article><h3>Approve the wording</h3><p>Define email and SMS templates, their versions, languages and required information. Applications select an approved template and supply the details for each message.</p></article>
+        <article><h3>Control which services may send</h3><p>Authorize applications to use specific senders and templates. Connect the email or SMS providers your institution chooses.</p></article>
+        <article><h3>Distinguish sending from delivery</h3><p>See whether a message is queued, accepted by the provider or has a reported delivery outcome. Delivery status is available where the provider reports it; it does not show whether the person read the notice.</p></article>
+      </div>
+    </div>
+  </section>
+  <section id="fit" class="section section-muted" aria-labelledby="messaging-fit-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">How it fits your service</p>
+        <h2 id="messaging-fit-title">Send messages when your application needs them.</h2>
+        <p>Connect Messaging to your application or workflow. Use it for acknowledgements, requests for information, reminders or decision notices. The calling service owns the process; Messaging handles each requested message through the configured provider.</p>
+      </div>
+      <dl>
+        <dt>The application chooses why, when and whom</dt><dd>Keep contact details and permission to contact someone in your service. Supply the recipient, template and message data when requesting a send.</dd>
+        <dt>The implementation connects the provider</dt><dd>Agree the sender, provider account, credentials, templates and links back to the official service. Documents and their access controls remain with that service.</dd>
+        <dt>Choose who runs it</dt><dd>Your institution or appointed provider can host and operate Messaging, or we can run it for you. We quote hosting and operation separately in the proposal.</dd>
+      </dl>
+    </div>
+  </section>
+  <section id="developers" class="section" aria-labelledby="messaging-developers-title">
+    <div class="section-inner">
+      <div class="section-heading compact">
+        <p class="eyebrow">Evaluate the software</p>
+        <h2 id="messaging-developers-title">Send and inspect a local message.</h2>
+        <p>The tutorial uses a local email inbox and mock SMS provider to inspect messages and status. Continue with the <a href="https://docs.registrystack.org/start/messaging/">Messaging overview</a> and <a href="https://docs.registrystack.org/operate/messaging/">operations guide</a> when connecting your chosen providers.</p>
+        <p><a class="inline-cta" href={product.tutorialHref}>{product.tutorialLabel} →</a></p>
+      </div>
+    </div>
+  </section>
+</Product>
+
+<style>
+  .messaging-example { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 28px; margin: 0; }
+  .request-panel, .message-panel { min-width: 0; border-top: 3px solid var(--registry-blue); padding: 22px; background: var(--registry-white); }
+  .panel-owner { margin: 0 0 20px; color: var(--registry-blue); font-size: var(--type-base); font-weight: 600; line-height: 1.5; }
+  .request-panel h3 { margin: 0 0 18px; font-size: var(--type-subhead); }
+  .request-panel dl { margin: 0; }
+  .request-panel dl div { display: grid; grid-template-columns: minmax(84px, 0.7fr) minmax(0, 1.3fr); gap: 12px; padding: 11px 0; border-top: 1px solid var(--registry-rule); }
+  .request-panel dt { color: var(--registry-muted); font-size: var(--type-md); }
+  .request-panel dd { margin: 0; font-size: var(--type-md); font-weight: 600; overflow-wrap: anywhere; }
+  .panel-note { color: var(--registry-body); font-size: var(--type-base); line-height: 1.6; margin: 18px 0 0; }
+  .email-message { padding: clamp(20px, 3vw, 28px); border: 1px solid var(--registry-paper-rule); background: var(--registry-paper); }
+  .message-channel { margin: 0 0 16px; color: var(--registry-blue); font: var(--type-xs)/1.5 var(--registry-mono); text-transform: uppercase; letter-spacing: 0.05em; }
+  .email-message h3 { margin: 0 0 16px; font-size: var(--type-subhead); line-height: 1.4; }
+  .email-message > p:not(.message-channel) { font-size: var(--type-md); line-height: 1.6; }
+  .email-message .message-reference { margin: 20px 0 0; padding-top: 14px; border-top: 1px solid var(--registry-paper-rule); color: var(--registry-muted); font-size: var(--type-base); }
+  .provider-outcome { border-top: 1px solid var(--registry-rule); margin-top: 20px; padding-top: 16px; }
+  .provider-outcome .panel-owner { margin-bottom: 10px; }
+  .provider-outcome p { font-size: var(--type-base); line-height: 1.6; margin: 5px 0 0; }
+  figcaption { grid-column: 1 / -1; margin: 0; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.6; }
+  @media (max-width: 700px) { .messaging-example { grid-template-columns: 1fr; gap: 20px; } .request-panel, .message-panel { padding: 20px; } }
+</style>

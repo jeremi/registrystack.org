@@ -201,8 +201,8 @@ const failures = [];
   failures.push(...homeOverviewFailures);
 
   const solutionCards = await page.locator('.home-product-links a').count();
-  if (solutionCards !== 3) {
-    failures.push(`expected 3 homepage product detail links, found ${solutionCards}`);
+  if (solutionCards !== 5) {
+    failures.push(`expected 5 homepage product detail links, found ${solutionCards}`);
   }
 
   await context.close();

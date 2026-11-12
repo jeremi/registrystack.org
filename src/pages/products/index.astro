@@ -1,0 +1,52 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import ProductServiceJourney from '../../components/ProductServiceJourney.astro';
+import { describeServiceHref } from '../../data/contact';
+---
+<Base title="Registry Stack products | Registers, reviews, documents and notices" description="See how Registry Stack products fit into a licensing service: records, staff review, PDF documents, notices and authorized information checks.">
+  <SiteHeader current="products" />
+  <main id="main-content" tabindex="-1">
+    <section class="hero hero-cover" aria-labelledby="products-title"><div class="hero-inner"><div class="hero-copy">
+      <p class="eyebrow">Registry Stack products</p>
+      <h1 id="products-title">The software behind a register service.</h1>
+      <p class="hero-lead">Maintain records, send requests to staff and connect the next steps. Registry Stack products handle records, reviews, documents, notices and information checks. Use the parts you need with an existing application or when creating a new service.</p>
+      <div class="hero-actions"><a class="button button-primary" href="#service-example">See how they fit together</a><a class="button button-secondary" href={describeServiceHref('Registry Stack products')}>Discuss your service</a></div>
+    </div></div></section>
+
+    <section class="section" id="service-example" aria-labelledby="service-title"><div class="section-inner">
+      <div class="section-heading"><h2 id="service-title">How the products work together.</h2></div>
+      <ProductServiceJourney />
+      <nav class="service-paths" aria-label="Priority service areas"><p>Explore the service you need:</p><ul><li><a href="/solutions/licensing/">Licensing and professional registers</a></li><li><a href="/solutions/business-and-tax/">Business registers</a></li><li><a href="/solutions/agriculture-food-and-environment/">Agricultural registers</a></li></ul></nav>
+    </div></section>
+
+    <section class="section section-muted" id="connections" aria-labelledby="connections-title"><div class="section-inner">
+      <div class="section-heading"><h2 id="connections-title">Connect the steps and the systems you keep.</h2><p>Your application can call the products directly. Add integration components when the service needs them.</p></div>
+      <div class="connection-grid">
+        <article><h3>Coordinate calls and wait for reviews</h3><p>Registry Coordinator runs reviewed sequences of product calls, including waits for a staff decision. Each product still checks the permissions for its own operation.</p><a class="inline-cta" href="https://docs.registrystack.org/start/coordinator/">Explore workflow coordination <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Keep an existing source of records</h3><p>Registry Adapter exposes configured operations over a system your institution already runs. The source keeps its records and authority; the integration defines which operations are available.</p><a class="inline-cta" href="https://github.com/registrystack/registry-stack/blob/v0.46.0/products/adapter/CONSULTATION.md">Read the Adapter integration contract <span aria-hidden="true">↗</span></a></article>
+      </div>
+      <p class="additional-parts">If a service includes appointments, <a href="https://docs.registrystack.org/start/scheduling/">Registry Scheduling</a> manages capacity and bookings. Where participating sources publish information-provider descriptions, <a href="https://docs.registrystack.org/start/discovery/">Registry Discovery</a> helps technical teams find them.</p>
+    </div></section>
+
+    <section class="section" id="evaluation" aria-labelledby="evaluation-title"><div class="section-inner adoption-grid">
+      <div><p class="eyebrow">For implementers</p><h2 id="evaluation-title">Try a connected example.</h2><p>The review-and-notice tutorial connects a workflow, staff review and a notice sent through a mock provider. Use it to inspect the handoffs.</p><a class="inline-cta" href="https://docs.registrystack.org/tutorials/review-an-application-and-send-a-notice/">Follow the review-and-notice tutorial <span aria-hidden="true">↗</span></a></div>
+      <div><p class="eyebrow">Implementation and operation</p><h2>Choose who delivers and runs it.</h2><p>Your team or an appointed provider can build the service and operate the software, or we do it with you and run it for you. Agree the records, screens, sign-in, connections and responsibilities in the implementation scope. Our hosting and operation are quoted separately.</p><a class="inline-cta" href="/pricing/#process">How implementation works <span aria-hidden="true">→</span></a></div>
+    </div></section>
+  </main>
+  <SiteFooter />
+</Base>
+<style>
+  .service-paths { border-top: 1px solid var(--registry-rule); margin-top: 32px; padding-top: 20px; }
+  .service-paths p { font-size: var(--type-base); color: var(--registry-body); margin: 0 0 8px; }
+  .service-paths ul { display: flex; flex-wrap: wrap; gap: 8px 28px; list-style: none; margin: 0; padding: 0; }
+  .service-paths a { display: inline-block; padding: 8px 0; font-size: var(--type-base); }
+  .connection-grid, .adoption-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+  .connection-grid article { border-top: 2px solid var(--registry-blue); padding-top: 22px; }
+  .connection-grid h3 { font-size: var(--type-subhead); }
+  .connection-grid p, .adoption-grid p { font-size: var(--type-body-sm); }
+  .additional-parts { border-top: 1px solid var(--registry-rule); margin: 30px 0 0; padding-top: 22px; font-size: var(--type-base); }
+  .adoption-grid h2 { font-size: clamp(28px, 3.5vw, 40px); }
+  @media (max-width: 760px) { .connection-grid, .adoption-grid { grid-template-columns: 1fr; gap: 32px; } }
+</style>

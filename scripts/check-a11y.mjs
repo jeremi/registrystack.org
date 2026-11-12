@@ -43,6 +43,9 @@ const failures = [];
 
 const paths = [
   '/',
+  '/products/',
+  '/products/render/',
+  '/products/messaging/',
   '/products/base-registry/',
   '/products/evidence-gateway/',
   '/products/casework/',

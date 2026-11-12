@@ -45,10 +45,13 @@ const products = [
   { path: '/products/base-registry/', name: 'Base Registry Engine', tutorial: '/tutorials/first-breg/' },
   { path: '/products/evidence-gateway/', name: 'Evidence Gateway', tutorial: '/tutorials/first-evidence-assertion/' },
   { path: '/products/casework/', name: 'Registry Casework', tutorial: '/tutorials/review-breg-changes-in-casework/' },
+  { path: '/products/render/', name: 'Registry Render', tutorial: '/tutorials/first-render-document/' },
+  { path: '/products/messaging/', name: 'Registry Messaging', tutorial: '/tutorials/first-messaging/' },
 ];
-// The Products menu lists the three core products, the authoring tool and evaluation routes.
+// The Products menu starts with the service overview, then products, authoring and evaluation.
 // Each core product also has a concise detail link in the homepage evaluation section.
 const productMenuHrefs = [
+  '/products/',
   ...products.map((product) => product.path),
   '/products/studio/',
   'https://marketplace.registrystack.org/',
@@ -417,7 +420,7 @@ for (const options of [
     return `${origin}${pathname}${hash}`;
   });
   if (menuLinks.length !== expectedProductLinks.length || expectedProductLinks.some((href) => !menuLinks.includes(href))) {
-    fail(`the Products menu must list the three core products, Studio, marketplace, developer tutorials and documentation (found ${menuLinks.join(', ')})`);
+    fail(`the Products menu must list the overview, maintained products, Studio, marketplace, tutorials and documentation (found ${menuLinks.join(', ')})`);
   }
   if (options.javaScriptEnabled !== false && await solutionsMenu.evaluate((menu) => menu.open)) {
     fail('opening the Products menu must close the Solutions menu');
@@ -476,6 +479,15 @@ for (const options of [
     }).length);
     if (unnamedSections > 0) fail(`${product.name} has ${unnamedSections} section(s) without an accessible name`);
   }
+
+  await page.goto(`${url}products/`);
+  const journey = page.locator('figure.product-service-journey');
+  if (!await journey.isVisible() || !await journey.locator('figcaption').isVisible()) fail('product overview must show its service diagram and caption');
+  for (const product of products) {
+    if (!await journey.locator(`a[href="${product.path}"]`).isVisible()) fail(`product overview is missing the ${product.name} detail path`);
+  }
+  const implementation = page.locator('a[href="/pricing/#process"]');
+  if (!await implementation.isVisible()) fail('product overview must expose implementation responsibilities');
 
   await page.goto(`${url}pricing/`);
   // The light question comes before the brief and asks for no budget; the

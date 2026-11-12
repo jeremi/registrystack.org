@@ -22,7 +22,7 @@ const countMatches = (relativePath, pattern) => (readFileSync(resolve(relativePa
 const expectedCapabilities = countMatches('src/data/solutions.ts', /kind: 'cross-cutting'/g);
 const expectedMenuLinks = [
   1 + countMatches('src/data/solutions.ts', /slug: '\/solutions\//g),
-  4 + countMatches('src/data/products.ts', /href: '\/products\//g),
+  5 + countMatches('src/data/products.ts', /href: '\/products\//g),
 ];
 
 const server = createServer(async (request, response) => {
@@ -59,6 +59,9 @@ const viewports = [
 
 const routes = [
   { name: 'home', path: '/' },
+  { name: 'products', path: '/products/' },
+  { name: 'render', path: '/products/render/' },
+  { name: 'messaging', path: '/products/messaging/' },
   { name: 'base-registry', path: '/products/base-registry/' },
   { name: 'evidence-gateway', path: '/products/evidence-gateway/' },
   { name: 'casework', path: '/products/casework/' },
@@ -125,7 +128,7 @@ for (const viewport of viewports) {
   if (route.name === 'starters') {
     await page.locator('.hero').screenshot({ path: resolve(outputDir, `starters-hero-${viewport.name}.png`) });
   }
-  if (route.path.startsWith('/products/')) {
+  if (route.path.startsWith('/products/') && route.path !== '/products/') {
     await page.locator('.hero').screenshot({ path: resolve(outputDir, `${route.name}-hero-${viewport.name}.png`) });
     await page.locator('#fit').screenshot({ path: resolve(outputDir, `${route.name}-fit-${viewport.name}.png`) });
   }

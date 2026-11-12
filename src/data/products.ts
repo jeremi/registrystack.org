@@ -34,31 +34,34 @@ export const products = [
     tutorialLabel: 'Read the review integration tutorial',
     firstResult: 'Prepare and validate configuration for a proposed register change that requires staff review.',
   },
+  {
+    key: 'render', name: 'Registry Render', solution: 'Licence documents', shortName: 'Render', featured: false, menu: true,
+    intent: 'Generate PDF documents from approved templates',
+    description: 'Generate licence documents and certificates from supplied data and reviewed templates. Registry Render produces PDF files for your service.',
+    href: '/products/render/',
+    tutorialHref: 'https://docs.registrystack.org/tutorials/first-render-document/',
+    tutorialLabel: 'Run the document tutorial',
+    firstResult: 'Generate a sample letter locally, then request the document over HTTP.',
+  },
+  {
+    key: 'messaging', name: 'Registry Messaging', solution: 'Service notices', shortName: 'Messaging', featured: false, menu: true,
+    intent: 'Send approved email and SMS notices',
+    description: 'Send approved email or SMS notices through your configured provider. Record each request and follow its dispatch status.',
+    href: '/products/messaging/',
+    tutorialHref: 'https://docs.registrystack.org/tutorials/first-messaging/',
+    tutorialLabel: 'Run the messaging tutorial',
+    firstResult: 'Send a template-based notice through a local mock provider and inspect its status.',
+  },
 ] as const;
 
-// Supporting parts around the three products. Each has docs, not a product
-// page: the home page names them once under the product cards, and a
-// register family's working week labels the step a service does. `job` is
-// the one line the home page prints. `status` prevents documented development
-// work from being presented as a released product.
+// Additional parts used in service examples. They keep a documentation
+// destination rather than requiring a marketing page for each component.
 export const companionServices = [
-  {
-    key: 'render', name: 'Registry Render',
-    job: 'returns same bytes when package hash, document type, locale, canonical data and issuedAt match; callers retain hashes',
-    href: 'https://docs.registrystack.org/start/registry-render/',
-    status: 'released',
-  },
-  {
-    key: 'messaging', name: 'Registry Messaging',
-    job: 'delivers an approved email or SMS template when an authorized service requests it',
-    href: 'https://docs.registrystack.org/start/messaging/',
-    status: 'released',
-  },
   {
     key: 'scheduling', name: 'Registry Scheduling',
     job: 'defines capacity, holds and appointment-booking rules',
-    href: 'https://docs.registrystack.org/reference/scheduling-configuration/',
-    status: 'development',
+    href: 'https://docs.registrystack.org/start/scheduling/',
+    status: 'released',
   },
   {
     key: 'manifest', name: 'Registry Manifest',

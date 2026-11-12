@@ -21,7 +21,7 @@ const evaluationLinks = [
 ];
 
 const onSolutionPage = current === 'solutions' || current === 'local-government' || solutionAreas.some((area) => area.key === current);
-const onProductPage = current === 'studio' || current === 'starters' || products.some((product) => product.key === current);
+const onProductPage = current === 'products' || current === 'studio' || current === 'starters' || products.some((product) => product.key === current);
 const inAiSection = current === 'customization' || Astro.url.pathname.startsWith('/ai/');
 // The flagship products lead the menu; the data order is otherwise kept.
 const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
@@ -61,6 +61,8 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
     <details class="nav-group" name="main-navigation">
       <summary aria-current={onProductPage ? 'page' : undefined}>Products</summary>
       <div class="nav-group-panel">
+        <a href="/products/" aria-current={current === 'products' ? 'page' : undefined}><span class="nav-entry-name">How the products fit together</span><span class="nav-entry-blurb">A register service, from review to notice</span></a>
+        <hr class="nav-group-rule" />
         {productEntries.map((product) => (
           <a href={product.href} aria-current={current === product.key ? 'page' : undefined}>
             <span class="nav-entry-name">{product.name}</span>

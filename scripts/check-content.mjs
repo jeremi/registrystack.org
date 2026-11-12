@@ -35,6 +35,8 @@ const productPages = [
   { key: 'base-registry', route: '/products/base-registry/', file: 'src/pages/products/base-registry.astro' },
   { key: 'evidence-gateway', route: '/products/evidence-gateway/', file: 'src/pages/products/evidence-gateway.astro' },
   { key: 'casework', route: '/products/casework/', file: 'src/pages/products/casework.astro' },
+  { key: 'render', route: '/products/render/', file: 'src/pages/products/render.astro' },
+  { key: 'messaging', route: '/products/messaging/', file: 'src/pages/products/messaging.astro' },
 ];
 
 // Solution areas come from src/data/solutions.ts. The script reads the source
@@ -504,7 +506,7 @@ for (const relativePath of sweptFiles) {
 // The FAQ routes product, solution, starter, and provider questions to the pages
 // that answer them, and closes on the light "Ask a question" action.
 const faqSource = readSource('src/pages/faq.astro');
-for (const route of ['/solutions/', '/solutions/#products', 'https://marketplace.registrystack.org/', '/imprint/']) {
+for (const route of ['/solutions/', '/products/', 'https://marketplace.registrystack.org/', '/imprint/']) {
   if (!faqSource.includes(`"href": "${route}"`)) failures.push(`FAQ is missing its link to ${route}`);
 }
 if (!/<DocsHandoff[\s\S]*?primaryHref=\{askQuestionHref\(\)\}[\s\S]*?\/>/.test(faqSource)) {

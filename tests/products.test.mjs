@@ -7,9 +7,7 @@ test('the companion services state their availability and point at maintained do
   assert.deepEqual(
     companionServices.map(({ key, name, status }) => ({ key, name, status })),
     [
-      { key: 'render', name: 'Registry Render', status: 'released' },
-      { key: 'messaging', name: 'Registry Messaging', status: 'released' },
-      { key: 'scheduling', name: 'Registry Scheduling', status: 'development' },
+      { key: 'scheduling', name: 'Registry Scheduling', status: 'released' },
       { key: 'manifest', name: 'Registry Manifest', status: 'released' },
     ],
   );

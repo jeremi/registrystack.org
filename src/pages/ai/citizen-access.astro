@@ -12,7 +12,7 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
 
 <Base
   title="AI assistants for citizen services | Registry Stack"
-  description="People prepare a change to their details with an AI assistant you approve, then check and submit it on your official website. Available in a pilot, using Model Context Protocol (MCP)."
+  description="People prepare a change to their details with an AI assistant you approve, then check and submit it on your official website. Connect through Model Context Protocol (MCP)."
   ogImagePath="/og-ai.png"
   ogImageAlt="Registry Stack: Design, adapt and access public services with AI."
 >
@@ -25,17 +25,18 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
       context={context}
       exampleHref="#correction-example"
       exampleLabel="See the change of address example"
-      note="Available in a pilot for a register built on Base Registry Engine."
+      exampleNote="Fictional example: Alex’s assistant prepares a change of address; Alex checks and submits it on the institution’s website."
+      note="Assistant integration · Preview, for a configured Base Registry Engine service."
     >
       <div class="assistant-preview">
-        <p class="ai-example-label">Example · Alex asks an AI assistant</p>
+        <p class="ai-example-label">Example · Assistant from your AI provider</p>
         <p class="question-bubble">“Can I update my contact address?”</p>
         <p class="reply-bubble">“Your change is ready. Check it and submit it on the official website.”</p>
       </div>
       <p class="handoff-label"><span aria-hidden="true">↓</span> Alex opens the link</p>
       <div class="review-preview">
         <div class="review-heading">
-          <p class="ai-example-label">Official website</p>
+          <p class="ai-example-label">Your institution’s website</p>
           <span class="draft-label">Not submitted yet</span>
         </div>
         <p class="ai-example-title">Check your change of address</p>
@@ -96,7 +97,7 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
             <p>The connection uses Model Context Protocol (MCP), an open standard. Your institution can register one or more assistants that support MCP and meet the sign-in requirements in the integration guide, from one AI provider or several.</p>
           </article>
         </div>
-        <p class="section-note">For technical teams, the <a href={mcpDocsHref}>Model Context Protocol (MCP) integration guide</a> covers sign-in, the separate service that grants access to each draft, and the review website. See also <a href="/architecture/headless/">how Registry Stack connects to your existing interfaces</a> and <a href="/security/">how it handles access and accountability</a>. The integration is a Preview, outside the compatibility promise. The documentation lists it as an experimental surface: read <a href="https://docs.registrystack.org/reference/api-stability/#experimental-surfaces">what the compatibility promise covers</a>.</p>
+        <p class="section-note">For technical teams, the <a href={mcpDocsHref}>Model Context Protocol (MCP) integration guide</a> covers sign-in, the separate service that grants access to each draft, and the review website. See also <a href="/architecture/headless/">how Registry Stack connects to your existing interfaces</a> and <a href="/security/">how it handles access and accountability</a>. The connection is a Preview; the FAQ below explains what that means for compatibility.</p>
       </div>
     </section>
 
@@ -118,14 +119,14 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
         },
         {
           q: 'What does our institution provide?',
-          a: 'Your identity provider signs people in and must support token exchange. A service you operate grants and withdraws the assistant’s access to each draft. You run the two connection services behind your own TLS proxy. Sign-in and access decisions stay in your systems, and we scope this work with you in a pilot.',
+          a: 'Your identity provider signs people in and must support token exchange. A service under your institution’s control grants and withdraws access to each draft. Your institution, an appointed provider or we can operate the two connection services behind a TLS proxy; hosting and operation by us are quoted separately. Your institution keeps authority over sign-in and access decisions. We agree the connection work with you before implementation.',
         },
         {
           q: 'Does the service depend on an AI model?',
           a: 'No. Registry Stack contains no AI model, and the service runs on its configured rules. The AI model is part of the assistant, and your institution chooses the assistant. You can change or remove the assistant and the service continues to run.',
         },
         {
-          q: 'Can we use this in a pilot today?',
+          q: 'Can we connect an assistant today?',
           a: 'Yes. The assistant tools and the review page are released and documented. They are a Preview, outside the compatibility promise, so a minor release may change or remove an interface without a deprecation period. Start with one task, and agree with us when to connect real records.',
           link: { href: 'https://docs.registrystack.org/reference/api-stability/#experimental-surfaces', label: 'Read what the compatibility promise covers' },
         },

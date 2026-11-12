@@ -9,12 +9,11 @@ interface Props {
   exampleHref: string;
   exampleLabel: string;
   note?: string;
-  exampleNote?: string;
+  exampleNote: string;
 }
 
 const {
-  eyebrow, heading, lead, context, exampleHref, exampleLabel, note,
-  exampleNote = 'Fictional example of a draft that people review before anything changes.',
+  eyebrow, heading, lead, context, exampleHref, exampleLabel, note, exampleNote,
 } = Astro.props;
 // A heading of two sentences breaks between them, not inside the second one.
 const headingSentences = heading.split(/(?<=\.)\s+/);

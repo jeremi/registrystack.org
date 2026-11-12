@@ -22,7 +22,7 @@ const columns: { title: string; links: FooterEntry[] }[] = [
     { heading: 'Shared capabilities' },
     ...crossCutting.map((area) => ({ href: area.slug, label: area.name })),
   ] },
-  { title: 'Products', links: [...productEntries.map((product) => ({ href: product.href, label: product.name })), { heading: 'Authoring' }, { href: '/products/studio/', label: 'Registry Studio · Preview' }] },
+  { title: 'Products', links: [{ href: '/products/', label: 'How the products fit together' }, ...productEntries.map((product) => ({ href: product.href, label: product.name })), { heading: 'Authoring' }, { href: '/products/studio/', label: 'Registry Studio · Preview' }] },
   { title: 'Explore', links: [
     { href: 'https://marketplace.registrystack.org/', label: 'Configuration marketplace' },
     { href: '/ai/', label: 'AI for public services' },
