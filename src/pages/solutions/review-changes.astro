@@ -77,6 +77,11 @@ const casework = products.find((p) => p.key === 'casework')!;
         link: { href: casework.tutorialHref, label: casework.tutorialLabel },
       },
       {
+        q: 'Can people prepare a request with an AI assistant?',
+        a: 'Yes, in a preview integration for Base Registry Engine. A signed-in person prepares the change with an assistant your institution approves, then reviews and submits it on your site. The assistant cannot submit a request, approve it or change a record.',
+        link: { href: '/ai/citizen-access/', label: 'See citizen access through an assistant' },
+      },
+      {
         q: 'Where does our technical team start?',
         a: 'The tutorial covers authoring and package verification for a reviewed register change. Use it to check the pairing; your implementation also connects and tests submission, staff review and the authorized register update.',
         link: { href: 'https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/', label: 'Configure a reviewed register change' },
