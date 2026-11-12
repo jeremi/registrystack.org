@@ -37,6 +37,10 @@ const server = createServer(async (request, response) => {
     '.html': 'text/html',
     '.js': 'text/javascript',
     '.svg': 'image/svg+xml',
+    '.webp': 'image/webp',
+    '.jpg': 'image/jpeg',
+    '.mp4': 'video/mp4',
+    '.vtt': 'text/vtt',
   }[extname(filePath)] ?? 'application/octet-stream';
   try {
     const body = await readFile(filePath);
@@ -114,6 +118,53 @@ for (const viewport of viewports) {
   const label = `${route.name} ${viewport.name}`;
   const page = await browser.newPage({ viewport });
   await page.goto(`http://127.0.0.1:${port}${route.path}`);
+  // Each explainer picture loads as it scrolls into view and keeps the shape
+  // its width and height declare, so the screenshots below show it in place.
+  for (const image of await page.locator('.media-figure img').all()) {
+    await image.scrollIntoViewIfNeeded();
+    const picture = await image.evaluate((element) => new Promise((done) => {
+      const report = () => done({
+        src: element.currentSrc || element.getAttribute('src'),
+        ratio: element.naturalHeight > 0 ? element.naturalWidth / element.naturalHeight : 0,
+        declared: element.width / element.height,
+      });
+      if (element.complete) report();
+      else {
+        element.addEventListener('load', report, { once: true });
+        element.addEventListener('error', report, { once: true });
+      }
+    }));
+    if (picture.ratio === 0) failures.push(`${label}: picture ${picture.src} did not load`);
+    else if (Math.abs(picture.ratio / picture.declared - 1) > 0.01) {
+      failures.push(`${label}: picture ${picture.src} is ${picture.ratio.toFixed(3)}:1 but declares ${picture.declared.toFixed(3)}:1`);
+    }
+  }
+  // Return to the top so the sticky header sits where the screenshots and
+  // layout checks expect it. The site scrolls smoothly, so jump instead.
+  if (await page.evaluate(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    return window.scrollY;
+  }) !== 0) failures.push(`${label}: could not return to the top of the page before the screenshot`);
+  // Each film's poster, video and full-size links are served with their media
+  // type, and its English captions parse into cues.
+  if (viewport.name === 'desktop') {
+    const mediaUrls = await page.locator('.media-figure').evaluateAll((figures) => figures.flatMap((figure) =>
+      [...figure.querySelectorAll('video[poster], source[src], track[src], a[href]')]
+        .map((element) => element.getAttribute('poster') ?? element.getAttribute('src') ?? element.getAttribute('href'))));
+    for (const url of mediaUrls) {
+      const response = await page.request.get(new URL(url, page.url()).href);
+      if (!response.ok() || response.headers()['content-type'] === 'application/octet-stream') {
+        failures.push(`${label}: media file ${url} is not served (${response.status()} ${response.headers()['content-type']})`);
+      }
+    }
+    const captionCues = await page.locator('.media-figure track').evaluateAll((tracks) => Promise.all(tracks.map((element) =>
+      new Promise((done) => {
+        element.addEventListener('load', () => done(element.track.cues?.length ?? 0), { once: true });
+        element.addEventListener('error', () => done(0), { once: true });
+        element.track.mode = 'hidden';
+      }))));
+    if (captionCues.some((count) => count === 0)) failures.push(`${label}: a film's captions did not load`);
+  }
   // Include an expanded answer in the FAQ layout and clipping checks.
   if (route.name === 'faq') {
     await page.locator('.faq-item summary').first().click();

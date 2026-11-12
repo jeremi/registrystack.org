@@ -1,0 +1,55 @@
+---
+// A narrated film from the explainer series. The visitor starts it; nothing
+// plays on its own. The English captions file also supplies the transcript,
+// so the two always match: each NOTE block in the file starts a paragraph.
+import { readFileSync, statSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { films } from '../data/media';
+
+interface Props {
+  name: keyof typeof films;
+  title: string;
+  caption: string;
+}
+
+const { name, title, caption } = Astro.props;
+const film = films[name];
+if (!film) throw new Error(`Unknown film: ${name}`);
+const base = `/films/${name}`;
+const sizeMb = (statSync(resolve(`public${base}-720.mp4`)).size / 1_000_000).toFixed(1);
+const transcript = readFileSync(resolve(`public${base}-en.vtt`), 'utf8')
+  .split(/\r?\n\r?\n/)
+  .slice(1)
+  .reduce<string[][]>((paragraphs, block) => {
+    if (block.startsWith('NOTE')) return [...paragraphs, []];
+    const text = block.split(/\r?\n/).filter((line) => !line.includes('-->')).join(' ').trim();
+    if (text) paragraphs[paragraphs.length - 1].push(text);
+    return paragraphs;
+  }, [[]])
+  .map((sentences) => sentences.join(' '))
+  .filter(Boolean);
+if (transcript.length === 0) throw new Error(`Film ${name} has no captions to use as a transcript`);
+const captionId = `${name}-caption`;
+---
+
+<figure class="media-figure film">
+  <video controls playsinline preload="none" width="1280" height="720" poster={`${base}-poster.jpg`} aria-label={title} aria-describedby={captionId}>
+    <source src={`${base}-720.mp4`} type="video/mp4" />
+    <track kind="captions" src={`${base}-en.vtt`} srclang="en" label="English" />
+  </video>
+  <figcaption id={captionId}>{caption} Film: {film.length}, with narration and English captions. <a href={`${base}-720.mp4`}>Download the film (MP4, {sizeMb} MB)</a>.</figcaption>
+  <details class="film-transcript">
+    <summary>Read the narration</summary>
+    {transcript.map((paragraph) => <p>{paragraph}</p>)}
+  </details>
+</figure>
+
+<style>
+  .film { margin: clamp(28px, 4vw, 40px) 0 0; max-width: 880px; }
+  .film video { aspect-ratio: 16 / 9; background: var(--registry-paper); border: 1px solid var(--registry-paper-rule); display: block; height: auto; width: 100%; }
+  .film figcaption { font-size: var(--type-sm); line-height: 1.5; margin-top: 10px; }
+  .film a { text-decoration: underline; text-underline-offset: 3px; }
+  .film-transcript { font-size: var(--type-sm); line-height: 1.6; margin-top: 12px; }
+  .film-transcript summary { color: var(--registry-blue); cursor: pointer; font-weight: 600; min-height: 24px; }
+  .film-transcript p { margin: 10px 0 0; max-width: 72ch; }
+</style>

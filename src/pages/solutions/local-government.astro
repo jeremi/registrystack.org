@@ -4,6 +4,7 @@ import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import SolutionFaq from '../../components/SolutionFaq.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
+import Illustration from '../../components/Illustration.astro';
 import { describeServiceHref } from '../../data/contact';
 
 const pageTitle = 'Local government services | Registry Stack';
@@ -51,6 +52,11 @@ const pageDescription = 'Run local permit and registration services, from applic
             <a class="inline-cta" href="/solutions/land-property-and-assets/">Explore property records <span aria-hidden="true">→</span></a>
           </article>
         </div>
+        <Illustration
+          name="service-template"
+          alt="A City Council’s market stall permit service is shared as a template with a District Council and a Town Council. The District Council adds a site visit and the Town Council drops the fee. Each council runs its own installation on its own servers and keeps its own permits."
+          caption="Fictional councils: one council shares its market stall permit service as a template. Each council adapts it and keeps its own permits."
+        />
       </div>
     </section>
 

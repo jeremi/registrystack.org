@@ -1,0 +1,144 @@
+WEBVTT
+
+00:00:00.400 --> 00:00:03.300
+Governments run many
+different public services.
+
+00:00:03.700 --> 00:00:06.600
+Each one is often built from scratch.
+
+00:00:07.000 --> 00:00:13.400
+Registry Stack is open-source software that lets
+public authorities build them from the same few parts.
+
+00:00:13.800 --> 00:00:17.800
+Records and registries. Steps and
+roles. Signed answers and certificates.
+
+00:00:18.200 --> 00:00:21.400
+Each service simply uses a different mix.
+
+NOTE The same definitions
+
+00:00:22.000 --> 00:00:26.700
+They can use the same definitions, too.
+PublicSchema publishes them openly.
+
+00:00:27.100 --> 00:00:31.500
+Each registry copies the definitions
+it needs, like Person or Household,
+
+00:00:31.900 --> 00:00:36.900
+and adds its own: an enrolment,
+a farm holding, a birth.
+
+00:00:37.700 --> 00:00:41.500
+After that, no registry looks
+PublicSchema up while it runs.
+
+00:00:41.900 --> 00:00:47.500
+So a signed answer about a Person
+means the same thing on both sides.
+
+00:00:47.900 --> 00:00:50.900
+Separate records. The same definitions.
+
+NOTE One request
+
+00:00:51.400 --> 00:00:53.600
+Now, a licence renewal.
+
+00:00:53.700 --> 00:00:57.900
+Submitted. Then a check: another
+authority sends a signed answer.
+
+00:00:58.500 --> 00:01:02.300
+A question goes back to the
+requester: waiting for you.
+
+00:01:02.500 --> 00:01:05.900
+Their reply comes in, and
+the request is approved.
+
+00:01:06.100 --> 00:01:09.500
+The renewal is recorded,
+and a notice goes out.
+
+00:01:09.900 --> 00:01:12.500
+Other services reuse the same steps.
+
+NOTE Answers out
+
+00:01:13.100 --> 00:01:17.500
+A business registers. Its record
+changes, and stays where it is.
+
+00:01:17.700 --> 00:01:20.500
+A sealed certificate comes off the record.
+
+00:01:20.900 --> 00:01:23.700
+Anyone checking it gets a signed yes.
+
+00:01:23.900 --> 00:01:27.200
+Systems get an answer, not a copy.
+
+00:01:27.400 --> 00:01:33.100
+Other authorities ask too: a city council,
+a ministry. Each gets only a signed answer.
+
+00:01:33.500 --> 00:01:36.500
+Records stay put. Only
+signed answers travel.
+
+NOTE Own installations
+
+00:01:37.100 --> 00:01:39.500
+Each authority runs its own installation:
+
+00:01:39.800 --> 00:01:45.700
+its own registries, an engine that runs the
+steps, sign-in, roles and an audit trail,
+
+00:01:46.000 --> 00:01:48.700
+all on its own servers.
+
+00:01:49.500 --> 00:01:53.300
+Step back: many installations,
+the same parts.
+
+00:01:53.500 --> 00:01:56.100
+One can keep several registries.
+
+00:01:56.300 --> 00:01:59.500
+They exchange signed answers
+directly, never copies.
+
+00:01:59.800 --> 00:02:03.100
+Two share government servers,
+but not their records.
+
+NOTE Templates
+
+00:02:03.700 --> 00:02:07.500
+One council's service can
+become another's template.
+
+00:02:07.800 --> 00:02:12.900
+Each council adapts it: one adds
+a site visit, one drops the fee.
+
+00:02:13.100 --> 00:02:17.900
+The design travels. The records never do.
+
+NOTE Close
+
+00:02:19.100 --> 00:02:23.100
+Many public services,
+built from the same parts.
+
+00:02:23.300 --> 00:02:26.100
+Each authority keeps its own records.
+
+00:02:26.900 --> 00:02:29.900
+Registry Stack. Open source,
+at registrystack.org.

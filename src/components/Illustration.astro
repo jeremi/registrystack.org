@@ -1,0 +1,37 @@
+---
+// A picture from the explainer series. Each page passes its own alt text and
+// a caption that names the example and marks it as fictional. The labels in
+// these pictures are small at phone width, so the caption links the
+// full-size picture. The 2400 pixel version keeps the labels sharp on
+// high-density screens, where the picture shows at up to 2080 pixels.
+import { illustrations } from '../data/media';
+
+interface Props {
+  name: keyof typeof illustrations;
+  alt: string;
+  caption: string;
+  variant?: 'hero';
+}
+
+const { name, alt, caption, variant } = Astro.props;
+const picture = illustrations[name];
+if (!picture) throw new Error(`Unknown illustration: ${name}`);
+const base = `/illustrations/${name}`;
+const hero = variant === 'hero';
+---
+
+<figure class:list={['media-figure', 'illustration', { 'illustration-hero': hero }]}>
+  <img src={`${base}-1600.webp`} srcset={`${base}-800.webp 800w, ${base}-1600.webp 1600w, ${base}-2400.webp 2400w`} sizes="(min-width: 1120px) 1040px, 100vw" width={picture.width} height={picture.height} alt={alt} loading={hero ? 'eager' : 'lazy'} fetchpriority={hero ? 'high' : 'auto'} decoding="async" />
+  <figcaption>{caption} <a href={`${base}-2400.webp`}>Open the full-size picture</a>.</figcaption>
+</figure>
+
+<style>
+  .illustration { margin: clamp(28px, 4vw, 40px) 0 0; }
+  .illustration img { background: var(--registry-paper); border: 1px solid var(--registry-paper-rule); display: block; height: auto; width: 100%; }
+  .illustration figcaption { font-size: var(--type-sm); line-height: 1.5; margin-top: 10px; max-width: 860px; }
+  .illustration figcaption a { text-decoration: underline; text-underline-offset: 3px; }
+  .illustration-hero { margin: 0; max-width: 1040px; width: 100%; }
+  .illustration-hero img { border-color: rgba(255, 255, 255, 0.35); }
+  .illustration-hero figcaption { color: rgba(255, 255, 255, 0.8); margin-left: auto; margin-right: auto; text-align: center; }
+  .illustration-hero figcaption a { color: var(--registry-white); }
+</style>

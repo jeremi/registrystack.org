@@ -3,6 +3,7 @@
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import Illustration from '../components/Illustration.astro';
 import { describeServiceHref } from '../data/contact';
 
 const releaseSource = 'https://github.com/registrystack/registry-stack/tree/v0.46.0/products';
@@ -28,15 +29,22 @@ const registryEvidenceExample = `${releaseSource}/breg/evidence`;
     </section>
 
     <section class="section" aria-labelledby="data-space-meaning-title">
-      <div class="section-inner approach-split">
-        <div class="section-heading">
-          <h2 id="data-space-meaning-title">Agree how organizations will share and use data.</h2>
-          <p>A data space brings organizations together under shared rules and technical arrangements. The bodies governing the space set the rules for joining, requesting and using data. Each data holder decides what it can offer under those rules. An organization can provide data, use data from others or do both.</p>
+      <div class="section-inner">
+        <div class="approach-split">
+          <div class="section-heading">
+            <h2 id="data-space-meaning-title">Agree how organizations will share and use data.</h2>
+            <p>A data space brings organizations together under shared rules and technical arrangements. The bodies governing the space set the rules for joining, requesting and using data. Each data holder decides what it can offer under those rules. An organization can provide data, use data from others or do both.</p>
+          </div>
+          <div class="editorial-callout">
+            <h3>Start from a specific need</h3>
+            <p>One participant needs to check a fact another institution already holds. Agree which source can answer, who may ask and how much information the receiving service needs.</p>
+          </div>
         </div>
-        <div class="editorial-callout">
-          <h3>Start from a specific need</h3>
-          <p>One participant needs to check a fact another institution already holds. Agree which source can answer, who may ask and how much information the receiving service needs.</p>
-        </div>
+        <Illustration
+          name="same-definitions"
+          alt="PublicSchema publishes definitions openly for anyone to use, such as Person, Household, Membership, Programme and code lists. Three registries, each on its own servers, copy the definitions they need and add their own: the Social registry of the Ministry of Social Affairs adds Enrolment, the Farmer registry of the Ministry of Agriculture adds Farm holding, and the Population register of the Civil Registration Office adds Birth. The Ministry of Social Affairs asks the Farmer registry whether a person is a registered farmer and receives a signed yes. Both registries read Person the same way."
+          caption="Three fictional registries copy the definitions they need from PublicSchema. A signed answer about a person then means the same thing to the authority that asks and the one that answers."
+        />
       </div>
     </section>
 

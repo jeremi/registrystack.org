@@ -3,6 +3,8 @@
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import Illustration from '../components/Illustration.astro';
+import Film from '../components/Film.astro';
 import { describeServiceHref } from '../data/contact';
 ---
 <Base title="Registries for digital public infrastructure | Registry Stack" description="Build reusable registry capabilities for digital public infrastructure with open-source software, documented interfaces and institutional control.">
@@ -14,7 +16,14 @@ import { describeServiceHref } from '../data/contact';
       <p class="hero-lead">Connect public services to records maintained by the responsible institution. Use Registry Stack’s open-source components with your team, or work with Aubex to implement and support a service.</p>
       <div class="hero-actions"><a class="button button-primary" href={describeServiceHref('a DPI programme')} data-journey="service-inquiry">Discuss your programme</a><a class="button button-secondary" href="#shared-capabilities">See how it fits</a></div>
       <p class="hero-note">For digital-government teams, funders and implementation partners.</p>
-    </div></div></section>
+    </div>
+      <Illustration
+        variant="hero"
+        name="same-parts-many-services"
+        alt="Four public services, each kept by a different authority: register a farm holding (Ministry of Agriculture), apply for a child grant (Ministry of Social Affairs), apply for a market stall permit (City Council) and renew a licence (Professional Council). The two ministries run on shared infrastructure operated by a national ICT agency; the two councils each run on their own servers. All four are built from the same eleven parts: records, registry, links, services, steps, actions, roles, automations, signed answers, certificates and connectors."
+        caption="Four services from four fictional authorities, built from the same parts. The two ministries share government infrastructure; the two councils run their own servers."
+      />
+    </div></section>
 
     <section class="section" id="shared-capabilities" aria-labelledby="reuse-title"><div class="section-inner">
       <div class="section-heading"><p class="eyebrow">Fit with your programme</p><h2 id="reuse-title">Build a register or connect an existing source.</h2></div>
@@ -23,6 +32,11 @@ import { describeServiceHref } from '../data/contact';
         <article><h3>Establish a register where one is needed</h3><p>Define the records, access rules and permitted changes. Keep the current information and its history, and connect the applications that use it.</p><a class="inline-cta" href="/products/base-registry/">Manage records and history <span aria-hidden="true">→</span></a></article>
       </div>
       <p class="dpi-example">For example, a health authority can maintain a facility register while a licensing service checks its recorded status. The health authority controls the information it shares; the licensing service applies its own rules. <a href="/solutions/health-and-safety/">Explore facility and oversight services</a>.</p>
+      <Film
+        name="registry-stack-film"
+        title="Many public services, built from the same parts"
+        caption="Fictional ministries, councils and registration offices build five services from the same parts. Each keeps its own records and answers the others with signed answers instead of copies."
+      />
     </div></section>
 
     <section class="section section-muted" aria-labelledby="fit-title"><div class="section-inner">

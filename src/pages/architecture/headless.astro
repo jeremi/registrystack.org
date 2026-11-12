@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import DocsHandoff from '../../components/DocsHandoff.astro';
+import Illustration from '../../components/Illustration.astro';
 
 const pageTitle = 'Headless architecture for public services | Registry Stack';
 const pageDescription =
@@ -86,6 +87,12 @@ const pythonExampleHref =
             integration shown here uses MCP to reach a configured Base Registry Engine task.
           </figcaption>
         </figure>
+
+        <Illustration
+          name="requests-and-signed-answers"
+          alt="Requests come in to a Business register kept by the Business Registration Office on its own servers: from an online portal where a requester asks to register a business, a staff app where a registrar reviews, and an optional AI assistant that helps people ask for a service. The register keeps business records and runs the service steps check, review, decide and run an action. It asks the Population register of the Civil Registration Office for a signed answer, and reaches the tax authority’s existing system through a connector. Signed answers go out to a City Council permit service and a Ministry of Agriculture farmer registry, which each ask whether a business is registered, to other institutions’ systems through an API, and to a checker who scans the certificate’s QR code or reads a digital wallet credential."
+          caption="A fictional business register: a portal, a staff app and an optional assistant send requests in. Other services and systems receive signed answers, never the record."
+        />
       </div>
     </section>
 

@@ -3,6 +3,7 @@
 import Base from '../../layouts/Base.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
+import Film from '../../components/Film.astro';
 import { askQuestionHref } from '../../data/contact';
 ---
 <Base title="Registry Studio | Registry Stack" description="Review and configure registries and services with your technical team. Registry Studio is an authoring workspace available as a Preview.">
@@ -18,6 +19,11 @@ import { askQuestionHref } from '../../data/contact';
     <section class="section" id="workspace" aria-labelledby="model-title"><div class="section-inner">
       <div class="section-heading"><h2 id="model-title">See the service your team is defining.</h2><p>Review the record model, the changes people may request and the steps used to handle a service. Keep programme and technical discussions connected to the same definitions.</p></div>
       <div class="value-grid"><article><h3>Records</h3><p>Inspect the information the register keeps and review changes to its structure.</p></article><article><h3>Permitted changes</h3><p>See the actions that can change a record and the rules your team must confirm.</p></article><article><h3>Service steps</h3><p>Follow the service map and review how the work is organized.</p></article></div>
+      <Film
+        name="registry-stack-studio-film"
+        title="Registry Stack Studio: build a service from the same parts"
+        caption="A fictional city council builds a market stall permit service in Studio. An approver signs before handover, and a later change goes through the same checks and approval."
+      />
     </div></section>
 
     <section class="section section-muted" id="fit" aria-labelledby="review-title"><div class="section-inner approach-split">

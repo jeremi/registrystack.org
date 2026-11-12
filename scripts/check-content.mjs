@@ -674,6 +674,81 @@ for (const component of ['RegisterWeek']) {
   }
 }
 
+// Pictures and films from the explainer series. Each page passes its own
+// caption, which names what the example shows and marks it as fictional, so
+// the caption checks above also cover them. Every file a figure points to
+// exists, and a film starts only when the visitor asks, with English captions.
+const mediaSource = readSource('src/data/media.ts');
+const mediaNames = {
+  Illustration: new Set([...mediaSource.matchAll(/'([a-z0-9-]+)': \{ width: \d+, height: \d+ \}/g)].map(([, name]) => name)),
+  Film: new Set([...mediaSource.matchAll(/'([a-z0-9-]+)': \{ length: '[^']+' \}/g)].map(([, name]) => name)),
+};
+const mediaFiles = {
+  Illustration: (name) => [800, 1600, 2400].map((width) => `public/illustrations/${name}-${width}.webp`),
+  Film: (name) => [`public/films/${name}-720.mp4`, `public/films/${name}-poster.jpg`, `public/films/${name}-en.vtt`],
+};
+const mediaUses = listAstroFiles('src/pages').flatMap((file) =>
+  [...readSource(file).matchAll(/<(Illustration|Film)\b([^>]*)\/>/g)].map(([, component, attributes]) => ({
+    file,
+    component,
+    name: attributes.match(/\bname="([^"]+)"/)?.[1],
+    label: attributes.match(component === 'Film' ? /\btitle="([^"]*)"/ : /\balt="([^"]*)"/)?.[1],
+    caption: attributes.match(/\bcaption="([^"]*)"/)?.[1],
+  })));
+for (const use of mediaUses) {
+  const figure = `${use.file}: ${use.component} "${use.name}"`;
+  if (!use.name || !mediaNames[use.component].has(use.name)) failures.push(`${figure} is not listed in src/data/media.ts`);
+  if (!/\bfictional\b/i.test(use.caption ?? '')) failures.push(`${figure} needs a literal caption that marks the example as fictional`);
+  if (!use.label?.trim()) failures.push(`${figure} needs ${use.component === 'Film' ? 'a title' : 'alt text'}`);
+  for (const asset of use.name ? mediaFiles[use.component](use.name) : []) {
+    if (!existsSync(resolve(asset))) failures.push(`${figure} is missing ${asset}`);
+  }
+}
+const mediaPlacements = [
+  { file: 'src/pages/digital-public-infrastructure.astro', component: 'Illustration', name: 'same-parts-many-services' },
+  { file: 'src/pages/digital-public-infrastructure.astro', component: 'Film', name: 'registry-stack-film' },
+  { file: 'src/pages/data-spaces.astro', component: 'Illustration', name: 'same-definitions' },
+  { file: 'src/pages/architecture/headless.astro', component: 'Illustration', name: 'requests-and-signed-answers' },
+  { file: 'src/pages/solutions/local-government.astro', component: 'Illustration', name: 'service-template' },
+  { file: 'src/pages/products/studio.astro', component: 'Film', name: 'registry-stack-studio-film' },
+  { file: 'src/pages/customization.astro', component: 'Illustration', name: 'ai-drafted-change' },
+];
+// Every media file in the public repository is used: it belongs to a picture
+// or film in src/data/media.ts, or a page links it directly. Films are large,
+// so an unused one should not be committed by accident.
+const mediaFileSet = new Set(Object.entries(mediaNames).flatMap(([component, names]) =>
+  [...names].flatMap((name) => mediaFiles[component](name))));
+const pageSources = listAstroFiles('src').map(readSource).join('\n');
+for (const folder of ['public/illustrations', 'public/films']) {
+  for (const entry of existsSync(resolve(folder)) ? readdirSync(resolve(folder)) : []) {
+    const file = `${folder}/${entry}`;
+    if (!entry.startsWith('.') && !mediaFileSet.has(file) && !pageSources.includes(file.replace(/^public/, ''))) {
+      failures.push(`${file} is not used by any page or by src/data/media.ts`);
+    }
+  }
+}
+for (const { file, component, name } of mediaPlacements) {
+  if (!mediaUses.some((use) => use.file === file && use.component === component && use.name === name)) {
+    failures.push(`${file} is missing its ${component} "${name}"`);
+  }
+}
+const filmComponent = readSource('src/components/Film.astro');
+const filmVideo = filmComponent.match(/<video\b[^>]*>/)?.[0] ?? '';
+if (!/\bcontrols\b/.test(filmVideo) || !/\bpreload="none"/.test(filmVideo) || !/\bposter=/.test(filmVideo) ||
+    /\bautoplay\b/.test(filmVideo) || !/<track\b[^>]*\bkind="captions"[^>]*\bsrclang="en"/.test(filmComponent)) {
+  failures.push('Film.astro must render a visitor-started video with controls, preload="none", a poster and an English captions track');
+}
+const illustrationComponent = readSource('src/components/Illustration.astro');
+const illustrationImage = illustrationComponent.match(/<img\b[^>]*>/)?.[0] ?? '';
+if (!/\bwidth=/.test(illustrationImage) || !/\bheight=/.test(illustrationImage) || !/\bsizes=/.test(illustrationImage) ||
+    !/-800\.webp 800w/.test(illustrationImage) || !/-1600\.webp 1600w/.test(illustrationImage) ||
+    !/-2400\.webp 2400w/.test(illustrationImage)) {
+  failures.push('Illustration.astro must give its picture dimensions, sizes and 800w, 1600w and 2400w sources, so it stays sharp on high-density screens');
+}
+if (!/<a\b[^>]*href=[^>]*-2400\.webp/.test(illustrationComponent)) {
+  failures.push('Illustration.astro must link the full-size picture for readers on small screens');
+}
+
 // The assistant channel states its maturity and the limit of what an
 // assistant can do, on the page that offers it.
 const citizenAccessSource = readSource('src/pages/ai/citizen-access.astro');
