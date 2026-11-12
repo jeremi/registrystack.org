@@ -36,8 +36,8 @@ export const products = [
   },
   {
     key: 'render', name: 'Registry Render', solution: 'Licence documents', shortName: 'Render', featured: false, menu: true,
-    intent: 'Generate PDF documents from approved templates',
-    description: 'Generate licence documents and certificates from supplied data and reviewed templates. Registry Render produces PDF files for your service.',
+    intent: 'Generate and digitally sign PDF documents',
+    description: 'Generate PDF licences and certificates from supplied data and approved templates. Apply your institution’s digital seal, with optional timestamping.',
     href: '/products/render/',
     tutorialHref: 'https://docs.registrystack.org/tutorials/first-render-document/',
     tutorialLabel: 'Run the document tutorial',
