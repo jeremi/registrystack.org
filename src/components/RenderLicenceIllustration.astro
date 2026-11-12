@@ -2,7 +2,7 @@
 import RegistrySeal from './RegistrySeal.astro';
 ---
 
-<figure class="licence-illustration" aria-labelledby="render-licence-caption" data-render-licence data-motion="paused">
+<figure class="licence-illustration" aria-labelledby="render-licence-caption">
   <div class="illustration-composition">
     <div class="licence-source">
       <p class="licence-source-owner">Your licensing service</p>
@@ -34,27 +34,9 @@ import RegistrySeal from './RegistrySeal.astro';
       <div class="licence-corner-seal"><RegistrySeal size={126} ringText="PROFESSIONAL LICENSING AUTHORITY · " monogram="PLA" animated={true} pathId="render-licence-seal" /></div>
     </div>
   </div>
-  <figcaption class="licence-figure-footer"><span class="licence-caption-text" id="render-licence-caption">Illustrative professional licence, generated and signed from the service’s approved record.</span><button type="button" class="licence-motion-control" data-seal-motion-control hidden>Pause motion</button></figcaption>
+  <figcaption class="licence-figure-footer" id="render-licence-caption">Illustrative professional licence, generated and signed from the service’s approved record.</figcaption>
 </figure>
 
-<script>
-  document.querySelectorAll<HTMLElement>('[data-render-licence]').forEach((figure) => {
-    const button = figure.querySelector<HTMLButtonElement>('[data-seal-motion-control]');
-    if (!button) return;
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let pausedByUser = false;
-    const updateMotion = () => {
-      const running = !reducedMotion.matches && !pausedByUser;
-      figure.dataset.motion = running ? 'running' : 'paused';
-      button.hidden = reducedMotion.matches;
-      button.textContent = running ? 'Pause motion' : 'Play motion';
-      button.setAttribute('aria-label', running ? 'Pause digital seal animation' : 'Play digital seal animation');
-    };
-    button.addEventListener('click', () => { pausedByUser = !pausedByUser; updateMotion(); });
-    reducedMotion.addEventListener('change', updateMotion);
-    updateMotion();
-  });
-</script>
 
 <style>
   .licence-illustration { max-width: 960px; margin: 0 auto; color: var(--registry-ink); font-family: var(--registry-font); }
@@ -91,14 +73,7 @@ import RegistrySeal from './RegistrySeal.astro';
   .licence-status-check img { display: block; width: 60px; height: 60px; flex: 0 0 60px; }
   .licence-status-check p { max-width: 110px; margin: 0; color: var(--registry-body); font-size: var(--type-base); line-height: 1.5; }
   .licence-corner-seal { position: absolute; z-index: 2; top: -34px; right: -34px; width: 126px; height: 126px; background: var(--registry-white); border-radius: 50%; }
-  .licence-figure-footer { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 6px; }
-  .licence-caption-text { display: block; max-width: 660px; margin: 0; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.6; }
-  .licence-motion-control { flex: 0 0 auto; min-height: 36px; padding: 6px 8px; border: 0; border-bottom: 1px solid var(--registry-blue-rule); background: transparent; color: var(--registry-blue); font: inherit; font-size: var(--type-sm); cursor: pointer; }
-  .licence-motion-control[hidden] { display: none; }
-  .licence-motion-control:focus-visible { outline: 2px solid var(--registry-blue); outline-offset: 3px; }
-  .licence-illustration[data-motion="paused"] :global(.seal-text-ring) { animation-play-state: paused; }
-  .licence-illustration[data-motion="running"] :global(.seal-text-ring) { animation-play-state: running; }
-  @media (prefers-reduced-motion: reduce) { .licence-motion-control { display: none; } }
+  .licence-figure-footer { max-width: 660px; margin: 6px auto 0; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.6; }
   @media (max-width: 850px) {
     .illustration-composition { grid-template-columns: 170px 88px minmax(0, 360px); gap: 18px; padding-right: 32px; }
     .licence-input-record { padding: 16px; }
@@ -125,7 +100,6 @@ import RegistrySeal from './RegistrySeal.astro';
     .licence-masthead p { max-width: 170px; font-size: var(--type-sm); }
     .licence-corner-seal { top: -31px; right: -14px; width: 110px; height: 110px; }
     .licence-corner-seal :global(.registry-seal) { width: 110px !important; height: 110px !important; }
-    .licence-figure-footer { align-items: flex-start; gap: 10px; }
   }
   @media (max-width: 360px) {
     .illustration-composition { grid-template-columns: minmax(0, 1fr) 88px; gap: 24px 18px; }
@@ -139,7 +113,5 @@ import RegistrySeal from './RegistrySeal.astro';
     .licence-corner-seal { width: 94px; height: 94px; }
     .licence-corner-seal :global(.registry-seal) { width: 94px !important; height: 94px !important; }
     .licence-facts { gap: 18px 12px; }
-    .licence-figure-footer { display: block; }
-    .licence-motion-control { margin-top: 8px; }
   }
 </style>
