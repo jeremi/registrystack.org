@@ -467,9 +467,12 @@ export function createSharedTrackingClient(options = {}) {
       notify();
       return effectiveState();
     },
-    async pageview(pageview) {
+    // An optional pageview, such as a film start, does not suspend accepted
+    // consent when the broker is unavailable; the page visit itself does.
+    async pageview(pageview, { optional = false } = {}) {
       if (effectiveState().choice !== 'accepted') throw trackingError();
-      return request('pageview', { expectedGeneration: state.generation, pageview });
+      return request('pageview', { expectedGeneration: state.generation, pageview },
+        optional ? { recoverUnavailable: true } : {});
     },
     async associate(expectedGeneration, requestOptions = {}) {
       if (effectiveState().choice !== 'accepted' || state.generation !== expectedGeneration) throw trackingError();

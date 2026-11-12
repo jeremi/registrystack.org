@@ -841,6 +841,51 @@ test('an unavailable association falls back without suspending accepted consent'
   f.client.close();
 });
 
+test('an optional pageview that cannot be recorded leaves accepted consent in place', async () => {
+  const optionalView = {
+    page_url: 'https://registrystack.org/films/registry-stack-film-720.mp4',
+    page_title: 'Film started: registry-stack-film',
+    page_referrer: '',
+  };
+  for (const optional of [true, false]) {
+    const f = fixture();
+    const initial = await nextRequest(() => f.client.read());
+    f.reply(accepted);
+    await initial.promise;
+    const view = await nextRequest(() => f.client.pageview(optionalView, { optional }));
+    const viewRequest = f.sent.at(-1).data;
+    assert.equal(viewRequest.type, 'pageview');
+    f.message({ ...envelope, id: viewRequest.id, ok: false, error: 'unavailable' });
+    await assert.rejects(view.promise, error => error?.code === 'broker-unavailable');
+    if (optional) {
+      assert.deepEqual(f.client.state, accepted);
+      assert.equal(f.failures.length, 0);
+    } else {
+      // An ordinary page visit that cannot be recorded still fails closed.
+      assert.equal(f.client.state.choice, null);
+      assert.equal(f.failures.length, 1);
+    }
+    f.client.close();
+  }
+});
+
+test('an optional pageview still fails closed on a prohibited broker response', async () => {
+  const f = fixture();
+  const initial = await nextRequest(() => f.client.read());
+  f.reply(accepted);
+  await initial.promise;
+  const view = await nextRequest(() => f.client.pageview({
+    page_url: 'https://registrystack.org/films/registry-stack-film-720.mp4',
+    page_title: 'Film started: registry-stack-film',
+    page_referrer: '',
+  }, { optional: true }));
+  f.message({ ...envelope, id: f.sent.at(-1).data.id, ok: false, error: 'not-allowed' });
+  await assert.rejects(view.promise, error => error?.code === 'broker-not-allowed');
+  assert.equal(f.client.state.choice, null);
+  assert.equal(f.failures.length, 1);
+  f.client.close();
+});
+
 test('device disclosure is returned once and is never persisted or retained on client state', async () => {
   const f = fixture();
   const initial = await nextRequest(() => f.client.read());

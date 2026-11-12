@@ -190,5 +190,23 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
         }
       });
     </script>
+    <script>
+      // Counts the first play of each film on the page. Mautic takes part only
+      // where its consent panel is rendered, that is, where it is configured.
+      import { createFilmStartRecorder } from '../lib/film-tracking.mjs';
+      import { getSharedTrackingClient } from '../lib/shared-tracking-client.mjs';
+
+      type Umami = { track?: (name: string, data: Record<string, string>) => void };
+      const mauticConfigured = document.querySelector('[data-tracking-preferences]') !== null;
+      const recordFilmStart = createFilmStartRecorder({
+        location: window.location,
+        umami: () => (window as Window & { umami?: Umami }).umami,
+        mautic: () => (mauticConfigured ? getSharedTrackingClient() : undefined),
+      });
+      // Play events do not bubble, so the document listens in the capture phase.
+      document.addEventListener('play', (event) => {
+        if (event.target instanceof HTMLVideoElement) recordFilmStart(event.target);
+      }, true);
+    </script>
   </body>
 </html>

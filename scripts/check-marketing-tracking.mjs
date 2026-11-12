@@ -111,8 +111,10 @@ const contentTypes = {
   '.jpg': 'image/jpeg',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.mp4': 'video/mp4',
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
+  '.vtt': 'text/vtt; charset=utf-8',
   '.webmanifest': 'application/manifest+json',
   '.webp': 'image/webp',
   '.woff': 'font/woff',
@@ -1410,6 +1412,98 @@ async function runExcludedVisitorScenario(browser, engine) {
   }
 }
 
+// Stands in for the Umami script, which this fixture build does not load, and
+// counts play events so the once-per-film check cannot pass vacuously.
+const umamiStubScript = `window.umami = {
+  track(name, data) { (window.__umamiEvents ||= []).push({ name, data }); },
+};
+document.addEventListener('play', () => { window.__filmPlayEvents = (window.__filmPlayEvents ?? 0) + 1; }, true);`;
+
+async function startFilm(page) {
+  // Headless engines may not decode the MP4. The first play() still fires a
+  // play event, but a later one on an unplayable film fires none, so a start
+  // with no play event dispatches one the way pause and resume would.
+  return page.locator('video').first().evaluate(async video => {
+    const before = window.__filmPlayEvents ?? 0;
+    video.muted = true;
+    video.pause();
+    const outcome = await video.play().then(() => 'playing', error => error.name);
+    if ((window.__filmPlayEvents ?? 0) === before) video.dispatchEvent(new Event('play'));
+    return { outcome, playEvents: window.__filmPlayEvents ?? 0 };
+  });
+}
+
+async function runFilmStartScenario(browser, engine) {
+  console.log(`${engine}: checking film starts in Umami and consented Mautic.`);
+  const filmPage = '/products/studio/';
+  const filmUrl = `${mainOrigin}/films/registry-stack-studio-film-720.mp4`;
+  const filmFailure = 'Film start for registry-stack-studio-film was not recorded in Mautic: broker-unavailable';
+  for (const choice of ['accepted', 'rejected', 'failed']) {
+    const records = createRecords(`${engine}-film-${choice}`);
+    const bridgeControl = { instrument: true };
+    const warnings = [];
+    const context = await browser.newContext({ serviceWorkers: 'block' });
+    try {
+      await context.addInitScript(umamiStubScript);
+      await configureContext(context, records, { bridgeControl });
+      const page = await context.newPage();
+      page.on('console', message => {
+        if (message.type() === 'warning' || message.type() === 'error') warnings.push(message.text());
+      });
+      await page.goto(`${mainOrigin}${filmPage}`);
+      const panel = page.locator('[data-tracking-preferences]');
+      await panel.waitFor({ state: 'visible' });
+      const button = choice === 'rejected' ? 'Reject optional cookies' : 'Accept optional cookies';
+      await panel.getByRole('button', { name: button }).click();
+      await panel.waitFor({ state: 'hidden' });
+      if (choice === 'failed') {
+        // Fail only the film hit, after the page visit has been recorded.
+        await waitFor(() => records.pageviews.length === 1, `${engine}: the consented page visit was not recorded.`);
+        bridgeControl.failNativeEvents = 1;
+      }
+      // An accepted visitor plays straight away, while the page visit may
+      // still be on its way to Mautic.
+      const first = await startFilm(page);
+      const second = await startFilm(page);
+      assert.equal(first.playEvents, 1, `${engine}: the first film start fired no play event.`);
+      assert.equal(second.playEvents, 2, `${engine}: the second film start fired no play event.`);
+      const filmHits = () => records.pageviews.filter(view => view.page_url === filmUrl);
+      if (choice === 'accepted') {
+        await waitFor(() => filmHits().length === 1, `${engine}: the consented film start was not recorded in Mautic.`);
+        await waitFor(() => records.pageviews.length === 2, `${engine}: the consented page visit was not recorded.`);
+        assert.equal(filmHits()[0].page_title, 'Film started: registry-stack-studio-film');
+        assert.equal(new Set(records.pageviews.map(view => view.contactId)).size, 1,
+          `${engine}: the film start was not attached to the visitor's contact.`);
+      } else if (choice === 'rejected') {
+        assert.equal(records.nativeEventRequests, 0, `${engine}: Mautic was contacted after rejection.`);
+      } else {
+        await waitFor(() => warnings.includes(filmFailure), `${engine}: the failed film start was not reported.`, 10_000);
+        assert.equal(records.nativeEventRequests, 2, `${engine}: the failed film start was retried.`);
+        assert.equal(await panel.isVisible(), false, `${engine}: a failed film start reopened the consent panel.`);
+        assert.equal(await panel.locator('[data-tracking-error]').isVisible(), false,
+          `${engine}: a failed film start showed a tracking error.`);
+      }
+      assert.equal(
+        await observeWithin(() => filmHits().length > (choice === 'accepted' ? 1 : 0), 1_000),
+        false,
+        `${engine}: a film start reached Mautic twice, without consent, or despite failing.`,
+      );
+      assert.deepEqual(
+        await page.evaluate(() => (window.__umamiEvents ?? []).filter(event => event.name === 'film_play')),
+        [{ name: 'film_play', data: { film: 'registry-stack-studio-film', source_path: filmPage } }],
+        `${engine}: Umami did not count exactly one film start after ${choice} tracking.`,
+      );
+      // Some engines also log the deliberately failed request itself.
+      const expected = text => text === filmFailure || (choice === 'failed' && text.includes('/mtc/event'));
+      assert.deepEqual(warnings.filter(text => !expected(text) && /track|mautic|film/i.test(text)), [],
+        `${engine}: film tracking logged an unexpected warning.`);
+      assert.deepEqual(records.errors, [], `${engine}: film tracking raised a page error.`);
+    } finally {
+      await context.close();
+    }
+  }
+}
+
 async function runRetainedLocalRefusalScenario(browser, engine) {
   console.log(`${engine}: checking retained local refusal startup replay.`);
   const records = createRecords(`${engine}-retained-local-refusal`);
@@ -2058,6 +2152,7 @@ async function runEngine(engine, browserType) {
     await runSplitStartupBudgetScenario(browser, engine);
     await runExplicitBootstrapRecoveryScenario(browser, engine);
     await runExcludedVisitorScenario(browser, engine);
+    await runFilmStartScenario(browser, engine);
     await runRetainedLocalRefusalScenario(browser, engine);
     if (marketplaceDist) {
       await runMarketplaceEnrollmentScenario(browser, engine);
@@ -2099,7 +2194,7 @@ for (const engine of requestedBrowsers) {
 // Keep the enrollment regression independently reproducible while the default
 // command still runs every shared-tracking scenario.
 const selectedScenario = process.env.TRACKING_SCENARIO?.trim() || 'all';
-assert.ok(['all', 'marketplace-enrollment', 'legacy-migration'].includes(selectedScenario), `Unsupported tracking scenario: ${selectedScenario}`);
+assert.ok(['all', 'marketplace-enrollment', 'legacy-migration', 'film-start'].includes(selectedScenario), `Unsupported tracking scenario: ${selectedScenario}`);
 if (selectedScenario === 'marketplace-enrollment') {
   assert.ok(marketplaceDist, 'The marketplace enrollment scenario requires MARKETPLACE_TRACKING_DIST.');
 }
@@ -2111,6 +2206,7 @@ for (const engine of requestedBrowsers) {
     const browser = await browserType.launch();
     try {
       if (selectedScenario === 'legacy-migration') await runLegacyConsentMigrationScenario(browser, engine);
+      else if (selectedScenario === 'film-start') await runFilmStartScenario(browser, engine);
       else await runMarketplaceEnrollmentScenario(browser, engine);
     }
     finally { await browser.close(); }
@@ -2118,7 +2214,7 @@ for (const engine of requestedBrowsers) {
 }
 
 console.log(
-  `${selectedScenario === 'all' ? 'Shared tracking' : selectedScenario === 'legacy-migration' ? 'Legacy consent migration' : 'Marketplace enrollment'} browser checks passed in ${requestedBrowsers.join(', ')} (` +
+  `${{ all: 'Shared tracking', 'legacy-migration': 'Legacy consent migration', 'film-start': 'Film start', 'marketplace-enrollment': 'Marketplace enrollment' }[selectedScenario]} browser checks passed in ${requestedBrowsers.join(', ')} (` +
   `${docsDist ? 'canonical Registry Docs build' : 'shared-client docs fixture'}, ` +
   `${marketplaceDist ? 'canonical marketplace build' : 'marketplace journey skipped'}).`,
 );

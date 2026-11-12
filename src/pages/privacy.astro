@@ -50,19 +50,22 @@ const pageDescription =
           <p>
             We run a self-hosted analytics tool, Umami, at stats.registrystack.org. It is
             cookie-free. When it is enabled, it records aggregate, de-identified usage data: page
-            views, referring sites, and a general browser and device class. It does not build a
-            profile of an individual visitor and does not share data with advertising networks. We
-            also tag some outbound link clicks, for example to the docs site, the live demo, or
-            GitHub, with the link&rsquo;s destination and label, so we can see which resources
-            visitors use next. These events are not tied to a name, an email address, or any other
-            identifying detail.
+            views, referring sites, and a general browser and device class. It may also record
+            interactions with page elements, such as links, buttons, films, pictures, downloads
+            and forms. An interaction event records what was used and on which page, for example
+            a link&rsquo;s destination and label or the name of a film you started, so we can see
+            which resources visitors find useful. It never records what you type into a form.
+            These events are not tied to
+            a name, an email address, or any other identifying detail. Umami does not build a
+            profile of an individual visitor and does not share data with advertising networks.
           </p>
           <h3>Optional visit tracking</h3>
           <p>
             When optional tracking is enabled, we ask before loading our self-hosted Mautic
             tracker. If you accept tracking, it records the public pages you visit on this website
-            and the canonical documentation at docs.registrystack.org,
-            referring sites, campaign labels, visit times, and browser and device information.
+            and the canonical documentation at docs.registrystack.org, referring sites, campaign
+            labels, visit times, and browser and device information. It may also record how you
+            use those pages, for example the films you start or the files you download.
             We use this history to understand interest in our services. If you then submit a
             non-privacy website enquiry or starter access request, we can link your current visits to the
             contact details you provide. A privacy request does not send a browser identifier or
@@ -159,7 +162,8 @@ const pageDescription =
           <h2 id="privacy-basis-title">Legal bases for visitors in the EEA and UK</h2>
           <p>
             Where the GDPR or the UK GDPR applies, we rely on legitimate interest to run
-            aggregate, cookie-free analytics that help us understand which pages are useful.
+            aggregate, cookie-free analytics that help us understand which pages and
+            materials are useful.
             Optional Mautic visit tracking relies on your consent, which you can withdraw at any time. If
             you submit a website enquiry or starter access request, that exchange proceeds on the basis
             that you chose to contact us and provided your information for that purpose.
@@ -201,7 +205,7 @@ const pageDescription =
             it last changed.
           </p>
 
-          <p class="legal-effective">Effective date: November 11, 2026.</p>
+          <p class="legal-effective">Effective date: November 12, 2026.</p>
         </div>
       </div>
     </section>
