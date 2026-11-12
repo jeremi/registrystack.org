@@ -150,5 +150,9 @@ test('privacy policy covers interaction events in Umami and Mautic without listi
   assert.match(privacy, /never records what you type into a form/i);
   assert.match(privacy, /may also record how you\s+use those pages, for example the films you start or the files you download/i);
   assert.match(privacy, /which pages and\s+materials are useful/i);
+  // Umami, which is cookie-free and aggregate, does not honour these signals;
+  // the policy must not read as if it did.
+  assert.match(privacy, /For this optional tracking, we also respect browser Do Not\s+Track and Global\s+Privacy Control signals\./);
+  assert.doesNotMatch(privacy, /(^|[.>]\s*)We also respect browser Do Not Track/m);
   assert.match(privacy, /Effective date: November 12, 2026\./);
 });
