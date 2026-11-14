@@ -63,6 +63,40 @@ Public Sans and IBM Plex Mono, ink text, stamp red and restrained brass on dark
 backgrounds. Keep readable text, visible focus, adequate link targets and
 layouts that work from mobile through desktop.
 
+## French localization
+
+French pages live in `src/pages/fr/` under the same slug as their English page,
+so `/pricing/` becomes `/fr/pricing/`. `src/i18n.ts` lists the English paths
+that have a French version (`frenchPagePaths`) and provides the helpers:
+`localeForPath`, `localizedPath`, `alternatePaths`, `englishHreflang` and
+`translator`. Pages not in that list (starters, marketplace, blog, legal pages,
+pilot, 404 and the docs) stay English.
+
+- `Base.astro` sets `<html lang>`, the canonical URL and reciprocal `hreflang`
+  alternates (`en`, `fr`, and `x-default` pointing to English) for every listed
+  page, and switches the default title, description and social image
+  (`public/og-image-fr.png`, built by `npm run build:og`) on French pages.
+- Shared components read the locale from `Astro.url.pathname` and pick their
+  wording with `t(english, french)`. French data lives in `src/data/fr/`: same
+  keys, slugs and links as the English data, with every reader-facing text
+  translated. `tests/french-data.test.mjs` enforces that parity.
+- The header's language switch leads to the same page in the other language.
+  An English page without a French version leads to `/fr/`. There is no
+  automatic redirect by browser language.
+- On French pages, internal links go to the French page when one exists
+  (`localizedPath`). A link to an English page or an English outside site
+  carries `hreflang="en"` and says "(en anglais)" in its text.
+- French typography uses the typographic apostrophe (’), guillemets « » and a
+  no-break space before `:` `;` `?` `!` and inside guillemets.
+- Contact links pass the locale (`describeServiceHref(context, 'fr')`) and lead
+  to `/fr/contact/`; the email fallback is then written in French.
+
+`npm run check:french` (part of `npm run check`, after a build) checks every
+listed pair: `lang`, one canonical, the alternates, one `h1`, the language
+switch, French link destinations and fragments, labelled English links, no
+English wording left from the shared components, and no horizontal overflow
+on a phone or desktop screen. It names each French page that is not built.
+
 ## Pages
 
 Routes, navigation and solution and product memberships live in

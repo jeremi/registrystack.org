@@ -2,6 +2,8 @@
 // Questions a reader asks before deciding, at the foot of a solution area
 // page. The answers carry the implementation vocabulary the page itself keeps
 // off, and link to the starter, product or docs page that holds the depth.
+import { englishHreflang, localeForPath, localizedPath, translator } from '../i18n';
+
 interface Item {
   q: string;
   a: string;
@@ -14,7 +16,11 @@ interface Props {
   muted?: boolean;
 }
 
-const { heading = 'Questions for planning the service', items, muted = false } = Astro.props;
+// French pages pass French items; links go to the French page where one
+// exists, and a link to an English page carries hreflang="en".
+const locale = localeForPath(Astro.url.pathname);
+const t = translator(locale);
+const { heading = t('Questions for planning the service', 'Questions pour préparer le service'), items, muted = false } = Astro.props;
 ---
 <section id="faq" class={muted ? 'section section-muted' : 'section'} aria-labelledby="solution-faq-title">
   <div class="section-inner">
@@ -28,7 +34,7 @@ const { heading = 'Questions for planning the service', items, muted = false } =
           <summary>{item.q}</summary>
           <div class="faq-answer">
             <p>{item.a}</p>
-            {item.link && <p><a class="inline-cta" href={item.link.href}>{item.link.label} <span aria-hidden="true">→</span></a></p>}
+            {item.link && <p><a class="inline-cta" href={localizedPath(item.link.href, locale)} hreflang={englishHreflang(localizedPath(item.link.href, locale), locale)}>{item.link.label} <span aria-hidden="true">→</span></a></p>}
           </div>
         </details>
       ))}

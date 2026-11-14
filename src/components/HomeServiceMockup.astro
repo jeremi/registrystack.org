@@ -3,6 +3,10 @@
 // Grounded in the licensing journey and the maintained product concepts:
 // Casework records the officer's decision; the register separately authorizes
 // application of the change. Screens and service rules belong to implementation.
+// The French home page shows the same example in French.
+import { localeForPath, translator } from '../i18n';
+const isFrench = localeForPath(Astro.url.pathname) === 'fr';
+const t = translator(isFrench ? 'fr' : 'en');
 ---
 
 <figure class="home-service-mockup" aria-labelledby="home-service-title" aria-describedby="home-service-caption">
@@ -13,51 +17,53 @@
         <path d="M14 1v7h6M8 13h8M8 18h8M8 23h5" stroke="currentColor" stroke-width="1.5" />
       </svg>
       <div>
-        <h2 id="home-service-title">Example · First licence application</h2>
+        <h2 id="home-service-title">{t('Example · First licence application', 'Exemple · Première demande d’autorisation')}</h2>
         <p class="application-reference">APP-2093</p>
       </div>
     </header>
-    <p class="step-owner">Provided by: your existing portal, or a new form</p>
+    <p class="step-owner">{t('Provided by: your existing portal, or a new form', 'Fourni par : votre portail existant, ou un nouveau formulaire')}</p>
 
     <div class="application-content">
       <dl class="application-details">
-        <div><dt>Applicant</dt><dd>Example applicant</dd></div>
-        <div><dt>Licence type</dt><dd>Professional licence</dd></div>
+        <div><dt>{t('Applicant', 'Demandeur')}</dt><dd>{t('Example applicant', 'Exemple de demandeur')}</dd></div>
+        <div><dt>{t('Licence type', 'Type d’autorisation')}</dt><dd>{t('Professional licence', 'Autorisation d’exercice')}</dd></div>
       </dl>
       <div class="supporting-document">
         <svg viewBox="0 0 20 22" fill="none" aria-hidden="true">
           <path d="M4 1h8l5 5v15H4V1Z" stroke="currentColor" stroke-width="1.3" />
           <path d="M12 1v5h5M7 11h7M7 15h7" stroke="currentColor" stroke-width="1.3" />
         </svg>
-        <div><span class="document-label">Supporting document</span><strong>Qualification certificate</strong></div>
-        <span class="document-state">Submitted</span>
+        <div><span class="document-label">{t('Supporting document', 'Pièce justificative')}</span><strong>{t('Qualification certificate', 'Attestation de qualification')}</strong></div>
+        <span class="document-state">{t('Submitted', 'Déposée')}</span>
       </div>
     </div>
 
     <section class="staff-review" aria-labelledby="home-review-title">
       <div class="review-heading">
-        <h3 id="home-review-title">Staff review</h3>
-        <span class="approval-state"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" /></svg>Approved</span>
+        <h3 id="home-review-title">{t('Staff review', 'Examen par un agent')}</h3>
+        <span class="approval-state"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" /></svg>{t('Approved', 'Approuvée')}</span>
       </div>
-      <p>An officer records the decision.</p>
-      <p class="step-owner">Provided by: Registry Casework</p>
+      <p>{t('An officer records the decision.', 'Un agent consigne la décision.')}</p>
+      <p class="step-owner">{t('Provided by: Registry Casework', 'Fourni par : Registry Casework')}</p>
     </section>
   </div>
 
   <section class="register-panel" aria-labelledby="home-register-title">
     <div class="register-heading">
-      <div><p class="register-label">Register entry</p><h3 id="home-register-title">Professional licence</h3></div>
+      <div><p class="register-label">{t('Register entry', 'Inscription au registre')}</p><h3 id="home-register-title">{t('Professional licence', 'Autorisation d’exercice')}</h3></div>
       <span class="licence-reference">LIC-2093</span>
     </div>
     <dl class="register-details">
-      <div><dt>Status</dt><dd><span class="active-dot" aria-hidden="true"></span>Active</dd></div>
-      <div><dt>Entry</dt><dd>First licence</dd></div>
+      <div><dt>{t('Status', 'Statut')}</dt><dd><span class="active-dot" aria-hidden="true"></span>{t('Active', 'En vigueur')}</dd></div>
+      <div><dt>{t('Entry', 'Inscription')}</dt><dd>{t('First licence', 'Première autorisation')}</dd></div>
     </dl>
-    <p class="step-owner">Provided by: Base Registry Engine</p>
-    <p class="register-authority"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" /></svg>Applied by authorized staff</p>
+    <p class="step-owner">{t('Provided by: Base Registry Engine', 'Fourni par : Base Registry Engine')}</p>
+    <p class="register-authority"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" /></svg>{t('Applied by authorized staff', 'Appliquée par un agent habilité')}</p>
   </section>
 
-  <figcaption id="home-service-caption">A fictional first-licence application, from the applicant’s form to staff review and the register entry.</figcaption>
+  {isFrench
+    ? <figcaption id="home-service-caption">Une première demande d’autorisation d’exercice fictive, du formulaire du demandeur à l’examen par un agent puis à l’inscription au registre.</figcaption>
+    : <figcaption id="home-service-caption">A fictional first-licence application, from the applicant’s form to staff review and the register entry.</figcaption>}
 </figure>
 
 <style>

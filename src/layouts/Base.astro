@@ -3,6 +3,7 @@ import '../styles/global.css';
 import TrackingPreferences from '../components/TrackingPreferences.astro';
 import { marketingTrackingUrl } from '../lib/marketing-tracking';
 import { articleLd, organizationLd, websiteLd } from '../lib/structured-data.ts';
+import { alternatePaths, localeForPath } from '../i18n.ts';
 
 interface Props {
   title?: string;
@@ -17,19 +18,31 @@ interface Props {
   ogImageAlt?: string;
 }
 
+// Pages under /fr/ are French; their defaults are the French wording of the
+// English ones, and the French social card is og-image-fr.png.
+const locale = localeForPath(Astro.url.pathname);
+const isFrench = locale === 'fr';
 const {
-  title = 'Registry Stack | Software for official registers and the services that use them',
-  description =
-    'Open-source registry software for national, regional and local government, with AI-assisted design and implementation support.',
+  title = isFrench
+    ? 'Registry Stack | Des logiciels pour les registres officiels et les services qui les utilisent'
+    : 'Registry Stack | Software for official registers and the services that use them',
+  description = isFrench
+    ? 'Logiciel open source pour les registres des administrations nationales, régionales et locales, avec une aide de l’IA à la conception et à la mise en œuvre.'
+    : 'Open-source registry software for national, regional and local government, with AI-assisted design and implementation support.',
   noindex = false,
   type = 'website',
   publishedAt,
   updatedAt,
   author = 'Registry Stack',
-  ogImagePath = '/og-image.png',
-  ogImageAlt = 'Registry Stack: Software for official registers and the services that use them.',
+  ogImagePath = isFrench ? '/og-image-fr.png' : '/og-image.png',
+  ogImageAlt = isFrench
+    ? 'Registry Stack : des logiciels pour les registres officiels et les services qui les utilisent.'
+    : 'Registry Stack: Software for official registers and the services that use them.',
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, 'https://registrystack.org').toString();
+// A page that exists in both languages names both, and English as the
+// default for readers of any other language. English-only pages name none.
+const alternates = noindex ? null : alternatePaths(Astro.url.pathname);
 const mauticUrl = noindex
   ? undefined
   : marketingTrackingUrl(import.meta.env.PUBLIC_MAUTIC_URL);
@@ -56,7 +69,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <script is:inline>
       document.documentElement.classList.add('js');
@@ -67,6 +80,13 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalUrl} />}
+    {alternates && (
+      <>
+        <link rel="alternate" hreflang="en" href={new URL(alternates.en, 'https://registrystack.org').toString()} />
+        <link rel="alternate" hreflang="fr" href={new URL(alternates.fr, 'https://registrystack.org').toString()} />
+        <link rel="alternate" hreflang="x-default" href={new URL(alternates.en, 'https://registrystack.org').toString()} />
+      </>
+    )}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -111,6 +131,9 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
         ['github.com', 'github'],
       ]);
 
+      // The contact form, in English and in French.
+      const contactPaths = new Set(['/contact/', '/fr/contact/']);
+
       const textLabel = (node) => (node.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 80);
 
       const journeyUrl = (anchor, targetSite) => {
@@ -143,7 +166,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
           const url = new URL(anchor.href);
           // strict-origin intentionally hides the referring page path. Carry
           // only this public path to the contact form, never its query or hash.
-          if (url.origin === window.location.origin && url.pathname === '/contact/') {
+          if (url.origin === window.location.origin && contactPaths.has(url.pathname)) {
             const source = window.location.pathname;
             if (source.length <= 500 && !source.includes('\\')) url.searchParams.set('source', source);
             anchor.setAttribute('href', `${url.pathname}${url.search}${url.hash}`);
@@ -164,7 +187,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS?.trim() || 'registryst
         try {
           const url = new URL(anchor.href);
           const isContact = url.origin === window.location.origin &&
-            ((url.pathname === '/contact/' && !anchor.getAttribute('href')?.startsWith('#')) ||
+            ((contactPaths.has(url.pathname) && !anchor.getAttribute('href')?.startsWith('#')) ||
               (anchor.dataset.journey === 'starter-request' &&
                 url.pathname === window.location.pathname && url.hash === '#starter-request-form'));
           const targetSite = journeyTargets.get(url.hostname) ||

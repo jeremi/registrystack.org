@@ -1,80 +1,97 @@
 ---
 import { products } from '../data/products';
+import { products as productsFr } from '../data/fr/products';
 import { solutionAreas } from '../data/solutions';
+import { solutionAreas as solutionAreasFr } from '../data/fr/solutions';
 import { askQuestionHref, describeServiceHref } from '../data/contact';
 import { marketingTrackingUrl } from '../lib/marketing-tracking';
+import { englishHreflang, localeForPath, localizedPath, translator } from '../i18n';
 const year = new Date().getFullYear();
 const repoHref = 'https://github.com/registrystack/registry-stack';
 const trackingPreferencesAvailable = Boolean(
   marketingTrackingUrl(import.meta.env.PUBLIC_MAUTIC_URL),
 );
-const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
-const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
+// Under /fr/ the footer is French and internal links go to the French page
+// where one exists. An `fr` label for an English destination ends
+// "(en anglais)", and the link carries hreflang="en".
+const locale = localeForPath(Astro.url.pathname);
+const isFrench = locale === 'fr';
+const t = translator(locale);
+const l = (href: string) => localizedPath(href, locale);
+const englishTarget = (href: string) => englishHreflang(href, locale);
+const areas = isFrench ? solutionAreasFr : solutionAreas;
+const registerFamilies = areas.filter((area) => area.kind === 'register-family');
+const crossCutting = areas.filter((area) => area.kind === 'cross-cutting');
 // The flagship products lead the column, as they do in the header menu.
-const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
+const productEntries = [...(isFrench ? productsFr : products)].sort((a, b) => Number(b.featured) - Number(a.featured));
 // An entry with `heading` instead of `href` is a sub-label over the entries
-// that follow it in the column.
-type FooterEntry = { href: string; label: string } | { heading: string };
-const columns: { title: string; links: FooterEntry[] }[] = [
-  { title: 'Solutions', links: [
-    { href: '/solutions/', label: 'All solutions' },
+// that follow it in the column. Entries built from the localized data have
+// no `fr`: their `label` is already in the page's language.
+type FooterEntry = { href: string; label: string; fr?: string } | { heading: string; fr: string };
+const columns: { title: string; fr: string; links: FooterEntry[] }[] = [
+  { title: 'Solutions', fr: 'Solutions', links: [
+    { href: '/solutions/', label: 'All solutions', fr: 'Toutes les solutions' },
     ...registerFamilies.map((area) => ({ href: area.slug, label: area.name })),
-    { heading: 'Shared capabilities' },
+    { heading: 'Shared capabilities', fr: 'Fonctions communes' },
     ...crossCutting.map((area) => ({ href: area.slug, label: area.name })),
   ] },
-  { title: 'Products', links: [{ href: '/products/', label: 'How the products fit together' }, ...productEntries.map((product) => ({ href: product.href, label: product.name })), { heading: 'Authoring' }, { href: '/products/studio/', label: 'Registry Studio · Preview' }] },
-  { title: 'Explore', links: [
-    { href: 'https://marketplace.registrystack.org/', label: 'Configuration marketplace' },
-    { href: '/ai/', label: 'AI for public services' },
-    { href: '/customization/', label: 'Implement and adapt a service' },
-    { href: '/architecture/headless/', label: 'Headless architecture' },
-    { href: '/digital-public-infrastructure/', label: 'Digital public infrastructure' },
-    { href: '/data-spaces/', label: 'Data spaces' },
-    { href: '/blog/', label: 'Blog' },
-    { href: '/security/', label: 'Security' },
-    { href: '/faq/', label: 'FAQ' },
+  { title: 'Products', fr: 'Produits', links: [{ href: '/products/', label: 'How the products fit together', fr: 'Comment les produits s’articulent' }, ...productEntries.map((product) => ({ href: product.href, label: product.name })), { heading: 'Authoring', fr: 'Conception' }, { href: '/products/studio/', label: 'Registry Studio · Preview', fr: 'Registry Studio · préversion' }] },
+  { title: 'Explore', fr: 'Explorer', links: [
+    { href: 'https://marketplace.registrystack.org/', label: 'Configuration marketplace', fr: 'Catalogue de configurations (en anglais)' },
+    { href: '/ai/', label: 'AI for public services', fr: 'L’IA pour les services publics' },
+    { href: '/customization/', label: 'Implement and adapt a service', fr: 'Mettre en œuvre et adapter un service' },
+    { href: '/architecture/headless/', label: 'Headless architecture', fr: 'Architecture « headless »' },
+    { href: '/digital-public-infrastructure/', label: 'Digital public infrastructure', fr: 'Infrastructure publique numérique' },
+    { href: '/data-spaces/', label: 'Data spaces', fr: 'Espaces de données' },
+    { href: '/blog/', label: 'Blog', fr: 'Blog (en anglais)' },
+    { href: '/security/', label: 'Security', fr: 'Sécurité' },
+    { href: '/faq/', label: 'FAQ', fr: 'Questions fréquentes' },
   ] },
-  { title: 'For developers', links: [
-    { href: '/#developers', label: 'Try a tutorial' },
-    { href: 'https://docs.registrystack.org/', label: 'Documentation' },
-    { href: repoHref, label: 'Source and releases' },
+  { title: 'For developers', fr: 'Pour les développeurs', links: [
+    { href: '/#developers', label: 'Try a tutorial', fr: 'Essayer un tutoriel' },
+    { href: 'https://docs.registrystack.org/', label: 'Documentation', fr: 'Documentation (en anglais)' },
+    { href: repoHref, label: 'Source and releases', fr: 'Code source et versions (en anglais)' },
   ] },
-  { title: 'Work with us', links: [
-    { href: '/pricing/', label: 'Implementation and pricing' },
-    { href: '/pricing/#support', label: 'Support contracts' },
-    { href: '/about/', label: 'About Aubex' },
-    { href: describeServiceHref(), label: 'Discuss your service' },
-    { href: askQuestionHref(), label: 'Ask a question' },
+  { title: 'Work with us', fr: 'Travailler avec nous', links: [
+    { href: '/pricing/', label: 'Implementation and pricing', fr: 'Mise en œuvre et tarifs' },
+    { href: '/pricing/#support', label: 'Support contracts', fr: 'Contrats d’assistance technique' },
+    { href: '/about/', label: 'About Aubex', fr: 'À propos d’Aubex' },
+    { href: describeServiceHref(undefined, locale), label: 'Discuss your service', fr: 'Décrivez votre service' },
+    { href: askQuestionHref(undefined, locale), label: 'Ask a question', fr: 'Posez une question' },
   ] },
 ];
 ---
 <footer class="site-footer">
   <div class="site-footer-inner">
     <div class="footer-brand">
-      <a class="footer-brand-name" href="/">Registry Stack</a>
-      <p>Public registers and services for national, regional and local government.</p>
-      <p>Built and supported by <a href="/about/">Aubex</a>.</p>
+      <a class="footer-brand-name" href={l('/')}>Registry Stack</a>
+      <p>{t('Public registers and services for national, regional and local government.', 'Registres et services publics pour les administrations nationales, régionales et locales.')}</p>
+      {isFrench
+        ? <p>Développé par <a href={l('/about/')}>Aubex</a>, qui en assure l’assistance technique.</p>
+        : <p>Built and supported by <a href="/about/">Aubex</a>.</p>}
     </div>
-    <nav class="footer-nav" aria-label="Footer">
+    <nav class="footer-nav" aria-label={t('Footer', 'Pied de page')}>
       {columns.map((column) => (
         <div class="footer-col">
-          <p class="footer-col-title">{column.title}</p>
+          <p class="footer-col-title">{t(column.title, column.fr)}</p>
           <ul>{column.links.map((link) => 'heading' in link
-            ? <li class="footer-col-label">{link.heading}</li>
-            : <li><a href={link.href}>{link.label}</a></li>)}</ul>
+            ? <li class="footer-col-label">{t(link.heading, link.fr)}</li>
+            : <li><a href={l(link.href)} hreflang={englishTarget(link.href)}>{link.fr ? t(link.label, link.fr) : link.label}</a></li>)}</ul>
         </div>
       ))}
     </nav>
   </div>
   <div class="site-footer-base">
-    <p>&copy; {year} Aubex Consulting LLC. Core software: Apache-2.0.</p>
+    <p>&copy; {year} Aubex Consulting LLC. {t('Core software: Apache-2.0.', 'Cœur du logiciel : Apache-2.0.')}</p>
     <p>
-      <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/imprint/">Legal notice</a>
+      {isFrench
+        ? <Fragment><a href="/privacy/" hreflang="en">Confidentialité (en anglais)</a> · <a href="/terms/" hreflang="en">Conditions d’utilisation (en anglais)</a> · <a href="/imprint/" hreflang="en">Mentions légales (en anglais)</a></Fragment>
+        : <Fragment><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/imprint/">Legal notice</a></Fragment>}
       {trackingPreferencesAvailable && (
         <span data-tracking-preferences-control hidden>
           {' · '}
           <button class="footer-tracking-preferences" type="button" data-tracking-preferences-open>
-            Tracking preferences
+            {t('Tracking preferences', 'Préférences de suivi')}
           </button>
         </span>
       )}

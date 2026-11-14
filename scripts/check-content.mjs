@@ -208,7 +208,9 @@ for (const [label, source] of [['header', headerSource], ['footer', footerSource
     failures.push(`${label} does not group the cross-cutting solution areas under "Shared capabilities"`);
   }
 }
-if (!headerSource.includes('href="/solutions/"') || !headerSource.includes('All solutions')) {
+// Header and footer hrefs pass through `l()` (localizedPath) so French pages
+// link to French pages; the English route stays the literal argument.
+if (!headerSource.includes("href={l('/solutions/')}") || !headerSource.includes('All solutions')) {
   failures.push('the Solutions menu must open with all solutions');
 }
 for (const route of ['https://marketplace.registrystack.org/', '/#developers', 'https://docs.registrystack.org/']) {
@@ -217,8 +219,8 @@ for (const route of ['https://marketplace.registrystack.org/', '/#developers', '
 if (!headerSource.includes("href: '/pricing/'")) failures.push('header is missing its direct /pricing/ route');
 // AI for public services is a menu: its overview first, then one entry per
 // use, in the order the overview presents them.
-if (headerSource.includes("href: '/ai/'") || !headerSource.includes('>AI for public services</summary>') ||
-    !headerSource.includes('href="/ai/"')) {
+if (headerSource.includes("href: '/ai/'") || !headerSource.includes(">{t('AI for public services',") ||
+    !headerSource.includes("href={l('/ai/')}")) {
   failures.push('AI for public services must be a header menu that opens with its overview');
 }
 const aiMenuRoutes = ['/ai/service-design/', '/customization/', '/ai/citizen-access/'];
@@ -226,10 +228,10 @@ const aiMenuPositions = aiMenuRoutes.map((route) => headerSource.indexOf(`href: 
 if (aiMenuPositions.some((position, index) => position === -1 || (index > 0 && position < aiMenuPositions[index - 1]))) {
   failures.push(`the AI menu must list ${aiMenuRoutes.join(', ')} in that order`);
 }
-if (!headerSource.includes('href={contactHref()}') || !headerSource.includes('>Contact</a>')) {
+if (!headerSource.includes('href={contactHref(undefined, undefined, locale)}') || !headerSource.includes('>Contact</a>')) {
   failures.push('header Contact action must lead to the general contact form');
 }
-if (!footerSource.includes('href: describeServiceHref()') || !footerSource.includes('href: askQuestionHref()')) {
+if (!footerSource.includes('href: describeServiceHref(undefined, locale)') || !footerSource.includes('href: askQuestionHref(undefined, locale)')) {
   failures.push('footer must route service discussions and questions through the contact form');
 }
 if (/mailto:|contactEmail/.test(footerSource)) {
@@ -436,7 +438,7 @@ if (!productLayout.includes('href="#product-example"') || !productLayout.include
 }
 const productClosing = productLayout.match(/<section class="final-cta"[\s\S]*?<\/section>/);
 const productContentIndex = productLayout.indexOf('<slot');
-if (!productClosing || !productClosing[0].includes('href="/pricing/"') || productContentIndex < 0 ||
+if (!productClosing || !productClosing[0].includes("href={l('/pricing/')}") || productContentIndex < 0 ||
     productClosing.index < productContentIndex) {
   failures.push('product layout is missing a shared closing pricing CTA after its page content');
 }
@@ -454,16 +456,19 @@ const handoffExempt = new Set([
   'src/pages/404.astro',
   'src/pages/tracking-bridge.astro',
 ]);
+// A French page under src/pages/fr/ follows the rule of its English twin and
+// may link the French route.
 for (const relativePath of sweptFiles) {
-  if (!relativePath.startsWith('src/pages/') || handoffExempt.has(relativePath)) continue;
+  const englishTwin = relativePath.replace(/^src\/pages\/fr\//, 'src/pages/');
+  if (!relativePath.startsWith('src/pages/') || handoffExempt.has(englishTwin)) continue;
   const source = readSource(relativePath);
   const hasBuyerHandoff = (/data-journey="service-inquiry"/.test(source) &&
-    /<section class="final-cta"[\s\S]*?href="\/pricing\//.test(source)) ||
+    /<section class="final-cta"[\s\S]*?href="(\/fr)?\/pricing\//.test(source)) ||
     // An unreleased authoring tool offers a contextual question and a delivery
     // route, rather than implying it is included in runtime pilot pricing.
-    (/askQuestionHref\('[^']+'\)/.test(source) &&
-      /<section class="final-cta"[\s\S]*?href="\/customization\//.test(source));
-  const hasSecurityHandoff = relativePath === 'src/pages/security.astro' &&
+    (/askQuestionHref\('[^']+'(, 'fr')?\)/.test(source) &&
+      /<section class="final-cta"[\s\S]*?href="(\/fr)?\/customization\//.test(source));
+  const hasSecurityHandoff = englishTwin === 'src/pages/security.astro' &&
     /href=\{securityDocsHref\}/.test(source) && /href=\{askQuestionHref\(/.test(source);
   if (!/DocsHandoff|<Product|<Article/.test(source) && !hasBuyerHandoff && !hasSecurityHandoff) {
     failures.push(`${relativePath} is missing a docs or buyer delivery handoff`);
@@ -541,14 +546,14 @@ if (!pricingSource.includes('/#developers')) {
 // route. Direct mail is reserved for recovery inside the form and the imprint.
 const contactSource = readSource('src/data/contact.ts');
 for (const mapping of [
-  ["contactHref('question', about)", 'question'],
-  ["contactHref('service', about)", 'service'],
-  ["contactHref('proposal')", 'proposal'],
+  ["contactHref('question', about, locale)", 'question'],
+  ["contactHref('service', about, locale)", 'service'],
+  ["contactHref('proposal', undefined, locale)", 'proposal'],
 ]) {
   if (!contactSource.includes(mapping[0])) failures.push(`contact route helper is missing its ${mapping[1]} type`);
 }
 for (const relativePath of listAstroFiles('src/pages')) {
-  if (['src/pages/contact.astro', 'src/pages/imprint.astro'].includes(relativePath)) continue;
+  if (['src/pages/contact.astro', 'src/pages/fr/contact.astro', 'src/pages/imprint.astro'].includes(relativePath)) continue;
   const source = readSource(relativePath);
   if (/mailto:contact@registrystack\.org|\bcontactEmail\b/.test(source)) {
     failures.push(`${relativePath} bypasses the contextual contact form`);
@@ -591,7 +596,8 @@ for (const relativePath of [
   }
 }
 
-// Aubex is one person, so copy in Aubex's voice says "we", never "our team".
+// Aubex is one person, so copy in Aubex's voice says "we", never "our team"
+// (in French, « nous », never « notre équipe »).
 // FAQ questions are in the reader's voice and may name the reader's team.
 const readerVoiceTeam = ['What will our team need to do?'];
 for (const relativePath of [
@@ -600,12 +606,14 @@ for (const relativePath of [
   'src/data/solutions.ts',
   'src/data/products.ts',
   'src/data/team.ts',
+  ...readdirSync(resolve('src/data/fr')).filter((name) => name.endsWith('.ts')).map((name) => `src/data/fr/${name}`),
   'src/lib/starter-request.ts',
   'public/llms.txt',
 ]) {
   let source = readSource(relativePath);
   for (const phrase of readerVoiceTeam) source = source.replaceAll(phrase, '');
   if (/\bour team\b/i.test(source)) failures.push(`${relativePath} says "our team"; Aubex is one person, so write "we"`);
+  if (/notre\s+équipe/i.test(source)) failures.push(`${relativePath} says « notre équipe »; Aubex is one person, so write « nous »`);
 }
 
 // Focus order: licensing, then business and agricultural registers, lead the
@@ -652,7 +660,7 @@ if (!readSource('src/components/SiteFooter.astro').includes("href: '/about/'")) 
 // repeated across examples reads as a disclaimer rather than a description.
 // The short sentence that marks records as fictional may repeat; the sentence
 // that describes the example may not.
-const fictionalMarkers = new Set(['The records are fictional.']);
+const fictionalMarkers = new Set(['The records are fictional.', 'Les fiches sont fictives.']);
 const captionSentences = new Map();
 const captionSources = [
   'src/components/HomeServiceMockup.astro',
