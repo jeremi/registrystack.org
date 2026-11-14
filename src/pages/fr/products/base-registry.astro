@@ -8,14 +8,14 @@ const product = products.find((p) => p.key === 'base-registry')!;
 <Product
   product={product}
   heading="Tenez les fiches sur lesquelles reposent vos services publics."
-  description="Base Registry Engine tient les fiches dont une institution publique est responsable : personnes, entreprises, autorisations, lieux ou biens. Il applique les règles d’accès de l’institution, conserve l’historique des modifications et permet aux applications approuvées des agents et aux services en ligne de travailler avec le registre."
+  description="Base Registry Engine tient les fiches dont une institution publique est responsable : personnes, entreprises, autorisations, lieux ou biens. Il applique les règles d’accès de l’institution, conserve l’historique des modifications et permet aux applications métier approuvées et aux services en ligne de travailler avec le registre."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="registry-lifecycle-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">Un exemple : un registre de population</p>
         <h2 id="registry-lifecycle-title">Tenez à jour des fiches liées au fil des changements de situation.</h2>
-        <p>Le service chargé du registre de population pourrait utiliser le moteur pour un registre des résidents et des ménages. Les agents enregistrent les personnes, retrouvent les fiches existantes et mettent à jour les informations quand la situation change. Le moteur conserve les informations et leur historique ; votre application fournit les écrans.</p>
+        <p>Un service chargé d’un registre de population pourrait utiliser le moteur pour un registre des résidents et des ménages. Les agents enregistrent les personnes, retrouvent les fiches existantes et mettent à jour les informations quand la situation change. Le moteur conserve les informations et leur historique ; votre application fournit les écrans.</p>
       </div>
       <figure class="record-example" aria-labelledby="record-example-caption">
         <div class="stored-records">
@@ -26,7 +26,7 @@ const product = products.find((p) => p.key === 'base-registry')!;
         <ol class="record-lifecycle">
           <li><h3>Enregistrer et relier</h3><p>Créez la fiche d’une personne et reliez-la à un ménage. Le moteur vérifie les informations obligatoires, les valeurs autorisées et les références avant de l’enregistrer.</p></li>
           <li><h3>Retrouver et utiliser</h3><p>Recherchez un résident ou obtenez les personnes liées à un ménage. Chaque application accède aux fiches et aux champs que ses droits d’accès autorisent.</p></li>
-          <li><h3>Suivre les changements</h3><p>Corrigez une information ou mettez à jour un lien de ménage. Le moteur conserve les informations actuelles et les révisions antérieures, pour que les utilisateurs habilités puissent suivre ce qui a changé.</p></li>
+          <li><h3>Suivre les changements</h3><p>Corrigez une information ou mettez à jour un lien de ménage. Le moteur conserve les informations actuelles et les versions antérieures, pour que les utilisateurs habilités puissent suivre ce qui a changé.</p></li>
         </ol>
         <figcaption id="record-example-caption">Registre illustratif avec des fiches fictives. La même approche peut relier une entreprise à ses établissements, un professionnel à ses autorisations ou un bien à son emplacement.</figcaption>
       </figure>
@@ -37,12 +37,12 @@ const product = products.find((p) => p.key === 'base-registry')!;
       <div class="section-heading">
         <p class="eyebrow">Fonctions pratiques</p>
         <h2 id="breg-records-title">Gérez les fiches selon les mêmes règles dans tous vos services.</h2>
-        <p>Votre institution définit une seule fois les informations, les relations et les droits d’accès. Les applications des agents, les services en ligne et les systèmes connectés travaillent ensuite avec le registre selon ces règles.</p>
+        <p>Votre institution définit une seule fois les informations, les relations et les droits d’accès. Les applications métier, les services en ligne et les systèmes connectés travaillent ensuite avec le registre selon ces règles.</p>
       </div>
       <div class="product-facts">
         <article><h3>Définir des fiches reliées entre elles</h3><p>Fixez les types de fiches que le registre contient, leurs informations obligatoires, leurs valeurs valides et leurs relations.</p></article>
         <article><h3>Contrôler qui peut lire et modifier</h3><p>Donnez à chaque rôle d’agent ou à chaque service connecté l’accès aux fiches et aux champs dont il a besoin. Lorsque l’approbation d’un agent est requise, reliez un service d’examen tel que Registry Casework. Le registre applique les modifications approuvées selon les règles de votre institution.</p></article>
-        <article><h3>Suivre chaque fiche dans le temps</h3><p>Conservez les révisions antérieures pour que les agents habilités voient ce qui a changé, et empêchez qu’une modification plus ancienne n’écrase une plus récente. Les changements de structure ou de règles du registre passent par une configuration examinée et, si nécessaire, par une migration de données planifiée.</p></article>
+        <article><h3>Suivre chaque fiche dans le temps</h3><p>Conservez les versions antérieures pour que les agents habilités voient ce qui a changé, et empêchez qu’une modification plus ancienne n’écrase une plus récente. Les changements de structure ou de règles du registre passent par une configuration examinée et, si nécessaire, par une migration de données planifiée.</p></article>
       </div>
     </div>
   </section>
@@ -51,13 +51,13 @@ const product = products.find((p) => p.key === 'base-registry')!;
       <div class="section-heading compact">
         <p class="eyebrow">Comment il s’intègre à votre organisation</p>
         <h2 id="breg-fit-title">Construisez un registre qui fonctionne avec vos services existants.</h2>
-        <p>Base Registry Engine tient les fiches derrière les applications des agents et les services en ligne. Utilisez-le pour construire un nouveau registre ou pour verser des fiches existantes dans une structure définie. Une mise en œuvre associe le moteur aux écrans, au service d’identité et aux connexions dont le service a besoin.</p>
+        <p>Base Registry Engine tient les fiches derrière les applications métier et les services en ligne. Utilisez-le pour construire un nouveau registre ou pour verser des fiches existantes dans une structure définie. Une mise en œuvre associe le moteur aux écrans, au service d’identité et aux connexions dont le service a besoin.</p>
         <p><a href="/fr/data-spaces/">Voir comment utiliser un registre comme source dans un espace de données</a>.</p>
         <p><a href="/fr/ai/citizen-access/">Voir comment les personnes peuvent préparer une correction avec un assistant approuvé</a>.</p>
       </div>
       <dl>
         <dt>Votre institution définit le registre</dt><dd>Convenez de ce que signifie chaque fiche, de la façon dont les fiches sont reliées, des modifications permises et de qui peut lire ou modifier les informations.</dd>
-        <dt>Choisissez qui assure la mise en œuvre</dt><dd>Aubex, un autre partenaire de mise en œuvre ou votre propre équipe peut configurer le moteur, fournir les écrans nécessaires, relier l’authentification des utilisateurs et les autres systèmes, et planifier la migration des données. Un cadrage écrit devrait convenir de l’hébergement, de l’exploitation, de l’assistance technique et de la remise à votre équipe.</dd>
+        <dt>Choisissez qui assure la mise en œuvre</dt><dd>Aubex, un autre partenaire de réalisation ou votre propre équipe peut configurer le moteur, fournir les écrans nécessaires, relier l’authentification des utilisateurs et les autres systèmes, et planifier la migration des données. Le périmètre convenu par écrit devrait fixer l’hébergement, l’exploitation, l’assistance technique et le transfert du service à votre équipe.</dd>
         <dt>Choisissez qui exploite le registre</dt><dd>Votre équipe ou un prestataire désigné peut exploiter le moteur et sa base de données, ou nous les hébergeons et les exploitons pour vous. Convenez de l’infrastructure, des sauvegardes, de la supervision, de la gestion des accès et des procédures de changement ; notre hébergement et notre exploitation font l’objet d’un devis distinct.</dd>
         <dt>Ajoutez des vérifications d’informations et des examens par les agents</dt><dd>Reliez <a href="/fr/products/evidence-gateway/">Evidence Gateway</a> lorsqu’un autre service doit vérifier une information précise, ou <a href="/fr/products/casework/">Registry Casework</a> lorsque des agents doivent examiner une demande et consigner une décision.</dd>
       </dl>

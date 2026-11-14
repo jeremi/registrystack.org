@@ -8,7 +8,7 @@ import { solutionAreas, registerFamilies } from '../../../data/fr/solutions';
 import { describeServiceHref } from '../../../data/contact';
 
 const pageTitle = 'Solutions pour les registres et les services publics | Registry Stack';
-const pageDescription = 'Trouvez le registre ou le service public proche du travail de votre institution, voyez ce que font demandeurs et agents, puis choisissez une suite.';
+const pageDescription = 'Trouvez le registre ou le service public proche des missions de votre institution, voyez ce que peuvent faire demandeurs et agents, et choisissez la suite.';
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 const fr = (href: string) => `/fr${href}`;
 ---
@@ -70,7 +70,7 @@ const fr = (href: string) => `/fr${href}`;
     <DocsHandoff
       eyebrow="Décrivez votre service"
       heading="Parlons d’un registre ou d’un service."
-      body="Dites-nous de quelles fiches, de quelles tâches des agents ou de quelles vérifications d’informations vous avez besoin, et quels systèmes doivent être reliés. Nous pouvons vous aider à évaluer l’adéquation et à délimiter la mise en œuvre."
+      body="Dites-nous de quelles fiches, de quelles tâches des agents ou de quelles vérifications d’informations vous avez besoin, et quels systèmes doivent être reliés. Nous pouvons vous aider à évaluer si la solution convient et à délimiter la mise en œuvre."
       primaryLabel="Décrivez votre service"
       primaryHref={describeServiceHref(undefined, 'fr')}
     />

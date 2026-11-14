@@ -54,8 +54,8 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
     <section class="section section-muted" id="correction-example" aria-labelledby="example-title">
       <div class="section-inner">
         <div class="section-heading"><p class="eyebrow">Exemple : un changement d’adresse</p><h2 id="example-title">D’une conversation à une demande officielle</h2><p>Alex a déménagé. Un assistant aide à préparer la modification ; Alex la vérifie et l’envoie sur le site officiel.</p></div>
-        <figure class="ai-film"><video controls playsinline preload="none" width="1280" height="720" poster="/films/registry-stack-ai-film-poster.jpg" aria-describedby="film-note"><source src="/films/registry-stack-ai-film-720.mp4" type="video/mp4" /><track kind="captions" src="/films/registry-stack-ai-film-fr.vtt" srclang="fr" label="Français" default /><track kind="captions" src="/films/registry-stack-ai-film-en.vtt" srclang="en" label="English" /></video><figcaption id="film-note">Changement d’adresse fictif. Film : 1 minute 25 secondes, musique sans parole ; le texte à l’écran est en anglais et des sous-titres en français expliquent chaque scène. Les étapes ci-dessous décrivent le même exemple par écrit. <a href="/films/registry-stack-ai-film-720.mp4">Télécharger le film (MP4, 4,5 Mo)</a>.</figcaption></figure>
-        <ol class="approach-steps"><li><strong>L’assistant prépare</strong><span>Une fois qu’Alex s’est connecté, l’assistant lit les informations autorisées dans la fiche d’Alex et prépare un brouillon de modification.</span></li><li><strong>Alex vérifie et envoie</strong><span>Alex se connecte sur le site officiel, compare le brouillon avec la fiche actuelle et choisit de l’envoyer ou non.</span></li><li><strong>L’institution applique ses règles</strong><span>Le registre contrôle la demande. Les agents examinent les cas que l’institution choisit. Alex peut demander à l’assistant où en est la demande, si cette option est activée.</span></li></ol>
+        <figure class="ai-film"><video controls playsinline preload="none" width="1280" height="720" poster="/films/registry-stack-ai-film-poster.jpg" aria-describedby="film-note"><source src="/films/registry-stack-ai-film-720.mp4" type="video/mp4" /><track kind="captions" src="/films/registry-stack-ai-film-fr.vtt" srclang="fr" label="Français" default /><track kind="captions" src="/films/registry-stack-ai-film-en.vtt" srclang="en" label="English" /></video><figcaption id="film-note">Changement d’adresse fictif. Film : 1 minute 25 secondes, musique sans parole ; le texte à l’écran est en anglais et des sous-titres facultatifs en français expliquent chaque scène. Les étapes ci-dessous décrivent le même exemple par écrit. <a href="/films/registry-stack-ai-film-720.mp4">Télécharger le film (MP4, 4,5 Mo)</a>.</figcaption></figure>
+        <ol class="approach-steps"><li><strong>L’assistant prépare</strong><span>Une fois la connexion d’Alex établie, l’assistant lit les informations autorisées dans la fiche d’Alex et prépare un brouillon de modification.</span></li><li><strong>Alex vérifie et envoie</strong><span>Alex se connecte sur le site officiel, compare le brouillon avec la fiche actuelle et choisit de l’envoyer ou non.</span></li><li><strong>L’institution applique ses règles</strong><span>Le registre contrôle la demande. Les agents examinent les cas que l’institution choisit. Alex peut demander à l’assistant où en est la demande, si cette option est activée.</span></li></ol>
       </div>
     </section>
 
@@ -97,10 +97,10 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
           </article>
           <article>
             <h3>Choisissez l’assistant</h3>
-            <p>La connexion utilise MCP (<span lang="en">Model Context Protocol</span>), un standard ouvert. Votre institution peut enregistrer un ou plusieurs assistants compatibles avec MCP et conformes aux exigences de connexion du guide d’intégration, chez un seul fournisseur d’IA ou chez plusieurs.</p>
+            <p>La connexion utilise MCP (<span lang="en">Model Context Protocol</span>), un standard ouvert. Votre institution peut enregistrer un ou plusieurs assistants compatibles avec MCP et conformes aux exigences d’authentification du guide d’intégration, chez un seul fournisseur d’IA ou chez plusieurs.</p>
           </article>
         </div>
-        <p class="section-note">Pour les équipes techniques, le <a href={mcpDocsHref} hreflang="en">guide d’intégration de MCP (en anglais)</a> décrit la connexion, le service distinct qui accorde l’accès à chaque brouillon et le site de relecture. Voir aussi <a href="/fr/architecture/headless/">comment Registry Stack s’intègre à vos interfaces existantes</a> et <a href="/fr/security/">comment il gère les accès et la responsabilité</a>. La connexion est une préversion ; la foire aux questions ci-dessous explique ce que cela signifie pour la compatibilité.</p>
+        <p class="section-note">Pour les équipes techniques, le <a href={mcpDocsHref} hreflang="en">guide d’intégration de MCP (en anglais)</a> décrit l’authentification, le service distinct qui accorde l’accès à chaque brouillon et le site de relecture. Voir aussi <a href="/fr/architecture/headless/">comment Registry Stack s’intègre à vos interfaces existantes</a> et <a href="/fr/security/">comment il gère les accès et la responsabilité</a>. La connexion est une préversion ; la foire aux questions ci-dessous explique ce que cela signifie pour la compatibilité.</p>
       </div>
     </section>
 
@@ -113,7 +113,7 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
         },
         {
           q: 'Quels assistants peuvent se connecter ?',
-          a: 'Ceux que votre institution enregistre. Chacun est compatible avec MCP et connecte les personnes par votre fournisseur d’identité. Le service refuse les demandes de tout autre assistant.',
+          a: 'Ceux que votre institution enregistre. Chacun est compatible avec MCP et authentifie les personnes par votre fournisseur d’identité. Le service refuse les demandes de tout autre assistant.',
         },
         {
           q: 'Qu’est-ce qui est consigné ?',
@@ -122,7 +122,7 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
         },
         {
           q: 'Que fournit notre institution ?',
-          a: 'Votre fournisseur d’identité connecte les personnes et doit prendre en charge l’échange de jetons. Un service sous le contrôle de votre institution accorde et retire l’accès à chaque brouillon. Les deux services de connexion peuvent être exploités par votre institution, par un prestataire désigné ou par nous, derrière un proxy TLS ; l’hébergement et l’exploitation par nos soins font l’objet d’un devis séparé. Votre institution garde la main sur la connexion et sur les décisions d’accès. Nous convenons avec vous du travail de connexion avant la mise en œuvre.',
+          a: 'Votre fournisseur d’identité authentifie les personnes et doit prendre en charge l’échange de jetons. Un service sous le contrôle de votre institution accorde et retire l’accès à chaque brouillon. Les deux services de connexion peuvent être exploités par votre institution, par un prestataire désigné ou par nous, derrière un proxy TLS ; l’hébergement et l’exploitation par nos soins font l’objet d’un devis séparé. Votre institution garde la main sur l’authentification et sur les décisions d’accès. Nous convenons avec vous du travail de connexion avant la mise en œuvre.',
         },
         {
           q: 'Le service dépend-il d’un modèle d’IA ?',
@@ -139,7 +139,7 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
     <section class="final-cta" aria-labelledby="next-title">
       <div class="section-inner">
         <h2 id="next-title">Choisissez une demande que les personnes peuvent essayer</h2>
-        <p>Dites-nous quelle tâche demande de l’aide, de quelles informations elle a besoin et où les personnes doivent vérifier le brouillon. Nous verrons avec votre équipe comment l’évaluer.</p>
+        <p>Dites-nous pour quelle tâche les personnes ont besoin d’aide, de quelles informations elle a besoin et où les personnes doivent vérifier le brouillon. Nous verrons avec votre équipe comment l’évaluer.</p>
         <div class="section-links">
           <a class="button button-primary" href={describeServiceHref(context, 'fr')} data-journey="service-inquiry">Décrivez votre service</a>
           <a class="button button-secondary" href="/fr/pricing/">Voir les options de mise en œuvre</a>

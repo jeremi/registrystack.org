@@ -57,7 +57,7 @@ const englishPresentation: Record<ContactRequestType, ContactRequestPresentation
   question: { eyebrow: 'Contact Registry Stack', heading: 'Ask a question', intro: 'Tell us what you need. We will review your message and reply.', messageLabel: 'Your question', submitLabel: 'Send question', successMessage: 'Question received. We will review it and reply.', privacyCopy: englishSharedPrivacy },
 };
 
-const frenchSharedPrivacy = 'Nous utilisons ces informations pour examiner votre message et y répondre. Vous pouvez l’envoyer sans accepter le suivi des visites. Si vous avez accepté le suivi, nous pouvons relier vos visites à ce message. Ce formulaire ne vous inscrit à aucune liste d’envoi commercial.';
+const frenchSharedPrivacy = 'Nous utilisons ces informations pour examiner votre message et y répondre. Vous pouvez l’envoyer sans accepter le suivi des visites. Si vous avez accepté le suivi, nous pouvons relier vos visites à ce message. Ce formulaire ne vous inscrit à aucune liste de diffusion commerciale.';
 
 const frenchPresentation: Record<ContactRequestType, ContactRequestPresentation> = {
   starter: {
@@ -67,11 +67,11 @@ const frenchPresentation: Record<ContactRequestType, ContactRequestPresentation>
     messageLabel: 'Que cherchez-vous à faire ?',
     submitLabel: 'Demander l’accès',
     successMessage: 'Demande d’accès reçue. Nous allons l’examiner.',
-    privacyCopy: 'Nous utilisons ces informations pour examiner votre demande et y répondre. Vous pouvez demander l’accès sans accepter le suivi. Si vous acceptez le suivi, nous pouvons relier vos visites à cette demande. Ce formulaire ne vous inscrit à aucune liste d’envoi commercial.',
+    privacyCopy: 'Nous utilisons ces informations pour examiner votre demande et y répondre. Vous pouvez demander l’accès sans accepter le suivi. Si vous acceptez le suivi, nous pouvons relier vos visites à cette demande. Ce formulaire ne vous inscrit à aucune liste de diffusion commerciale.',
   },
   service: { eyebrow: 'Demande sur un service', heading: 'Parlons de votre service', intro: 'Décrivez le service, les personnes qui l’utiliseront et ce qu’il doit faire. Nous examinerons votre message et vous répondrons.', messageLabel: 'Votre service et vos besoins', submitLabel: 'Envoyer le message', successMessage: 'Message reçu. Nous allons l’examiner et vous répondre.', privacyCopy: frenchSharedPrivacy },
-  proposal: { eyebrow: 'Mise en œuvre', heading: 'Demander une proposition', intro: 'Décrivez le service et l’assistance à la mise en œuvre que vous voulez nous voir chiffrer. Nous vous répondrons pour préciser le périmètre.', messageLabel: 'Que doit couvrir la proposition ?', submitLabel: 'Demander une proposition', successMessage: 'Demande reçue. Nous allons l’examiner et vous répondre.', privacyCopy: frenchSharedPrivacy },
-  privacy: { eyebrow: 'Données personnelles', heading: 'Envoyer une demande relative aux données personnelles', intro: 'Indiquez-nous la demande concernant vos données personnelles que vous voulez nous voir examiner, et comment nous pouvons retrouver la correspondance ou l’historique de visites concerné.', messageLabel: 'Votre demande relative aux données personnelles', submitLabel: 'Envoyer la demande', successMessage: 'Demande relative aux données personnelles reçue. Nous allons l’examiner et vous répondre.', privacyCopy: 'Nous utilisons ces informations pour traiter votre demande relative aux données personnelles et y répondre. Nous n’utilisons pas cette demande pour relier votre navigateur actuel à votre message. Ce formulaire ne vous inscrit à aucune liste d’envoi commercial.' },
+  proposal: { eyebrow: 'Mise en œuvre', heading: 'Demander une proposition', intro: 'Décrivez le service et l’assistance à la mise en œuvre que vous souhaitez nous faire chiffrer. Nous vous répondrons pour préciser le périmètre.', messageLabel: 'Que doit couvrir la proposition ?', submitLabel: 'Demander une proposition', successMessage: 'Demande reçue. Nous allons l’examiner et vous répondre.', privacyCopy: frenchSharedPrivacy },
+  privacy: { eyebrow: 'Données personnelles', heading: 'Envoyer une demande relative aux données personnelles', intro: 'Indiquez-nous quelle demande concernant vos données personnelles nous devons examiner, et comment retrouver la correspondance ou l’historique de visites concerné.', messageLabel: 'Votre demande relative aux données personnelles', submitLabel: 'Envoyer la demande', successMessage: 'Demande relative aux données personnelles reçue. Nous allons l’examiner et vous répondre.', privacyCopy: 'Nous utilisons ces informations pour traiter votre demande relative aux données personnelles et y répondre. Nous n’utilisons pas cette demande pour relier votre navigateur actuel à votre message. Ce formulaire ne vous inscrit à aucune liste de diffusion commerciale.' },
   terms: { eyebrow: 'Conditions du site', heading: 'Poser une question sur les conditions', intro: 'Indiquez-nous la partie des conditions d’utilisation du site qui fait l’objet de votre question. Nous examinerons votre message et vous répondrons.', messageLabel: 'Votre question', submitLabel: 'Envoyer la question', successMessage: 'Question reçue. Nous allons l’examiner et vous répondre.', privacyCopy: frenchSharedPrivacy },
   question: { eyebrow: 'Contacter Registry Stack', heading: 'Posez une question', intro: 'Dites-nous ce dont vous avez besoin. Nous examinerons votre message et vous répondrons.', messageLabel: 'Votre question', submitLabel: 'Envoyer la question', successMessage: 'Question reçue. Nous allons l’examiner et vous répondre.', privacyCopy: frenchSharedPrivacy },
 };
@@ -108,11 +108,11 @@ const frenchFormText: typeof englishFormText = {
   readThe: 'Lisez la',
   privacyLinkLabel: 'politique de confidentialité (en anglais)',
   sending: 'Envoi de votre demande…',
-  error: 'Nous n’avons pas pu confirmer votre demande. Vos informations sont toujours saisies. Vous pouvez réessayer ou utiliser l’option courriel ci-dessous.',
+  error: 'Nous n’avons pas pu confirmer votre demande. Votre saisie est conservée. Vous pouvez réessayer ou nous écrire par courriel à l’adresse ci-dessous.',
   fallbackWithForm: 'Si le formulaire ne fonctionne pas, ',
   fallbackAlone: 'Contactez-nous par courriel : ',
   emailLinkWithForm: 'écrivez-nous à',
-  emailLinkAlone: 'Courriel à',
+  emailLinkAlone: 'écrivez à',
   about: 'Au sujet de : ',
 };
 

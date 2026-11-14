@@ -23,7 +23,7 @@ const steps: WeekStep[] = [
     text: 'Le ministère informe votre service que deux districts fusionnent le 1er janvier. La liste ne change pas tant que votre équipe n’a pas décidé.',
     card: { kind: 'record', recordType: 'Proposition de modification', recordId: 'CHG-118', icon: 'data', fields: [
       { label: 'Entrée', value: 'District NR-07' },
-      { label: 'Modification', value: 'Fusion dans NR-05' },
+      { label: 'Modification', value: 'Intégration à NR-05' },
       { label: 'Applicable à partir du', value: '1er janvier' },
     ] },
   },
@@ -65,7 +65,7 @@ const steps: WeekStep[] = [
 <Solution
   area={area}
   heading="Tenez les listes sur lesquelles s’appuient les autres services."
-  description="Examinez et publiez les modifications des noms de lieux, des annuaires d’organismes, des classifications et des listes de codes. Les services connectés récupèrent la version actuelle, tandis que les fiches qui utilisent un code antérieur renvoient toujours à une entrée connue."
+  description="Examinez et publiez les modifications des noms de lieux, des annuaires d’organismes, des classifications et des listes de codes. Les services connectés peuvent récupérer la version actuelle, tandis que les fiches qui utilisent un code antérieur renvoient toujours à une entrée connue."
 >
   <section class="section" id="example" aria-labelledby="reference-example-title">
     <div class="section-inner">
@@ -89,7 +89,7 @@ const steps: WeekStep[] = [
         <h2 id="reference-change-title">Tenez une seule liste actuelle et gardez les entrées antérieures.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Utilisez le même code pour le même lieu</h3><p>Chaque entrée comprend son code officiel, son parent s’il y en a un, et les dates auxquelles elle s’applique. Le registre des adresses et l’institut de statistique peuvent récupérer les entrées dans la même liste.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre sert d’autres services <span aria-hidden="true">→</span></a></article>
+        <article><h3>Utilisez le même code pour le même lieu</h3><p>Chaque entrée comprend son code officiel, son élément parent s’il y en a un, et les dates auxquelles elle s’applique. Le registre des adresses et l’institut de statistique peuvent récupérer les entrées dans la même liste.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre sert d’autres services <span aria-hidden="true">→</span></a></article>
         <article><h3>Contrôlez qui modifie la liste</h3><p>Votre institution décide qui peut ajouter, renommer ou clôturer une entrée. Les services connectés peuvent recevoir un accès en lecture, tandis que les agents ou systèmes autorisés enregistrent les modifications.</p><a class="inline-cta" href="/fr/security/">Qui est responsable de quoi <span aria-hidden="true">→</span></a></article>
         <article><h3>Aidez les autres services à trouver la liste actuelle</h3><p>Publiez les entrées par un service ou un export convenu. Les métadonnées de catalogue décrivent cette source et sa version, afin que les autres équipes sachent où récupérer la liste.</p><a class="inline-cta" href="https://docs.registrystack.org/products/registry-manifest/" hreflang="en">Comment les descriptions de catalogue sont publiées (en anglais) <span aria-hidden="true">↗</span></a></article>
       </div>

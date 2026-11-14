@@ -33,10 +33,10 @@ const context = 'Mise en œuvre assistée par l’IA';
       <p class="ai-example-title">Ouvrir l’inscription aux enfants de cinq ans</p>
       <dl class="ai-example-rows">
         <div><dt>Âge d’entrée</dt><dd>De 6 ans à <strong>5 ans</strong></dd></div>
-        <div><dt>A cinq ans à la date limite</dt><dd>Remplit la condition d’âge</dd></div>
-        <div><dt>A cinq ans après la date limite</dt><dd>Ne remplit pas la condition d’âge</dd></div>
+        <div><dt>A cinq ans révolus à la date limite</dt><dd>Remplit la condition d’âge</dd></div>
+        <div><dt>Aura cinq ans après la date limite</dt><dd>Ne remplit pas la condition d’âge</dd></div>
       </dl>
-      <p class="ai-example-status">Rédigé avec l’IA. Les tests réussissent. En attente de l’approbation de l’autorité chargée de l’éducation.</p>
+      <p class="ai-example-status">Rédigé avec l’IA. Tests réussis. En attente de l’approbation de l’autorité chargée de l’éducation.</p>
     </AiLandingHero>
 
     <section class="section section-muted" id="change-example" aria-labelledby="change-title">
@@ -80,7 +80,7 @@ const context = 'Mise en œuvre assistée par l’IA';
         </div>
         <Illustration
           name="ai-drafted-change"
-          alt="Une demande du service : permettre aussi aux personnes de corriger leur numéro de téléphone. Un outil d’IA utilisé par l’équipe de réalisation rédige la modification et les tests. La version 5 de la configuration ajoute « Corriger le numéro de téléphone » aux modifications qu’une personne peut envoyer. Quatre cas de test : une personne qui corrige son propre numéro de téléphone ou sa propre adresse de contact est autorisée ; une personne qui modifie la fiche d’une autre personne, ou un assistant qui envoie une demande à la place d’une personne, est refusé. Les quatre contrôles réussissent. Un approbateur du service de l’état civil signe, et la modification est publiée en version 5."
+          alt="Une demande du service : permettre aussi aux personnes de corriger leur numéro de téléphone. Un outil d’IA utilisé par l’équipe de réalisation rédige la modification et les tests. La version 5 de la configuration ajoute « Corriger le numéro de téléphone » aux modifications qu’une personne peut envoyer. Quatre cas de test : une personne qui corrige son propre numéro de téléphone ou sa propre adresse de contact est autorisée ; les demandes d’une personne qui modifie la fiche d’une autre personne, ou d’un assistant qui agit à la place d’une personne, sont refusées. Les quatre contrôles réussissent. Un approbateur du Service de l’état civil signe, et la modification est publiée en version 5."
           caption="Un second exemple fictif : un service de l’état civil demande de permettre aux personnes de corriger leur numéro de téléphone. L’outil d’IA de l’équipe de réalisation rédige la modification et ses tests, et l’approbateur du service signe lorsque les quatre réussissent."
         />
         <p class="section-note">Pour les équipes techniques : <a href="https://docs.registrystack.org/operate/breg/#check-test-package" hreflang="en">lire comment une configuration est vérifiée, testée et empaquetée (en anglais)</a>.</p>
@@ -106,7 +106,7 @@ const context = 'Mise en œuvre assistée par l’IA';
 
     <section class="final-cta" aria-labelledby="next-title">
       <div class="section-inner">
-        <h2 id="next-title">Cadrez votre registre pilote</h2>
+        <h2 id="next-title">Définissez le périmètre de votre registre pilote</h2>
         <p>Apportez les exigences ou un formulaire public, avec un exemple fictif de ce que le service doit faire. Nous verrons ce qu’il faut construire et tester. Dites-nous quels outils d’IA et quelles données votre institution autorise, et nous travaillerons dans ce cadre.</p>
         <div class="section-links">
           <a class="button button-primary" href={describeServiceHref(context, 'fr')} data-journey="service-inquiry">Décrivez votre service</a>

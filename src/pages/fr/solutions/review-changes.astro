@@ -23,7 +23,7 @@ const casework = products.find((p) => p.key === 'casework')!;
     items={[
       { term: 'Déposer une demande de correction', body: 'Le titulaire de l’autorisation utilise le service de dépôt des demandes pour expliquer l’erreur et joindre les pièces justificatives.' },
       { term: 'Attribuer l’examen', body: 'La demande est attribuée à un agent. L’équipe voit qui en est chargé et à quelle date une décision est attendue. L’autorisation reste inchangée pendant l’examen.' },
-      { term: 'Examiner et décider', body: 'S’il manque des informations, l’agent met fin à l’examen en demandant des modifications. Le titulaire révise sa demande et la soumet pour un nouvel examen. Après approbation, un agent ou un service connecté qui en a le droit applique la correction.' },
+      { term: 'Examiner et décider', body: 'S’il manque des informations, l’agent met fin à l’examen en demandant des modifications. Le titulaire modifie sa demande et la soumet pour un nouvel examen. Après approbation, un agent ou un service connecté qui en a le droit applique la correction.' },
       { term: 'Conserver la décision et l’historique', body: 'Le service de dépôt des demandes conserve la dernière version soumise par le titulaire. Casework consigne chaque attribution d’examen et chaque décision. Le registre conserve l’autorisation corrigée et l’historique de ses modifications.' },
     ]}
     link={{ href: '/products/casework/#product-example', label: 'Voir la correction étape par étape' }}
@@ -31,7 +31,7 @@ const casework = products.find((p) => p.key === 'casework')!;
   <section class="section" aria-labelledby="review-change-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">Ce qui change pour votre service</p>
+        <p class="eyebrow">Ce qui change pour votre institution</p>
         <h2 id="review-change-title">Voir qui est responsable et ce qui attend une décision.</h2>
       </div>
       <div class="product-facts">
@@ -66,7 +66,7 @@ const casework = products.find((p) => p.key === 'casework')!;
       {
         q: 'Cela remplace-t-il notre système de registre ?',
         a: 'Non. Casework consigne les attributions, les échéances et les décisions d’examen. Votre registre continue de détenir les fiches officielles et de contrôler qui peut les modifier. La connexion d’un registre existant fait partie de la mise en œuvre.',
-        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’utilise à côté des systèmes existants (en anglais)' },
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’intègre aux systèmes existants (en anglais)' },
       },
       {
         q: 'Une approbation met-elle à jour le registre automatiquement ?',
@@ -91,7 +91,7 @@ const casework = products.find((p) => p.key === 'casework')!;
   />
   <DocsHandoff
     eyebrow="Travaillons ensemble"
-    heading="Parlons d’un processus d’examen par les agents avec nous."
+    heading="Parlons d’un processus d’examen par les agents."
     body="Dites-nous quelles demandes les agents examinent, qui décide et comment une modification approuvée est appliquée. Nous pouvons montrer comment les écrans des agents, les attributions d’examen et le registre peuvent fonctionner ensemble."
     primaryLabel="Décrivez votre service"
     primaryHref={describeServiceHref(area.name, 'fr')}

@@ -11,8 +11,8 @@ const { fieldLabel, value, recipient, issuer } = Astro.props;
 const t = translator(localeForPath(Astro.url.pathname));
 ---
 
-<section class="signed-answer" aria-label={t(`Signed answer for ${recipient}`, `Réponse signée pour ${recipient}`)}>
-  <p class="answer-recipient">{t(`${recipient} receives`, `${recipient} reçoit`)}</p>
+<section class="signed-answer" aria-label={t(`Signed answer for ${recipient}`, `Réponse signée, destinataire : ${recipient}`)}>
+  <p class="answer-recipient">{t(`${recipient} receives`, `Destinataire : ${recipient}`)}</p>
   <dl class="answer-result">
     <dt>{fieldLabel}</dt>
     <dd>{value}</dd>

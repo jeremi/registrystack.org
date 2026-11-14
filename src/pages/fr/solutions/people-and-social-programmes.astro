@@ -24,14 +24,14 @@ const steps: WeekStep[] = [
     card: { kind: 'record', recordType: 'Demande', recordId: 'APP-5120', icon: 'household', fields: [
       { label: 'Ménage', value: 'HH-30944' },
       { label: 'Programme', value: 'Protection sociale' },
-      { label: 'Déposée à', value: 'Bureau du district' },
+      { label: 'Lieu de dépôt', value: 'Bureau du district' },
     ] },
   },
   {
     when: 'Évaluation et décision',
     ...weekProduct('casework'),
     title: 'Un agent décide',
-    text: 'La demande complète entre dans la file des inscriptions. A. Haddad examine la demande et l’évaluation, puis consigne la décision du programme.',
+    text: 'La demande complète entre dans la file d’examen des inscriptions. A. Haddad examine la demande et l’évaluation, puis consigne la décision du programme.',
     card: { kind: 'history', items: [
       { state: 'Reçue', note: 'Dirigée vers les inscriptions' },
       { state: 'Prise en charge', note: 'Confiée à A. Haddad' },
@@ -42,11 +42,11 @@ const steps: WeekStep[] = [
     when: 'Fiche du ménage mise à jour',
     ...weekProduct('base-registry'),
     title: 'La fiche du ménage change et garde son historique',
-    text: 'L’agent enregistre l’inscription sous son propre nom. La révision 4 contient le statut ; la révision 3 reste consultable.',
+    text: 'L’agent enregistre l’inscription sous son propre nom. La version 4 contient le statut ; la version 3 reste consultable.',
     card: { kind: 'record', recordType: 'Fiche du ménage', recordId: 'HH-30944', icon: 'household', fields: [
       { label: 'Statut', value: 'Inscrit' },
       { label: 'Modifiée par', value: 'A. Haddad' },
-      { label: 'Révision', value: '4' },
+      { label: 'Version', value: '4' },
     ] },
   },
   {
@@ -73,7 +73,7 @@ const steps: WeekStep[] = [
         id="people-week"
         kicker="Ménage HH-30944, une demande"
         heading="Suivez la demande du ménage."
-        caption="Demande d’un ménage, de la requête à la vérification de l’inscription par un autre programme, en passant par la décision de l’agent et la modification de la fiche. Les fiches sont fictives."
+        caption="Demande d’un ménage, du dépôt à la vérification de l’inscription par un autre programme, en passant par la décision de l’agent et la modification de la fiche. Les fiches sont fictives."
         steps={steps}
       />
     </div>
@@ -110,7 +110,7 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Qui peut consulter la fiche d’une personne ?',
-        a: 'Votre institution décide qui peut enregistrer une personne, modifier un ménage ou rechercher quelqu’un, et pour quel motif. Base Registry Engine conserve un historique des modifications qu’il traite. La mise en œuvre convient de la couverture de l’audit pour l’ensemble du registre et des applications connectées.',
+        a: 'Votre institution décide qui peut enregistrer une personne, modifier un ménage ou rechercher quelqu’un, et pour quel motif. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit pour l’ensemble du registre et des applications connectées est convenue lors de la mise en œuvre.',
         link: { href: '/security/', label: 'Qui est responsable de quoi' },
       },
       ...sharedFamilyFaq,
