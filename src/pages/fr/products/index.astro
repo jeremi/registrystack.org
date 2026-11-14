@@ -1,0 +1,54 @@
+---
+// French twin of src/pages/products/index.astro.
+import Base from '../../../layouts/Base.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import ProductServiceJourney from '../../../components/ProductServiceJourney.astro';
+import { describeServiceHref } from '../../../data/contact';
+---
+<Base title="Produits Registry Stack | Registres, examen, documents et notifications" description="Voyez comment les produits Registry Stack s’intègrent à un service d’autorisation d’exercice : fiches, examen par les agents, PDF signés, notifications et vérifications.">
+  <SiteHeader current="products" />
+  <main id="main-content" tabindex="-1">
+    <section class="hero hero-cover" aria-labelledby="products-title"><div class="hero-inner"><div class="hero-copy">
+      <p class="eyebrow">Produits Registry Stack</p>
+      <h1 id="products-title">Les logiciels derrière un service de registre.</h1>
+      <p class="hero-lead">Tenez des fiches, transmettez les demandes aux agents et reliez les étapes suivantes. Les produits Registry Stack prennent en charge les fiches, les examens, les documents, les notifications et les vérifications d’informations. Utilisez les composants dont vous avez besoin, avec une application existante ou pour créer un nouveau service.</p>
+      <div class="hero-actions"><a class="button button-primary" href="#service-example">Voir comment ils s’articulent</a><a class="button button-secondary" href={describeServiceHref('Produits Registry Stack', 'fr')}>Décrivez votre service</a></div>
+    </div></div></section>
+
+    <section class="section" id="service-example" aria-labelledby="service-title"><div class="section-inner">
+      <div class="section-heading"><h2 id="service-title">Comment les produits fonctionnent ensemble.</h2></div>
+      <ProductServiceJourney />
+      <nav class="service-paths" aria-label="Domaines de service prioritaires"><p>Explorez le service qui vous concerne :</p><ul><li><a href="/fr/solutions/licensing/">Autorisations d’exercice et registres professionnels</a></li><li><a href="/fr/solutions/business-and-tax/">Registres du commerce</a></li><li><a href="/fr/solutions/agriculture-food-and-environment/">Registres agricoles</a></li></ul></nav>
+    </div></section>
+
+    <section class="section section-muted" id="connections" aria-labelledby="connections-title"><div class="section-inner">
+      <div class="section-heading"><h2 id="connections-title">Reliez les étapes et les systèmes que vous conservez.</h2><p>Votre application peut appeler directement les produits. Ajoutez des composants d’intégration lorsque le service en a besoin.</p></div>
+      <div class="connection-grid">
+        <article><h3>Coordonner les appels et attendre les examens</h3><p>Registry Coordinator exécute des séquences d’appels de produits examinées, y compris l’attente d’une décision d’un agent. Chaque produit vérifie quand même les droits d’accès pour sa propre opération.</p><a class="inline-cta" href="https://docs.registrystack.org/start/coordinator/" hreflang="en">Découvrir la coordination des flux de travail (en anglais) <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Conserver une source de fiches existante</h3><p>Registry Adapter expose des opérations configurées sur un système que votre institution exploite déjà. La source garde ses fiches et son autorité ; l’intégration définit les opérations disponibles.</p><a class="inline-cta" href="https://github.com/registrystack/registry-stack/blob/v0.46.0/products/adapter/CONSULTATION.md" hreflang="en">Lire le contrat d’intégration de l’Adapter (en anglais) <span aria-hidden="true">↗</span></a></article>
+      </div>
+      <p class="additional-parts">Si un service comprend des rendez-vous, <a href="https://docs.registrystack.org/start/scheduling/" hreflang="en">Registry Scheduling (en anglais)</a> gère les capacités et les réservations. Lorsque des sources participantes publient des descriptions de fournisseurs d’informations, <a href="https://docs.registrystack.org/start/discovery/" hreflang="en">Registry Discovery (en anglais)</a> aide les équipes techniques à les trouver.</p>
+    </div></section>
+
+    <section class="section" id="evaluation" aria-labelledby="evaluation-title"><div class="section-inner adoption-grid">
+      <div><p class="eyebrow">Pour les équipes de mise en œuvre</p><h2 id="evaluation-title">Essayez un exemple relié.</h2><p>Le tutoriel d’examen et de notification relie un flux de travail, l’examen par un agent et une notification envoyée par un fournisseur fictif. Utilisez-le pour inspecter les passages de relais.</p><a class="inline-cta" href="https://docs.registrystack.org/tutorials/review-an-application-and-send-a-notice/" hreflang="en">Suivre le tutoriel d’examen et de notification (en anglais) <span aria-hidden="true">↗</span></a></div>
+      <div><p class="eyebrow">Mise en œuvre et exploitation</p><h2>Choisissez qui le met en œuvre et l’exploite.</h2><p>Votre équipe ou un prestataire désigné peut construire le service et exploiter le logiciel, ou nous le faisons avec vous et l’exploitons pour vous. Convenez des fiches, des écrans, de l’authentification, des connexions et des responsabilités dans le cadrage de la mise en œuvre. Notre hébergement et notre exploitation font l’objet d’un devis distinct.</p><a class="inline-cta" href="/fr/pricing/#process">Comment fonctionne la mise en œuvre <span aria-hidden="true">→</span></a></div>
+    </div></section>
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .service-paths { border-top: 1px solid var(--registry-rule); margin-top: 32px; padding-top: 20px; }
+  .service-paths p { font-size: var(--type-base); color: var(--registry-body); margin: 0 0 8px; }
+  .service-paths ul { display: flex; flex-wrap: wrap; gap: 8px 28px; list-style: none; margin: 0; padding: 0; }
+  .service-paths a { display: inline-block; padding: 8px 0; font-size: var(--type-base); }
+  .connection-grid, .adoption-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+  .connection-grid article { border-top: 2px solid var(--registry-blue); padding-top: 22px; }
+  .connection-grid h3 { font-size: var(--type-subhead); }
+  .connection-grid p, .adoption-grid p { font-size: var(--type-body-sm); }
+  .additional-parts { border-top: 1px solid var(--registry-rule); margin: 30px 0 0; padding-top: 22px; font-size: var(--type-base); }
+  .adoption-grid h2 { font-size: clamp(28px, 3.5vw, 40px); }
+  @media (max-width: 760px) { .connection-grid, .adoption-grid { grid-template-columns: 1fr; gap: 32px; } }
+</style>

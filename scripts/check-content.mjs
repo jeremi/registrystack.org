@@ -695,6 +695,9 @@ for (const component of ['RegisterWeek']) {
 // caption, which names what the example shows and marks it as fictional, so
 // the caption checks above also cover them. Every file a figure points to
 // exists, and a film starts only when the visitor asks, with English captions.
+// A French page marks the example as fictional in French and shows a film
+// with French captions. A picture may have a French version under
+// public/illustrations/fr/; when it has one, it has all three sizes.
 const mediaSource = readSource('src/data/media.ts');
 const mediaNames = {
   Illustration: new Set([...mediaSource.matchAll(/'([a-z0-9-]+)': \{ width: \d+, height: \d+ \}/g)].map(([, name]) => name)),
@@ -704,6 +707,11 @@ const mediaFiles = {
   Illustration: (name) => [800, 1600, 2400].map((width) => `public/illustrations/${name}-${width}.webp`),
   Film: (name) => [`public/films/${name}-720.mp4`, `public/films/${name}-poster.jpg`, `public/films/${name}-en.vtt`],
 };
+const frenchMediaFiles = {
+  Illustration: (name) => [800, 1600, 2400].map((width) => `public/illustrations/fr/${name}-${width}.webp`),
+  Film: (name) => [`public/films/${name}-fr.vtt`],
+};
+const isFrenchPage = (file) => file.startsWith('src/pages/fr/');
 const mediaUses = listAstroFiles('src/pages').flatMap((file) =>
   [...readSource(file).matchAll(/<(Illustration|Film)\b([^>]*)\/>/g)].map(([, component, attributes]) => ({
     file,
@@ -715,10 +723,22 @@ const mediaUses = listAstroFiles('src/pages').flatMap((file) =>
 for (const use of mediaUses) {
   const figure = `${use.file}: ${use.component} "${use.name}"`;
   if (!use.name || !mediaNames[use.component].has(use.name)) failures.push(`${figure} is not listed in src/data/media.ts`);
-  if (!/\bfictional\b/i.test(use.caption ?? '')) failures.push(`${figure} needs a literal caption that marks the example as fictional`);
+  if (!(isFrenchPage(use.file) ? /\bficti(?:f|ve)s?\b/i : /\bfictional\b/i).test(use.caption ?? '')) {
+    failures.push(`${figure} needs a literal caption that marks the example as fictional`);
+  }
   if (!use.label?.trim()) failures.push(`${figure} needs ${use.component === 'Film' ? 'a title' : 'alt text'}`);
-  for (const asset of use.name ? mediaFiles[use.component](use.name) : []) {
+  const assets = !use.name ? [] : [
+    ...mediaFiles[use.component](use.name),
+    ...(isFrenchPage(use.file) && use.component === 'Film' ? frenchMediaFiles.Film(use.name) : []),
+  ];
+  for (const asset of assets) {
     if (!existsSync(resolve(asset))) failures.push(`${figure} is missing ${asset}`);
+  }
+}
+for (const name of mediaNames.Illustration) {
+  const present = frenchMediaFiles.Illustration(name).filter((asset) => existsSync(resolve(asset)));
+  if (present.length > 0 && present.length < 3) {
+    failures.push(`French picture "${name}" needs its 800, 1600 and 2400 pixel files under public/illustrations/fr/`);
   }
 }
 const mediaPlacements = [
@@ -734,19 +754,24 @@ const mediaPlacements = [
 // or film in src/data/media.ts, or a page links it directly. Films are large,
 // so an unused one should not be committed by accident.
 const mediaFileSet = new Set(Object.entries(mediaNames).flatMap(([component, names]) =>
-  [...names].flatMap((name) => mediaFiles[component](name))));
+  [...names].flatMap((name) => [...mediaFiles[component](name), ...frenchMediaFiles[component](name)])));
 const pageSources = listAstroFiles('src').map(readSource).join('\n');
-for (const folder of ['public/illustrations', 'public/films']) {
+const mediaFolders = ['public/illustrations', 'public/illustrations/fr', 'public/films'];
+for (const folder of mediaFolders) {
   for (const entry of existsSync(resolve(folder)) ? readdirSync(resolve(folder)) : []) {
     const file = `${folder}/${entry}`;
+    if (mediaFolders.includes(file)) continue;
     if (!entry.startsWith('.') && !mediaFileSet.has(file) && !pageSources.includes(file.replace(/^public/, ''))) {
       failures.push(`${file} is not used by any page or by src/data/media.ts`);
     }
   }
 }
 for (const { file, component, name } of mediaPlacements) {
-  if (!mediaUses.some((use) => use.file === file && use.component === component && use.name === name)) {
-    failures.push(`${file} is missing its ${component} "${name}"`);
+  const frenchFile = file.replace(/^src\/pages\//, 'src/pages/fr/');
+  for (const page of [file, ...(existsSync(resolve(frenchFile)) ? [frenchFile] : [])]) {
+    if (!mediaUses.some((use) => use.file === page && use.component === component && use.name === name)) {
+      failures.push(`${page} is missing its ${component} "${name}"`);
+    }
   }
 }
 const filmComponent = readSource('src/components/Film.astro');

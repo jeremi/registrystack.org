@@ -1,0 +1,147 @@
+---
+// French twin of src/pages/about.astro: the same sections in the same order.
+// The styles repeat the English page's, which are scoped to that file.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { describeServiceHref } from '../../data/contact';
+import { teamRecordFull } from '../../data/fr/team';
+
+const pageTitle = 'À propos | Registry Stack';
+const pageDescription =
+  'Aubex Consulting LLC développe et assiste Registry Stack, logiciel open source pour les registres publics.';
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="about" />
+
+  <main id="main-content" tabindex="-1">
+    <section class="hero" aria-labelledby="about-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">À propos</p>
+          <h1 id="about-hero-title">Qui développe et assiste Registry Stack.</h1>
+          <p class="hero-lead">
+            Aubex Consulting LLC, basée à San Francisco, aux États-Unis, développe et assiste Registry Stack. Le cœur du
+            logiciel est open source sous licence Apache-2.0 : votre équipe peut l’utiliser avec ou sans nous.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="about-work-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Ce que fait Aubex</p>
+          <h2 id="about-work-title">Des logiciels ouverts, et de l’aide quand vous la voulez.</h2>
+        </div>
+        <div class="about-cards">
+          <article class="quiet-card">
+            <h3>Mise en œuvre d’un registre pilote</h3>
+            <p>Nous mettons en œuvre un registre et son service avec votre équipe. Consultez les <a href="/fr/pricing/">tarifs</a> pour connaître ce qui est convenu avant le début des travaux.</p>
+          </article>
+          <article class="quiet-card">
+            <h3>Assistance technique annuelle</h3>
+            <p>Si votre équipe met en œuvre et exploite Registry Stack, nous assistons les produits et les versions que vous utilisez. Consultez les <a href="/fr/pricing/">tarifs</a> pour savoir comment fonctionne l’assistance.</p>
+          </article>
+          <article class="quiet-card">
+            <h3>Registry Studio</h3>
+            <p>Studio est un outil de création commercial, soumis à ses propres conditions de licence. La licence Apache-2.0 du cœur du logiciel ne le couvre pas, et vous n’avez pas besoin de Studio pour exploiter ou modifier un service. <a href="/fr/products/studio/">À propos de Registry Studio</a></p>
+          </article>
+          <article class="quiet-card">
+            <h3>Conception du service</h3>
+            <p>Le travail de conception du service est surtout assuré par nos partenaires. <a href="/fr/ai/service-design/">À propos de la conception du service</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="about-people-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">Avec qui vous travaillez</p>
+          <h2 id="about-people-title">Dix ans de travail sur les registres des administrations.</h2>
+          <p>{teamRecordFull}</p>
+          <p>Jeremi :</p>
+          <ul class="person-roles">
+            <li>
+              dirige <a href="https://openspp.org/" hreflang="en">OpenSPP (en anglais)</a>, logiciel open source pour les
+              programmes de protection sociale, placé sous l’égide d’ACN ;
+            </li>
+            <li>
+              siège au comité des standards de <a href="https://spdci.org/" hreflang="en">SP-DCI (en anglais)</a>, qui établit
+              des standards communs pour l’échange de données entre systèmes de protection sociale ;
+            </li>
+            <li>
+              travaille dans les groupes de travail <span lang="en">AI</span> et <span lang="en">Digital Registries</span> de
+              <a href="https://www.govstack.global/" hreflang="en">GovStack (en anglais)</a>, qui rédigent des spécifications
+              ouvertes pour les services numériques de l’administration.
+            </li>
+          </ul>
+        </div>
+        <div class="quiet-card">
+          <h3>Votre registre ne dépend pas de nous.</h3>
+          <ul class="check-list">
+            <li>Le cœur du logiciel est open source sous licence Apache-2.0.</li>
+            <li>Vos règles et votre configuration sont des fichiers que votre équipe conserve.</li>
+            <li>La <a href="https://docs.registrystack.org/" hreflang="en">documentation (en anglais)</a> est publique.</li>
+            <li>Tout prestataire que vous désignez peut l’exploiter et en assurer l’assistance.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="about-next-title">
+      <div class="section-inner">
+        <p class="eyebrow">Prochaine étape</p>
+        <h2 id="about-next-title">Parlons de votre registre.</h2>
+        <p>Dites-nous qui vous êtes et ce dont vous avez besoin. Vous n’avez pas besoin d’un budget pour nous écrire.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href={describeServiceHref('Aubex et Registry Stack', 'fr')} data-journey="service-inquiry">Décrivez votre service</a>
+          <a class="button button-secondary" href="/fr/pricing/">Mise en œuvre et tarifs</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  .about-cards {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: clamp(24px, 4vw, 36px);
+  }
+
+  .quiet-card h3 {
+    margin-top: 0;
+  }
+
+  .quiet-card p:last-child {
+    margin-bottom: 0;
+  }
+
+  .person-roles {
+    color: var(--registry-body);
+    display: grid;
+    font-size: var(--type-lg);
+    gap: 10px;
+    line-height: 1.55;
+    margin: 0;
+    padding-left: 1.2em;
+  }
+
+  /* Links in these lists sit inside running text, so they are underlined. */
+  .person-roles a,
+  .check-list a {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 720px) {
+    .about-cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

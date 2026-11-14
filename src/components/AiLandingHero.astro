@@ -1,5 +1,6 @@
 ---
 import { describeServiceHref } from '../data/contact';
+import { localeForPath, translator } from '../i18n';
 
 interface Props {
   eyebrow: string;
@@ -15,6 +16,8 @@ interface Props {
 const {
   eyebrow, heading, lead, context, exampleHref, exampleLabel, note, exampleNote,
 } = Astro.props;
+const locale = localeForPath(Astro.url.pathname);
+const t = translator(locale);
 // A heading of two sentences breaks between them, not inside the second one.
 const headingSentences = heading.split(/(?<=\.)\s+/);
 ---
@@ -26,7 +29,7 @@ const headingSentences = heading.split(/(?<=\.)\s+/);
       <h1 id="ai-hero-title">{headingSentences.map((sentence, index) => <>{index > 0 && ' '}<span class="heading-sentence">{sentence}</span></>)}</h1>
       <p class="hero-lead">{lead}</p>
       <div class="hero-actions">
-        <a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a>
+        <a class="button button-primary" href={describeServiceHref(context, locale)} data-journey="service-inquiry">{t('Discuss your service', 'Décrivez votre service')}</a>
         <a class="button button-secondary" href={exampleHref}>{exampleLabel}</a>
       </div>
       {note && <p class="hero-note">{note}</p>}

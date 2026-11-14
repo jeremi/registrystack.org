@@ -1,0 +1,129 @@
+---
+// French twin of src/pages/data-spaces.astro. The styles repeat the English
+// page's, which are scoped to that file.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import Illustration from '../../components/Illustration.astro';
+import { describeServiceHref } from '../../data/contact';
+
+const releaseSource = 'https://github.com/registrystack/registry-stack/tree/v0.46.0/products';
+const adapterExample = `${releaseSource}/adapter/examples/dhis2-consultation`;
+const evidenceExample = `${releaseSource}/evidence/examples/standalone`;
+const registryEvidenceExample = `${releaseSource}/breg/evidence`;
+---
+
+<Base title="Espaces de données et registres faisant autorité | Registry Stack" description="Utilisez un registre faisant autorité, reliez un système existant ou proposez des réponses signées dans un espace de données, avec des accès convenus.">
+  <SiteHeader current="data-spaces" />
+  <main id="main-content" tabindex="-1">
+    <section class="hero hero-cover" aria-labelledby="data-spaces-title">
+      <div class="hero-inner"><div class="hero-copy">
+        <p class="eyebrow">Espaces de données</p>
+        <h1 id="data-spaces-title">Partagez des données à partir des systèmes que votre institution exploite déjà.</h1>
+        <p class="hero-lead">Donnez à des partenaires approuvés l’accès à certaines fiches, ou une réponse signée à une question précise. Registry Stack peut gérer le registre source, relier un système existant ou préparer la réponse que votre institution accepte de partager.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#example">Voir un exemple de statut d’autorisation</a>
+          <a class="button button-secondary" href={describeServiceHref('la participation à un espace de données', 'fr')} data-journey="service-inquiry">Parlons de votre échange</a>
+        </div>
+        <p class="hero-note">Pour les fournisseurs de données, les utilisateurs de données et les équipes qui les relient.</p>
+      </div></div>
+    </section>
+
+    <section class="section" aria-labelledby="data-space-meaning-title">
+      <div class="section-inner">
+        <div class="approach-split">
+          <div class="section-heading">
+            <h2 id="data-space-meaning-title">Convenez de la manière dont les organisations partageront et utiliseront les données.</h2>
+            <p>Un espace de données réunit des organisations autour de règles communes et de dispositions techniques partagées. Les instances qui gouvernent l’espace fixent les règles pour y adhérer, demander des données et les utiliser. Chaque détenteur de données décide de ce qu’il peut proposer dans le cadre de ces règles. Une organisation peut fournir des données, utiliser celles des autres, ou les deux.</p>
+          </div>
+          <div class="editorial-callout">
+            <h3>Partez d’un besoin précis</h3>
+            <p>Un participant doit vérifier une information qu’une autre institution détient déjà. Convenez de la source qui peut répondre, de qui peut poser la question et de la quantité d’informations dont le service destinataire a besoin.</p>
+          </div>
+        </div>
+        <Illustration
+          name="same-definitions"
+          alt="PublicSchema publie librement ses définitions, pour que chacun puisse les utiliser : Personne, Ménage, Appartenance, Programme et listes de codes. Trois registres, chacun sur ses propres serveurs, reprennent les définitions dont ils ont besoin et y ajoutent les leurs : le registre social du ministère des Affaires sociales ajoute Inscription, le registre des agriculteurs du ministère de l’Agriculture ajoute Exploitation agricole, et le registre de population du Service de l’état civil ajoute Naissance. Le ministère des Affaires sociales demande au registre des agriculteurs si une personne y figure et reçoit un oui signé. Les deux registres lisent Personne de la même façon."
+          caption="Trois registres fictifs reprennent de PublicSchema les définitions dont ils ont besoin. Une réponse signée à propos d’une personne a alors le même sens pour l’autorité qui la demande et pour celle qui répond."
+        />
+      </div>
+    </section>
+
+    <section class="section section-muted" id="example" aria-labelledby="licence-example-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Exemple d’échange</p>
+          <h2 id="licence-example-title">Vérifiez l’autorisation d’un fournisseur sans demander sa fiche complète.</h2>
+          <p>Une autorité de délivrance des autorisations tient le registre. Un service de passation des marchés publics doit vérifier, dans un but convenu, le statut enregistré de l’autorisation d’un fournisseur.</p>
+        </div>
+        <ol class="delivery-steps exchange-steps">
+          <li><h3>Décrire l’offre</h3><p>L’autorité décrit la vérification du statut d’une autorisation, les organisations qui peuvent la demander et les conditions d’utilisation de la réponse.</p></li>
+          <li><h3>Répondre à une demande approuvée</h3><p>Le service de passation des marchés fournit la référence de l’autorisation par le canal d’échange convenu. Evidence Gateway vérifie la demande, lit la source approuvée et renvoie un statut signé.</p></li>
+          <li><h3>Utiliser la réponse</h3><p>Le service de passation des marchés peut vérifier la signature et appliquer ses propres règles. L’autorité de délivrance conserve la fiche complète et garde la maîtrise de l’accès à la source.</p></li>
+        </ol>
+        <p class="section-note">Consultez la configuration et les cas de test synthétiques dans l’<a href={evidenceExample} hreflang="en">exemple publié de statut d’autorisation avec Evidence Gateway (en anglais)</a>. Pour voir comment un registre peut fournir la source, lisez l’<a href={registryEvidenceExample} hreflang="en">exemple associant Base Registry Engine et Evidence Gateway (en anglais)</a>.</p>
+      </div>
+    </section>
+
+    <section class="section" id="components" aria-labelledby="data-space-components-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Ce que fournit Registry Stack</p>
+          <h2 id="data-space-components-title">Choisissez ce dont votre institution a besoin pour participer.</h2>
+        </div>
+        <div class="value-grid component-grid">
+          <article>
+            <h3>Tenir le registre source</h3>
+            <p>Base Registry Engine tient les fiches, définit les opérations et les champs qu’un appelant peut utiliser, et conserve l’historique des modifications. Ne proposez que les fiches et les champs que l’institution a accepté de partager.</p>
+            <a class="inline-cta" href="/fr/products/base-registry/">Découvrir Base Registry Engine <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Relier un système que vous utilisez déjà</h3>
+            <p>Registry Adapter expose une API convenue au-dessus d’un système existant. Il vérifie qui peut appeler chaque opération, fait correspondre la demande et renvoie les champs que le projet définit. La source applique ses propres règles d’accès et garde ses fiches. L’exemple DHIS2 montre différentes vues d’une même source.</p>
+            <a class="inline-cta" href={adapterExample} hreflang="en">Voir comment Adapter fait correspondre une source DHIS2 (en anglais) <span aria-hidden="true">↗</span></a>
+          </article>
+          <article>
+            <h3>Partager une réponse plutôt qu’une fiche</h3>
+            <p>Evidence Gateway répond à une question prédéfinie à partir d’une source approuvée. Le service destinataire peut vérifier qui a émis la réponse et si elle a été modifiée.</p>
+            <a class="inline-cta" href="/fr/products/evidence-gateway/">Découvrir Evidence Gateway <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Décrire ce que les autres peuvent demander</h3>
+            <p>Registry Manifest produit des descriptions portables des registres et des informations proposées. Votre mise en œuvre relie ces descriptions au catalogue que l’espace de données utilise, afin que les autres participants trouvent ce que votre institution propose.</p>
+            <a class="inline-cta" href="https://docs.registrystack.org/products/registry-manifest/" hreflang="en">Découvrir Registry Manifest (en anglais) <span aria-hidden="true">↗</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="exchange" aria-labelledby="exchange-integration-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <p class="eyebrow">Participation et intégration</p>
+          <h2 id="exchange-integration-title">Reliez le service à l’infrastructure d’échange de l’espace de données.</h2>
+          <p>L’espace de données fixe ses règles d’adhésion, d’identification, d’accords et d’utilisation des données. Votre équipe d’intégration relie l’API du participant au connecteur ou au réseau d’échange que l’espace exige, et convient de la manière dont le fournisseur vérifiera l’identité de l’appelant. Le service du fournisseur applique ses règles d’accès à chaque demande.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="data-space-next-title">
+      <div class="section-inner">
+        <p class="eyebrow">Commencer par un échange</p>
+        <h2 id="data-space-next-title">Apportez une source, un partenaire et les données dont il a besoin.</h2>
+        <p>Dites-nous quel système détient les données, qui doit les utiliser, et quelles règles et quelle infrastructure d’échange s’appliquent. Convenez de ce que le service destinataire peut conserver et de la façon de tester une demande autorisée, une demande refusée et une source indisponible.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href={describeServiceHref('la participation à un espace de données', 'fr')} data-journey="service-inquiry">Parlons de votre échange</a>
+          <a class="button button-secondary" href="/fr/pricing/">Mise en œuvre et tarifs</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .exchange-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .component-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 900px) { .exchange-steps { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) { .component-grid { grid-template-columns: 1fr; } }
+</style>

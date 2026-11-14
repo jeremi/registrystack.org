@@ -1,0 +1,101 @@
+---
+// French twin of src/pages/solutions/review-changes.astro.
+import Solution from '../../../layouts/Solution.astro';
+import SolutionExample from '../../../components/SolutionExample.astro';
+import SolutionFit from '../../../components/SolutionFit.astro';
+import SolutionFaq from '../../../components/SolutionFaq.astro';
+import DocsHandoff from '../../../components/DocsHandoff.astro';
+import { solutionAreas } from '../../../data/fr/solutions';
+import { describeServiceHref } from '../../../data/contact';
+import { products } from '../../../data/fr/products';
+const area = solutionAreas.find((a) => a.key === 'review-changes')!;
+const casework = products.find((p) => p.key === 'casework')!;
+---
+<Solution
+  area={area}
+  heading="Aidez les agents à examiner les demandes et à consigner leurs décisions."
+  description="Attribuez aux agents les demandes de correction, les contestations et les autres modifications proposées. Suivez les échéances et consignez chaque décision. Après approbation, un agent ou un service connecté qui en a le droit applique la modification au registre."
+>
+  <SolutionExample
+    eyebrow="Un exemple : la correction d’une autorisation d’exercice"
+    heading="Examiner une demande de correction d’une autorisation d’exercice."
+    intro="Un professionnel signale que son autorisation d’exercice mentionne des activités autorisées erronées. Un agent examine les pièces justificatives et décide s’il approuve la correction."
+    items={[
+      { term: 'Déposer une demande de correction', body: 'Le titulaire de l’autorisation utilise le service de dépôt des demandes pour expliquer l’erreur et joindre les pièces justificatives.' },
+      { term: 'Attribuer l’examen', body: 'La demande est attribuée à un agent. L’équipe voit qui en est chargé et à quelle date une décision est attendue. L’autorisation reste inchangée pendant l’examen.' },
+      { term: 'Examiner et décider', body: 'S’il manque des informations, l’agent met fin à l’examen en demandant des modifications. Le titulaire révise sa demande et la soumet pour un nouvel examen. Après approbation, un agent ou un service connecté qui en a le droit applique la correction.' },
+      { term: 'Conserver la décision et l’historique', body: 'Le service de dépôt des demandes conserve la dernière version soumise par le titulaire. Casework consigne chaque attribution d’examen et chaque décision. Le registre conserve l’autorisation corrigée et l’historique de ses modifications.' },
+    ]}
+    link={{ href: '/products/casework/#product-example', label: 'Voir la correction étape par étape' }}
+  />
+  <section class="section" aria-labelledby="review-change-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">Ce qui change pour votre service</p>
+        <h2 id="review-change-title">Voir qui est responsable et ce qui attend une décision.</h2>
+      </div>
+      <div class="product-facts">
+        <article><h3>Choisir les demandes qui passent par un examen</h3><p>Votre institution décide quelles modifications appellent une décision, comme la correction d’une autorisation ou l’ajout d’un membre à un ménage. Chaque type de demande peut avoir sa propre équipe d’examen et son échéance.</p></article>
+        <article><h3>Suivre les attributions et les demandes en retard</h3><p>Les agents voient les demandes qui leur sont attribuées et leurs échéances. Les responsables repèrent les dossiers en retard et relancent l’agent concerné. Une application reliée à Casework peut afficher la décision enregistrée.</p></article>
+        <article><h3>Garder la trace de la décision et de la modification</h3><p>Casework consigne qui a examiné la demande et qui a décidé. Seuls les agents ou les systèmes habilités par le registre peuvent appliquer la modification approuvée. Le registre consigne cette modification dans son propre historique.</p></article>
+      </div>
+      <div id="what-your-office-calls-it" class="product-note">
+        <h3>Autres demandes que votre équipe pourrait examiner</h3>
+        <p>La même approche peut servir pour la correction d’une fiche foncière ou une contestation des informations d’un ménage. Les pièces justificatives et les règles de décision sont configurées pour chaque institution.</p>
+      </div>
+    </div>
+  </section>
+  <SolutionFit
+    area={area}
+    heading="Relier l’examen par les agents à votre registre."
+    muted
+    jobs={{
+      casework: 'Attribue les demandes aux examinateurs, suit les échéances et consigne les décisions selon les règles d’examen que votre équipe configure.',
+      'base-registry': 'Tient les fiches et leur historique. Pour une modification qui exige un examen, il vérifie le résultat de l’examen et le droit d’appliquer la modification.',
+    }}
+    extra={[
+      { term: 'Votre institution fixe les règles', body: 'Votre équipe décide qui examine chaque type de demande et ce que les agents doivent prendre en compte. Les agents prennent la décision ; Casework la consigne.' },
+      { term: 'Des écrans pour les examinateurs', body: 'Les examinateurs peuvent utiliser les écrans fournis avec le service ou travailler dans une application existante des agents, reliée à Casework. Ils voient la demande, les pièces, l’échéance et les actions que leur rôle leur permet.' },
+      { term: 'Un registre existant', body: 'Base Registry Engine dispose d’une connexion prise en charge avec Casework. Votre équipe de mise en œuvre peut construire une connexion pour un autre registre, y compris la manière dont il soumet les demandes et reçoit les décisions d’examen.' },
+    ]}
+  >
+    <p>Convenez des modifications qui exigent un examen, de qui peut en décider et de qui peut mettre à jour le registre. Reliez ensuite ces étapes aux écrans que vos demandeurs et vos agents utilisent.</p>
+  </SolutionFit>
+  <SolutionFaq
+    items={[
+      {
+        q: 'Cela remplace-t-il notre système de registre ?',
+        a: 'Non. Casework consigne les attributions, les échéances et les décisions d’examen. Votre registre continue de détenir les fiches officielles et de contrôler qui peut les modifier. La connexion d’un registre existant fait partie de la mise en œuvre.',
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’utilise à côté des systèmes existants (en anglais)' },
+      },
+      {
+        q: 'Une approbation met-elle à jour le registre automatiquement ?',
+        a: 'L’approbation consigne la décision d’examen. Un agent ou un service connecté doit ensuite appliquer la modification avec l’autorisation du registre. Votre institution peut aussi configurer d’autres types de modification qui ne passent pas par un examen des agents.',
+      },
+      {
+        q: 'Une application existante peut-elle soumettre des demandes ?',
+        a: 'Oui. Une application connectée peut soumettre des demandes, suivre leur avancement et récupérer les décisions enregistrées. Base Registry Engine dispose d’une connexion prise en charge ; les autres systèmes demandent une intégration.',
+        link: { href: casework.tutorialHref, label: casework.tutorialLabel },
+      },
+      {
+        q: 'Les personnes peuvent-elles préparer une demande avec un assistant d’IA ?',
+        a: 'Oui, dans une intégration en préversion pour Base Registry Engine. Une personne connectée prépare la modification avec un assistant que votre institution approuve, puis la vérifie et l’envoie sur votre site. L’assistant ne peut ni envoyer une demande, ni l’approuver, ni modifier une fiche.',
+        link: { href: '/ai/citizen-access/', label: 'Voir l’accès des citoyens par un assistant' },
+      },
+      {
+        q: 'Par où votre équipe technique commence-t-elle ?',
+        a: 'Le tutoriel couvre la rédaction et la vérification du paquet pour une modification de registre soumise à examen. Servez-vous-en pour vérifier l’association des deux produits ; votre mise en œuvre relie et teste aussi le dépôt des demandes, l’examen par les agents et la mise à jour autorisée du registre.',
+        link: { href: 'https://docs.registrystack.org/tutorials/review-breg-changes-in-casework/', label: 'Configurer une modification de registre soumise à examen (en anglais)' },
+      },
+    ]}
+  />
+  <DocsHandoff
+    eyebrow="Travaillons ensemble"
+    heading="Parlons d’un processus d’examen par les agents avec nous."
+    body="Dites-nous quelles demandes les agents examinent, qui décide et comment une modification approuvée est appliquée. Nous pouvons montrer comment les écrans des agents, les attributions d’examen et le registre peuvent fonctionner ensemble."
+    primaryLabel="Décrivez votre service"
+    primaryHref={describeServiceHref(area.name, 'fr')}
+    note="Le cœur du logiciel est open source (Apache-2.0). Votre équipe, un prestataire que vous désignez ou nous pouvons le mettre en œuvre et l’exploiter. Nous établissons un devis distinct pour l’hébergement et l’exploitation."
+    emphasis="docs"
+  />
+</Solution>

@@ -1,0 +1,108 @@
+---
+// French twin of the English page of the same name.
+import Product from '../../../layouts/Product.astro';
+import { products } from '../../../data/fr/products';
+const product = products.find((p) => p.key === 'messaging')!;
+---
+<Product
+  product={product}
+  heading="Envoyez des notifications depuis vos services publics."
+  description="Registry Messaging envoie des courriels et des SMS à partir de modèles approuvés, par les fournisseurs que vous configurez. Votre application choisit le destinataire et le moment de l’envoi ; Messaging prépare le message, l’expédie et consigne le résultat."
+  note="Messagerie open source pour un nouveau service ou un service que vous exploitez déjà."
+>
+  <section id="product-example" class="section section-muted" aria-labelledby="messaging-example-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">Un exemple : un document d’autorisation est prêt</p>
+        <h2 id="messaging-example-title">Indiquez au demandeur où trouver son document.</h2>
+        <p>Le service de délivrance des autorisations a préparé et conservé le document d’autorisation. Il demande à Registry Messaging d’envoyer un courriel à partir du modèle approuvé de l’autorité. La notification invite le demandeur à se connecter au service officiel pour le consulter.</p>
+      </div>
+      <figure class="messaging-example" aria-labelledby="messaging-example-caption">
+        <section class="request-panel" aria-labelledby="messaging-request-title">
+          <p class="panel-owner">Fourni par : votre service de délivrance des autorisations</p>
+          <h3 id="messaging-request-title">Demander une notification</h3>
+          <dl>
+            <div><dt>Destinataire</dt><dd>demandeur@example.invalid</dd></div>
+            <div><dt>Modèle</dt><dd>Document d’autorisation prêt</dd></div>
+            <div><dt>Référence</dt><dd>APP-2093</dd></div>
+          </dl>
+          <p class="panel-note">L’application décide du moment de l’envoi et de l’adresse à utiliser.</p>
+        </section>
+        <section class="message-panel" aria-labelledby="messaging-message-title">
+          <p class="panel-owner">Préparé par : Registry Messaging</p>
+          <div class="email-message">
+            <p class="message-channel">Notification par courriel</p>
+            <h3 id="messaging-message-title">Votre document d’autorisation est prêt</h3>
+            <p>Connectez-vous au service officiel de délivrance des autorisations pour consulter votre document.</p>
+            <p class="message-reference">Demande APP-2093</p>
+          </div>
+          <div class="provider-outcome">
+            <p class="panel-owner">Envoyé par : votre fournisseur de courriel</p>
+            <p><strong>Accepté par le fournisseur</strong></p>
+            <p>Cela confirme la transmission au fournisseur, pas la remise au demandeur.</p>
+          </div>
+        </section>
+        <figcaption id="messaging-example-caption">Un courriel fictif d’un service de délivrance des autorisations, demandé par l’application et envoyé par le fournisseur configuré. Le document reste dans le service officiel.</figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="messaging-capabilities-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">Fonctions pratiques</p>
+        <h2 id="messaging-capabilities-title">Gardez des notifications cohérentes et suivez leur progression.</h2>
+      </div>
+      <div class="product-facts">
+        <article><h3>Approuver la formulation</h3><p>Définissez les modèles de courriel et de SMS, leurs versions, leurs langues et les informations requises. Les applications choisissent un modèle approuvé et fournissent les informations de chaque message.</p></article>
+        <article><h3>Contrôler quels services peuvent envoyer</h3><p>Autorisez des applications à utiliser des expéditeurs et des modèles précis. Reliez les fournisseurs de courriel ou de SMS que votre institution choisit.</p></article>
+        <article><h3>Distinguer l’envoi de la remise</h3><p>Voyez si un message est en file d’attente, accepté par le fournisseur, ou s’il a un résultat de remise signalé. Le statut de remise est disponible lorsque le fournisseur le signale ; il n’indique pas si la personne a lu la notification.</p></article>
+      </div>
+    </div>
+  </section>
+  <section id="fit" class="section section-muted" aria-labelledby="messaging-fit-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">Comment il s’intègre à votre service</p>
+        <h2 id="messaging-fit-title">Envoyez des messages quand votre application en a besoin.</h2>
+        <p>Reliez Messaging à votre application ou à votre flux de travail. Utilisez-le pour des accusés de réception, des demandes d’informations, des rappels ou des notifications de décision. Le service appelant garde la maîtrise du processus ; Messaging traite chaque message demandé par le fournisseur configuré.</p>
+      </div>
+      <dl>
+        <dt>L’application choisit pourquoi, quand et à qui</dt><dd>Gardez dans votre service les coordonnées et l’autorisation de contacter une personne. Fournissez le destinataire, le modèle et les données du message au moment de demander l’envoi.</dd>
+        <dt>La mise en œuvre relie le fournisseur</dt><dd>Convenez de l’expéditeur, du compte chez le fournisseur, des identifiants, des modèles et des liens de retour vers le service officiel. Les documents et leurs contrôles d’accès restent dans ce service.</dd>
+        <dt>Choisissez qui l’exploite</dt><dd>Votre institution ou un prestataire désigné peut héberger et exploiter Messaging, ou nous l’exploitons pour vous. Nous établissons un devis distinct pour l’hébergement et l’exploitation dans la proposition.</dd>
+      </dl>
+    </div>
+  </section>
+  <section id="developers" class="section" aria-labelledby="messaging-developers-title">
+    <div class="section-inner">
+      <div class="section-heading compact">
+        <p class="eyebrow">Évaluer le logiciel</p>
+        <h2 id="messaging-developers-title">Envoyez et inspectez un message local.</h2>
+        <p>Le tutoriel utilise une boîte de courriel locale et un fournisseur de SMS fictif pour inspecter les messages et leur statut. Poursuivez avec la <a href="https://docs.registrystack.org/start/messaging/" hreflang="en">présentation de Messaging (en anglais)</a> et le <a href="https://docs.registrystack.org/operate/messaging/" hreflang="en">guide d’exploitation (en anglais)</a> pour relier les fournisseurs que vous avez choisis.</p>
+        <p><a class="inline-cta" href={product.tutorialHref} hreflang="en">{product.tutorialLabel} →</a></p>
+      </div>
+    </div>
+  </section>
+</Product>
+
+<style>
+  .messaging-example { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 28px; margin: 0; }
+  .request-panel, .message-panel { min-width: 0; border-top: 3px solid var(--registry-blue); padding: 22px; background: var(--registry-white); }
+  .panel-owner { margin: 0 0 20px; color: var(--registry-blue); font-size: var(--type-base); font-weight: 600; line-height: 1.5; }
+  .request-panel h3 { margin: 0 0 18px; font-size: var(--type-subhead); }
+  .request-panel dl { margin: 0; }
+  .request-panel dl div { display: grid; grid-template-columns: minmax(84px, 0.7fr) minmax(0, 1.3fr); gap: 12px; padding: 11px 0; border-top: 1px solid var(--registry-rule); }
+  .request-panel dt { color: var(--registry-muted); font-size: var(--type-md); }
+  .request-panel dd { margin: 0; font-size: var(--type-md); font-weight: 600; overflow-wrap: anywhere; }
+  .panel-note { color: var(--registry-body); font-size: var(--type-base); line-height: 1.6; margin: 18px 0 0; }
+  .email-message { padding: clamp(20px, 3vw, 28px); border: 1px solid var(--registry-paper-rule); background: var(--registry-paper); }
+  .message-channel { margin: 0 0 16px; color: var(--registry-blue); font: var(--type-xs)/1.5 var(--registry-mono); text-transform: uppercase; letter-spacing: 0.05em; }
+  .email-message h3 { margin: 0 0 16px; font-size: var(--type-subhead); line-height: 1.4; }
+  .email-message > p:not(.message-channel) { font-size: var(--type-md); line-height: 1.6; }
+  .email-message .message-reference { margin: 20px 0 0; padding-top: 14px; border-top: 1px solid var(--registry-paper-rule); color: var(--registry-muted); font-size: var(--type-base); }
+  .provider-outcome { border-top: 1px solid var(--registry-rule); margin-top: 20px; padding-top: 16px; }
+  .provider-outcome .panel-owner { margin-bottom: 10px; }
+  .provider-outcome p { font-size: var(--type-base); line-height: 1.6; margin: 5px 0 0; }
+  figcaption { grid-column: 1 / -1; margin: 0; color: var(--registry-muted); font-size: var(--type-base); line-height: 1.6; }
+  @media (max-width: 700px) { .messaging-example { grid-template-columns: 1fr; gap: 20px; } .request-panel, .message-panel { padding: 20px; } }
+</style>

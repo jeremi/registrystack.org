@@ -4,7 +4,8 @@
 // so the two always match: each NOTE block in the file starts a paragraph.
 import { readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { films } from '../data/media';
+import { films, filmLengthsFr } from '../data/media';
+import { localeForPath, translator } from '../i18n';
 
 interface Props {
   name: keyof typeof films;
@@ -13,11 +14,13 @@ interface Props {
 }
 
 const { name, title, caption } = Astro.props;
+const locale = localeForPath(Astro.url.pathname);
+const t = translator(locale);
 const film = films[name];
 if (!film) throw new Error(`Unknown film: ${name}`);
 const base = `/films/${name}`;
 const sizeMb = (statSync(resolve(`public${base}-720.mp4`)).size / 1_000_000).toFixed(1);
-const transcript = readFileSync(resolve(`public${base}-en.vtt`), 'utf8')
+const transcript = readFileSync(resolve(`public${base}-${locale}.vtt`), 'utf8')
   .split(/\r?\n\r?\n/)
   .slice(1)
   .reduce<string[][]>((paragraphs, block) => {
@@ -35,11 +38,12 @@ const captionId = `${name}-caption`;
 <figure class="media-figure film">
   <video controls playsinline preload="none" width="1280" height="720" poster={`${base}-poster.jpg`} aria-label={title} aria-describedby={captionId}>
     <source src={`${base}-720.mp4`} type="video/mp4" />
+    {locale === 'fr' && <track kind="captions" src={`${base}-fr.vtt`} srclang="fr" label="Français" default />}
     <track kind="captions" src={`${base}-en.vtt`} srclang="en" label="English" />
   </video>
-  <figcaption id={captionId}>{caption} Film: {film.length}, with narration and English captions. <a href={`${base}-720.mp4`}>Download the film (MP4, {sizeMb} MB)</a>.</figcaption>
+  <figcaption id={captionId}>{caption} {locale === 'fr' ? `Film : ${filmLengthsFr[name]}, narration en anglais, sous-titres en français.` : `Film: ${film.length}, with narration and English captions.`} <a href={`${base}-720.mp4`}>{t(`Download the film (MP4, ${sizeMb} MB)`, `Télécharger le film (MP4, ${sizeMb.replace('.', ',')} Mo)`)}</a>.</figcaption>
   <details class="film-transcript">
-    <summary>Read the narration</summary>
+    <summary>{t('Read the narration', 'Lire la narration (traduction française)')}</summary>
     {transcript.map((paragraph) => <p>{paragraph}</p>)}
   </details>
 </figure>

@@ -4,10 +4,11 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { describeServiceHref } from '../data/contact';
 import type { products } from '../data/products';
+import type { products as productsFr } from '../data/fr/products';
 import { localeForPath, localizedPath, translator } from '../i18n';
 
 interface Props {
-  product: (typeof products)[number];
+  product: (typeof products)[number] | (typeof productsFr)[number];
   heading: string;
   // The hero lead. The search snippet is the product's shorter `description`.
   description: string;

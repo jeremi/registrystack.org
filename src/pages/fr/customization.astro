@@ -1,0 +1,128 @@
+---
+// French twin of src/pages/customization.astro: the same sections in the same
+// order. The styles repeat the English page's, which are scoped to that file.
+import Base from '../../layouts/Base.astro';
+import AiLandingHero from '../../components/AiLandingHero.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import Illustration from '../../components/Illustration.astro';
+import { describeServiceHref } from '../../data/contact';
+
+const context = 'Mise en œuvre assistée par l’IA';
+---
+
+<Base
+  title="Mettre en œuvre et adapter un service public | Registry Stack"
+  description="Adaptez un logiciel de registre open source à vos formulaires, règles et systèmes. Nous utilisons l’IA pour configurer et tester avec vous un service public."
+  ogImagePath="/og-ai.png"
+  ogImageAlt="Registry Stack : concevoir, adapter et ouvrir l’accès aux services publics avec l’IA."
+>
+  <SiteHeader current="customization" />
+  <main id="main-content" tabindex="-1">
+    <AiLandingHero
+      eyebrow="Mise en œuvre avec l’IA"
+      heading="Construisez un service autour de vos règles."
+      lead="Adaptez un logiciel de registre open source à vos formulaires, à vos règles et à vos étapes d’examen. Nous utilisons l’IA pour rédiger la configuration et les cas de test. Votre institution relit, teste et approuve chaque modification."
+      context={context}
+      exampleHref="#change-example"
+      exampleLabel="Voir un exemple de modification"
+      exampleNote="Exemple fictif : une modification de la règle d’âge d’entrée à l’école, rédigée avec l’IA, avec des résultats de test en attente de l’approbation de l’autorité chargée de l’éducation."
+      note="Aubex · Mise en œuvre d’un registre pilote"
+    >
+      <p class="ai-example-label">Exemple : modification rédigée par Aubex</p>
+      <p class="ai-example-title">Ouvrir l’inscription aux enfants de cinq ans</p>
+      <dl class="ai-example-rows">
+        <div><dt>Âge d’entrée</dt><dd>De 6 ans à <strong>5 ans</strong></dd></div>
+        <div><dt>A cinq ans à la date limite</dt><dd>Remplit la condition d’âge</dd></div>
+        <div><dt>A cinq ans après la date limite</dt><dd>Ne remplit pas la condition d’âge</dd></div>
+      </dl>
+      <p class="ai-example-status">Rédigé avec l’IA. Les tests réussissent. En attente de l’approbation de l’autorité chargée de l’éducation.</p>
+    </AiLandingHero>
+
+    <section class="section section-muted" id="change-example" aria-labelledby="change-title">
+      <div class="section-inner approach-split">
+        <div class="section-heading">
+          <p class="eyebrow">Exemple : l’inscription scolaire</p>
+          <h2 id="change-title">Changer une règle dans tout le service</h2>
+          <p>Une autorité chargée de l’éducation abaisse l’âge d’entrée à l’école maternelle. Cela touche ce que le service vérifie, ce que les agents disent aux parents et ce qui figure dans la notification d’affectation.</p>
+          <p>Nous utilisons l’IA pour rédiger les modifications. L’autorité chargée de l’éducation examine le comportement proposé et les résultats des tests, puis approuve la version.</p>
+        </div>
+        <div class="editorial-callout">
+          <h3>Ce que nous vérifions avant la mise en service</h3>
+          <dl class="change-checks">
+            <div><dt>Éligibilité</dt><dd>Le service applique la date limite de la bonne année scolaire.</dd></div>
+            <div><dt>Preuve</dt><dd>Un contrôle de l’âge approuvé applique la règle révisée et prévoit une solution de repli convenue.</dd></div>
+            <div><dt>Notification</dt><dd>Le courrier d’affectation nomme le bon programme et la bonne date de rentrée.</dd></div>
+            <div><dt>Consignes</dt><dd>Le portail et le secrétariat de l’école donnent aux parents les mêmes informations.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="change-checks" aria-labelledby="checks-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <h2 id="checks-title">Chaque modification est testée avant la mise en service</h2>
+        </div>
+        <div class="value-grid">
+          <article>
+            <h3>Vos règles sont des fichiers que votre équipe conserve</h3>
+            <p>Le service lit sa configuration dans des fichiers tenus sous gestion de versions. Avant la mise en service, une comparaison liste chaque modification par rapport à la version en usage et signale celles qui demandent une relecture.</p>
+          </article>
+          <article>
+            <h3>Des cas de test pour les demandes autorisées et refusées</h3>
+            <p>Chaque service conserve des cas de test : des demandes qui doivent être autorisées et des demandes qui doivent être refusées. Ils sont rejoués à chaque modification.</p>
+          </article>
+          <article>
+            <h3>Un contrôle en échec arrête la mise en service</h3>
+            <p>Le service refuse de démarrer avec une configuration qui échoue à ses contrôles. Votre équipe approuve la modification une fois les contrôles réussis.</p>
+          </article>
+        </div>
+        <Illustration
+          name="ai-drafted-change"
+          alt="Une demande du service : permettre aussi aux personnes de corriger leur numéro de téléphone. Un outil d’IA utilisé par l’équipe de réalisation rédige la modification et les tests. La version 5 de la configuration ajoute « Corriger le numéro de téléphone » aux modifications qu’une personne peut envoyer. Quatre cas de test : une personne qui corrige son propre numéro de téléphone ou sa propre adresse de contact est autorisée ; une personne qui modifie la fiche d’une autre personne, ou un assistant qui envoie une demande à la place d’une personne, est refusé. Les quatre contrôles réussissent. Un approbateur du service de l’état civil signe, et la modification est publiée en version 5."
+          caption="Un second exemple fictif : un service de l’état civil demande de permettre aux personnes de corriger leur numéro de téléphone. L’outil d’IA de l’équipe de réalisation rédige la modification et ses tests, et l’approbateur du service signe lorsque les quatre réussissent."
+        />
+        <p class="section-note">Pour les équipes techniques : <a href="https://docs.registrystack.org/operate/breg/#check-test-package" hreflang="en">lire comment une configuration est vérifiée, testée et empaquetée (en anglais)</a>.</p>
+      </div>
+    </section>
+
+    <section class="section" id="how-customization-works" aria-labelledby="delivery-title">
+      <div class="section-inner approach-split">
+        <div class="section-heading">
+          <p class="eyebrow">L’IA dans la réalisation</p>
+          <h2 id="delivery-title">Comment nous utilisons l’IA dans votre mise en œuvre</h2>
+          <p>Nous partons des exigences de votre service, des formulaires existants et de cas d’exemple fictifs. Convenez des outils d’IA et des données que votre institution autorise avant le début de la mise en œuvre. Votre équipe relit les modifications proposées et les résultats des tests avant d’approuver une version. Le service configuré fonctionne selon ses règles, sans modèle d’IA.</p>
+          <p>Pour le périmètre et les responsabilités de la mise en œuvre, <a href="/fr/pricing/#process">voyez comment elle se déroule</a>. Vous définissez encore le service ? <a href="/fr/ai/service-design/">Préparez une note de cadrage</a>.</p>
+        </div>
+        <section id="studio" class="editorial-callout" aria-labelledby="studio-title">
+          <p class="eyebrow">Préversion</p>
+          <h3 id="studio-title">Registry Studio</h3>
+          <p>Un espace de conception pour examiner les fiches, les étapes du service et les modifications proposées.</p>
+          <a class="inline-cta" href="/fr/products/studio/">Découvrir Registry Studio <span aria-hidden="true">→</span></a>
+        </section>
+      </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="next-title">
+      <div class="section-inner">
+        <h2 id="next-title">Cadrez votre registre pilote</h2>
+        <p>Apportez les exigences ou un formulaire public, avec un exemple fictif de ce que le service doit faire. Nous verrons ce qu’il faut construire et tester. Dites-nous quels outils d’IA et quelles données votre institution autorise, et nous travaillerons dans ce cadre.</p>
+        <div class="section-links">
+          <a class="button button-primary" href={describeServiceHref(context, 'fr')} data-journey="service-inquiry">Décrivez votre service</a>
+          <a class="button button-secondary" href="/fr/pricing/">Mise en œuvre et tarifs</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .change-checks { margin: 0; }
+  .change-checks > div { border-top: 1px solid var(--registry-paper-rule); padding: 10px 0; }
+  .change-checks > div:last-child { padding-bottom: 0; }
+  .change-checks dt { color: var(--registry-ink); font-weight: 700; }
+  .change-checks dd { line-height: 1.5; margin: 2px 0 0; }
+  #studio { scroll-margin-top: 78px; }
+</style>

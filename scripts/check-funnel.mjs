@@ -2,15 +2,30 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { relative as relativePath, resolve } from 'node:path';
 import { chromium } from 'playwright';
+import { localizedPath } from '../src/i18n.ts';
 
 if (!existsSync(resolve('dist/index.html'))) {
   console.error('dist/index.html does not exist. Run npm run build first.');
   process.exit(1);
 }
 
-// The service-answer figure lives on the check-a-fact solution page, and only
-// there: one civil register answering several services.
+// The service-answer figure lives on the check-a-fact solution page and its
+// French twin, and only there: one civil register answering several services.
+// Each language names the words its caption and its private fields must use.
 const figureRoute = '/solutions/check-a-fact/';
+const figureVersions = [
+  {
+    route: figureRoute,
+    captionPatterns: ['illustrat|fictional', 'record', 'request|answer|service'],
+    privateLabels: 'date of birth|street address|marital status',
+  },
+  {
+    route: localizedPath(figureRoute, 'fr'),
+    captionPatterns: ['illustrat|ficti(f|ve)', 'fiche', 'demande|réponse|service'],
+    privateLabels: 'date de naissance|adresse|situation matrimoniale',
+  },
+];
+const figureRoutes = figureVersions.map((version) => version.route);
 const listHtml = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
   const fullPath = resolve(dir, entry.name);
   if (entry.isDirectory()) return listHtml(fullPath);
@@ -19,8 +34,8 @@ const listHtml = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((ent
 const figurePages = listHtml(resolve('dist'))
   .filter((file) => readFileSync(file, 'utf8').includes('class="service-answers'))
   .map((file) => '/' + relativePath(resolve('dist'), file).replace(/index\.html$/, ''));
-if (figurePages.length !== 1 || figurePages[0] !== figureRoute) {
-  console.error(`expected the service-answer figure on ${figureRoute} only, found it on ${figurePages.join(', ') || 'no page'}`);
+if ([...figurePages].sort().join(' ') !== [...figureRoutes].sort().join(' ')) {
+  console.error(`expected the service-answer figure on ${figureRoutes.join(' and ')} only, found it on ${figurePages.join(', ') || 'no page'}`);
   process.exit(1);
 }
 
@@ -52,19 +67,19 @@ const { port } = server.address();
 // then links to product details and technical evaluation. The detailed service-answer figure
 // remains on its own page.
 const homeUrl = `http://127.0.0.1:${port}/`;
-const url = `http://127.0.0.1:${port}${figureRoute}`;
+const figureUrl = (route) => `http://127.0.0.1:${port}${route}`;
 
 const browser = await chromium.launch();
 const failures = [];
 
 // One source record supports three separate, minimal answers. A refused
 // request must remain separate from those signed results.
-{
+for (const { route, captionPatterns, privateLabels } of figureVersions) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });
   const page = await context.newPage();
-  await page.goto(url);
+  await page.goto(figureUrl(route));
 
-  const structureFailures = await page.evaluate(() => {
+  const structureFailures = await page.evaluate(({ captionPatterns, privateLabels }) => {
     const issues = [];
     const figures = document.querySelectorAll('figure.service-answers');
     if (figures.length !== 1) return [`expected exactly 1 service-answer figure, found ${figures.length}`];
@@ -73,8 +88,8 @@ const failures = [];
     const caption = figure.querySelector('figcaption');
     const captionText = text(caption);
     const captionIds = figure.getAttribute('aria-labelledby')?.split(/\s+/) ?? [];
-    if (!caption?.id || !captionIds.includes(caption.id) || !/illustrat|fictional/i.test(captionText) ||
-        !/record/i.test(captionText) || !/request|answer|service/i.test(captionText)) {
+    if (!caption?.id || !captionIds.includes(caption.id) ||
+        captionPatterns.some((pattern) => !new RegExp(pattern, 'i').test(captionText))) {
       issues.push('figure needs an associated caption explaining the illustrative record and service requests');
     }
 
@@ -92,7 +107,7 @@ const failures = [];
     const identityValues = [...(source?.querySelectorAll('.record-name, .record-id') ?? [])].map(text).filter(Boolean);
     const sourceValues = sourceFields.map((field) => field.value).filter(Boolean);
     const privateValues = sourceFields
-      .filter((field) => /date of birth|street address|marital status/i.test(field.label))
+      .filter((field) => new RegExp(privateLabels, 'i').test(field.label))
       .map((field) => field.value);
     if (privateValues.length !== 3) issues.push('source record must include the three fields kept private in this example');
 
@@ -149,8 +164,8 @@ const failures = [];
       }
     }
     return issues;
-  });
-  failures.push(...structureFailures);
+  }, { captionPatterns, privateLabels });
+  failures.push(...structureFailures.map((failure) => `${route}: ${failure}`));
 
   await context.close();
 }
@@ -210,7 +225,9 @@ const failures = [];
 
 // The static explanation must be readable and exposed to assistive technology
 // on desktop and mobile, including without JavaScript and with reduced motion.
-for (const viewport of [{ width: 1440, height: 1200 }, { width: 390, height: 900 }]) {
+const viewports = [{ width: 1440, height: 1200 }, { width: 390, height: 900 }];
+const visibilityCases = figureRoutes.flatMap((route) => viewports.map((viewport) => ({ route, viewport })));
+for (const { route, viewport } of visibilityCases) {
   for (const mode of [
     { name: 'default', options: {} },
     { name: 'no JavaScript', options: { javaScriptEnabled: false } },
@@ -218,7 +235,7 @@ for (const viewport of [{ width: 1440, height: 1200 }, { width: 390, height: 900
   ]) {
     const context = await browser.newContext({ viewport, ...mode.options });
     const page = await context.newPage();
-    await page.goto(url);
+    await page.goto(figureUrl(route));
     const visibilityFailures = await page.locator('figure.service-answers').evaluateAll((figures) => {
       if (figures.length !== 1) return ['service-answer figure is missing or duplicated'];
       if (figures[0].querySelectorAll('.record-card').length !== 1 ||
@@ -252,7 +269,7 @@ for (const viewport of [{ width: 1440, height: 1200 }, { width: 390, height: 900
       }
       return issues;
     });
-    failures.push(...visibilityFailures.map((failure) => `${viewport.width}px, ${mode.name}: ${failure}`));
+    failures.push(...visibilityFailures.map((failure) => `${route}, ${viewport.width}px, ${mode.name}: ${failure}`));
     await context.close();
   }
 }

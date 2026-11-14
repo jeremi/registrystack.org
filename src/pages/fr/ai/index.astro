@@ -1,0 +1,53 @@
+---
+// French twin of src/pages/ai/index.astro: the same sections in the same
+// order. The styles repeat the English page's, which are scoped to that file.
+// Reader: a programme or service owner choosing where AI could help their team.
+import Base from '../../../layouts/Base.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import { describeServiceHref } from '../../../data/contact';
+import { teamRecordFull } from '../../../data/fr/team';
+const context = 'Services publics assistés par l’IA';
+---
+<Base title="L’IA pour les services publics | Registry Stack" description="Concevez un service, adaptez ses règles ou laissez les usagers préparer leurs demandes avec un assistant approuvé. Trois usages de l’IA, validés par votre institution." ogImagePath="/og-ai.png" ogImageAlt="Registry Stack : concevoir, adapter et ouvrir l’accès aux services publics avec l’IA.">
+  <SiteHeader current="ai" />
+  <main id="main-content" tabindex="-1">
+    <section class="hero hero-cover" aria-labelledby="ai-title"><div class="hero-inner"><div class="hero-copy">
+      <p class="eyebrow">L’IA pour les services publics</p>
+      <h1 id="ai-title">Concevoir, adapter et ouvrir l’accès aux services publics avec l’IA.</h1>
+      <p class="hero-lead">Utilisez l’IA pour définir un service, préparer les changements de mise en œuvre ou aider les personnes à faire une demande. Votre institution approuve les règles et les modifications apportées à son service.</p>
+      <div class="hero-actions"><a class="button button-primary" href={describeServiceHref(context, 'fr')} data-journey="service-inquiry">Décrivez votre service</a><a class="button button-secondary" href="#uses">Découvrir les trois usages</a></div>
+    </div></div></section>
+
+    <section class="section" id="uses" aria-labelledby="uses-title"><div class="section-inner">
+      <div class="section-heading"><h2 id="uses-title">Où l’IA aiderait-elle votre service ?</h2></div>
+      <div class="ai-paths">
+        <article><p class="eyebrow">Conception du service</p><h3>Préparer une note de cadrage et tester un prototype</h3><p>Appuyez-vous sur les recherches et sur les exigences du service pour parcourir le service avec les agents et les demandeurs. Remettez à votre équipe de réalisation une note de cadrage relue.</p><p class="path-status">Une mission cadrée, principalement par l’intermédiaire de nos partenaires.</p><a class="inline-cta" href="/fr/ai/service-design/">Découvrir la conception du service <span aria-hidden="true">→</span></a></article>
+        <article><p class="eyebrow">Mise en œuvre</p><h3>Adapter un service à vos règles</h3><p>Nous utilisons l’IA pour rédiger la configuration, les cas de test et les consignes, et nous vérifions chaque ébauche ; votre équipe approuve les modifications avant la mise en service.</p><p class="path-status">Aubex · Mise en œuvre d’un registre pilote</p><a class="inline-cta" href="/fr/customization/">Voir comment nous utilisons l’IA dans la mise en œuvre <span aria-hidden="true">→</span></a></article>
+        <article id="citizen-access"><p class="eyebrow">Accès des citoyens</p><h3>Aider les personnes à préparer une demande</h3><p>Un assistant que vous approuvez lit les informations que vous autorisez et prépare un brouillon. La personne le vérifie et l’envoie sur votre site officiel. L’assistant ne peut pas déposer une demande, l’approuver ni modifier une fiche.</p><p class="path-status">Pour un service Base Registry Engine configuré.</p><a class="inline-cta" href="/fr/ai/citizen-access/">Voir l’exemple d’accès des citoyens <span aria-hidden="true">→</span></a></article>
+      </div>
+    </div></section>
+
+    <section class="section section-muted" aria-labelledby="control-title"><div class="section-inner approach-split">
+      <div class="section-heading"><h2 id="control-title">Votre équipe fixe les règles.</h2><p>L’IA peut proposer une conception ou rédiger une modification. Votre institution confirme les règles du service, puis relit et approuve les modifications de mise en œuvre.</p><p>Le service de registre configuré fonctionne sans modèle d’IA. Pour l’accès des citoyens, vous choisissez les assistants autorisés à se connecter et ce qu’ils peuvent lire et préparer.</p><a class="inline-cta" href="/fr/architecture/headless/">Comment s’intégrer à vos systèmes existants <span aria-hidden="true">→</span></a></div>
+      <div class="editorial-callout"><p class="eyebrow">Outil de conception · Préversion</p><h3>Registry Studio</h3><p>Un espace de travail pour examiner, avec votre équipe technique, les fiches, les étapes du service et les modifications proposées. Il s’appuie aussi sur vos documents existants pour préparer une note de cadrage provisoire à relire.</p><a class="inline-cta" href="/fr/products/studio/">Découvrir Registry Studio <span aria-hidden="true">→</span></a></div>
+    </div></section>
+
+    <section class="section" aria-labelledby="team-title"><div class="section-inner approach-split">
+      <div class="section-heading"><h2 id="team-title">Dix ans de travail sur les registres publics.</h2><p>{teamRecordFull}</p><p>Le cœur du logiciel, son moteur d’exécution, est open source sous licence Apache-2.0. Votre institution peut l’inspecter, l’adapter et l’exploiter avec sa propre équipe ou avec un autre prestataire. Nous proposons une mise en œuvre et une assistance technique payantes, et nous pouvons héberger et exploiter le service sur devis séparé.</p></div>
+      <div class="editorial-callout"><h3>Inspecter le logiciel et ses limites</h3><ul class="check-links"><li><a href="https://github.com/registrystack/registry-stack" hreflang="en">Code source et versions (en anglais)</a></li><li><a href="https://docs.registrystack.org/security/#an-ai-assistant-acting-for-a-citizen" hreflang="en">Modèle de sécurité pour les assistants des citoyens (en anglais)</a></li><li><a href="/fr/pricing/">Mise en œuvre et tarifs</a></li></ul></div>
+    </div></section>
+
+    <section class="final-cta" aria-labelledby="next-title"><div class="section-inner"><h2 id="next-title">Commencez par un seul service.</h2><p>Décrivez un service prévu, ou apportez un formulaire ou une procédure à adapter. Nous conviendrons de ce qu’il faut évaluer, de qui relit et de ce que votre équipe reçoit.</p><div class="section-links"><a class="button button-primary" href={describeServiceHref(context, 'fr')} data-journey="service-inquiry">Décrivez votre service</a><a class="button button-secondary" href="/fr/pricing/">Voir les options de mise en œuvre</a></div></div></section>
+  </main><SiteFooter />
+</Base>
+<style>
+  .ai-paths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 48px); }
+  .ai-paths article { border-top: 2px solid var(--registry-blue); display: flex; flex-direction: column; align-items: start; padding-top: 24px; }
+  .ai-paths h3 { font-size: var(--type-xl); }
+  .ai-paths .path-status { font-size: var(--type-sm); }
+  .ai-paths .inline-cta { margin-top: auto; }
+  .check-links { list-style: none; margin: 0; padding: 0; }
+  .check-links li { border-top: 1px solid var(--registry-rule); padding: 14px 0; }
+  @media (max-width: 820px) { .ai-paths { grid-template-columns: 1fr; } }
+</style>

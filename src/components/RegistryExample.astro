@@ -1,30 +1,32 @@
 ---
 import PersonHouseholdRecords from './PersonHouseholdRecords.astro';
 import SignedAnswer from './SignedAnswer.astro';
+import { localeForPath, translator } from '../i18n';
+const t = translator(localeForPath(Astro.url.pathname));
 ---
 
 <figure class="registry-example" aria-labelledby="registry-example-caption">
   <div class="example-source">
     <div class="example-heading">
       <p class="example-product">Base Registry Engine</p>
-      <p class="example-description">Stores and manages linked records</p>
+      <p class="example-description">{t('Stores and manages linked records', 'Conserve et gère des fiches liées')}</p>
     </div>
     <PersonHouseholdRecords />
     <p class="example-history">
       <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 8a7 7 0 1 1 1 6M3 3v5h5m2-3v5l3 2" /></svg>
-      Current records and their change history
+      {t('Current records and their change history', 'Fiches actuelles et historique de leurs modifications')}
     </p>
   </div>
   <div class="example-exchange">
     <div class="example-heading">
       <p class="example-product">Evidence Gateway</p>
-      <p class="example-description">Answers an approved question</p>
+      <p class="example-description">{t('Answers an approved question', 'Répond à une question approuvée')}</p>
     </div>
-    <p class="example-question">Is Amara 18 or older?</p>
-    <SignedAnswer fieldLabel="18 or older" value="Yes" recipient="Licensing service" issuer="Registry authority" />
-    <p class="example-detail">Date of birth and household details stay in the registry.</p>
+    <p class="example-question">{t('Is Amara 18 or older?', 'Amara a-t-elle 18 ans ou plus ?')}</p>
+    <SignedAnswer fieldLabel={t('18 or older', '18 ans ou plus')} value={t('Yes', 'Oui')} recipient={t('Licensing service', 'Service de délivrance des autorisations')} issuer={t('Registry authority', 'Autorité du registre')} />
+    <p class="example-detail">{t('Date of birth and household details stay in the registry.', 'La date de naissance et les informations du ménage restent dans le registre.')}</p>
   </div>
-  <figcaption id="registry-example-caption">Fictional records and a configured connection. Each product can also be used independently.</figcaption>
+  <figcaption id="registry-example-caption">{t('Fictional records and a configured connection. Each product can also be used independently.', 'Fiches fictives et connexion configurée. Chaque produit peut aussi être utilisé séparément.')}</figcaption>
 </figure>
 
 <style>

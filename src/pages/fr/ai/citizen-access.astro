@@ -1,0 +1,213 @@
+---
+// French twin of src/pages/ai/citizen-access.astro: the same sections in the
+// same order. The styles repeat the English page's, which are scoped to that
+// file.
+import Base from '../../../layouts/Base.astro';
+import AiLandingHero from '../../../components/AiLandingHero.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import SolutionFaq from '../../../components/SolutionFaq.astro';
+import { describeServiceHref } from '../../../data/contact';
+
+const context = 'IA pour l’accès des citoyens';
+const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
+---
+
+<Base
+  title="Assistants d’IA pour les services aux citoyens | Registry Stack"
+  description="Les personnes préparent la modification de leurs données avec un assistant d’IA que vous approuvez, puis la vérifient et l’envoient sur votre site officiel. Connexion par MCP."
+  ogImagePath="/og-ai.png"
+  ogImageAlt="Registry Stack : concevoir, adapter et ouvrir l’accès aux services publics avec l’IA."
+>
+  <SiteHeader current="ai-citizen-access" />
+  <main id="main-content" tabindex="-1">
+    <AiLandingHero
+      eyebrow="L’IA pour les services aux citoyens"
+      heading="Laissez les personnes mettre à jour leurs données avec l’aide d’un assistant d’IA."
+      lead="Les personnes demandent à un assistant que vous approuvez de préparer une modification, puis la vérifient et l’envoient sur votre site officiel. L’assistant ne lit que les informations que vous autorisez. Il ne peut pas déposer une demande, l’approuver ni modifier une fiche."
+      context={context}
+      exampleHref="#correction-example"
+      exampleLabel="Voir l’exemple du changement d’adresse"
+      exampleNote="Exemple fictif : l’assistant d’Alex prépare un changement d’adresse ; Alex le vérifie et l’envoie sur le site de l’institution."
+      note="Intégration d’assistants · Préversion, pour un service Base Registry Engine configuré."
+    >
+      <div class="assistant-preview">
+        <p class="ai-example-label">Exemple · Assistant de votre fournisseur d’IA</p>
+        <p class="question-bubble">« Puis-je modifier mon adresse de contact ? »</p>
+        <p class="reply-bubble">« Votre modification est prête. Vérifiez-la et envoyez-la sur le site officiel. »</p>
+      </div>
+      <p class="handoff-label"><span aria-hidden="true">↓</span> Alex ouvre le lien</p>
+      <div class="review-preview">
+        <div class="review-heading">
+          <p class="ai-example-label">Le site de votre institution</p>
+          <span class="draft-label">Pas encore envoyée</span>
+        </div>
+        <p class="ai-example-title">Vérifiez votre changement d’adresse</p>
+        <dl class="address-fields">
+          <div><dt>Actuelle</dt><dd>6 Station Road</dd></div>
+          <div><dt>Nouvelle</dt><dd>18 Market Street</dd></div>
+        </dl>
+        <p class="mock-submit">Envoyer la modification</p>
+      </div>
+    </AiLandingHero>
+
+    <section class="section section-muted" id="correction-example" aria-labelledby="example-title">
+      <div class="section-inner">
+        <div class="section-heading"><p class="eyebrow">Exemple : un changement d’adresse</p><h2 id="example-title">D’une conversation à une demande officielle</h2><p>Alex a déménagé. Un assistant aide à préparer la modification ; Alex la vérifie et l’envoie sur le site officiel.</p></div>
+        <figure class="ai-film"><video controls playsinline preload="none" width="1280" height="720" poster="/films/registry-stack-ai-film-poster.jpg" aria-describedby="film-note"><source src="/films/registry-stack-ai-film-720.mp4" type="video/mp4" /><track kind="captions" src="/films/registry-stack-ai-film-fr.vtt" srclang="fr" label="Français" default /><track kind="captions" src="/films/registry-stack-ai-film-en.vtt" srclang="en" label="English" /></video><figcaption id="film-note">Changement d’adresse fictif. Film : 1 minute 25 secondes, musique sans parole ; le texte à l’écran est en anglais et des sous-titres en français expliquent chaque scène. Les étapes ci-dessous décrivent le même exemple par écrit. <a href="/films/registry-stack-ai-film-720.mp4">Télécharger le film (MP4, 4,5 Mo)</a>.</figcaption></figure>
+        <ol class="approach-steps"><li><strong>L’assistant prépare</strong><span>Une fois qu’Alex s’est connecté, l’assistant lit les informations autorisées dans la fiche d’Alex et prépare un brouillon de modification.</span></li><li><strong>Alex vérifie et envoie</strong><span>Alex se connecte sur le site officiel, compare le brouillon avec la fiche actuelle et choisit de l’envoyer ou non.</span></li><li><strong>L’institution applique ses règles</strong><span>Le registre contrôle la demande. Les agents examinent les cas que l’institution choisit. Alex peut demander à l’assistant où en est la demande, si cette option est activée.</span></li></ol>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="limits-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <h2 id="limits-title">L’assistant prépare la demande. La personne l’envoie.</h2>
+        </div>
+        <div class="value-grid">
+          <article>
+            <h3>Ce que l’assistant peut faire</h3>
+            <p>Expliquer le service, lire les informations que vous autorisez dans la fiche de la personne connectée, préparer ou modifier un brouillon, donner le lien vers la page où la personne le vérifie et, si votre institution l’autorise, indiquer l’état d’une demande.</p>
+          </article>
+          <article>
+            <h3>Ce que l’assistant ne peut pas faire</h3>
+            <p>L’assistant ne peut pas déposer une demande, l’approuver ni modifier une fiche. La connexion n’offre aucun outil pour envoyer, annuler ou appliquer une demande, et Base Registry Engine contrôle chaque demande reçue d’un assistant au regard des autorisations que votre institution accorde.</p>
+          </article>
+          <article>
+            <h3>Ce que décident la personne et votre institution</h3>
+            <p>La personne se connecte sur votre site officiel, compare le brouillon avec la fiche actuelle et choisit de l’envoyer ou non. Vos règles déterminent la suite, y compris tout examen par un agent.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="fit-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <h2 id="fit-title">Ajoutez un assistant une tâche à la fois</h2>
+        </div>
+        <div class="value-grid">
+          <article>
+            <h3>Les personnes peuvent toujours passer par votre site et votre guichet</h3>
+            <p>Les personnes qui n’utilisent pas d’assistant continuent comme aujourd’hui. L’assistant est une voie de plus vers le même service, sous les mêmes règles.</p>
+          </article>
+          <article>
+            <h3>Choisissez la tâche et les informations dont elle a besoin</h3>
+            <p>Approuvez les informations que l’assistant peut lire et les modifications qu’il peut aider à préparer. Le registre contrôle l’autorisation à chaque demande reçue.</p>
+          </article>
+          <article>
+            <h3>Choisissez l’assistant</h3>
+            <p>La connexion utilise MCP (<span lang="en">Model Context Protocol</span>), un standard ouvert. Votre institution peut enregistrer un ou plusieurs assistants compatibles avec MCP et conformes aux exigences de connexion du guide d’intégration, chez un seul fournisseur d’IA ou chez plusieurs.</p>
+          </article>
+        </div>
+        <p class="section-note">Pour les équipes techniques, le <a href={mcpDocsHref} hreflang="en">guide d’intégration de MCP (en anglais)</a> décrit la connexion, le service distinct qui accorde l’accès à chaque brouillon et le site de relecture. Voir aussi <a href="/fr/architecture/headless/">comment Registry Stack s’intègre à vos interfaces existantes</a> et <a href="/fr/security/">comment il gère les accès et la responsabilité</a>. La connexion est une préversion ; la foire aux questions ci-dessous explique ce que cela signifie pour la compatibilité.</p>
+      </div>
+    </section>
+
+    <SolutionFaq
+      heading="Questions des équipes de protection des données et de sécurité"
+      items={[
+        {
+          q: 'Quelles informations l’assistant reçoit-il ?',
+          a: 'Les informations que votre institution autorise, tirées de la fiche de la personne connectée, et ce que la personne saisit dans la conversation. Votre institution rédige une déclaration de ce que l’assistant verra, et le service la remet à l’assistant avec la description du service. Le fournisseur de l’assistant traite la conversation selon ses propres conditions, en dehors de Registry Stack. Lisez ces conditions avant d’approuver un assistant.',
+        },
+        {
+          q: 'Quels assistants peuvent se connecter ?',
+          a: 'Ceux que votre institution enregistre. Chacun est compatible avec MCP et connecte les personnes par votre fournisseur d’identité. Le service refuse les demandes de tout autre assistant.',
+        },
+        {
+          q: 'Qu’est-ce qui est consigné ?',
+          a: 'La connexion entre l’assistant et votre registre journalise chaque action de l’assistant et son résultat. Le journal utilise des pseudonymes, et non des noms, pour les personnes et les assistants, et il ne contient pas le contenu des fiches. Base Registry Engine conserve sa propre trace de chaque demande.',
+          link: { href: 'https://docs.registrystack.org/security/#an-ai-assistant-acting-for-a-citizen', label: 'Lire le modèle de sécurité pour un assistant agissant au nom d’un citoyen (en anglais)' },
+        },
+        {
+          q: 'Que fournit notre institution ?',
+          a: 'Votre fournisseur d’identité connecte les personnes et doit prendre en charge l’échange de jetons. Un service sous le contrôle de votre institution accorde et retire l’accès à chaque brouillon. Les deux services de connexion peuvent être exploités par votre institution, par un prestataire désigné ou par nous, derrière un proxy TLS ; l’hébergement et l’exploitation par nos soins font l’objet d’un devis séparé. Votre institution garde la main sur la connexion et sur les décisions d’accès. Nous convenons avec vous du travail de connexion avant la mise en œuvre.',
+        },
+        {
+          q: 'Le service dépend-il d’un modèle d’IA ?',
+          a: 'Non. Registry Stack ne contient aucun modèle d’IA, et le service fonctionne avec ses règles configurées. Le modèle d’IA fait partie de l’assistant, et votre institution choisit l’assistant. Vous pouvez changer ou retirer l’assistant : le service continue de fonctionner.',
+        },
+        {
+          q: 'Pouvons-nous connecter un assistant dès aujourd’hui ?',
+          a: 'Oui. Les outils de l’assistant et la page de relecture sont publiés et documentés. Ils sont en préversion, hors de la promesse de compatibilité : une version mineure peut donc modifier ou retirer une interface sans période de dépréciation. Commencez par une seule tâche, et convenez avec nous du moment où connecter de vraies fiches.',
+          link: { href: 'https://docs.registrystack.org/reference/api-stability/#experimental-surfaces', label: 'Lire ce que couvre la promesse de compatibilité (en anglais)' },
+        },
+      ]}
+    />
+
+    <section class="final-cta" aria-labelledby="next-title">
+      <div class="section-inner">
+        <h2 id="next-title">Choisissez une demande que les personnes peuvent essayer</h2>
+        <p>Dites-nous quelle tâche demande de l’aide, de quelles informations elle a besoin et où les personnes doivent vérifier le brouillon. Nous verrons avec votre équipe comment l’évaluer.</p>
+        <div class="section-links">
+          <a class="button button-primary" href={describeServiceHref(context, 'fr')} data-journey="service-inquiry">Décrivez votre service</a>
+          <a class="button button-secondary" href="/fr/pricing/">Voir les options de mise en œuvre</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .ai-film { margin: 0 0 28px; max-width: 880px; }
+  .ai-film video { aspect-ratio: 16 / 9; background: var(--registry-paper); border: 1px solid var(--registry-paper-rule); display: block; height: auto; width: 100%; }
+  .ai-film figcaption a { text-decoration: underline; text-underline-offset: 3px; }
+  .ai-film figcaption { font-size: var(--type-sm); line-height: 1.5; margin-top: 10px; }
+
+  .assistant-preview, .review-preview {
+    background: var(--registry-white);
+    border: 1px solid var(--registry-paper-rule);
+    border-radius: 5px;
+    padding: 14px;
+  }
+  .question-bubble, .reply-bubble {
+    border-radius: 4px;
+    color: var(--registry-ink);
+    font-size: var(--type-body-sm);
+    line-height: 1.45;
+    padding: 8px 10px;
+    width: fit-content;
+  }
+  .question-bubble { background: var(--registry-blue-tint); margin: 10px 0 8px auto; }
+  .reply-bubble { background: var(--registry-paper); margin: 0; }
+  .handoff-label {
+    color: var(--registry-blue);
+    font: 600 var(--type-xs)/1.5 var(--registry-mono);
+    margin: 8px 0 8px 14px;
+    text-transform: uppercase;
+  }
+  .handoff-label span { margin-inline-end: 4px; }
+  .review-preview { margin-inline-start: clamp(8px, 2vw, 24px); }
+  .review-heading { align-items: baseline; display: flex; flex-wrap: wrap; gap: 4px 10px; justify-content: space-between; }
+  .draft-label {
+    background: var(--registry-stamp-tint);
+    color: var(--registry-stamp);
+    font: 600 var(--type-xs)/1.5 var(--registry-mono);
+    padding: 2px 6px;
+    text-transform: uppercase;
+  }
+  .review-preview .ai-example-title { margin: 6px 0 12px; }
+  .mock-submit {
+    background: var(--registry-blue);
+    border-radius: 4px;
+    color: var(--registry-white);
+    font-size: var(--type-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 14px 0 0;
+    padding: 7px 14px;
+    width: fit-content;
+  }
+  .address-fields {
+    border-top: 1px solid var(--registry-paper-rule);
+    display: grid;
+    gap: 10px 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    padding-top: 10px;
+  }
+  .address-fields dt { color: var(--registry-muted); font-size: var(--type-base); }
+  .address-fields dd { color: var(--registry-ink); font-size: var(--type-body-sm); font-weight: 600; margin: 2px 0 0; }
+</style>

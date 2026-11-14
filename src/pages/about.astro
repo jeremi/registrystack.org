@@ -130,6 +130,12 @@ const pageDescription =
     padding-left: 1.2em;
   }
 
+  /* Links in these lists sit inside running text, so they are underlined. */
+  .person-roles a,
+  .check-list a {
+    text-decoration: underline;
+  }
+
   @media (max-width: 720px) {
     .about-cards {
       grid-template-columns: 1fr;

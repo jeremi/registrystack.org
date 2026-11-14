@@ -4,8 +4,12 @@
 // these pictures are small at phone width, so the caption links the
 // full-size picture. The 2400 pixel version keeps the labels sharp on
 // high-density screens, where the picture shows at up to 2080 pixels.
+// A French page shows the French version of a picture when its files exist;
+// otherwise the caption says that the labels in the picture are in English.
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { illustrations } from '../data/media';
-import { localeForPath, translator } from '../i18n';
+import { illustrationSource, localeForPath, translator } from '../i18n';
 
 interface Props {
   name: keyof typeof illustrations;
@@ -17,14 +21,19 @@ interface Props {
 const { name, alt, caption, variant } = Astro.props;
 const picture = illustrations[name];
 if (!picture) throw new Error(`Unknown illustration: ${name}`);
-const base = `/illustrations/${name}`;
+const locale = localeForPath(Astro.url.pathname);
+const { base, labelsInEnglish } = illustrationSource(
+  name,
+  locale,
+  existsSync(resolve(`public/illustrations/fr/${name}-2400.webp`)),
+);
 const hero = variant === 'hero';
-const t = translator(localeForPath(Astro.url.pathname));
+const t = translator(locale);
 ---
 
 <figure class:list={['media-figure', 'illustration', { 'illustration-hero': hero }]}>
   <img src={`${base}-1600.webp`} srcset={`${base}-800.webp 800w, ${base}-1600.webp 1600w, ${base}-2400.webp 2400w`} sizes="(min-width: 1120px) 1040px, 100vw" width={picture.width} height={picture.height} alt={alt} loading={hero ? 'eager' : 'lazy'} fetchpriority={hero ? 'high' : 'auto'} decoding="async" />
-  <figcaption>{caption} <a href={`${base}-2400.webp`}>{t('Open the full-size picture', 'Ouvrir l’image en taille réelle')}</a>.</figcaption>
+  <figcaption>{caption} {labelsInEnglish && 'Les libellés de l’image sont en anglais. '}<a href={`${base}-2400.webp`}>{t('Open the full-size picture', 'Ouvrir l’image en taille réelle')}</a>.</figcaption>
 </figure>
 
 <style>

@@ -2,66 +2,70 @@
 // Static service-first adaptation of the Registry Stack explainer diagrams for
 // a service and its parts. Product responsibilities follow maintained v0.46 sources.
 // This is an explanatory composition, not a screenshot or a ready-made app.
+import { localeForPath, localizedPath, translator } from '../i18n';
+const locale = localeForPath(Astro.url.pathname);
+const t = translator(locale);
+const l = (href: string) => localizedPath(href, locale);
 ---
 
 <figure class="product-service-journey" aria-labelledby="product-journey-title" aria-describedby="product-journey-caption">
   <header class="journey-heading">
-    <p class="example-label">Example</p>
-    <h3 id="product-journey-title">Renew a professional licence</h3>
+    <p class="example-label">{t('Example', 'Exemple')}</p>
+    <h3 id="product-journey-title">{t('Renew a professional licence', 'Renouveler une autorisation d’exercice')}</h3>
   </header>
 
   <div class="service-context">
-    <div><p class="owner-label">Supplied or adapted in your implementation</p><h4>Your licensing service</h4></div>
-    <p>The applicant submits a renewal and supporting documents. Your service connects the review, register and next steps under your institution’s rules.</p>
+    <div><p class="owner-label">{t('Supplied or adapted in your implementation', 'Fourni ou adapté lors de votre mise en œuvre')}</p><h4>{t('Your licensing service', 'Votre service de délivrance des autorisations')}</h4></div>
+    <p>{t('The applicant submits a renewal and supporting documents. Your service connects the review, register and next steps under your institution’s rules.', 'Le demandeur dépose une demande de renouvellement et ses pièces justificatives. Votre service relie l’examen, le registre et les étapes suivantes selon les règles de votre institution.')}</p>
   </div>
 
   <div class="review-and-record">
     <section class="work-panel review-panel" aria-labelledby="product-journey-review">
-      <header><h4 id="product-journey-review">Staff review</h4><a class="product-owner" href="/products/casework/">Registry Casework</a></header>
-      <p>An officer reviews the application and records a decision.</p>
-      <dl class="review-result"><div><dt>Request</dt><dd>Renewal</dd></div><div><dt>Decision</dt><dd>Approved</dd></div></dl>
+      <header><h4 id="product-journey-review">{t('Staff review', 'Examen par un agent')}</h4><a class="product-owner" href={l('/products/casework/')}>Registry Casework</a></header>
+      <p>{t('An officer reviews the application and records a decision.', 'Un agent examine la demande et consigne sa décision.')}</p>
+      <dl class="review-result"><div><dt>{t('Request', 'Demande')}</dt><dd>{t('Renewal', 'Renouvellement')}</dd></div><div><dt>{t('Decision', 'Décision')}</dt><dd>{t('Approved', 'Approuvée')}</dd></div></dl>
     </section>
 
     <div class="decision-handoff">
       <svg viewBox="0 0 48 24" fill="none" aria-hidden="true"><path d="M1 12h43M35 3l9 9-9 9" stroke="currentColor" stroke-width="1.5" /></svg>
-      <p>The decision returns to your service.</p>
-      <p>The register separately authorizes the update.</p>
+      <p>{t('The decision returns to your service.', 'La décision revient à votre service.')}</p>
+      <p>{t('The register separately authorizes the update.', 'Le registre autorise la mise à jour séparément.')}</p>
     </div>
 
     <section class="work-panel record-panel" aria-labelledby="product-journey-record">
-      <header><h4 id="product-journey-record">Licence record</h4><a class="product-owner" href="/products/base-registry/">Base Registry Engine</a></header>
-      <p>Authorized staff or a connected service record the new licence term.</p>
-      <dl class="licence-record"><div><dt>Licence</dt><dd>LIC-2093</dd></div><div><dt>Valid until</dt><dd>2029-10-31</dd></div></dl>
+      <header><h4 id="product-journey-record">{t('Licence record', 'Fiche de l’autorisation')}</h4><a class="product-owner" href={l('/products/base-registry/')}>Base Registry Engine</a></header>
+      <p>{t('Authorized staff or a connected service record the new licence term.', 'Un agent habilité ou un service connecté enregistre la nouvelle durée de validité de l’autorisation.')}</p>
+      <dl class="licence-record"><div><dt>{t('Licence', 'Autorisation')}</dt><dd>LIC-2093</dd></div><div><dt>{t('Valid until', 'Valable jusqu’au')}</dt><dd>{t('2029-10-31', '31/10/2029')}</dd></div></dl>
     </section>
   </div>
 
-  <div class="output-intro"><span aria-hidden="true"></span><p>Connected services request the next step.</p><span aria-hidden="true"></span></div>
+  <div class="output-intro"><span aria-hidden="true"></span><p>{t('Connected services request the next step.', 'Les services connectés demandent l’étape suivante.')}</p><span aria-hidden="true"></span></div>
   <div class="service-outputs">
     <section class="output-panel" aria-labelledby="product-journey-document">
-      <header><h4 id="product-journey-document">Generate and sign a document</h4><a class="product-owner" href="/products/render/">Registry Render</a></header>
+      <header><h4 id="product-journey-document">{t('Generate and sign a document', 'Produire et signer un document')}</h4><a class="product-owner" href={l('/products/render/')}>Registry Render</a></header>
       <div class="document-artifact">
         <svg viewBox="0 0 24 30" fill="none" aria-hidden="true"><path d="M3 1h11l7 7v21H3V1Z" stroke="currentColor" stroke-width="1.5" /><path d="M14 1v8h7M7 14h10M7 19h10M7 24h6" stroke="currentColor" stroke-width="1.5" /></svg>
-        <div><strong>Licence document</strong><span>Digitally sealed PDF</span></div>
+        <div><strong>{t('Licence document', 'Document d’autorisation')}</strong><span>{t('Digitally sealed PDF', 'PDF avec cachet électronique')}</span></div>
       </div>
-      <p>Your service requests the document. Render generates the PDF and applies your institution’s configured digital seal.</p>
+      <p>{t('Your service requests the document. Render generates the PDF and applies your institution’s configured digital seal.', 'Votre service demande le document. Render produit le PDF et applique le cachet électronique configuré de votre institution.')}</p>
     </section>
 
     <section class="output-panel" aria-labelledby="product-journey-notice">
-      <header><h4 id="product-journey-notice">Send a notice</h4><a class="product-owner" href="/products/messaging/">Registry Messaging</a></header>
+      <header><h4 id="product-journey-notice">{t('Send a notice', 'Envoyer une notification')}</h4><a class="product-owner" href={l('/products/messaging/')}>Registry Messaging</a></header>
       <div class="notice-artifact">
         <svg viewBox="0 0 28 22" fill="none" aria-hidden="true"><rect x="1" y="1" width="26" height="20" rx="1" stroke="currentColor" stroke-width="1.5" /><path d="m2 3 12 9L26 3" stroke="currentColor" stroke-width="1.5" /></svg>
-        <p>Your licence renewal has been recorded.</p>
+        <p>{t('Your licence renewal has been recorded.', 'Le renouvellement de votre autorisation a été enregistré.')}</p>
       </div>
-      <p>Your service requests the notice. The operator configures the provider used to send it.</p>
+      <p>{t('Your service requests the notice. The operator configures the provider used to send it.', 'Votre service demande la notification. L’exploitant configure le fournisseur utilisé pour l’envoyer.')}</p>
     </section>
 
     <section class="output-panel" aria-labelledby="product-journey-check">
-      <header><h4 id="product-journey-check">Check the licence status</h4><a class="product-owner" href="/products/evidence-gateway/">Evidence Gateway</a></header>
-      <div class="answer-artifact"><p>Licence in good standing?</p><strong>Yes <span>· signed answer</span></strong></div>
-      <p>An authorized employer service asks the agreed question and receives the answer.</p>
+      <header><h4 id="product-journey-check">{t('Check the licence status', 'Vérifier le statut de l’autorisation')}</h4><a class="product-owner" href={l('/products/evidence-gateway/')}>Evidence Gateway</a></header>
+      <div class="answer-artifact"><p>{t('Licence in good standing?', 'Autorisation en règle ?')}</p><strong>{t('Yes', 'Oui')} <span>{t('· signed answer', '· réponse signée')}</span></strong></div>
+      <p>{t('An authorized employer service asks the agreed question and receives the answer.', 'Un service employeur autorisé pose la question convenue et reçoit la réponse.')}</p>
     </section>
   </div>
-  <figcaption id="product-journey-caption">A fictional licence renewal showing staff review, an authorized register update, a digitally sealed document, a notice and an employer’s status check. Screens and connections are supplied in the implementation.</figcaption>
+  <figcaption id="product-journey-caption">{t('A fictional licence renewal showing staff review, an authorized register update, a digitally sealed document, a notice and an employer’s status check. Screens and connections are supplied in the implementation.', 'Un renouvellement d’autorisation fictif : examen par un agent, mise à jour autorisée du registre, document avec cachet électronique, notification et vérification du statut par un employeur. Les écrans et les connexions sont fournis lors de la mise en œuvre.')}</figcaption>
 </figure>
 
 <style>

@@ -1,0 +1,147 @@
+---
+// French twin of src/pages/solutions/local-government.astro.
+import Base from '../../../layouts/Base.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import SolutionFaq from '../../../components/SolutionFaq.astro';
+import DocsHandoff from '../../../components/DocsHandoff.astro';
+import Illustration from '../../../components/Illustration.astro';
+import { describeServiceHref } from '../../../data/contact';
+
+const pageTitle = 'Logiciel pour les services des communes et collectivités territoriales | Registry Stack';
+const pageDescription = 'Gérez les autorisations et enregistrements locaux : demandes, examen par les agents, fiches à jour, notifications et renouvellements.';
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="local-government" />
+  <main id="main-content" tabindex="-1" class="solution-page local-government-page">
+    <section class="hero" aria-labelledby="local-government-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Collectivités territoriales</p>
+          <h1 id="local-government-title">Gérez les autorisations et les enregistrements locaux, de la demande au renouvellement.</h1>
+          <p class="hero-lead">Offrez aux habitants et aux entreprises un moyen clair de déposer une demande, donnez aux agents un lieu unique pour examiner chaque demande, et tenez à jour la fiche de l’autorisation ou de l’enregistrement qui en résulte. Registry Stack peut se relier aux systèmes de paiement, de gestion des documents et de cartographie que votre collectivité utilise déjà.</p>
+          <div class="hero-actions" aria-label="Actions principales">
+            <a class="button button-primary" href="#example">Voir des exemples de services</a>
+            <a class="button button-secondary" href="#what-changes">Suivre le service</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="example" class="section" aria-labelledby="local-examples-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Exemples de services</p>
+          <h2 id="local-examples-title">Les services que votre collectivité rend.</h2>
+          <p>Ces services, donnés à titre d’illustration, sont configurés selon les formulaires, les décisions et les règles de publication des informations de chaque collectivité.</p>
+        </div>
+        <div class="product-facts">
+          <article>
+            <h3>Autorisations d’emplacement de marché</h3>
+            <p>Un commerçant dépose le formulaire et les pièces justificatives, voit ce qui manque et remplace un document sans tout recommencer. Les agents examinent la demande, consignent la décision et délivrent l’autorisation. Les inspecteurs peuvent vérifier le statut en cours de l’autorisation sans recevoir le dossier de demande.</p>
+            <a class="inline-cta" href="/fr/solutions/licensing/">Découvrir les services d’autorisation <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Enregistrement des établissements alimentaires</h3>
+            <p>Une entreprise enregistre chacun de ses établissements et met à jour ses informations quand quelque chose change. Les agents examinent la déclaration et les informations d’inspection, corrigent les doublons et tiennent à jour le statut en cours de l’établissement. Le public et les services partenaires ne voient que les informations que la collectivité autorise.</p>
+            <a class="inline-cta" href="/fr/solutions/agriculture-food-and-environment/">Découvrir les registres d’établissements <span aria-hidden="true">→</span></a>
+          </article>
+          <article>
+            <h3>Enregistrement des logements loués</h3>
+            <p>Un propriétaire dépose une déclaration ou signale une modification. Les agents vérifient les informations, statuent sur la demande et tiennent l’historique de l’enregistrement du bien. Le service peut continuer à utiliser les systèmes existants de gestion des biens, de paiement et de documents, au lieu d’en recopier les informations à la main.</p>
+            <a class="inline-cta" href="/fr/solutions/land-property-and-assets/">Découvrir les fiches immobilières <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+        <Illustration
+          name="service-template"
+          alt="Le service « Demander un emplacement de marché » d’une Ville est partagé comme modèle avec un District et une Commune. Le District ajoute une visite sur place et la Commune supprime les frais. Chaque collectivité exploite sa propre installation sur ses propres serveurs et conserve ses propres autorisations."
+          caption="Collectivités fictives : une Ville partage son service « Demander un emplacement de marché » comme modèle. Chaque collectivité l’adapte et conserve ses propres autorisations."
+        />
+      </div>
+    </section>
+
+    <section id="what-changes" class="section section-muted" aria-labelledby="local-journey-title">
+      <div class="section-inner product-fit">
+        <div class="section-heading compact">
+          <p class="eyebrow">De la demande au renouvellement</p>
+          <h2 id="local-journey-title">Prendre en charge les demandes, l’examen par les agents et la mise à jour des fiches.</h2>
+          <p>Ces étapes peuvent servir une autorisation, l’enregistrement d’un établissement ou un autre service local. Chaque étape peut s’appuyer sur les canaux et les systèmes que la collectivité utilise déjà, quand ils fonctionnent bien.</p>
+        </div>
+        <dl>
+          <dt>Déposer la demande et fournir les pièces</dt>
+          <dd>Les demandeurs saisissent leurs informations et joignent les pièces justificatives, reprennent un brouillon enregistré et remplacent les documents manquants.</dd>
+          <dt>Examiner et décider</dt>
+          <dd>Les agents reçoivent la demande dans la bonne file et vérifient les pièces. S’il manque quelque chose, ils demandent des modifications ; le demandeur révise sa demande et la soumet pour un nouvel examen. Les responsables voient quel agent est chargé de chaque examen en cours et ce qui demande leur attention.</dd>
+          <dt>Mettre à jour l’autorisation ou l’enregistrement</dt>
+          <dd>Après la décision, un agent ou un service connecté qui en a le droit consigne l’autorisation, l’enregistrement ou le statut. Les agents habilités peuvent toujours consulter les versions antérieures.</dd>
+          <dt>Notifier, inspecter et renouveler</dt>
+          <dd>Le service peut envoyer une notification approuvée lorsque l’application de dépôt des demandes la déclenche. Les inspecteurs peuvent vérifier les informations autorisées, et les agents peuvent gérer le renouvellement, la suspension, la correction et la clôture.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="local-scope-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">S’intègre aux systèmes existants</p>
+          <h2 id="local-scope-title">Conservez les systèmes qui rendent encore service à votre collectivité.</h2>
+          <p>Reliez le registre aux systèmes de paiement, d’identité, de cartographie, de gestion des documents et de finances que vous utilisez déjà. Le périmètre de la mise en œuvre précise ce qui est ajouté, ce qui reste en place et qui exploite chaque élément.</p>
+        </div>
+      </div>
+    </section>
+
+    <div id="questions">
+      <SolutionFaq
+        heading="Questions pour choisir le premier service"
+        items={[
+          {
+            q: 'Faut-il d’abord choisir une configuration de départ ?',
+            a: 'Non. Dites-nous quel service vous voulez, qui l’utilisera et ce qu’il doit faire. Nous pouvons identifier une configuration de départ utile et expliquer comment l’adapter. Vous pouvez demander un accès gratuit aux configurations actuelles.',
+            link: { href: 'https://marketplace.registrystack.org/', label: 'Parcourir le catalogue de configurations (en anglais)' },
+          },
+          {
+            q: 'Devons-nous remplacer nos applications actuelles ?',
+            a: 'Non. Registry Stack peut fournir un nouveau registre ou relier certaines fonctions aux systèmes que la collectivité utilise déjà. Un service d’autorisation d’emplacement de marché, par exemple, pourrait conserver un système de paiement et un espace de stockage de documents existants, tout en gagnant un examen plus clair, l’historique des autorisations et la vérification des statuts.',
+            link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Voir les modèles d’intégration (en anglais)' },
+          },
+          {
+            q: 'La mise en œuvre peut-elle inclure les écrans et l’hébergement ?',
+            a: 'Oui. Le périmètre convenu par écrit peut inclure les écrans des demandeurs, des agents ou du public, l’identification, l’hébergement, la reprise des données et les intégrations. Nous convenons de ce dont votre collectivité a besoin et de la manière dont cela sera testé avant la remise.',
+          },
+          {
+            q: 'Quel service devons-nous aborder en premier ?',
+            a: 'Apportez un nouveau besoin d’autorisation ou d’enregistrement, ou un service pour lequel demandeurs et agents ont besoin d’une meilleure façon de travailler. Décrivez qui l’utilisera, les décisions que prend votre collectivité et les systèmes à relier.',
+          },
+        ]}
+      />
+    </div>
+
+    <DocsHandoff
+      eyebrow="Parlons d’un service local"
+      heading="Parlons d’un service dont votre collectivité a besoin."
+      body="Décrivez une autorisation d’emplacement de marché, l’enregistrement d’un établissement, l’enregistrement d’un logement loué ou un autre service local. Indiquez qui dépose la demande, ce que les agents décident et les systèmes à relier."
+      primaryLabel="Décrivez un service local"
+      primaryHref={describeServiceHref('un service de collectivité territoriale', 'fr')}
+      note="Le cœur du logiciel est open source (Apache-2.0). Votre équipe, un prestataire que vous désignez ou nous pouvons le mettre en œuvre et l’exploiter. Nous établissons un devis distinct pour l’hébergement et l’exploitation."
+      emphasis="docs"
+    />
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .local-government-page :global(.section-inner) { padding-top: clamp(44px, 6vw, 68px); padding-bottom: clamp(44px, 6vw, 68px); }
+  .local-government-page :global(h2) { font-size: clamp(28px, 3.7vw, 42px); }
+  .local-government-page :global(.product-facts) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .local-government-page :global(.product-facts article) { border-top: 2px solid var(--registry-blue); padding-top: 20px; }
+  .local-government-page :global(.product-facts p) { margin-bottom: 0; }
+  .local-government-page :global(.product-facts .inline-cta) { display: inline-block; margin-top: 12px; }
+  .local-government-page :global(.product-fit) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+  .local-government-page :global(.product-fit dl) { margin: 0; }
+  .local-government-page :global(.product-fit dt) { color: var(--registry-ink); font-weight: 700; margin-bottom: 5px; }
+  .local-government-page :global(.product-fit dd) { border-bottom: 1px solid var(--registry-rule); line-height: 1.55; margin: 0 0 20px; padding-bottom: 18px; }
+  @media (max-width: 700px) {
+    .local-government-page :global(.product-facts), .local-government-page :global(.product-fit) { grid-template-columns: 1fr; gap: 24px; }
+  }
+</style>

@@ -77,6 +77,7 @@ const paths = [
   '/blog/choose-a-registry-interface/',
   '/blog/reconstruct-registry-access/',
   '/security/',
+  '/about/',
   '/pricing/',
   '/contact/',
   '/contact/?type=proposal',

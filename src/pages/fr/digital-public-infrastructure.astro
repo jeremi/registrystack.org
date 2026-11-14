@@ -1,0 +1,59 @@
+---
+// French twin of src/pages/digital-public-infrastructure.astro. The styles
+// repeat the English page's, which are scoped to that file.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import Illustration from '../../components/Illustration.astro';
+import Film from '../../components/Film.astro';
+import { describeServiceHref } from '../../data/contact';
+---
+<Base title="Registres pour l’infrastructure publique numérique | Registry Stack" description="Créez des fonctions de registre réutilisables pour l’infrastructure publique numérique : logiciel open source, API documentées, maîtrise institutionnelle.">
+  <SiteHeader current="dpi" />
+  <main id="main-content" tabindex="-1">
+    <section class="hero hero-cover" aria-labelledby="dpi-title"><div class="hero-inner"><div class="hero-copy">
+      <p class="eyebrow">Infrastructure publique numérique (DPI, selon le sigle anglais)</p>
+      <h1 id="dpi-title">Un même registre peut servir de nombreux services publics.</h1>
+      <p class="hero-lead">Reliez les services publics aux fiches tenues par l’institution responsable. Utilisez les composants open source de Registry Stack avec votre équipe, ou travaillez avec Aubex pour mettre en œuvre un service et en assurer l’assistance technique.</p>
+      <div class="hero-actions"><a class="button button-primary" href={describeServiceHref('un programme d’infrastructure publique numérique', 'fr')} data-journey="service-inquiry">Parlons de votre programme</a><a class="button button-secondary" href="#shared-capabilities">Voir comment il s’intègre</a></div>
+      <p class="hero-note">Pour les équipes de l’administration numérique, les bailleurs de fonds et les partenaires de mise en œuvre.</p>
+    </div>
+      <Illustration
+        variant="hero"
+        name="same-parts-many-services"
+        alt="Quatre services publics, chacun tenu par une autorité différente : enregistrer une exploitation agricole (ministère de l’Agriculture), demander une allocation familiale (ministère des Affaires sociales), demander un emplacement de marché (la Ville) et renouveler une autorisation (ordre professionnel). Les deux ministères fonctionnent sur une infrastructure partagée, exploitée par l’agence nationale du numérique ; la Ville et l’ordre professionnel fonctionnent chacun sur leurs propres serveurs. Les quatre services sont bâtis avec les mêmes onze composants : fiches, registre, liens, services, étapes, actions, rôles, automatisations, réponses signées, certificats et connecteurs."
+        caption="Quatre services de quatre autorités fictives, bâtis avec les mêmes composants. Les deux ministères partagent une infrastructure gouvernementale ; la Ville et l’ordre professionnel exploitent chacun leurs propres serveurs."
+      />
+    </div></section>
+
+    <section class="section" id="shared-capabilities" aria-labelledby="reuse-title"><div class="section-inner">
+      <div class="section-heading"><p class="eyebrow">Adéquation à votre programme</p><h2 id="reuse-title">Créez un registre ou reliez une source existante.</h2></div>
+      <div class="value-grid dpi-adoption-grid">
+        <article><h3>Utilisez les fiches que vous tenez déjà</h3><p>Reliez un registre existant pour que les services autorisés puissent poser des questions définies et recevoir des réponses signées numériquement. L’institution responsable de la source décide de ce qu’elle communique.</p><a class="inline-cta" href="/fr/products/evidence-gateway/">Relier un registre existant <span aria-hidden="true">→</span></a></article>
+        <article><h3>Créez un registre là où il en faut un</h3><p>Définissez les fiches, les règles d’accès et les modifications autorisées. Conservez les informations à jour et leur historique, et reliez les applications qui les utilisent.</p><a class="inline-cta" href="/fr/products/base-registry/">Gérer les fiches et l’historique <span aria-hidden="true">→</span></a></article>
+      </div>
+      <p class="dpi-example">Par exemple, une autorité sanitaire peut tenir un registre des établissements de santé pendant qu’un service d’autorisation vérifie le statut enregistré d’un établissement. L’autorité sanitaire décide des informations qu’elle communique ; le service d’autorisation applique ses propres règles. <a href="/fr/solutions/health-and-safety/">Découvrir les services liés aux établissements et à leur contrôle</a>.</p>
+      <Film
+        name="registry-stack-film"
+        title="De nombreux services publics, bâtis avec les mêmes composants"
+        caption="Des ministères, des communes et des bureaux d’enregistrement fictifs bâtissent cinq services avec les mêmes composants. Chacun garde ses propres fiches et répond aux autres par des réponses signées plutôt que par des copies."
+      />
+    </div></section>
+
+    <section class="section section-muted" aria-labelledby="fit-title"><div class="section-inner">
+      <div class="approach-split">
+        <div class="section-heading"><p class="eyebrow">Mise en œuvre et assistance technique</p><h2 id="fit-title">Travaillez avec Aubex sur le premier service.</h2><p>Nous adaptons et testons avec votre équipe un service bien défini. Un périmètre de projet pilote convenu par écrit décrit les fiches, les écrans, les connexions, l’hébergement et le transfert du service à votre équipe, avec les responsabilités arrêtées avant la réalisation.</p><a class="inline-cta" href="/fr/customization/">Comment se déroule la mise en œuvre <span aria-hidden="true">→</span></a></div>
+        <div class="editorial-callout"><h3>Choisissez votre équipe de réalisation et d’exploitation</h3><p>Le cœur du logiciel est open source sous licence Apache-2.0. Votre institution peut l’examiner, l’adapter et l’exploiter, avec sa propre équipe ou un autre prestataire.</p><p>Aubex propose une mise en œuvre et une assistance technique payantes. <a href="/fr/pricing/">Voir les options de réalisation et d’assistance technique</a>.</p></div>
+      </div>
+      <p class="dpi-technical">Pour les équipes techniques : <a href="https://docs.registrystack.org/start/adopt/" hreflang="en">examiner les parcours d’adoption (en anglais)</a>.</p>
+    </div></section>
+
+    <section class="final-cta" aria-labelledby="programme-title"><div class="section-inner"><p class="eyebrow">Du programme à la mise en œuvre</p><h2 id="programme-title">Parlons du premier service de votre programme.</h2><p>Dites-nous de quelles fiches votre programme a besoin, quels services les utiliseront et qui les tiendra à jour.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref('un programme d’infrastructure publique numérique', 'fr')} data-journey="service-inquiry">Parlons de votre programme</a><a class="button button-secondary" href="/fr/pricing/">Mise en œuvre et assistance technique</a></div></div></section>
+  </main><SiteFooter />
+</Base>
+<style>
+  .dpi-adoption-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dpi-example { max-width: 860px; margin: 28px 0 0; font-size: var(--type-body-sm); }
+  .dpi-technical { margin: 28px 0 0; font-size: var(--type-base); }
+  @media (max-width: 700px) { .dpi-adoption-grid { grid-template-columns: 1fr; } }
+</style>

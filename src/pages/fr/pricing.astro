@@ -1,0 +1,150 @@
+---
+// French twin of src/pages/pricing.astro. The styles repeat the English
+// page's, which are scoped to that file.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { askQuestionHref, proposalHref } from '../../data/contact';
+
+// Le calendrier et le budget sont facultatifs : un lecteur qui n’a ni budget
+// ni date peut quand même demander une proposition.
+const brief = [
+  'Votre organisation et votre fonction.',
+  'Le service dont vous avez besoin, les personnes qui l’utiliseront et ce qu’il doit permettre de faire.',
+  'Les fiches ou les systèmes à connecter, et les points sur lesquels vous souhaitez de l’aide.',
+  'Le calendrier : la date de démarrage souhaitée et toute échéance de financement (facultatif).',
+  'La fourchette de budget et la devise, si vous pouvez les indiquer (facultatif).',
+];
+const proposalRoute = proposalHref('fr');
+---
+
+<Base title="Mise en œuvre et tarifs d’un registre officiel | Registry Stack" description="Découvrez la mise en œuvre de Registry Stack et les prix de départ d’un registre pilote et de l’assistance technique annuelle. Demandez une proposition.">
+  <SiteHeader current="pricing" />
+  <main id="main-content" tabindex="-1">
+    <section class="hero hero-cover" aria-labelledby="pricing-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Mise en œuvre et tarifs</p>
+          <h1 id="pricing-title">Mise en œuvre et assistance technique pour votre service.</h1>
+          <p class="hero-lead">Nous configurons et testons votre service avec vous, ou nous assurons une assistance technique annuelle pendant que votre équipe pilote la mise en œuvre.</p>
+          <div class="hero-actions" aria-label="Actions principales">
+            <a class="button button-primary" href="#scope">Découvrir les offres payantes</a>
+            <a class="button button-secondary" href="#self-service">Utiliser le logiciel vous-même</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="scope" aria-labelledby="options-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Deux façons de vous aider</p>
+          <h2 id="options-title">Prix de départ</h2>
+          <p>Avant de commencer, nous convenons avec vous par écrit des travaux, du rôle de chacun et d’un forfait fixe.</p>
+        </div>
+        <div class="service-options">
+          <article id="pilot" aria-labelledby="implementation-title">
+            <p class="option-label">Réalisation avec nous</p>
+            <h3 id="implementation-title">Mise en œuvre d’un registre pilote</h3>
+            <p class="starting-fee"><span>À partir de</span> <strong>20 000 $ US</strong></p>
+            <p class="fee-basis">Par registre, pour un périmètre convenu par écrit</p>
+            <p>Nous mettons en œuvre avec votre équipe un registre et son service, configurés selon vos règles et testés avec vos agents. La proposition indique si votre registre pilote fonctionne avec des données de test ou avec des fiches réelles.</p>
+            <h4>Ce que nous convenons avant le début des travaux</h4>
+            <p>Convenez des écrans, de la connexion, des connexions à d’autres systèmes, de la préparation des données, de l’hébergement et du transfert du service à votre équipe, de qui fait quoi et de la manière dont votre équipe évaluera le résultat. Le périmètre énumère la configuration, les tests, les instructions et le code propre au service que vous recevez, avec les conditions de licence et de maintenance.</p>
+            <p>Le forfait dépend des étapes du service, des connexions, de la préparation des données et des travaux de déploiement. Voir <a href="#process">le déroulement de la mise en œuvre</a>.</p>
+          </article>
+          <article id="support" aria-labelledby="support-title">
+            <p class="option-label">Votre équipe pilote</p>
+            <h3 id="support-title">Assistance technique annuelle</h3>
+            <p class="starting-fee"><span>À partir de</span> <strong>7 500 $ US</strong> <span>par an</span></p>
+            <p class="fee-basis">Pour les équipes qui mettent en œuvre et exploitent Registry Stack</p>
+            <p>Votre équipe met en œuvre et exploite la solution. L’assistance technique peut couvrir les questions techniques, la préparation des mises à niveau et le dépannage pour les produits Registry Stack et les versions que vous exploitez. Le contrat précise la couverture et la responsabilité de chacun.</p>
+            <p>Votre proposition indique les déploiements couverts, la façon de joindre l’assistance, les périodes où elle est disponible et les délais de réponse convenus.</p>
+          </article>
+        </div>
+        <p class="hosting-note">Nous pouvons aussi héberger et exploiter le service pour vous, sur devis séparé dans votre proposition.</p>
+        <p class="options-next"><a class="inline-cta" href="#inquiry">Parlons de vos besoins <span aria-hidden="true">→</span></a></p>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="inquiry" aria-labelledby="inquiry-title">
+      <div class="section-inner split">
+        <div class="section-heading compact">
+          <p class="eyebrow">Parlons de vos besoins</p>
+          <h2 id="inquiry-title">Posez une question.</h2>
+          <p>Dites qui vous êtes et décrivez le service ou le besoin. Il n’est pas nécessaire d’avoir un budget pour poser une question.</p>
+          <a class="button button-secondary" href={askQuestionHref('Registry Stack', 'fr')} data-journey="ask-question">Posez une question</a>
+        </div>
+        <div class="pilot-brief" aria-labelledby="brief-title">
+          <h3 id="brief-title">Demandez une proposition.</h3>
+          <p>Décrivez ce dont vous avez besoin pour que nous puissions proposer les travaux et leur coût. Indiquez ces points dans votre demande.</p>
+          <ol>
+            {brief.map((item) => <li>{item}</li>)}
+          </ol>
+          <p>Vous pouvez laisser le calendrier et le budget vides si vous ne les connaissez pas encore.</p>
+          <div class="inquiry-action">
+            <a class="button button-primary" href={proposalRoute} data-journey="implementation-support-inquiry">Demandez une proposition</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="process" aria-labelledby="process-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <p class="eyebrow">Déroulement de la mise en œuvre</p>
+          <h2 id="process-title">Comment se déroule la mise en œuvre</h2>
+          <ol class="next-steps">
+            <li>Parlons de vos besoins. Nous examinons votre service et revenons vers vous avec nos questions.</li>
+            <li>Convenez par écrit du périmètre, du rôle de chacun et d’un forfait fixe, dans une proposition que votre service de passation des marchés peut examiner.</li>
+            <li>Configurez et testez avec votre équipe. Nous utilisons l’IA pour rédiger la configuration et les cas de test ; votre équipe examine et approuve chaque modification. Le service configuré n’a besoin d’aucun modèle d’IA pour fonctionner. <a href="/fr/customization/">Voir comment nous utilisons l’IA</a>.</li>
+            <li>Transférez le service. Votre équipe ou un prestataire que vous désignez l’exploite, ou nous l’exploitons pour vous. L’<a href="#support">assistance technique annuelle</a> est disponible lorsque votre équipe l’exploite.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="self-service" aria-labelledby="self-service-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <p class="eyebrow">Logiciel open source en autonomie</p>
+          <h2 id="self-service-title">Utilisez Registry Stack avec votre propre équipe.</h2>
+          <p>Le cœur du logiciel Registry Stack est disponible sous licence Apache 2.0, sans redevance de licence. Votre équipe peut l’évaluer, le mettre en œuvre et l’exploiter à l’aide de la documentation et du code source.</p>
+          <a class="button button-secondary" href="/fr/#developers">Découvrir les tutoriels pour développeurs</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .service-options { display: grid; gap: 28px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .service-options article { border: 1px solid var(--registry-rule); border-top: 3px solid var(--registry-blue); padding: clamp(22px, 3vw, 32px); }
+  .option-label { color: var(--registry-blue); font: var(--type-xs)/1.5 var(--registry-mono); margin: 0 0 16px; }
+  .service-options h3 { font-size: var(--type-2xl); margin: 0 0 20px; }
+  .service-options article > p:last-child { margin-bottom: 0; }
+  .starting-fee { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 9px; color: var(--registry-ink); margin: 0; }
+  .starting-fee span { font-size: var(--type-md); }
+  .starting-fee strong { font-size: var(--type-2xl); line-height: 1.2; }
+  .fee-basis { color: var(--registry-muted); font-size: var(--type-sm); line-height: 1.5; min-height: 40px; margin: 8px 0 18px; }
+  .hosting-note { font-size: var(--type-md); line-height: 1.6; margin: 24px 0 0; }
+  .options-next { margin: 24px 0 0; }
+  .pilot-brief { background: var(--registry-white); border-top: 3px solid var(--registry-blue); padding: clamp(20px, 3vw, 28px); }
+  .pilot-brief h3 { font-size: var(--type-2xl); }
+  .pilot-brief ol { line-height: 1.6; margin: 24px 0; padding-left: 22px; }
+  .pilot-brief li { margin-bottom: 18px; padding-left: 4px; }
+  .pilot-brief li::marker { color: var(--registry-stamp); font-family: var(--registry-mono); }
+  .inquiry-action { border-top: 1px solid var(--registry-rule); padding-top: 22px; }
+  .inquiry-action > p:first-child { font-size: var(--type-md); line-height: 1.6; }
+  .service-options h4 { font-size: var(--type-body); margin: 22px 0 6px; }
+  .pilot-brief > p { font-size: var(--type-md); line-height: 1.6; }
+  .next-steps { line-height: 1.6; margin: 20px 0 0; padding-left: 22px; }
+  .next-steps li { margin-bottom: 12px; padding-left: 4px; }
+  .next-steps li::marker { color: var(--registry-stamp); font-family: var(--registry-mono); }
+  .next-steps a { text-decoration: underline; }
+  @media (max-width: 700px) {
+    .service-options { grid-template-columns: 1fr; }
+    .fee-basis { min-height: 0; }
+  }
+</style>

@@ -1,0 +1,97 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:04.200
+Voici le studio, où les équipes
+construisent des services publics.
+
+00:00:04.600 --> 00:00:08.800
+Pas de zéro, mais avec les mêmes composants,
+puis vérifiés et approuvés.
+
+NOTE Ce dont le vendeur a besoin
+
+00:00:09.800 --> 00:00:13.200
+Partons de ce que doit faire
+un vendeur de denrées alimentaires :
+
+00:00:13.400 --> 00:00:15.500
+déposer sa demande, faire vérifier
+son certificat d’hygiène,
+
+00:00:15.800 --> 00:00:18.400
+payer les frais et obtenir l’autorisation.
+
+NOTE Les mêmes composants
+
+00:00:19.600 --> 00:00:22.400
+Chaque étape est faite des mêmes composants,
+
+00:00:22.700 --> 00:00:26.200
+ceux dont les services publics
+ont sans cesse besoin,
+
+00:00:26.600 --> 00:00:30.000
+avec la connexion nationale et les paiements
+déjà en place.
+
+00:00:30.300 --> 00:00:32.800
+Seulement les composants utiles à ce service.
+
+00:00:33.400 --> 00:00:36.600
+Ensemble, ils forment une configuration,
+pas du nouveau code.
+
+00:00:36.800 --> 00:00:40.100
+Modifiez-la visuellement, avec un assistant
+d’IA, ou à la main.
+
+00:00:40.400 --> 00:00:42.600
+Du code seulement là où il le faut.
+
+NOTE Vérifications et approbation
+
+00:00:43.500 --> 00:00:46.000
+Chaque composant vérifie ses propres réglages,
+
+00:00:46.400 --> 00:00:49.600
+et s’ils ne s’accordent pas,
+la remise est impossible.
+
+00:00:52.000 --> 00:00:54.400
+Un approbateur de la Ville signe.
+
+00:00:54.800 --> 00:00:57.000
+Alors seulement, elle est remise.
+
+00:00:57.300 --> 00:01:00.400
+Sa fiche de catalogue vient du même fichier.
+
+NOTE Une modification ultérieure
+
+00:01:01.500 --> 00:01:04.300
+Plus tard, la Ville ajoute une inspection
+sur place.
+
+00:01:04.500 --> 00:01:06.600
+L’assistant d’IA propose la modification.
+
+00:01:07.000 --> 00:01:09.800
+Les vérifications repèrent ce qui a été oublié.
+
+00:01:10.300 --> 00:01:13.400
+Approuvée de nouveau, la version deux
+est remise.
+
+00:01:13.800 --> 00:01:16.600
+Une modification relue, pas un nouveau projet.
+
+NOTE Conclusion
+
+00:01:17.700 --> 00:01:19.000
+Construit avec les mêmes composants.
+
+00:01:19.400 --> 00:01:20.800
+Approuvé avant la remise.
+
+00:01:22.200 --> 00:01:23.600
+Registry Stack.
