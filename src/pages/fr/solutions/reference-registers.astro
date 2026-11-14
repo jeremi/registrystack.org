@@ -20,7 +20,7 @@ const steps: WeekStep[] = [
     when: 'Modification proposée',
     product: 'Votre application de réception des demandes',
     title: 'Une modification est proposée',
-    text: 'Le ministère informe votre service que deux districts fusionnent le 1er janvier. La liste ne change pas tant que votre équipe n’a pas décidé.',
+    text: 'Le ministère informe votre service que deux districts fusionnent le 1er janvier. La liste reste inchangée tant que votre équipe n’a pas statué.',
     card: { kind: 'record', recordType: 'Proposition de modification', recordId: 'CHG-118', icon: 'data', fields: [
       { label: 'Entrée', value: 'District NR-07' },
       { label: 'Modification', value: 'Intégration à NR-05' },
@@ -42,7 +42,7 @@ const steps: WeekStep[] = [
     when: 'Modification autorisée de la liste',
     ...weekProduct('base-registry'),
     title: 'La liste change et garde l’ancienne entrée',
-    text: 'L’agent clôt NR-07 avec sa date de fin et désigne son successeur. Le registre consigne le nom de l’agent, et les fiches qui utilisent NR-07 restent reliées à l’entrée conservée.',
+    text: 'L’agent clôt NR-07 en indiquant sa date de fin et son successeur. Le registre consigne le nom de l’agent, et les fiches qui utilisent NR-07 restent reliées à l’entrée conservée.',
     card: { kind: 'record', recordType: 'Entrée de la nomenclature', recordId: 'NR-07', icon: 'data', fields: [
       { label: 'Statut', value: 'Clôturée à partir du 1er janvier' },
       { label: 'Successeur', value: 'NR-05' },
@@ -64,8 +64,8 @@ const steps: WeekStep[] = [
 ---
 <Solution
   area={area}
-  heading="Tenez les listes sur lesquelles s’appuient les autres services."
-  description="Examinez et publiez les modifications des noms de lieux, des annuaires d’organismes, des classifications et des listes de codes. Les services connectés peuvent récupérer la version actuelle, tandis que les fiches qui utilisent un code antérieur renvoient toujours à une entrée connue."
+  heading="Tenez les listes de référence utilisées par les autres services."
+  description="Noms de lieux, annuaires d’organismes, classifications, listes de codes : les modifications sont examinées, puis publiées. Les services connectés peuvent récupérer la version actuelle, et les fiches qui utilisent un ancien code renvoient toujours à une entrée connue."
 >
   <section class="section" id="example" aria-labelledby="reference-example-title">
     <div class="section-inner">
@@ -89,7 +89,7 @@ const steps: WeekStep[] = [
         <h2 id="reference-change-title">Tenez une seule liste actuelle et gardez les entrées antérieures.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Utilisez le même code pour le même lieu</h3><p>Chaque entrée comprend son code officiel, son élément parent s’il y en a un, et les dates auxquelles elle s’applique. Le registre des adresses et l’institut de statistique peuvent récupérer les entrées dans la même liste.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre sert d’autres services <span aria-hidden="true">→</span></a></article>
+        <article><h3>Utilisez le même code pour le même lieu</h3><p>Chaque entrée comporte son code officiel, son rattachement le cas échéant et ses dates d’application. Le registre des adresses et l’institut de statistique peuvent récupérer les entrées dans la même liste.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment d’autres services s’appuient sur le registre <span aria-hidden="true">→</span></a></article>
         <article><h3>Contrôlez qui modifie la liste</h3><p>Votre institution décide qui peut ajouter, renommer ou clôturer une entrée. Les services connectés peuvent recevoir un accès en lecture, tandis que les agents ou systèmes autorisés enregistrent les modifications.</p><a class="inline-cta" href="/fr/security/">Qui est responsable de quoi <span aria-hidden="true">→</span></a></article>
         <article><h3>Aidez les autres services à trouver la liste actuelle</h3><p>Publiez les entrées par un service ou un export convenu. Les métadonnées de catalogue décrivent cette source et sa version, afin que les autres équipes sachent où récupérer la liste.</p><a class="inline-cta" href="https://docs.registrystack.org/products/registry-manifest/" hreflang="en">Comment les descriptions de catalogue sont publiées (en anglais) <span aria-hidden="true">↗</span></a></article>
       </div>
@@ -100,20 +100,20 @@ const steps: WeekStep[] = [
     items={[
       {
         q: 'Cela remplace-t-il le tableur que nous diffusons ?',
-        a: 'Cela peut remplacer les copies de tableur envoyées par courriel par une source tenue à jour. Les services connectés récupèrent les entrées par un service ou un export convenu et suivent les règles convenues pour adopter une nouvelle version.',
-        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’intègre aux systèmes existants (en anglais)' },
+        a: 'Une source tenue à jour peut remplacer les copies de tableur envoyées par courriel. Les services connectés récupèrent les entrées par un service ou un export convenu, et passent à une nouvelle version selon des règles arrêtées en commun.',
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il fonctionne aux côtés des systèmes existants (en anglais)' },
       },
       {
         q: 'Que deviennent les fiches qui renvoient à un ancien code ?',
-        a: 'Une entrée renommée ou retirée reste dans la liste, avec les dates auxquelles elle s’est appliquée. Les fiches qui utilisent l’ancien code peuvent toujours renvoyer à cette entrée. Chaque service connecté a besoin de règles pour traiter un code renommé ou retiré.',
+        a: 'Une entrée renommée ou retirée reste dans la liste, avec ses dates d’application. Les fiches qui utilisent l’ancien code peuvent toujours renvoyer à cette entrée. Chaque service connecté doit prévoir des règles pour traiter un code renommé ou retiré.',
       },
       {
         q: 'La liste contient-elle aussi les limites des districts ?',
-        a: 'La liste donnée en exemple contient des codes, des noms et des dates. Gardez les cartes des limites dans le système de cartographie et reliez les entrées par leurs codes officiels.',
+        a: 'La liste donnée en exemple contient des codes, des noms et des dates. Les cartes des limites restent dans le système de cartographie et se relient aux entrées par les codes officiels.',
       },
       {
         q: 'Qui peut modifier la liste ?',
-        a: 'Seules les personnes que désigne votre institution. Votre institution décide qui peut enregistrer une nouvelle entrée, qui peut en clôturer une, et qui peut seulement lire ; chaque modification est conservée avec son auteur et sa date.',
+        a: 'Seules les personnes désignées par votre institution. Elle décide qui peut enregistrer une nouvelle entrée, qui peut en clôturer une et qui a seulement accès en lecture ; chaque modification est conservée avec son auteur et sa date.',
         link: { href: '/security/', label: 'Qui est responsable de quoi' },
       },
       ...sharedFamilyFaq,
@@ -122,10 +122,10 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Travaillons ensemble"
     heading="Parlons de votre liste partagée."
-    body="Décrivez la liste partagée dont vous avez besoin, qui approuve les modifications et quels services l’utiliseront. Nous pouvons vous montrer comment Registry Stack pourrait publier une seule version actuelle tout en conservant les entrées antérieures."
+    body="Décrivez la liste à partager, qui en approuve les modifications et quels services l’utiliseront. Nous pouvons vous montrer comment Registry Stack pourrait publier une seule version actuelle tout en conservant les entrées antérieures."
     primaryLabel="Décrivez votre service"
     primaryHref={describeServiceHref(area.name, 'fr')}
-    note="Le cœur du logiciel est open source (Apache-2.0). Votre équipe, un prestataire que vous désignez ou nous pouvons le mettre en œuvre et l’exploiter. L’hébergement et l’exploitation font l’objet d’un devis distinct."
+    note="Le cœur du logiciel est open source (Apache-2.0). Sa mise en œuvre et son exploitation peuvent être assurées par votre équipe, par un prestataire que vous désignez ou par nous. Nous établissons un devis distinct pour l’hébergement et l’exploitation."
     emphasis="docs"
   />
 </Solution>

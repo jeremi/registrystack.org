@@ -19,7 +19,7 @@ const steps: WeekStep[] = [
     when: 'Modification déposée',
     product: 'Votre service de dépôt',
     title: 'Une entreprise dépose un changement de siège social',
-    text: 'Le représentant de l’entreprise dépose un changement de siège social. Le registre ne change pas tant qu’un agent du registre n’a pas décidé.',
+    text: 'Le représentant de l’entreprise dépose une déclaration de changement de siège social. Le registre reste inchangé tant qu’un agent du registre n’a pas statué.',
     card: { kind: 'record', recordType: 'Dépôt', recordId: 'REQ-8821', icon: 'business', fields: [
       { label: 'Entreprise', value: 'BR-20417' },
       { label: 'Dépôt', value: 'Changement de siège social' },
@@ -41,7 +41,7 @@ const steps: WeekStep[] = [
     when: 'Fiche de l’entreprise mise à jour',
     ...weekProduct('base-registry'),
     title: 'La fiche change et garde son historique',
-    text: 'L’agent du registre enregistre la nouvelle adresse, et le registre consigne qui a fait la modification. La version 23 la contient ; la version 22 reste consultable.',
+    text: 'L’agent du registre enregistre la nouvelle adresse ; le registre consigne l’auteur de la modification. La nouvelle adresse figure dans la version 23, et la version 22 reste consultable.',
     card: { kind: 'record', recordType: 'Fiche de l’entreprise', recordId: 'BR-20417', icon: 'business', fields: [
       { label: 'Siège social', value: 'Mis à jour' },
       { label: 'Modifiée par', value: 'L. Mensah' },
@@ -52,7 +52,7 @@ const steps: WeekStep[] = [
     when: 'Notification demandée',
     ...weekProduct('messaging'),
     title: 'L’entreprise est informée',
-    text: 'Après la mise à jour de la fiche de l’entreprise, le service de dépôt appelle Messaging pour envoyer le modèle de courriel relu. Messaging n’envoie que lorsqu’un appelant autorisé le déclenche, et renvoie le résultat de l’envoi au service de dépôt.',
+    text: 'Une fois la fiche de l’entreprise mise à jour, le service de dépôt fait appel à Messaging pour envoyer un courriel établi à partir du modèle relu. Messaging n’envoie rien sans la demande d’un appelant autorisé, puis transmet le résultat de l’envoi au service de dépôt.',
     card: { kind: 'notice', channel: 'Email', to: 'Représentant de l’entreprise', subject: 'Changement de siège social enregistré, BR-20417', status: 'Remis' },
   },
 ];
@@ -60,7 +60,7 @@ const steps: WeekStep[] = [
 <Solution
   area={area}
   heading="Gérez les immatriculations d’entreprises et leurs modifications."
-  description="Les entreprises déposent leurs immatriculations et leurs modifications. Les agents du registre examinent chaque dépôt et consignent les informations approuvées dans le registre du commerce. Une banque, un système de passation des marchés ou un autre service habilité peut vérifier une information autorisée sans recevoir les pièces du dépôt."
+  description="Les entreprises déposent leurs demandes d’immatriculation et de modification. Les agents du registre examinent chaque dépôt et consignent les informations approuvées dans le registre du commerce. Une banque, un système de passation des marchés ou un autre service habilité peut vérifier une information autorisée sans recevoir les pièces du dépôt."
 >
   <section class="section" id="example" aria-labelledby="business-example-title">
     <div class="section-inner">
@@ -84,7 +84,7 @@ const steps: WeekStep[] = [
         <h2 id="business-change-title">Gardez un historique clair des modifications des entreprises.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Reliez une entreprise à ses immatriculations</h3><p>Les agents peuvent consigner, dans la fiche d’une entreprise, ses immatriculations au registre du commerce, ses immatriculations fiscales et ses autorisations. Lorsqu’une autre institution détient une immatriculation, la mise en œuvre doit convenir de la manière d’identifier l’entreprise et de relier cette information.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre tient une fiche <span aria-hidden="true">→</span></a></article>
+        <article><h3>Reliez une entreprise à ses immatriculations</h3><p>Les agents peuvent consigner, dans la fiche d’une entreprise, ses immatriculations au registre du commerce, ses immatriculations fiscales et ses autorisations. Lorsqu’une immatriculation relève d’une autre institution, il faut convenir, lors de la mise en œuvre, du mode d’identification de l’entreprise et du rattachement de cette information.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre tient une fiche <span aria-hidden="true">→</span></a></article>
         <article><h3>Vérifiez une immatriculation sans le dossier complet</h3><p>Une banque ou un service des marchés publics reçoit seulement la réponse que votre institution autorise, par exemple si l’entreprise est immatriculée. L’historique des dépôts, les adresses et les propriétaires restent dans votre registre.</p><a class="inline-cta" href="/fr/solutions/check-a-fact/">Comment un service vérifie une information <span aria-hidden="true">→</span></a></article>
         <article><h3>Reproduisez un certificat quand une autre copie est nécessaire</h3><p>À partir des mêmes données d’émission, Registry Render reproduit le certificat afin que la copie ultérieure corresponde à l’original. L’application décide quand un certificat ou un extrait peut être délivré.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/" hreflang="en">Comment Registry Render reproduit un document (en anglais) <span aria-hidden="true">↗</span></a></article>
       </div>
@@ -95,17 +95,17 @@ const steps: WeekStep[] = [
     items={[
       {
         q: 'Cela remplace-t-il notre système d’immatriculation des entreprises ?',
-        a: 'Cela dépend de ce qui tient votre registre aujourd’hui. Si un système d’immatriculation reçoit les demandes, encaisse les frais et délivre l’immatriculation, ce système reste en place et consigne le résultat dans le registre. Si votre registre est un tableur, ou vit dans une application que vous retirez, Base Registry Engine peut être le registre, et votre équipe planifie la reprise des fiches existantes.',
-        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’intègre aux systèmes existants (en anglais)' },
+        a: 'Tout dépend de l’outil qui tient votre registre aujourd’hui. Si un système d’immatriculation reçoit les demandes, encaisse les frais et délivre l’immatriculation, il reste en place et consigne le résultat dans le registre. Si votre registre est un tableur, ou se trouve dans une application que vous abandonnez, Base Registry Engine peut devenir le registre ; votre équipe planifie alors la reprise des fiches existantes.',
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il fonctionne aux côtés des systèmes existants (en anglais)' },
       },
       {
         q: 'Une banque peut-elle vérifier qu’une entreprise est immatriculée sans compte sur notre système ?',
-        a: 'Deux cas. Un particulier ou une banque qui consulte une seule entreprise utilise le registre public que publie votre application en vertu de votre législation. Un service qui doit vérifier des entreprises dans le cadre de son propre processus pose à votre registre une question que vous avez convenu de traiter, par exemple si une entreprise figure au registre comme active, et reçoit cette réponse, et rien d’autre. Votre institution décide quels services peuvent poser des questions, et lesquelles.',
+        a: 'Il faut distinguer deux cas. Un particulier ou une banque qui recherche une entreprise précise consulte le registre public que votre application publie en vertu de votre législation. Un service qui vérifie des entreprises dans le cadre de ses propres procédures pose à votre registre une question que vous avez accepté de traiter, par exemple si une entreprise y figure comme active ; il reçoit cette réponse, et rien de plus. Votre institution décide quels services peuvent interroger le registre, et sur quelles questions.',
         link: { href: '/solutions/check-a-fact/', label: 'Comment un service vérifie une information' },
       },
       {
         q: 'Qui peut savoir à qui appartient une entreprise ?',
-        a: 'Votre institution décide qui peut enregistrer un propriétaire, qui peut en consulter un et au titre de quelle obligation légale. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit pour l’ensemble du registre et des applications connectées est convenue lors de la mise en œuvre.',
+        a: 'Votre institution décide qui peut enregistrer un propriétaire, qui peut consulter cette information et au titre de quelle obligation légale. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit du registre et des applications connectées est convenue lors de la mise en œuvre.',
         link: { href: '/security/', label: 'Qui est responsable de quoi' },
       },
       {
@@ -114,7 +114,7 @@ const steps: WeekStep[] = [
         link: { href: 'https://marketplace.registrystack.org/collections/business-and-tax/', label: 'Parcourir les configurations pour les entreprises et la fiscalité (en anglais)' },
       },
       {
-        q: 'Pouvons-nous continuer à vendre des certificats et des extraits ?',
+        q: 'Pouvons-nous continuer à facturer les certificats et les extraits ?',
         a: 'Oui. Votre institution fixe les frais et les règles de délivrance. Le service applique ces règles avant de délivrer un certificat ou un extrait.',
         link: { href: 'https://docs.registrystack.org/explanation/render-determinism/', label: 'Comment fonctionne la production déterministe des documents (en anglais)' },
       },
@@ -124,10 +124,10 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Travaillons ensemble"
     heading="Parlons de votre service."
-    body="Décrivez les immatriculations ou les dépôts à traiter, qui soumet les modifications, qui décide et quels systèmes connecter. Nous pouvons vous montrer comment Registry Stack pourrait s’intégrer."
+    body="Décrivez-nous les immatriculations ou les dépôts à traiter, et indiquez qui dépose les modifications, qui décide et quels systèmes connecter. Nous pouvons vous montrer comment Registry Stack pourrait s’y intégrer."
     primaryLabel="Décrivez votre service"
     primaryHref={describeServiceHref(area.name, 'fr')}
-    note="Le cœur du logiciel est open source (Apache-2.0). Votre équipe, un prestataire que vous désignez ou nous pouvons le mettre en œuvre et l’exploiter. L’hébergement et l’exploitation font l’objet d’un devis distinct."
+    note="Le cœur du logiciel est open source (Apache-2.0). Sa mise en œuvre et son exploitation peuvent être assurées par votre équipe, par un prestataire que vous désignez ou par nous. Nous établissons un devis distinct pour l’hébergement et l’exploitation."
     emphasis="docs"
   />
 </Solution>

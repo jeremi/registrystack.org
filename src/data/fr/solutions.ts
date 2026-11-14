@@ -37,15 +37,15 @@ const areaText: readonly AreaText[] = [
     pageTitle: 'Logiciel pour les registres agricoles, animaliers et environnementaux',
     intent: 'Inscrire les producteurs, sites, établissements, autorisations et ressources',
     audience: 'Pour les ministères de l’agriculture, les services vétérinaires et de sécurité sanitaire des aliments, et les agences de l’environnement.',
-    description: 'Inscrivez producteurs, sites, entreprises alimentaires, permis et ressources naturelles. Suivez les changements ; statut vérifiable par les services autorisés.',
+    description: 'Inscrivez producteurs, sites, entreprises alimentaires, permis, ressources naturelles. Consignez les changements ; un service autorisé peut vérifier le statut.',
   },
   {
     key: 'people-and-social-programmes',
     name: 'Personnes, ménages et programmes sociaux',
     pageTitle: 'Logiciel pour les registres de population et de programmes sociaux',
-    intent: 'Tenir les données d’identité, de ménage, d’inscription et de statut dont les services publics ont besoin',
+    intent: 'Tenir les fiches d’identité, de ménage, d’inscription et de statut pour les services publics',
     audience: 'Pour l’état civil et les registres de population, la protection sociale, l’éducation, l’immigration et les autorités électorales.',
-    description: 'Tenez registres de population, registres sociaux et inscriptions. Examinez les corrections et laissez les services autorisés vérifier une information.',
+    description: 'Tenez registres de population, registres sociaux et inscriptions, examinez les corrections et permettez aux services autorisés de vérifier un point précis.',
   },
   {
     key: 'land-property-and-assets',
@@ -61,7 +61,7 @@ const areaText: readonly AreaText[] = [
     pageTitle: 'Logiciel pour les registres de santé et de sécurité',
     intent: 'Tenir les fiches des établissements, opérateurs, produits et risques',
     audience: 'Pour les registres d’établissements de santé, les autorités du médicament et des dispositifs médicaux, et la radioprotection.',
-    description: 'Tenez les fiches des établissements, essais, dispositifs, opérateurs et risques. Consignez les décisions et laissez les services autorisés vérifier le statut.',
+    description: 'Tenez les fiches des établissements, essais, dispositifs, opérateurs et risques. Consignez les décisions ; un service autorisé peut en vérifier le statut.',
   },
   {
     key: 'reference-registers',
@@ -106,11 +106,11 @@ export const solutionAreas: readonly SolutionArea[] = englishAreas.map((area) =>
 export const sharedFamilyFaq: readonly { q: string; a: string; link?: { href: string; label: string } }[] = [
   {
     q: 'Comment préparer une mise en œuvre ?',
-    a: 'Commencez par un seul service. Convenez des fiches, des tâches des agents, des écrans, des connexions et de la reprise des données dont il a besoin. Un périmètre convenu par écrit précise qui réalise, héberge et exploite le service, y compris les accès, les sauvegardes et la prise en main par votre équipe.',
+    a: 'Commencez par un seul service et arrêtez d’un commun accord ce qu’il requiert : fiches, tâches des agents, écrans, connexions et reprise des données. Un périmètre convenu par écrit précise qui réalise, héberge et exploite le service, y compris les accès, les sauvegardes et la prise en main par votre équipe.',
     link: { href: englishFaq[0].link!.href, label: 'Questions sur la propriété, la réalisation et l’exploitation' },
   },
   {
-    q: 'Comment votre équipe technique peut-elle évaluer le logiciel ?',
+    q: 'Comment l’équipe technique peut-elle évaluer le logiciel ?',
     a: 'Elle peut suivre les tutoriels des composants pour tester leur fonctionnement de base avec des données d’exemple. Un service complet nécessite encore ses propres règles, ses applications connectées et des tests de bout en bout.',
     link: { href: englishFaq[1].link!.href, label: 'Évaluation technique' },
   },

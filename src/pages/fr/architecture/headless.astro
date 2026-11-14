@@ -25,15 +25,15 @@ const pythonExampleHref =
           <p class="eyebrow">Architecture <span lang="en">headless</span> (sans interface imposée)</p>
           <h1 id="headless-title">Utilisez Registry Stack derrière le portail que vous exploitez déjà.</h1>
           <p class="hero-lead">
-            Reliez votre portail ou votre application métier existants par des API documentées.
-            Vous choisissez les écrans que les personnes utilisent. Chaque produit vérifie ce que
-            l’appelant peut voir et faire.
+            Reliez votre portail ou votre application métier existants à Registry Stack par des
+            API documentées. Vous choisissez les écrans que chacun utilise. Chaque produit vérifie
+            ce que l’appelant peut voir et faire.
           </p>
           <div class="hero-actions">
-            <a class="button button-primary" href={adoptionDocsHref} hreflang="en">Examiner les parcours d’adoption (en anglais)</a>
-            <a class="button button-secondary" href="/fr/customization/">Planifier votre mise en œuvre</a>
+            <a class="button button-primary" href={adoptionDocsHref} hreflang="en">Consultez les parcours d’adoption (en anglais)</a>
+            <a class="button button-secondary" href="/fr/customization/">Planifiez votre mise en œuvre</a>
           </div>
-          <p class="hero-note">Ajoutez ou changez une interface en gardant le même registre et les mêmes règles d’accès.</p>
+          <p class="hero-note">Une interface peut être ajoutée ou remplacée : le registre et les règles d’accès restent les mêmes.</p>
         </div>
       </div>
     </section>
@@ -42,11 +42,11 @@ const pythonExampleHref =
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Des interfaces autour de produits encadrés</p>
-          <h2 id="channels-title">Placez l’expérience du service là où les personnes travaillent déjà.</h2>
+          <h2 id="channels-title">Intégrer le service aux outils que chacun utilise déjà.</h2>
           <p>
-            Un portail ou une application métier peut appeler les produits dont il a besoin. Vous
-            pouvez aussi relier un assistant approuvé à une tâche de registre configurée. Chaque
-            produit vérifie l’accès à la réception d’une demande.
+            Un portail ou une application métier peut appeler les produits qui lui sont
+            nécessaires. Vous pouvez aussi relier un assistant approuvé à une tâche de registre
+            configurée. Chaque produit vérifie l’accès dès qu’il reçoit une demande.
           </p>
         </div>
 
@@ -75,7 +75,7 @@ const pythonExampleHref =
             <span class="map-arrow" aria-hidden="true">&rarr;</span>
             <section aria-labelledby="authority-layer-title">
               <p class="map-label">Autorité</p>
-              <h4 id="authority-layer-title">Le produit qui est responsable de l’effet</h4>
+              <h4 id="authority-layer-title">Le produit responsable du résultat</h4>
               <ul>
                 <li>Fiches de Base Registry Engine</li>
                 <li>Décisions de Registry Casework</li>
@@ -85,8 +85,8 @@ const pythonExampleHref =
           </div>
           <figcaption id="channel-map-caption">
             Un portail ou une application métier peut utiliser les API des produits auxquels il
-            est relié. L’intégration d’un assistant représentée ici utilise MCP pour atteindre
-            une tâche configurée de Base Registry Engine.
+            est relié. Dans l’intégration d’assistant représentée ici, MCP donne accès à une
+            tâche configurée de Base Registry Engine.
           </figcaption>
         </figure>
 
@@ -101,9 +101,9 @@ const pythonExampleHref =
     <section class="section section-muted" aria-labelledby="contract-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">Choisir le bon contrat d’interface</p>
-          <h2 id="contract-title">Adaptez l’interface à la tâche et à la responsabilité.</h2>
-          <p>Chaque canal a un périmètre différent. L’autorisation propre à chaque produit reste en vigueur pour tous.</p>
+          <p class="eyebrow">Le bon contrat d’interface</p>
+          <h2 id="contract-title">Choisir l’interface selon la tâche et les responsabilités.</h2>
+          <p>Chaque canal a un périmètre différent, mais les autorisations de chaque produit s’appliquent à tous.</p>
         </div>
         <div class="value-grid">
           <article>
@@ -111,12 +111,12 @@ const pythonExampleHref =
             <p>Votre application peut utiliser les API publiques des produits, les clients Node.js et Python publiés, ou le client Rust à partir du code source. Votre équipe gère la connexion des utilisateurs, suit les demandes à chaque étape et traite les échecs.</p>
           </article>
           <article>
-            <h3>Des outils MCP plus restreints</h3>
-            <p>Le <span lang="en">Model Context Protocol</span> (MCP, protocole de contexte de modèle) relie un assistant approuvé à certaines tâches. Les outils publiés pour les citoyens peuvent lire des informations autorisées et préparer un brouillon que la personne envoie sur le site de l’institution.</p>
+            <h3>Outils MCP plus restreints</h3>
+            <p>Le <span lang="en">Model Context Protocol</span> (MCP, protocole de contexte de modèle) relie un assistant approuvé à certaines tâches. Les outils publiés pour les usagers peuvent lire des informations autorisées et préparer un brouillon ; c’est la personne qui l’envoie sur le site de l’institution.</p>
           </article>
           <article>
-            <h3>Des décisions indépendantes par produit</h3>
-            <p>Une approbation dans Casework consigne une décision d’examen. Base Registry Engine exige toujours une autorisation indépendante avant qu’une application puisse modifier une fiche.</p>
+            <h3>Décisions indépendantes par produit</h3>
+            <p>Une approbation dans Casework consigne une décision d’examen. Base Registry Engine exige néanmoins une autorisation indépendante avant toute modification d’une fiche par une application.</p>
           </article>
         </div>
       </div>
@@ -129,9 +129,9 @@ const pythonExampleHref =
           <h2 id="python-example-title">Voir comment une application coordonne la modification d’une fiche.</h2>
           <p>
             L’exemple Python de la v0.46.0 soumet une proposition à Base Registry Engine
-            et donne aux agents les commandes pour l’examiner dans Registry Casework. Il utilise
-            un appelant autorisé séparément pour appliquer la version approuvée, et peut envoyer
-            une notification par Registry Messaging.
+            et donne aux agents les commandes pour l’examiner dans Registry Casework. La version
+            approuvée est appliquée par un appelant disposant de sa propre autorisation ; l’exemple
+            peut aussi envoyer une notification par Registry Messaging.
           </p>
           <p>
             L’application suit les étapes et gère les nouvelles tentatives. Chaque produit
@@ -141,16 +141,16 @@ const pythonExampleHref =
         </div>
         <div class="editorial-callout" aria-labelledby="proof-limit-title">
           <h3 id="proof-limit-title">Qui construit l’interface ?</h3>
-          <p>Votre propre équipe, Aubex ou un autre partenaire de réalisation peut construire ou adapter les écrans, intégrer la connexion des utilisateurs et prévoir la reprise lorsqu’une demande échoue. Convenez de ce travail dans le périmètre de mise en œuvre.</p>
+          <p>Votre propre équipe, Aubex ou un autre partenaire de réalisation peut développer ou adapter les écrans, intégrer la connexion des utilisateurs et mettre en place la reprise lorsqu’une demande échoue. Inscrivez ce travail dans le périmètre de mise en œuvre convenu.</p>
         </div>
       </div>
     </section>
 
     <DocsHandoff
       eyebrow="Pour votre équipe technique"
-      heading="Choisissez l’ensemble de produits le plus restreint et l’interface dont votre service a besoin."
+      heading="Ne retenez que les produits et l’interface nécessaires à votre service."
       body="Examinez les parcours d’adoption tenus à jour (en anglais), puis définissez dans le périmètre de mise en œuvre le parcours des utilisateurs, les identifiants, les limites de chaque produit et le travail de reprise."
-      primaryLabel="Examiner les parcours d’adoption (en anglais)"
+      primaryLabel="Consultez les parcours d’adoption (en anglais)"
       primaryHref={adoptionDocsHref}
       emphasis="docs"
     />

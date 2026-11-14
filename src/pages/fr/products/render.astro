@@ -8,7 +8,7 @@ const product = products.find((p) => p.key === 'render')!;
 <Product
   product={product}
   heading="Produisez et signez les documents de votre service."
-  description="Produisez des autorisations d’exercice, des certificats, des courriers et des reçus au format PDF à partir des données de votre service et de modèles approuvés. Ajoutez un cachet électronique avec la clé de signature de votre institution, et un horodatage lorsque celui-ci est configuré."
+  description="Autorisations d’exercice, certificats, courriers ou reçus : Registry Render les produit au format PDF à partir des données de votre service et de modèles approuvés. Il peut y apposer un cachet électronique avec la clé de signature de votre institution, ainsi qu’un horodatage lorsque celui-ci est configuré."
   note="Production et signature de documents en open source. Pour un nouveau service ou un service que vous exploitez déjà."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="render-example-title">
@@ -28,9 +28,9 @@ const product = products.find((p) => p.key === 'render')!;
         <h2 id="render-capabilities-title">Préparez un document cohérent, puis signez-le.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Utiliser des modèles approuvés</h3><p>Définissez la mise en page, les libellés, les polices et les langues prises en charge. Empaquetez le modèle examiné pour que le service utilise une version connue.</p></article>
-        <article><h3>Vérifier les informations requises</h3><p>Fixez les données dont chaque document a besoin. Render vérifie les informations fournies par rapport à cette définition avant de produire le PDF.</p></article>
-        <article><h3>Signer avec la clé de votre institution</h3><p>Apposez un cachet électronique sur le PDF produit. Les destinataires peuvent valider la signature avec le certificat de votre institution et détecter toute modification du contenu signé. Ajoutez un horodatage fourni par l’autorité que vous avez configurée.</p></article>
+        <article><h3>Utiliser des modèles approuvés</h3><p>Vous définissez la mise en page, les libellés, les polices et les langues prises en charge. Le modèle examiné est ensuite empaqueté, pour que le service utilise une version connue.</p></article>
+        <article><h3>Vérifier les informations requises</h3><p>Vous fixez les données nécessaires à chaque document ; Render vérifie les informations fournies au regard de cette définition avant de produire le PDF.</p></article>
+        <article><h3>Signer avec la clé de votre institution</h3><p>Render appose un cachet électronique sur le PDF produit. Les destinataires peuvent valider la signature à l’aide du certificat de votre institution et détecter toute modification du contenu signé. Un horodatage peut s’y ajouter, fourni par l’autorité que vous avez configurée.</p></article>
       </div>
     </div>
   </section>
@@ -38,13 +38,13 @@ const product = products.find((p) => p.key === 'render')!;
     <div class="section-inner product-fit">
       <div class="section-heading compact">
         <p class="eyebrow">Comment il s’intègre à votre service</p>
-        <h2 id="render-fit-title">Ajoutez la production et la signature de documents à côté de vos fiches.</h2>
-        <p>Votre application peut demander un document produit et signé au service de Render. Pour la production seule, utilisez une commande locale ou intégrez Render dans un logiciel. Les données peuvent venir de <a href="/fr/products/base-registry/">Base Registry Engine</a> ou d’un autre système.</p>
+        <h2 id="render-fit-title">Ajoutez la production et la signature de documents en complément de vos fiches.</h2>
+        <p>Votre application peut demander au service Render un document produit et signé. Pour la production seule, Render s’utilise par une commande exécutée en local ou s’intègre dans un logiciel. Les données peuvent venir de <a href="/fr/products/base-registry/">Base Registry Engine</a> ou d’un autre système.</p>
       </div>
       <dl>
-        <dt>Votre institution définit le document et le cachet</dt><dd>Convenez du contenu, du modèle et du moment où le service peut le délivrer. Pour la signature, configurez le certificat, les applications autorisées et une clé conservée dans Vault ou OpenBao Transit. L’horodatage utilise l’autorité que vous choisissez.</dd>
-        <dt>L’application conserve et partage le résultat</dt><dd>Votre mise en œuvre conserve le PDF et ses empreintes numériques d’identification, puis fournit le téléchargement, l’impression ou l’accès aux documents dont les personnes ont besoin.</dd>
-        <dt>Choisissez qui l’exploite</dt><dd>Votre institution ou un prestataire désigné peut héberger et exploiter Render, ou nous pouvons l’exploiter pour vous. Nous établissons un devis distinct pour l’hébergement et l’exploitation dans la proposition.</dd>
+        <dt>Votre institution définit le document et le cachet</dt><dd>Il s’agit de convenir du contenu, du modèle et du moment où le service peut délivrer le document. Pour la signature, la configuration porte sur le certificat, les applications autorisées et une clé conservée dans Vault ou OpenBao Transit. L’horodatage fait appel à l’autorité de votre choix.</dd>
+        <dt>L’application conserve et partage le résultat</dt><dd>Votre mise en œuvre conserve le PDF et ses empreintes numériques d’identification, puis offre aux usagers le mode d’accès nécessaire : téléchargement, impression ou consultation du document.</dd>
+        <dt>Choisissez qui l’exploite</dt><dd>Votre institution ou un prestataire désigné peut héberger et exploiter Render, ou nous pouvons l’exploiter pour vous. L’hébergement et l’exploitation font l’objet d’un devis distinct dans notre proposition.</dd>
       </dl>
     </div>
   </section>
@@ -53,7 +53,7 @@ const product = products.find((p) => p.key === 'render')!;
       <div class="section-heading compact">
         <p class="eyebrow">Évaluer le logiciel</p>
         <h2 id="render-developers-title">Produisez votre premier document.</h2>
-        <p>Le tutoriel produit une lettre en local, puis demande un PDF par l’interface du service. La <a href="https://docs.registrystack.org/start/registry-render/" hreflang="en">présentation de Render (en anglais)</a> explique le produit ; le <a href="https://docs.registrystack.org/operate/registry-render/" hreflang="en">guide d’exploitation (en anglais)</a> explique comment l’exploiter. Suivez la <a href="https://docs.registrystack.org/operate/registry-render/#seal-documents" hreflang="en">configuration de la signature (en anglais)</a> pour apposer un cachet électronique PAdES, avec ou sans horodatage. Le guide comprend un cachet d’essai à évaluer en local et les exigences relatives à la clé de signature de votre institution.</p>
+        <p>Le tutoriel produit une lettre en local, puis demande un PDF par l’interface du service. La <a href="https://docs.registrystack.org/start/registry-render/" hreflang="en">présentation de Render (en anglais)</a> présente le produit ; le <a href="https://docs.registrystack.org/operate/registry-render/" hreflang="en">guide d’exploitation (en anglais)</a> explique comment l’exploiter. Suivez la <a href="https://docs.registrystack.org/operate/registry-render/#seal-documents" hreflang="en">configuration de la signature (en anglais)</a> pour apposer un cachet électronique PAdES, avec ou sans horodatage. Le guide comprend un cachet d’essai à évaluer en local et les exigences relatives à la clé de signature de votre institution.</p>
         <p><a class="inline-cta" href={product.tutorialHref} hreflang="en">{product.tutorialLabel} →</a></p>
       </div>
     </div>

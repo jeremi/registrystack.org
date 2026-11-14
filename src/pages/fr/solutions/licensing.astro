@@ -18,7 +18,7 @@ const steps: WeekStep[] = [
     when: 'Demande déposée',
     product: 'Votre service de demandes',
     title: 'Un titulaire demande le renouvellement de son autorisation',
-    text: 'Le titulaire dépose le formulaire de renouvellement et les pièces justificatives par le canal de service que fournit votre autorité. Cela crée une demande ; la fiche d’autorisation n’est pas modifiée.',
+    text: 'Le titulaire dépose le formulaire de renouvellement et les pièces justificatives par le canal que votre autorité met à sa disposition. Une demande est ainsi créée, sans que la fiche d’autorisation soit modifiée.',
     card: { kind: 'record', recordType: 'Demande de renouvellement', recordId: 'APP-2093', icon: 'person', fields: [
       { label: 'Autorisation', value: 'LIC-2093' },
       { label: 'Demande', value: 'Renouvellement' },
@@ -29,7 +29,7 @@ const steps: WeekStep[] = [
     when: 'Examen et décision',
     ...weekProduct('casework'),
     title: 'Un agent examine le renouvellement',
-    text: 'Un agent demande une copie plus lisible d’un certificat. Le service de demandes accepte le document de remplacement et renvoie la demande modifiée vers un nouvel examen. L’agent approuve la demande complète.',
+    text: 'Un agent demande une copie plus lisible d’un certificat. Le service de demandes accepte le document de remplacement et soumet la demande modifiée à un nouvel examen. L’agent approuve la demande, désormais complète.',
     card: { kind: 'history', items: [
       { state: 'Examen 1', note: 'Terminé : modifications demandées' },
       { state: 'Service de demandes', note: 'Remplacement accepté et redéposé' },
@@ -40,7 +40,7 @@ const steps: WeekStep[] = [
     when: 'Fiche d’autorisation mise à jour',
     ...weekProduct('base-registry'),
     title: 'Une nouvelle période de validité est enregistrée',
-    text: 'Après l’approbation, un agent habilité ou un service connecté autorisé enregistre une nouvelle période de validité pour l’autorisation. Les périodes précédentes restent dans son historique.',
+    text: 'Une fois la demande approuvée, un agent habilité ou un service connecté autorisé enregistre une nouvelle période de validité. Les périodes précédentes restent dans l’historique de l’autorisation.',
     card: { kind: 'record', recordType: 'Période de validité', recordId: 'TERM-2093-07', icon: 'person', fields: [
       { label: 'Valide jusqu’au', value: '31/10/2029' },
       { label: 'Enregistrée par', value: 'Service des autorisations' },
@@ -51,7 +51,7 @@ const steps: WeekStep[] = [
     when: 'Vérification par l’employeur',
     ...weekProduct('evidence-gateway'),
     title: 'Un employeur vérifie le statut enregistré de l’autorisation',
-    text: 'Un employeur habilité à faire cette vérification demande si l’autorisation figure au registre comme en règle, et reçoit une réponse signée numériquement. La demande et les pièces justificatives ne sont pas communiquées.',
+    text: 'Un employeur habilité à faire cette vérification demande si le registre indique l’autorisation comme en règle ; il reçoit une réponse signée numériquement. Ni la demande ni les pièces justificatives ne lui sont communiquées.',
     card: { kind: 'answer', fieldLabel: 'Autorisation en règle', value: 'Oui', recipient: 'Service des ressources humaines de l’employeur', issuer: 'Autorité de délivrance' },
   },
 ];
@@ -59,7 +59,7 @@ const steps: WeekStep[] = [
 <Solution
   area={area}
   heading="Gérez les demandes d’autorisation et leurs renouvellements."
-  description="Gardez reliés les demandes d’autorisation, les décisions des agents et la fiche d’autorisation. Adaptez le service aux règles de votre autorité, conservez l’historique des renouvellements et des suspensions, et laissez les services autorisés vérifier le statut d’une autorisation sans recevoir le dossier de demande."
+  description="Les demandes d’autorisation, les décisions des agents et la fiche d’autorisation restent reliées. Vous adaptez le service aux règles de votre autorité, conservez l’historique des renouvellements et des suspensions, et permettez aux services autorisés de vérifier le statut d’une autorisation sans recevoir le dossier de demande."
 >
   <section class="section" id="example" aria-labelledby="licensing-example-title">
     <div class="section-inner">
@@ -74,7 +74,7 @@ const steps: WeekStep[] = [
         caption="Renouvellement d’une autorisation, de la demande à la vérification du statut par un employeur, en passant par l’examen et la nouvelle période de validité. Les fiches sont fictives."
         steps={steps}
       />
-      <p>Pour les services d’autorisation locaux, voir <a href="/fr/solutions/local-government/">des exemples d’emplacements de marché, de locaux alimentaires et d’enregistrement des logements loués</a>.</p>
+      <p>Pour les autorisations délivrées à l’échelon local, consultez <a href="/fr/solutions/local-government/">des exemples pour les emplacements de marché, les locaux alimentaires et l’enregistrement des logements loués</a>.</p>
     </div>
   </section>
   <section class="section section-muted" id="what-changes" aria-labelledby="licensing-change-title">
@@ -84,8 +84,8 @@ const steps: WeekStep[] = [
         <h2 id="licensing-change-title">Gardez un historique clair des autorisations.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Les demandeurs peuvent remplacer une pièce justificative manquante</h3><p>Lorsqu’un agent demande des modifications, le service de demandes indique ce qui manque. Le demandeur peut fournir un remplacement et déposer la demande modifiée pour un nouvel examen. L’institution décide des pièces que ses règles exigent.</p><a class="inline-cta" href="/fr/customization/">Comment un service est adapté <span aria-hidden="true">→</span></a></article>
-        <article><h3>Une suspension n’écrase jamais l’autorisation qu’elle suspend</h3><p>Chaque renouvellement, suspension ou révocation fait l’objet d’une inscription distincte, avec l’auteur de l’enregistrement et la date. Si une suspension est levée, les deux décisions restent dans l’ordre.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre conserve son historique <span aria-hidden="true">→</span></a></article>
+        <article><h3>Les demandeurs peuvent remplacer une pièce justificative manquante</h3><p>Lorsqu’un agent demande des modifications, le service de demandes indique ce qui manque. Le demandeur peut alors fournir une pièce de remplacement et redéposer sa demande pour un nouvel examen. C’est l’institution qui fixe, dans ses règles, les pièces exigées.</p><a class="inline-cta" href="/fr/customization/">Comment un service est adapté <span aria-hidden="true">→</span></a></article>
+        <article><h3>Une suspension n’écrase jamais l’autorisation qu’elle suspend</h3><p>Chaque renouvellement, suspension ou révocation fait l’objet d’une inscription distincte, qui indique qui l’a enregistrée et quand. Lorsqu’une suspension est levée, les deux décisions restent consignées dans leur ordre.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre conserve son historique <span aria-hidden="true">→</span></a></article>
         <article><h3>Les agents décident ; le personnel habilité met à jour le registre</h3><p>Un agent consigne la décision d’autorisation. La fiche d’autorisation ne change que lorsqu’un agent habilité ou un service connecté autorisé applique la modification approuvée. La décision et l’historique de la fiche restent consultables pour un examen ultérieur.</p><a class="inline-cta" href="/fr/solutions/review-changes/">Comment fonctionne l’examen par les agents <span aria-hidden="true">→</span></a></article>
       </div>
     </div>
@@ -95,31 +95,31 @@ const steps: WeekStep[] = [
     items={[
       {
         q: 'Cela remplace-t-il notre système de gestion des autorisations ?',
-        a: 'Cela dépend de ce qui tient votre registre aujourd’hui. Si un système de demandes reçoit les demandes, encaisse les frais et délivre l’autorisation, ce système reste en place et consigne le résultat dans le registre. Si votre registre est un tableur, ou vit dans une application que vous retirez, Base Registry Engine peut être le registre, et votre équipe planifie la reprise des fiches existantes.',
-        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’intègre aux systèmes existants (en anglais)' },
+        a: 'Tout dépend de l’outil qui tient votre registre aujourd’hui. Si un système de demandes reçoit les demandes, encaisse les frais et délivre l’autorisation, il reste en place et consigne le résultat dans le registre. Si votre registre est un tableur, ou se trouve dans une application que vous abandonnez, Base Registry Engine peut devenir le registre ; votre équipe planifie alors la reprise des fiches existantes.',
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il fonctionne aux côtés des systèmes existants (en anglais)' },
       },
       {
         q: 'Un employeur peut-il vérifier une autorisation sans compte sur notre système ?',
-        a: 'Deux cas. Un particulier ou un employeur qui consulte une seule autorisation utilise le registre public que publie votre application en vertu de votre législation. Un service qui doit vérifier des autorisations dans le cadre de son propre processus pose à votre registre une question que vous avez convenu de traiter, par exemple si une autorisation figure au registre comme active pour une catégorie, et reçoit cette réponse, et rien d’autre. Votre institution décide quels services peuvent poser des questions, et lesquelles.',
+        a: 'Il faut distinguer deux cas. Un particulier ou un employeur qui recherche une autorisation précise consulte le registre public que votre application publie en vertu de votre législation. Un service qui vérifie des autorisations dans le cadre de ses propres procédures pose à votre registre une question que vous avez accepté de traiter, par exemple si une autorisation y figure comme active pour une catégorie donnée ; il reçoit cette réponse, et rien de plus. Votre institution décide quels services peuvent interroger le registre, et sur quelles questions.',
         link: { href: '/solutions/check-a-fact/', label: 'Comment un service vérifie une information' },
       },
       {
         q: 'Un professionnel peut-il recevoir une attestation dans un portefeuille numérique ?',
-        a: 'Oui, dans le cadre d’une mise en œuvre avec un portefeuille compatible et un service destinataire. Evidence Gateway peut délivrer une attestation vérifiable contenant le statut de l’autorisation enregistré par le registre. La mise en œuvre doit tester le parcours complet et définir la durée de validité de l’attestation et le moment où une nouvelle est nécessaire.',
+        a: 'Oui, dans le cadre d’une mise en œuvre avec un portefeuille compatible et un service destinataire. Evidence Gateway peut délivrer une attestation vérifiable contenant le statut de l’autorisation enregistré par le registre. La mise en œuvre doit tester le parcours complet, fixer la durée de validité de l’attestation et préciser à quel moment une nouvelle attestation devient nécessaire.',
         link: { href: '/solutions/verifiable-credentials/', label: 'Découvrir les attestations vérifiables' },
       },
       {
-        q: 'Cela fournit-il une page de recherche publique ?',
-        a: 'Oui, si l’autorité en veut une. Une mise en œuvre peut inclure une page de recherche publique accessible, qui affiche les informations d’autorisation permises tirées du registre. La proposition précise si elle est incluse.',
+        q: 'Peut-on disposer d’une page de recherche publique ?',
+        a: 'Oui, si l’autorité le souhaite. La mise en œuvre peut comprendre une page de recherche publique accessible, qui affiche, à partir du registre, les informations d’autorisation dont la publication est permise. La proposition précise si elle est incluse.',
       },
       {
         q: 'Qui peut consulter une fiche d’autorisation ?',
-        a: 'Votre institution décide qui peut enregistrer une autorisation, enregistrer une suspension ou consulter une autorisation, et pour quel motif. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit pour l’ensemble du registre et des applications connectées est convenue lors de la mise en œuvre.',
+        a: 'Votre institution décide qui peut enregistrer une autorisation, enregistrer une suspension ou consulter une autorisation, et pour quel motif. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit du registre et des applications connectées est convenue lors de la mise en œuvre.',
         link: { href: '/security/', label: 'Qui est responsable de quoi' },
       },
       {
         q: 'Comment une équipe technique peut-elle évaluer le logiciel ?',
-        a: 'Commencez par les tutoriels des composants. Ils utilisent des données d’exemple pour tester le comportement de base ; ils ne constituent pas une application complète de gestion des autorisations. Votre mise en œuvre doit relier le service de demandes, l’examen par les agents et la mise à jour du registre, et tester le parcours complet.',
+        a: 'Commencez par les tutoriels des composants : ils testent les fonctions de base avec des données d’exemple, mais ne forment pas une application complète de gestion des autorisations. Votre mise en œuvre doit relier le service de demandes, l’examen par les agents et la mise à jour du registre, et tester le parcours complet.',
         link: { href: '/#developers', label: 'Évaluation technique' },
       },
     ]}
@@ -127,10 +127,10 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Travaillons ensemble"
     heading="Parlons de votre service."
-    body="Dites-nous ce que les demandeurs et les agents doivent pouvoir faire, qui prend les décisions d’autorisation et quels systèmes doivent être connectés. Nous pouvons identifier une configuration de départ utile et définir avec vous les écrans, l’identification, l’hébergement et les intégrations."
+    body="Indiquez-nous ce que les demandeurs et les agents doivent pouvoir faire, qui décide des autorisations et quels systèmes connecter. Nous pouvons repérer une configuration de départ utile et définir avec vous les écrans, l’identification, l’hébergement et les intégrations."
     primaryLabel="Décrivez votre service"
     primaryHref={describeServiceHref(area.name, 'fr')}
-    note="Le cœur du logiciel est open source (Apache-2.0). Votre équipe, un prestataire que vous désignez ou nous pouvons le mettre en œuvre et l’exploiter. L’hébergement et l’exploitation font l’objet d’un devis distinct."
+    note="Le cœur du logiciel est open source (Apache-2.0). Sa mise en œuvre et son exploitation peuvent être assurées par votre équipe, par un prestataire que vous désignez ou par nous. Nous établissons un devis distinct pour l’hébergement et l’exploitation."
     emphasis="docs"
   />
 </Solution>

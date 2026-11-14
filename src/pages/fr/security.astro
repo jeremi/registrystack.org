@@ -21,7 +21,7 @@ const properties = [
   {
     title: 'Autoriser les modifications du registre',
     body:
-      'Base Registry Engine vérifie qui peut modifier une fiche et si la modification respecte les règles que vous avez configurées. Il conserve les versions, de sorte que les utilisateurs autorisés peuvent consulter l’historique par l’intermédiaire de votre application.',
+      'Base Registry Engine vérifie qui peut modifier une fiche et si la modification respecte les règles que vous avez configurées. Il conserve les versions successives des fiches : les utilisateurs autorisés peuvent en consulter l’historique depuis votre application.',
   },
   {
     title: 'Limiter ce que reçoit chaque service',
@@ -31,12 +31,12 @@ const properties = [
   {
     title: 'Vérifier l’origine d’une réponse',
     body:
-      'Evidence Gateway signe ses réponses afin que le service destinataire puisse vérifier l’émetteur, l’intégrité, l’usage prévu et la validité. Le propriétaire de la source reste responsable de l’exactitude des informations ; le service destinataire prend sa propre décision.',
+      'Evidence Gateway signe ses réponses : le service destinataire peut ainsi en vérifier l’émetteur, l’intégrité, l’usage prévu et la validité. Le propriétaire de la source reste responsable de l’exactitude des informations ; le service destinataire prend sa propre décision.',
   },
   {
-    title: 'Garder les décisions humaines imputables',
+    title: 'Attribuer chaque décision humaine à son auteur',
     body:
-      'Registry Casework consigne qui a examiné chaque élément et qui a décidé. L’application d’une modification est une étape distincte. Le registre vérifie l’autorisation de la personne ou du service qui l’applique et consigne qui a effectué la modification.',
+      'Registry Casework consigne qui a examiné chaque élément et qui a pris la décision. La modification est appliquée lors d’une étape distincte : le registre vérifie alors que la personne ou le service qui l’applique y est autorisé, et consigne l’auteur de la modification.',
   },
 ];
 
@@ -44,12 +44,12 @@ const responsibilities = [
   {
     title: 'Votre organisation fixe les règles',
     body:
-      'Vous êtes propriétaire des fiches et vous décidez qui peut les tenir à jour, quels services peuvent demander des informations, et dans quel but. Votre équipe définit les règles, examine les autorisations configurées et décide de l’usage des informations renvoyées.',
+      'Les fiches vous appartiennent : vous décidez qui peut les tenir à jour, quels services peuvent demander des informations et dans quel but. Votre équipe définit les règles, examine les autorisations configurées et décide de l’usage des informations renvoyées.',
   },
   {
-    title: 'Votre exploitant fait fonctionner le déploiement',
+    title: 'Votre exploitant assure le fonctionnement du logiciel',
     body:
-      'Votre organisation, ou un exploitant qu’elle désigne, fait fonctionner le logiciel dans un environnement qu’elle maîtrise. L’exploitant gère l’accès à la base de données et aux sources, les identifiants, les journaux d’audit, la supervision, les mises à jour, les sauvegardes et la réponse aux incidents. Votre équipe garde la maîtrise des systèmes auxquels le déploiement se connecte.',
+      'Votre organisation, ou un exploitant qu’elle désigne, exploite le logiciel dans un environnement placé sous son contrôle. L’exploitant gère l’accès à la base de données et aux sources, les identifiants, les journaux d’audit, la supervision, les mises à jour, les sauvegardes et la réponse aux incidents. Votre équipe garde la maîtrise des systèmes auxquels le déploiement se connecte.',
   },
 ];
 
@@ -57,12 +57,12 @@ const evidence = [
   {
     label: 'Modèle de sécurité et responsabilités (en anglais)',
     href: securityDocsHref,
-    description: 'Les limites de confiance, les vérifications de chaque demande et les contrôles que fournit votre exploitant.',
+    description: 'Les frontières de confiance, les vérifications appliquées à chaque demande et les contrôles que met en place votre exploitant.',
   },
   {
     label: 'Auto-évaluation de sécurité (en anglais)',
     href: 'https://docs.registrystack.org/security/self-assessment/',
-    description: 'Des questions contrôle par contrôle et des références de mise en œuvre pour un évaluateur.',
+    description: 'Pour l’évaluateur : des questions, contrôle par contrôle, et des références de mise en œuvre.',
   },
   {
     label: 'Vérification des versions (en anglais)',
@@ -90,11 +90,11 @@ const evidence = [
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Sécurité</p>
-          <h1 id="security-hero-title">Gardez l’autorité et la responsabilité au sein de votre organisation.</h1>
+          <h1 id="security-hero-title">Votre organisation garde l’autorité et la responsabilité.</h1>
           <p class="hero-lead">
             Registry Stack applique les règles d’accès, de modification, d’examen et de
-            communication que votre organisation configure. Votre équipe de gouvernance définit
-            ces règles, et votre exploitant protège le déploiement et ses fiches.
+            communication configurées par votre organisation. Vos responsables de la gouvernance
+            définissent ces règles ; votre exploitant protège le déploiement et les fiches qu’il contient.
           </p>
         </div>
       </div>
@@ -104,10 +104,10 @@ const evidence = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">Ce que fait le logiciel</p>
-          <h2 id="security-properties-title">Rendre chaque modification et chaque communication traçables.</h2>
+          <h2 id="security-properties-title">Pouvoir rendre compte de chaque modification et de chaque communication.</h2>
           <p>
-            Base Registry Engine, Evidence Gateway et Registry Casework ont des responsabilités
-            distinctes et peuvent être utilisés indépendamment. Chacun applique sa propre limite d’accès.
+            Base Registry Engine, Evidence Gateway et Registry Casework ont des rôles distincts et
+            peuvent être utilisés indépendamment ; chacun fait respecter son propre périmètre d’accès.
           </p>
         </div>
         <div class="security-properties">
@@ -125,7 +125,7 @@ const evidence = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">Responsabilité de l’organisation</p>
-          <h2 id="security-shared-title">Attribuer explicitement les responsabilités de politique et d’exploitation.</h2>
+          <h2 id="security-shared-title">Désigner explicitement qui fixe les règles et qui exploite le logiciel.</h2>
           <p>
             Les contrôles du logiciel mettent en œuvre une partie du modèle de sécurité. La
             gouvernance, la qualité des sources, la gestion des identités, l’infrastructure et les
@@ -142,7 +142,7 @@ const evidence = [
         </div>
         <p class="security-note">
           Votre équipe technique limite les comptes de base de données, les connexions aux
-          sources et les accès réseau au travail dont chaque déploiement a besoin. La
+          sources et les accès réseau à ce qu’exige chaque déploiement. La
           documentation de sécurité tenue à jour (en anglais) explique le modèle de menaces, la
           protection des serveurs, la gestion des clés et la durée de conservation des journaux d’audit.
         </p>
@@ -152,13 +152,13 @@ const evidence = [
     <section class="section" aria-labelledby="security-verify-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">Pour l’examen par la gouvernance, la sécurité et les équipes techniques</p>
+          <p class="eyebrow">Pour un examen de gouvernance, de sécurité ou technique</p>
           <h2 id="security-verify-title">Examinez les contrôles avant d’adopter le logiciel.</h2>
           <p>
             Vos évaluateurs peuvent consulter le code source, vérifier les fichiers des versions,
-            examiner le modèle de sécurité et suivre des tutoriels locaux avec des données
-            d’exemple. La documentation tenue à jour (en anglais) détaille davantage les
-            menaces, les responsabilités d’exploitation et les limites connues.
+            examiner le modèle de sécurité et suivre des tutoriels en local avec des données
+            d’exemple. La documentation tenue à jour (en anglais) traite plus en détail des
+            menaces, des responsabilités d’exploitation et des limites connues.
           </p>
         </div>
         <div class="security-properties">
@@ -179,16 +179,16 @@ const evidence = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">Divulgation coordonnée</p>
-          <h2 id="security-report-title">Signaler un problème de sécurité de manière confidentielle.</h2>
+          <h2 id="security-report-title">Signalez un problème de sécurité de façon confidentielle.</h2>
           <p>
-            Utilisez le signalement privé de vulnérabilités de GitHub (en anglais) pour que le
-            problème puisse être examiné avant d’être rendu public, dans le cadre d’une
+            Passez par le signalement privé de vulnérabilités de GitHub (en anglais) : le problème
+            pourra ainsi être examiné avant d’être rendu public, puis traité dans le cadre d’une
             divulgation coordonnée.
           </p>
         </div>
         <div class="solution-choice-row">
-          <a class="button button-primary" href={securityReportHref} hreflang="en">Signaler une vulnérabilité (en anglais)</a>
-          <a class="button button-secondary" href={securityDocsHref} hreflang="en">Lire la documentation de sécurité (en anglais)</a>
+          <a class="button button-primary" href={securityReportHref} hreflang="en">Signalez une vulnérabilité (en anglais)</a>
+          <a class="button button-secondary" href={securityDocsHref} hreflang="en">Consultez la documentation de sécurité (en anglais)</a>
         </div>
         <p class="security-disclosure-extra">
           <a class="inline-cta" href="/.well-known/security.txt" hreflang="en">Coordonnées de signalement lisibles par machine dans security.txt (en anglais) &rarr;</a>

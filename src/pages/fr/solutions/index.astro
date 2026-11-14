@@ -8,7 +8,7 @@ import { solutionAreas, registerFamilies } from '../../../data/fr/solutions';
 import { describeServiceHref } from '../../../data/contact';
 
 const pageTitle = 'Solutions pour les registres et les services publics | Registry Stack';
-const pageDescription = 'Trouvez le registre ou le service public proche des missions de votre institution, voyez ce que peuvent faire demandeurs et agents, et choisissez la suite.';
+const pageDescription = 'Trouvez le registre ou le service public proche de vos missions, découvrez ce que demandeurs et agents peuvent y faire, puis choisissez la suite.';
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 const fr = (href: string) => `/fr${href}`;
 ---
@@ -20,7 +20,7 @@ const fr = (href: string) => `/fr${href}`;
       <div class="hero-inner"><div class="hero-copy">
         <p class="eyebrow">Solutions</p>
         <h1 id="solutions-title">Registres et services</h1>
-        <p class="hero-lead">Parcourez les domaines de registres, ou voyez comment relier des services, examiner des demandes et délivrer des attestations.</p>
+        <p class="hero-lead">Parcourez les solutions par domaine de registre, ou découvrez comment relier des services, examiner des demandes et délivrer des attestations.</p>
       </div></div>
     </section>
 
@@ -63,14 +63,14 @@ const fr = (href: string) => `/fr${href}`;
     <section class="section technical-handoff" id="products" aria-labelledby="products-title">
       <div class="section-inner">
         <h2 id="products-title">Vous évaluez le logiciel ?</h2>
-        <p>Retrouvez le détail des composants et les tutoriels locaux dans le <a href="/fr/#developers">guide d’évaluation technique</a>. Vous pouvez adopter les composants open source avec votre propre équipe ou avec un autre prestataire.</p>
+        <p>Retrouvez le détail des composants et les tutoriels en local dans le <a href="/fr/#developers">guide d’évaluation technique</a>. Vous pouvez adopter les composants open source avec votre propre équipe ou avec un autre prestataire.</p>
       </div>
     </section>
 
     <DocsHandoff
       eyebrow="Décrivez votre service"
       heading="Parlons d’un registre ou d’un service."
-      body="Dites-nous de quelles fiches, de quelles tâches des agents ou de quelles vérifications d’informations vous avez besoin, et quels systèmes doivent être reliés. Nous pouvons vous aider à évaluer si la solution convient et à délimiter la mise en œuvre."
+      body="Indiquez-nous les fiches, les tâches des agents ou les vérifications d’informations nécessaires, ainsi que les systèmes à relier. Nous pouvons vous aider à évaluer si la solution convient et à cadrer la mise en œuvre."
       primaryLabel="Décrivez votre service"
       primaryHref={describeServiceHref(undefined, 'fr')}
     />

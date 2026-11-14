@@ -10,7 +10,7 @@ import { askQuestionHref, proposalHref } from '../../data/contact';
 // ni date peut quand même demander une proposition.
 const brief = [
   'Votre organisation et votre fonction.',
-  'Le service dont vous avez besoin, les personnes qui l’utiliseront et ce qu’il doit permettre de faire.',
+  'Le service recherché, ses futurs utilisateurs et ce qu’il doit permettre de faire.',
   'Les fiches ou les systèmes à connecter, et les points sur lesquels vous souhaitez de l’aide.',
   'Le calendrier : la date de démarrage souhaitée et toute échéance de financement (facultatif).',
   'La fourchette de budget et la devise, si vous pouvez les indiquer (facultatif).',
@@ -18,7 +18,7 @@ const brief = [
 const proposalRoute = proposalHref('fr');
 ---
 
-<Base title="Mise en œuvre et tarifs | Registry Stack" description="Découvrez la mise en œuvre de Registry Stack et les prix de départ d’un registre pilote et de l’assistance technique annuelle. Demandez une proposition.">
+<Base title="Mise en œuvre et tarifs | Registry Stack" description="Déroulement de la mise en œuvre et prix de départ : registre pilote, assistance technique annuelle. Parlez-nous de votre service et demandez une proposition.">
   <SiteHeader current="pricing" />
   <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="pricing-title">
@@ -28,8 +28,8 @@ const proposalRoute = proposalHref('fr');
           <h1 id="pricing-title">Mise en œuvre et assistance technique pour votre service.</h1>
           <p class="hero-lead">Configurez et testez un service avec nous, ou bénéficiez d’une assistance technique annuelle pendant que votre équipe mène la mise en œuvre.</p>
           <div class="hero-actions" aria-label="Actions principales">
-            <a class="button button-primary" href="#scope">Découvrir les offres payantes</a>
-            <a class="button button-secondary" href="#self-service">Utiliser le logiciel vous-même</a>
+            <a class="button button-primary" href="#scope">Découvrez les offres payantes</a>
+            <a class="button button-secondary" href="#self-service">Utilisez le logiciel vous-même</a>
           </div>
         </div>
       </div>
@@ -49,8 +49,8 @@ const proposalRoute = proposalHref('fr');
             <p class="starting-fee"><span>À partir de</span> <strong>20 000 $ US</strong></p>
             <p class="fee-basis">Par registre, pour un périmètre convenu par écrit</p>
             <p>Nous mettons en œuvre avec votre équipe un registre et son service, configurés selon vos règles et testés avec vos agents. La proposition indique si votre registre pilote fonctionne avec des données de test ou avec des fiches réelles.</p>
-            <h4>Ce dont nous convenons avant le début des travaux</h4>
-            <p>Nous convenons avec vous des écrans, de la connexion des utilisateurs, des interfaces avec d’autres systèmes, de la préparation des données, de l’hébergement et du transfert du service à votre équipe, de qui fait quoi et de la manière dont votre équipe évaluera le résultat. Le périmètre énumère la configuration, les tests, les instructions et le code propre au service que vous recevez, avec les conditions de licence et de maintenance.</p>
+            <h4>Ce qui est convenu avant le début des travaux</h4>
+            <p>Nous fixons avec vous les écrans, la connexion des utilisateurs, les interfaces avec d’autres systèmes, la préparation des données, l’hébergement et le transfert du service, la répartition des tâches et la façon dont votre équipe évaluera le résultat. Le périmètre énumère ce que vous recevez (configuration, tests, instructions et code propre au service), avec les conditions de licence et de maintenance.</p>
             <p>Le forfait dépend des étapes du service, des connexions, de la préparation des données et des travaux de déploiement. Voir <a href="#process">le déroulement de la mise en œuvre</a>.</p>
           </article>
           <article id="support" aria-labelledby="support-title">
@@ -62,7 +62,7 @@ const proposalRoute = proposalHref('fr');
             <p>Votre proposition indique les déploiements couverts, la façon de joindre l’assistance, les périodes où elle est disponible et les délais de réponse convenus.</p>
           </article>
         </div>
-        <p class="hosting-note">Nous pouvons aussi héberger et exploiter le service pour vous, sur devis séparé dans votre proposition.</p>
+        <p class="hosting-note">Nous pouvons aussi héberger et exploiter le service pour vous ; ce poste est chiffré à part dans votre proposition.</p>
         <p class="options-next"><a class="inline-cta" href="#inquiry">Parlons de vos besoins <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
@@ -72,12 +72,12 @@ const proposalRoute = proposalHref('fr');
         <div class="section-heading compact">
           <p class="eyebrow">Parlons de vos besoins</p>
           <h2 id="inquiry-title">Posez une question.</h2>
-          <p>Dites qui vous êtes et décrivez le service ou le besoin. Il n’est pas nécessaire d’avoir un budget pour poser une question.</p>
+          <p>Présentez-vous et décrivez le service ou le besoin. Vous pouvez poser une question même sans budget.</p>
           <a class="button button-secondary" href={askQuestionHref('Registry Stack', 'fr')} data-journey="ask-question">Posez une question</a>
         </div>
         <div class="pilot-brief" aria-labelledby="brief-title">
           <h3 id="brief-title">Demandez une proposition.</h3>
-          <p>Décrivez ce dont vous avez besoin pour que nous puissions proposer les travaux et leur coût. Indiquez ces points dans votre demande.</p>
+          <p>Décrivez vos besoins pour que nous puissions vous proposer des travaux et en chiffrer le coût. Précisez les points suivants dans votre demande.</p>
           <ol>
             {brief.map((item) => <li>{item}</li>)}
           </ol>
@@ -95,9 +95,9 @@ const proposalRoute = proposalHref('fr');
           <p class="eyebrow">Déroulement de la mise en œuvre</p>
           <h2 id="process-title">Comment se déroule la mise en œuvre</h2>
           <ol class="next-steps">
-            <li>Parlons de vos besoins. Nous examinons votre service et revenons vers vous avec nos questions.</li>
-            <li>Nous convenons par écrit avec vous du périmètre, du rôle de chacun et d’un forfait fixe, dans une proposition que votre service de passation des marchés peut examiner.</li>
-            <li>Configuration et tests avec votre équipe. Nous utilisons l’IA pour rédiger la configuration et les cas de test ; votre équipe examine et approuve chaque modification. Le service configuré n’a besoin d’aucun modèle d’IA pour fonctionner. <a href="/fr/customization/">Voir comment nous utilisons l’IA</a>.</li>
+            <li>Échange sur vos besoins. Nous examinons votre service et revenons vers vous avec nos questions éventuelles.</li>
+            <li>Accord écrit sur le périmètre, le rôle de chacun et un forfait fixe, dans une proposition que votre service des marchés peut examiner.</li>
+            <li>Configuration et tests avec votre équipe. Nous rédigeons la configuration et les cas de test avec l’aide de l’IA ; votre équipe examine et approuve chaque modification. Le service configuré n’a besoin d’aucun modèle d’IA pour fonctionner. <a href="/fr/customization/">Voir comment nous utilisons l’IA</a>.</li>
             <li>Transfert du service. Votre équipe ou un prestataire que vous désignez l’exploite, ou nous l’exploitons pour vous. L’<a href="#support">assistance technique annuelle</a> est disponible lorsque votre équipe l’exploite.</li>
           </ol>
         </div>
@@ -110,7 +110,7 @@ const proposalRoute = proposalHref('fr');
           <p class="eyebrow">Logiciel open source en autonomie</p>
           <h2 id="self-service-title">Utilisez Registry Stack avec votre propre équipe.</h2>
           <p>Le cœur du logiciel Registry Stack est disponible sous licence Apache 2.0, sans redevance de licence. Votre équipe peut l’évaluer, le mettre en œuvre et l’exploiter à l’aide de la documentation et du code source.</p>
-          <a class="button button-secondary" href="/fr/#developers">Découvrir les tutoriels pour développeurs</a>
+          <a class="button button-secondary" href="/fr/#developers">Découvrez les tutoriels pour développeurs</a>
         </div>
       </div>
     </section>

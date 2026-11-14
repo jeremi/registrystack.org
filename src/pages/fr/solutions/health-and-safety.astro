@@ -20,7 +20,7 @@ const steps: WeekStep[] = [
     when: 'Rapport d’inspection transmis',
     product: 'Votre application d’inspection',
     title: 'Un rapport d’inspection arrive',
-    text: 'Le service d’inspection donne à l’exploitant du centre de santé l’occasion de répondre, puis transmet le rapport d’inspection, la recommandation et la réponse pour décision. Le registre ne change pas encore.',
+    text: 'Le service d’inspection invite l’exploitant du centre de santé à répondre, puis transmet pour décision le rapport d’inspection, la recommandation et la réponse de l’exploitant. À ce stade, le registre ne change pas.',
     card: { kind: 'record', recordType: 'Rapport d’inspection', recordId: 'INS-4410', icon: 'data', fields: [
       { label: 'Établissement', value: 'Centre de santé HF-0732' },
       { label: 'Constat', value: 'Équipement non entretenu' },
@@ -42,7 +42,7 @@ const steps: WeekStep[] = [
     when: 'Fiche d’autorisation mise à jour',
     ...weekProduct('base-registry'),
     title: 'L’autorisation est suspendue et garde son historique',
-    text: 'L’agent consigne la suspension sur la fiche de l’autorisation. Le registre consigne qui a fait la modification. Si elle est levée plus tard, les deux décisions restent dans l’ordre.',
+    text: 'L’agent inscrit la suspension sur la fiche de l’autorisation ; le registre garde la trace de l’auteur de la modification. Si la suspension est levée plus tard, les deux décisions restent dans leur ordre.',
     card: { kind: 'record', recordType: 'Fiche de l’établissement', recordId: 'HF-0732', icon: 'business', fields: [
       { label: 'Autorisation de fonctionnement', value: 'Suspendue' },
       { label: 'Modifiée par', value: 'P. Castillo' },
@@ -53,15 +53,15 @@ const steps: WeekStep[] = [
     when: 'Vérification par l’assureur',
     ...weekProduct('evidence-gateway'),
     title: 'Un assureur vérifie le statut actuel',
-    text: 'Une caisse d’assurance maladie habilitée à faire cette vérification demande si le centre est autorisé à fonctionner et reçoit une réponse signée numériquement. Le rapport d’inspection et la réponse de l’exploitant ne sont pas communiqués.',
+    text: 'Une caisse d’assurance maladie habilitée à faire cette vérification demande si le centre est autorisé à fonctionner ; elle reçoit une réponse signée numériquement. Ni le rapport d’inspection ni la réponse de l’exploitant ne lui sont communiqués.',
     card: { kind: 'answer', fieldLabel: 'Autorisé à fonctionner', value: 'Non', recipient: 'Caisse d’assurance maladie', issuer: 'Registre des établissements de santé' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Tenez à jour les registres des établissements et de la sécurité."
-  description="Les agents peuvent examiner les constats d’inspection, consigner les décisions et appliquer les changements de statut autorisés. Les inspecteurs, les assureurs et les autres services autorisés peuvent utiliser le même code d’établissement et vérifier un statut précis sans recevoir le dossier réglementaire."
+  heading="Tenez à jour les registres d’établissements et de sécurité."
+  description="Les agents peuvent examiner les constats d’inspection, consigner les décisions et appliquer les changements de statut autorisés. Les inspecteurs, les assureurs et les autres services habilités peuvent utiliser le même code d’établissement et vérifier un statut précis sans recevoir le dossier réglementaire."
 >
   <section class="section" id="example" aria-labelledby="health-example-title">
     <div class="section-inner">
@@ -82,12 +82,12 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">Ce qui change pour votre institution</p>
-        <h2 id="health-change-title">Utilisez un seul code d’établissement et ne renvoyez que les informations de statut autorisées.</h2>
+        <h2 id="health-change-title">Utilisez un code d’établissement unique et ne communiquez que les informations de statut autorisées.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Convenez d’un code d’établissement que les systèmes connectés peuvent utiliser</h3><p>Les agents tiennent des fiches distinctes pour le prestataire de soins, ses établissements et leurs autorisations. La mise en œuvre relie les assureurs, les services d’inspection et les systèmes d’information sanitaire aux codes d’établissement convenus.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre tient une fiche <span aria-hidden="true">→</span></a></article>
-        <article><h3>Gardez les décisions antérieures lorsqu’une autorisation change</h3><p>Un renouvellement, une suspension ou un retrait est enregistré avec le nom de l’agent et la date. Les agents peuvent voir quel statut le registre indiquait le jour d’une inspection.</p><a class="inline-cta" href="/fr/solutions/review-changes/">Comment une décision parvient au registre <span aria-hidden="true">→</span></a></article>
-        <article><h3>Publiez des avis et restreignez l’accès aux rapports d’inspection</h3><p>Un avis approuvé de rupture de stock d’un médicament peut être public. Un rapport d’inspection peut rester réservé aux agents, tandis qu’un service autorisé reçoit seulement le statut de l’établissement qu’il a le droit de vérifier.</p><a class="inline-cta" href="/fr/security/">Qui est responsable de quoi <span aria-hidden="true">→</span></a></article>
+        <article><h3>Convenez d’un code d’établissement utilisable par les systèmes connectés</h3><p>Les agents tiennent des fiches distinctes pour le prestataire de soins, ses établissements et leurs autorisations. La mise en œuvre relie les assureurs, les services d’inspection et les systèmes d’information sanitaire aux codes d’établissement convenus.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre tient une fiche <span aria-hidden="true">→</span></a></article>
+        <article><h3>Gardez les décisions antérieures lorsqu’une autorisation change</h3><p>Un renouvellement, une suspension ou un retrait est enregistré avec le nom de l’agent et la date. Les agents peuvent retrouver le statut qu’indiquait le registre le jour d’une inspection.</p><a class="inline-cta" href="/fr/solutions/review-changes/">Comment une décision parvient au registre <span aria-hidden="true">→</span></a></article>
+        <article><h3>Publiez des avis et restreignez l’accès aux rapports d’inspection</h3><p>Un avis de rupture de stock de médicament, une fois approuvé, peut être rendu public. Un rapport d’inspection peut rester réservé aux agents, tandis qu’un service autorisé reçoit seulement le statut de l’établissement qu’il a le droit de vérifier.</p><a class="inline-cta" href="/fr/security/">Qui est responsable de quoi <span aria-hidden="true">→</span></a></article>
       </div>
     </div>
   </section>
@@ -95,22 +95,22 @@ const steps: WeekStep[] = [
   <SolutionFaq
     items={[
       {
-        q: 'Cela contient-il des données de patients ou des données cliniques ?',
-        a: 'Les exemples présentés ici portent sur des registres réglementaires : établissements, essais cliniques, dispositifs, opérateurs et sources de rayonnements. Les soins cliniques et les dossiers de patients sortent du cadre des exemples de service présentés ici. Un avis concernant un médicament peut renvoyer au catalogue des médicaments existant.',
+        q: 'Ces registres contiennent-ils des données de patients ou des données cliniques ?',
+        a: 'Les exemples de cette page portent sur des registres réglementaires : établissements, essais cliniques, dispositifs, opérateurs et sources de rayonnements. Les soins cliniques et les dossiers de patients n’entrent pas dans ces exemples de service. Un avis concernant un médicament peut renvoyer au catalogue des médicaments existant.',
       },
       {
         q: 'Cela remplace-t-il notre système ?',
-        a: 'Cela dépend de ce qui tient votre registre aujourd’hui. Si un système d’autorisation reçoit les demandes, encaisse les frais et délivre l’autorisation, ce système reste en place et consigne le résultat dans le registre. Si votre registre est un tableur, ou vit dans une application que vous retirez, Base Registry Engine peut être le registre, et votre équipe planifie la reprise des fiches existantes.',
-        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’intègre aux systèmes existants (en anglais)' },
+        a: 'Tout dépend de l’outil qui tient votre registre aujourd’hui. Si un système d’autorisation reçoit les demandes, encaisse les frais et délivre l’autorisation, il reste en place et consigne le résultat dans le registre. Si votre registre est un tableur, ou se trouve dans une application que vous abandonnez, Base Registry Engine peut devenir le registre ; votre équipe planifie alors la reprise des fiches existantes.',
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il fonctionne aux côtés des systèmes existants (en anglais)' },
       },
       {
         q: 'Un assureur peut-il vérifier un centre de santé sans compte sur notre système ?',
-        a: 'Le service de l’assureur pose à votre registre une question que vous avez convenu de traiter, par exemple si l’autorisation d’un centre de santé est en cours de validité, et reçoit cette réponse, et rien d’autre. Votre institution décide quels services peuvent poser des questions, et lesquelles.',
+        a: 'Le service de l’assureur pose à votre registre une question que vous avez accepté de traiter, par exemple si l’autorisation d’un centre de santé est en cours de validité ; il reçoit cette réponse, et rien de plus. Votre institution décide quels services peuvent interroger le registre, et sur quelles questions.',
         link: { href: '/solutions/check-a-fact/', label: 'Comment un service vérifie une information' },
       },
       {
         q: 'Qui peut voir une fiche, et que voit le public ?',
-        a: 'Votre institution décide, fiche par fiche et rôle par rôle : ce que le public peut lire, qui peut consigner une autorisation et qui peut en consulter une. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit pour l’ensemble du registre et des applications connectées est convenue lors de la mise en œuvre.',
+        a: 'Votre institution décide, fiche par fiche et rôle par rôle : ce que le public peut lire, qui peut consigner une autorisation et qui peut la consulter. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit du registre et des applications connectées est convenue lors de la mise en œuvre.',
         link: { href: '/security/', label: 'Qui est responsable de quoi' },
       },
       ...sharedFamilyFaq,
@@ -119,10 +119,10 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Travaillons ensemble"
     heading="Parlons de votre service."
-    body="Décrivez les établissements, les opérateurs ou les produits à enregistrer, qui signale les changements, qui décide et quels systèmes ont besoin du statut qui en résulte. Nous pouvons vous montrer comment Registry Stack pourrait s’intégrer."
+    body="Décrivez-nous les établissements, les opérateurs ou les produits à enregistrer, et indiquez qui signale les changements, qui décide et quels systèmes doivent connaître le statut qui en résulte. Nous pouvons vous montrer comment Registry Stack pourrait s’y intégrer."
     primaryLabel="Décrivez votre service"
     primaryHref={describeServiceHref(area.name, 'fr')}
-    note="Le cœur du logiciel est open source (Apache-2.0). Votre équipe, un prestataire que vous désignez ou nous pouvons le mettre en œuvre et l’exploiter. L’hébergement et l’exploitation font l’objet d’un devis distinct."
+    note="Le cœur du logiciel est open source (Apache-2.0). Sa mise en œuvre et son exploitation peuvent être assurées par votre équipe, par un prestataire que vous désignez ou par nous. Nous établissons un devis distinct pour l’hébergement et l’exploitation."
     emphasis="docs"
   />
 </Solution>
