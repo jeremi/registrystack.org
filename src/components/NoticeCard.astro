@@ -1,6 +1,7 @@
 ---
 // One notice on its way to one person: the channel, who it went to, what it
 // said, and what the provider reported back.
+import { localeForPath, translator } from '../i18n';
 interface Props {
   channel: 'Email' | 'SMS';
   to: string;
@@ -8,9 +9,11 @@ interface Props {
   status: string;
 }
 const { channel, to, subject, status } = Astro.props;
+const t = translator(localeForPath(Astro.url.pathname));
+const frenchChannel = channel === 'SMS' ? 'SMS' : 'e-mail';
 ---
 
-<section class="notice-card" aria-label={`${channel} notice to ${to}`}>
+<section class="notice-card" aria-label={t(`${channel} notice to ${to}`, `Notification par ${frenchChannel} à ${to}`)}>
   <p class="notice-channel">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
       {channel === 'SMS' ? (
@@ -19,11 +22,11 @@ const { channel, to, subject, status } = Astro.props;
         <><rect x="3" y="5" width="18" height="14" rx="1" /><path d="m3 7 9 6 9-6" /></>
       )}
     </svg>
-    {channel} notice
+    {t(`${channel} notice`, `Notification par ${frenchChannel}`)}
   </p>
   <dl class="notice-fields">
-    <div><dt>To</dt><dd>{to}</dd></div>
-    <div><dt>{channel === 'SMS' ? 'Text' : 'Subject'}</dt><dd>{subject}</dd></div>
+    <div><dt>{t('To', 'À')}</dt><dd>{to}</dd></div>
+    <div><dt>{channel === 'SMS' ? t('Text', 'Texte') : t('Subject', 'Objet')}</dt><dd>{subject}</dd></div>
   </dl>
   <p class="notice-status"><span class="notice-dot" aria-hidden="true"></span>{status}</p>
 </section>

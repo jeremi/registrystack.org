@@ -4,6 +4,7 @@ import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
+import { frenchPagePaths, localizedPath } from '../src/i18n.ts';
 
 const htmlPath = resolve('dist/index.html');
 if (!existsSync(htmlPath)) {
@@ -85,6 +86,11 @@ const paths = [
   '/terms/',
   '/imprint/',
   '/404.html',
+  // The French pages that are built. scripts/check-french.mjs names any
+  // listed French page that is missing.
+  ...[...frenchPagePaths, '/contact/?type=proposal']
+    .map((path) => localizedPath(path, 'fr'))
+    .filter((path) => existsSync(resolve('dist', `.${new URL(path, 'https://registrystack.org').pathname}`, 'index.html'))),
 ].filter((path) => !migrationEnabled || !path.startsWith('/starters/'));
 for (const path of paths) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1200 } });

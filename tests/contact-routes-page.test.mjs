@@ -51,11 +51,12 @@ test('shared navigation and product calls to action use forms while legal and se
     readFile(new URL('src/pages/security.astro', root), 'utf8'),
   ]);
 
-  assert.match(header, /href=\{contactHref\(\)\}/);
+  // The shared frame passes the page's locale so French pages reach /fr/contact/.
+  assert.match(header, /href=\{contactHref\(undefined, undefined, locale\)\}/);
   assert.match(header, /aria-current=\{current === 'contact' \? 'page' : undefined\}/);
-  assert.match(footer, /askQuestionHref\(\)/);
+  assert.match(footer, /askQuestionHref\(undefined, locale\)/);
   assert.doesNotMatch(footer, /mailto:|contactEmail/);
-  assert.match(product, /describeServiceHref\(product\.name\)/);
+  assert.match(product, /describeServiceHref\(product\.name, locale\)/);
   assert.doesNotMatch(product, /contactEmail|email/i);
   assert.match(imprint, /mailto:contact@registrystack\.org/);
   assert.match(security, /github\.com\/registrystack\/registry-stack\/security\/advisories\/new/);

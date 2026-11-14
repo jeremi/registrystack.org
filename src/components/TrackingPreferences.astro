@@ -1,10 +1,17 @@
 ---
+import { localeForPath, translator } from '../i18n';
+
 interface Props {
   mauticUrl: string;
   canonicalUrl: string;
 }
 
 const { mauticUrl, canonicalUrl } = Astro.props;
+// The French wording promises exactly what the English promises: optional
+// cookies, the link to an enquiry, and a choice that can change at any time.
+const locale = localeForPath(Astro.url.pathname);
+const isFrench = locale === 'fr';
+const t = translator(locale);
 ---
 
 <aside
@@ -16,22 +23,30 @@ const { mauticUrl, canonicalUrl } = Astro.props;
   hidden
 >
   <div class="tracking-preferences-copy">
-    <h2 id="tracking-preferences-title" tabindex="-1">Cookies on Registry Stack</h2>
-    <p>
-      We use optional cookies to understand how you use our website and documentation.
-      If you contact us, we may link this activity to your enquiry. You can change your choice at any time.
-      <a href="/privacy/">Privacy policy</a>.
-    </p>
+    <h2 id="tracking-preferences-title" tabindex="-1">{t('Cookies on Registry Stack', 'Cookies sur Registry Stack')}</h2>
+    {isFrench ? (
+      <p>
+        Nous utilisons des cookies facultatifs pour comprendre comment vous utilisez notre site web et notre documentation.
+        Si vous nous contactez, nous pouvons rattacher cette activité à votre demande. Vous pouvez modifier votre choix à tout moment.
+        <a href="/privacy/" hreflang="en">Politique de confidentialité (en anglais)</a>.
+      </p>
+    ) : (
+      <p>
+        We use optional cookies to understand how you use our website and documentation.
+        If you contact us, we may link this activity to your enquiry. You can change your choice at any time.
+        <a href="/privacy/">Privacy policy</a>.
+      </p>
+    )}
     <p data-tracking-signal hidden>
-      Your browser is asking sites not to track you, so tracking stays off.
+      {t('Your browser is asking sites not to track you, so tracking stays off.', 'Votre navigateur demande aux sites de ne pas vous suivre : le suivi reste donc désactivé.')}
     </p>
     <p class="tracking-preferences-error" data-tracking-error role="alert" hidden>
-      Shared tracking is unavailable. Tracking remains off on this page. You can still send a request.
+      {t('Shared tracking is unavailable. Tracking remains off on this page. You can still send a request.', 'Le suivi partagé est indisponible. Le suivi reste désactivé sur cette page. Vous pouvez tout de même envoyer une demande.')}
     </p>
   </div>
   <div class="tracking-preferences-actions">
-    <button class="tracking-choice" type="button" data-tracking-accept>Accept optional cookies</button>
-    <button class="tracking-choice" type="button" data-tracking-reject>Reject optional cookies</button>
+    <button class="tracking-choice" type="button" data-tracking-accept>{t('Accept optional cookies', 'Accepter les cookies facultatifs')}</button>
+    <button class="tracking-choice" type="button" data-tracking-reject>{t('Reject optional cookies', 'Refuser les cookies facultatifs')}</button>
   </div>
 </aside>
 

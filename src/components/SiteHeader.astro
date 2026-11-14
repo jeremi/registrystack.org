@@ -2,62 +2,90 @@
 // Shared top navigation for every marketing page. Marketing is organized by
 // the register a team keeps, then the products; implementation detail lives
 // in the docs.
+// The page's locale comes from its path: under /fr/ the labels are French and
+// internal links go to the French page where one exists. Entries that stay in
+// English carry an `fr` label ending "(en anglais)".
 import { products } from '../data/products';
+import { products as productsFr } from '../data/fr/products';
 import { solutionAreas } from '../data/solutions';
+import { solutionAreas as solutionAreasFr } from '../data/fr/solutions';
 import { contactHref } from '../data/contact';
+import { englishHreflang, hasFrenchPage, localeForPath, localizedPath, translator } from '../i18n';
 const { current } = Astro.props;
-const registerFamilies = solutionAreas.filter((area) => area.kind === 'register-family');
-const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
+const pathname = Astro.url.pathname;
+const locale = localeForPath(pathname);
+const isFrench = locale === 'fr';
+const t = translator(locale);
+const l = (href: string) => localizedPath(href, locale);
+const areas = isFrench ? solutionAreasFr : solutionAreas;
+const registerFamilies = areas.filter((area) => area.kind === 'register-family');
+const crossCutting = areas.filter((area) => area.kind === 'cross-cutting');
 
 // AI for public services opens with its overview, then one entry per use in
 // the order the overview presents them.
 const aiEntries = [
-  { href: '/ai/service-design/', label: 'Service design', intent: 'Prepare a brief and test a prototype', key: 'ai-service-design' },
-  { href: '/customization/', label: 'Implementation', intent: 'Adapt a service to your rules', key: 'customization' },
-  { href: '/ai/citizen-access/', label: 'Citizen access', intent: 'Help people prepare a request', key: 'ai-citizen-access' },
+  { href: '/ai/service-design/', label: 'Service design', intent: 'Prepare a brief and test a prototype', key: 'ai-service-design',
+    fr: 'Conception du service', frIntent: 'Préparer une note de cadrage et tester un prototype' },
+  { href: '/customization/', label: 'Implementation', intent: 'Adapt a service to your rules', key: 'customization',
+    fr: 'Mise en œuvre', frIntent: 'Adapter un service à vos règles' },
+  { href: '/ai/citizen-access/', label: 'Citizen access', intent: 'Help people prepare a request', key: 'ai-citizen-access',
+    fr: 'Accès des citoyens', frIntent: 'Aider les personnes à préparer une demande' },
 ];
 const links = [
-  { href: '/pricing/', label: 'Implementation and pricing', key: 'pricing' },
-  { href: 'https://docs.registrystack.org/', label: 'Docs', key: 'docs' },
+  { href: '/pricing/', label: 'Implementation and pricing', key: 'pricing', fr: 'Mise en œuvre et tarifs' },
+  { href: 'https://docs.registrystack.org/', label: 'Docs', key: 'docs', fr: 'Documentation (en anglais)' },
 ];
 const evaluationLinks = [
-  { href: 'https://marketplace.registrystack.org/', label: 'Configuration marketplace', key: 'starters' },
-  { href: '/#developers', label: 'Developer tutorials', key: 'developers' },
-  { href: 'https://docs.registrystack.org/', label: 'Documentation', key: 'docs' },
+  { href: 'https://marketplace.registrystack.org/', label: 'Configuration marketplace', key: 'starters', fr: 'Catalogue de configurations (en anglais)' },
+  { href: '/#developers', label: 'Developer tutorials', key: 'developers', fr: 'Tutoriels pour les développeurs' },
+  { href: 'https://docs.registrystack.org/', label: 'Documentation', key: 'docs', fr: 'Documentation (en anglais)' },
 ];
+// French entries that lead to an English page say so to assistive technology
+// as well as in their label.
+const englishTarget = (href: string) => englishHreflang(href, locale);
 
 const onSolutionPage = current === 'solutions' || current === 'local-government' || solutionAreas.some((area) => area.key === current);
 const onProductPage = current === 'products' || current === 'studio' || current === 'starters' || products.some((product) => product.key === current);
-const inAiSection = Astro.url.pathname.startsWith('/ai/') || aiEntries.some((entry) => entry.key === current);
+const inAiSection = /^(\/fr)?\/ai\//.test(pathname) || aiEntries.some((entry) => entry.key === current);
 // The flagship products lead the menu; the data order is otherwise kept.
-const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(a.featured));
+const productEntries = [...(isFrench ? productsFr : products)].sort((a, b) => Number(b.featured) - Number(a.featured));
+
+// The language switch leads to the same page in the other language. An
+// English page with no French version leads to the French home page, and
+// says so; there is no automatic redirect by browser language.
+const samePageInFrench = hasFrenchPage(pathname);
+const languageSwitch = isFrench
+  ? { href: localizedPath(pathname, 'en'), lang: 'en', label: 'English', ariaLabel: 'Read this page in English' }
+  : samePageInFrench
+    ? { href: localizedPath(pathname, 'fr'), lang: 'fr', label: 'Français', ariaLabel: 'Lire cette page en français' }
+    : { href: '/fr/', lang: 'fr', label: 'Français', ariaLabel: 'Accueil du site en français' };
 ---
 
-<a class="skip-link" href="#main-content">Skip to main content</a>
+<a class="skip-link" href="#main-content">{t('Skip to main content', 'Aller au contenu principal')}</a>
 <header class="site-header">
-  <a class="brand" href="/" aria-label="Registry Stack home">
+  <a class="brand" href={l('/')} aria-label={t('Registry Stack home', 'Accueil de Registry Stack')}>
     <span class="brand-mark" aria-hidden="true">RS</span>
     <span>Registry Stack</span>
   </a>
-  <nav class="top-nav" aria-label="Main navigation">
+  <nav class="top-nav" aria-label={t('Main navigation', 'Navigation principale')}>
     <details class="nav-group" name="main-navigation">
       <summary aria-current={onSolutionPage ? 'page' : undefined}>Solutions</summary>
       <div class="nav-group-panel">
-        <a href="/solutions/" aria-current={current === 'solutions' ? 'page' : undefined}>
-          <span class="nav-entry-name">All solutions</span>
-          <span class="nav-entry-blurb">For national, regional and local government</span>
+        <a href={l('/solutions/')} aria-current={current === 'solutions' ? 'page' : undefined}>
+          <span class="nav-entry-name">{t('All solutions', 'Toutes les solutions')}</span>
+          <span class="nav-entry-blurb">{t('For national, regional and local government', 'Pour les administrations nationales, régionales et locales')}</span>
         </a>
         <hr class="nav-group-rule" />
         {registerFamilies.map((area) => (
-          <a href={area.slug} aria-current={current === area.key ? 'page' : undefined}>
+          <a href={l(area.slug)} aria-current={current === area.key ? 'page' : undefined}>
             <span class="nav-entry-name">{area.name}</span>
             <span class="nav-entry-blurb">{area.intent}</span>
           </a>
         ))}
         <hr class="nav-group-rule" />
-        <p class="nav-group-label">Shared capabilities</p>
+        <p class="nav-group-label">{t('Shared capabilities', 'Fonctions communes')}</p>
         {crossCutting.map((area) => (
-          <a href={area.slug} aria-current={current === area.key ? 'page' : undefined}>
+          <a href={l(area.slug)} aria-current={current === area.key ? 'page' : undefined}>
             <span class="nav-entry-name">{area.name}</span>
             <span class="nav-entry-blurb">{area.intent}</span>
           </a>
@@ -65,43 +93,50 @@ const productEntries = [...products].sort((a, b) => Number(b.featured) - Number(
       </div>
     </details>
     <details class="nav-group" name="main-navigation">
-      <summary aria-current={onProductPage ? 'page' : undefined}>Products</summary>
+      <summary aria-current={onProductPage ? 'page' : undefined}>{t('Products', 'Produits')}</summary>
       <div class="nav-group-panel">
-        <a href="/products/" aria-current={current === 'products' ? 'page' : undefined}><span class="nav-entry-name">How the products fit together</span><span class="nav-entry-blurb">A register service, from review to notice</span></a>
+        <a href={l('/products/')} aria-current={current === 'products' ? 'page' : undefined}><span class="nav-entry-name">{t('How the products fit together', 'Comment les produits s’articulent')}</span><span class="nav-entry-blurb">{t('A register service, from review to notice', 'Un service de registre, de l’examen à la notification')}</span></a>
         <hr class="nav-group-rule" />
         {productEntries.map((product) => (
-          <a href={product.href} aria-current={current === product.key ? 'page' : undefined}>
+          <a href={l(product.href)} aria-current={current === product.key ? 'page' : undefined}>
             <span class="nav-entry-name">{product.name}</span>
             <span class="nav-entry-blurb">{product.intent}</span>
           </a>
         ))}
         <hr class="nav-group-rule" />
-        <p class="nav-group-label">Authoring</p>
-        <a href="/products/studio/" aria-current={current === 'studio' ? 'page' : undefined}><span class="nav-entry-name">Registry Studio</span><span class="nav-entry-blurb">Review and configure services · Preview</span></a>
+        <p class="nav-group-label">{t('Authoring', 'Conception')}</p>
+        <a href={l('/products/studio/')} aria-current={current === 'studio' ? 'page' : undefined}><span class="nav-entry-name">Registry Studio</span><span class="nav-entry-blurb">{t('Review and configure services · Preview', 'Examiner et configurer les services · préversion')}</span></a>
         <hr class="nav-group-rule" />
         {evaluationLinks.map((link) => (
-          <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>
-            <span class="nav-entry-name">{link.label}</span>
+          <a href={l(link.href)} hreflang={englishTarget(link.href)} aria-current={current === link.key ? 'page' : undefined}>
+            <span class="nav-entry-name">{t(link.label, link.fr)}</span>
           </a>
         ))}
       </div>
     </details>
     <details class="nav-group" name="main-navigation">
-      <summary aria-current={inAiSection ? 'page' : undefined}>AI for public services</summary>
+      <summary aria-current={inAiSection ? 'page' : undefined}>{t('AI for public services', 'L’IA pour les services publics')}</summary>
       <div class="nav-group-panel">
-        <a href="/ai/" aria-current={current === 'ai' ? 'page' : undefined}><span class="nav-entry-name">Three uses of AI</span><span class="nav-entry-blurb">Your institution reviews and approves</span></a>
+        <a href={l('/ai/')} aria-current={current === 'ai' ? 'page' : undefined}><span class="nav-entry-name">{t('Three uses of AI', 'Trois usages de l’IA')}</span><span class="nav-entry-blurb">{t('Your institution reviews and approves', 'Votre institution examine et approuve')}</span></a>
         <hr class="nav-group-rule" />
         {aiEntries.map((entry) => (
-          <a href={entry.href} aria-current={current === entry.key ? 'page' : undefined}>
-            <span class="nav-entry-name">{entry.label}</span>
-            <span class="nav-entry-blurb">{entry.intent}</span>
+          <a href={l(entry.href)} aria-current={current === entry.key ? 'page' : undefined}>
+            <span class="nav-entry-name">{t(entry.label, entry.fr)}</span>
+            <span class="nav-entry-blurb">{t(entry.intent, entry.frIntent)}</span>
           </a>
         ))}
       </div>
     </details>
     {links.map((link) => (
-      <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
+      <a href={l(link.href)} hreflang={englishTarget(link.href)} aria-current={current === link.key ? 'page' : undefined}>{t(link.label, link.fr)}</a>
     ))}
-    <a class="nav-emphasis" href={contactHref()} aria-current={current === 'contact' ? 'page' : undefined}>Contact</a>
+    <a class="nav-emphasis" href={contactHref(undefined, undefined, locale)} aria-current={current === 'contact' ? 'page' : undefined}>Contact</a>
+    <a
+      class="language-switch"
+      href={languageSwitch.href}
+      lang={languageSwitch.lang}
+      hreflang={languageSwitch.lang}
+      aria-label={languageSwitch.ariaLabel}
+    >{languageSwitch.label}</a>
   </nav>
 </header>

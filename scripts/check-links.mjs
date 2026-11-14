@@ -105,7 +105,7 @@ for (const file of htmlFiles) {
       const target = new URL(normalizedHref, siteOrigin);
       const { pathname } = target;
       resolveInternal(pathname, file);
-      if (pathname === "/contact/") {
+      if (pathname === "/contact/" || pathname === "/fr/contact/") {
         const allowedParams = new Set(["type", "context", "source"]);
         const types = target.searchParams.getAll("type");
         const contexts = target.searchParams.getAll("context");

@@ -1,6 +1,7 @@
 ---
 // A printed document as the civic-print figure shows it: what it is, what it
 // says, and the hash the office stores beside the record it was printed from.
+import { localeForPath, translator } from '../i18n';
 interface Props {
   documentType?: string;
   format?: string;
@@ -10,10 +11,11 @@ interface Props {
   // The stored fingerprint of a printed document; a published catalogue has none.
   hash?: string;
 }
-const { documentType = 'Printed document', format = 'PDF', title, fields, footnote = 'Same bytes on every reprint', hash } = Astro.props;
+const t = translator(localeForPath(Astro.url.pathname));
+const { documentType = t('Printed document', 'Document imprimé'), format = 'PDF', title, fields, footnote = t('Same bytes on every reprint', 'Identique à l’octet près à chaque réimpression'), hash } = Astro.props;
 ---
 
-<section class="document-card" aria-label={`${documentType}: ${title}`}>
+<section class="document-card" aria-label={t(`${documentType}: ${title}`, `${documentType} : ${title}`)}>
   <div class="document-heading">
     <span class="document-type">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">

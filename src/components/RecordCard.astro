@@ -1,4 +1,6 @@
 ---
+import { localeForPath, translator } from '../i18n';
+
 interface Props {
   recordType: string;
   recordId: string;
@@ -8,6 +10,7 @@ interface Props {
 }
 
 const { recordType, recordId, name, icon = 'data', fields } = Astro.props;
+const t = translator(localeForPath(Astro.url.pathname));
 ---
 
 <section class="record-card" aria-label={`${recordType} ${recordId}`}>
@@ -33,7 +36,7 @@ const { recordType, recordId, name, icon = 'data', fields } = Astro.props;
     {fields.map((field) => (
       <div class:list={['record-field', field.state && `record-field-${field.state}`]}>
         <dt>{field.label}</dt>
-        <dd>{field.value}{field.state && <span class="field-disclosure">{field.state === 'selected' ? 'Shared' : 'Not shared'}</span>}</dd>
+        <dd>{field.value}{field.state && <span class="field-disclosure">{field.state === 'selected' ? t('Shared', 'Partagé') : t('Not shared', 'Non partagé')}</span>}</dd>
       </div>
     ))}
   </dl>

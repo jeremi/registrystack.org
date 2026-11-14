@@ -179,6 +179,17 @@ dd a {
   color: var(--registry-ink);
 }
 
+/* The link to the same page in the other language closes the row, set apart
+   from the sections by a rule on its left. */
+.top-nav a.language-switch {
+  border-left: 1px solid var(--registry-rule);
+  padding-left: clamp(12px, 2vw, 24px);
+}
+
+.top-nav a.language-switch:hover {
+  color: var(--registry-blue);
+}
+
 /* Solutions and Products each fold into a disclosure. Plain <details> keeps
    the menus usable without JavaScript. */
 .nav-group {

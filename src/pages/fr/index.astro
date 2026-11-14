@@ -1,0 +1,134 @@
+---
+// French twin of src/pages/index.astro: the same sections in the same order,
+// built from the French data. The styles repeat the English page's, which are
+// scoped to that file.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import HomeServiceMockup from '../../components/HomeServiceMockup.astro';
+import { products } from '../../data/fr/products';
+import { registerFamilies, solutionAreas } from '../../data/fr/solutions';
+import { describeServiceHref } from '../../data/contact';
+import { teamRecordFull } from '../../data/fr/team';
+
+const featured = registerFamilies.filter((area) => ['licensing', 'business-and-tax', 'agriculture-food-and-environment'].includes(area.key));
+const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
+const fr = (href: string) => `/fr${href}`;
+---
+<Base>
+  <SiteHeader />
+  <main id="main-content" tabindex="-1">
+    <section class="hero hero-cover" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <div class="hero-top">
+          <div class="hero-copy">
+            <p class="eyebrow">Logiciels open source pour les registres et les services publics</p>
+            <h1 id="hero-title">Des logiciels pour les registres officiels et les services qui les utilisent.</h1>
+            <p class="hero-lead">Créez un registre ou adaptez celui que vous tenez déjà. Registry Stack conserve les fiches, l’examen par les agents et l’historique des modifications, et fonctionne aux côtés de vos portails et de vos systèmes d’identification. Le cœur du logiciel est open source : aucune redevance de licence, et votre institution garde la maîtrise de ses données.</p>
+            <div class="hero-actions" aria-label="Actions principales">
+              <a class="button button-primary" href="/fr/solutions/">Découvrir les solutions</a>
+              <a class="button button-secondary" href={describeServiceHref(undefined, 'fr')} data-journey="service-inquiry">Décrivez votre service</a>
+            </div>
+            <p class="hero-note">Commencez par un <a href="/fr/pricing/#pilot">registre pilote</a> : nous le mettons en œuvre avec votre équipe.</p>
+          </div>
+          <div class="hero-figure"><HomeServiceMockup /></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="registers" aria-labelledby="registers-title">
+      <div class="section-inner" id="how-a-register-runs">
+        <div class="section-heading">
+          <p class="eyebrow">Pour les administrations nationales, régionales et locales</p>
+          <h2 id="registers-title">Créer et adapter des services publics.</h2>
+          <p>Délivrez une première autorisation ou renouvelez-la, créez un registre des entreprises ou tenez à jour les fiches des établissements. Gardez reliées les demandes, les décisions des agents et les fiches officielles. Permettez aux services autorisés de vérifier les informations dont ils ont besoin.</p>
+        </div>
+        <ul class="register-grid featured-solutions">
+          {featured.map((area) => (
+            <li>
+              <a href={fr(area.slug)}>
+                <span class="register-name">{area.name}</span>
+                <span class="register-intent">{area.intent}</span>
+                {area.audience && <span class="register-audience">{area.audience}</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div class="section-links"><a class="inline-cta" href="/fr/solutions/">Voir tous les domaines de solutions <span aria-hidden="true">→</span></a></div>
+        <nav class="shared-work" id="shared-work" aria-label="Fonctions associées">
+          <p>Fonctions associées</p>
+          <ul>{crossCutting.map((area) => <li><a href={fr(area.slug)}>{area.name}</a></li>)}</ul>
+        </nav>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="open-source" aria-labelledby="ownership-title">
+      <div class="section-inner" id="get-started">
+        <div class="section-heading">
+          <p class="eyebrow">Logiciel open source. Mise en œuvre et assistance commerciales.</p>
+          <h2 id="ownership-title">Construisez avec votre équipe ou travaillez avec nous.</h2>
+        </div>
+        <div class="value-grid adoption-grid">
+          <article><h3>Utiliser et adapter le logiciel</h3><p>Le cœur du logiciel est open source, sous licence Apache-2.0. Votre équipe ou le prestataire de votre choix peut l’examiner, l’adapter et l’exploiter. Votre institution décide où il fonctionne et qui peut utiliser ses fiches.</p><a class="inline-cta" href="/fr/faq/">Propriété, licences et hébergement <span aria-hidden="true">→</span></a></article>
+          <article><h3>Travailler avec Aubex</h3><p>Aubex développe Registry Stack et en assure l’assistance technique. Apportez un service : nous convenons de la configuration, des écrans, des intégrations et des responsabilités dans un périmètre écrit pour le registre pilote de votre institution. La mise en œuvre et l’assistance dans la durée sont des services payants.</p><a class="inline-cta" href="/fr/pricing/">Mise en œuvre et assistance technique <span aria-hidden="true">→</span></a></article>
+        </div>
+        <p class="team-record"><strong>Une expérience acquise sur des projets de registres antérieurs.</strong> {teamRecordFull}</p>
+      </div>
+    </section>
+
+    <section class="section" id="customization" aria-labelledby="customization-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">L’IA pour les services publics</p>
+          <h2 id="customization-title">Utiliser l’IA là où elle aide votre service.</h2>
+          <p>Découvrez l’IA au service de la conception, de la mise en œuvre et de l’accès aux informations du registre. Votre institution définit les règles, et les personnes restent responsables des demandes et des décisions.</p>
+          <a class="inline-cta" href="/fr/ai/">Découvrir les usages de l’IA <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="developers" aria-labelledby="developers-title">
+      <div class="section-inner" id="start-testing">
+        <div class="section-heading"><p class="eyebrow">Pour les équipes techniques</p><h2 id="developers-title">Examinez le logiciel. Exécutez un exemple.</h2><p>Suivez un tutoriel local avec des données d’exemple pour évaluer les fonctions principales.</p></div>
+        <div id="products"><div id="how-it-works" class="home-product-links" aria-label="Détail des produits">{products.map((product) => <a href={fr(product.href)}>{product.name}</a>)}</div></div>
+        <div class="developer-grid">{products.filter((product) => product.featured).map((product) => (<article><h3>{product.solution}</h3><p>{product.firstResult}</p><a class="inline-cta developer-tutorial" href={product.tutorialHref} hreflang="en">{product.tutorialLabel} <span aria-hidden="true">↗</span></a></article>))}</div>
+        <p class="developer-note" id="project-status">Consultez la <a href="https://docs.registrystack.org/" hreflang="en">documentation (en anglais)</a> et parcourez le <a href="https://github.com/registrystack/registry-stack" hreflang="en">code source et les versions (en anglais)</a>.</p>
+      </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="pilot-title"><div class="section-inner"><p class="eyebrow">Votre prochain service</p><h2 id="pilot-title">Dites-nous ce dont votre institution a besoin.</h2><p>Décrivez le service, ses utilisateurs et ce qu’il doit faire. Nous pouvons vous aider à évaluer l’adéquation et à cadrer le travail.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref(undefined, 'fr')} data-journey="service-inquiry">Décrivez votre service</a><a class="button button-secondary" href="/fr/pricing/">Voir les options de mise en œuvre</a></div></div></section>
+  </main>
+  <SiteFooter />
+</Base>
+<style>
+  .hero-top { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: clamp(32px, 5vw, 64px); }
+  .hero-inner { padding-top: clamp(40px, 5vw, 72px); padding-bottom: clamp(44px, 6vw, 80px); }
+  .hero-cover h1 { font-size: clamp(2.3rem, 4.4vw, 3.7rem); }
+  .hero-lead { font-size: clamp(18px, 1.8vw, 21px); line-height: 1.55; }
+  .hero-note a { color: inherit; }
+  .register-grid { display: grid; gap: 0 32px; list-style: none; margin: 0; padding: 0; }
+  .register-grid li { border-top: 1px solid var(--registry-rule); }
+  .register-grid a { display: grid; gap: 4px; padding: 18px 0 20px; }
+  .register-grid a:hover { text-decoration: none; }
+  .register-grid a:hover .register-name { color: var(--registry-blue); }
+  .register-name { color: var(--registry-ink); font-size: var(--type-body); font-weight: 700; }
+  .register-intent { color: var(--registry-muted); font-size: var(--type-md); }
+  .register-audience { color: var(--registry-body); font-size: var(--type-sm); margin-top: 4px; }
+  .featured-solutions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .shared-work { border-top: 1px solid var(--registry-rule); margin-top: 36px; padding-top: 20px; }
+  .shared-work > p { color: var(--registry-muted); font-size: var(--type-base); margin: 0 0 8px; }
+  .shared-work ul { display: flex; flex-wrap: wrap; gap: 4px 28px; list-style: none; padding: 0; margin: 0; }
+  .shared-work a { display: inline-block; padding: 8px 0; font-size: var(--type-base); }
+  .team-record { max-width: 78ch; border-top: 1px solid var(--registry-rule); margin: 32px 0 0; padding-top: 24px; font-size: var(--type-base); }
+  .home-product-links { display: flex; flex-wrap: wrap; gap: 12px 28px; border-bottom: 1px solid var(--registry-rule); margin-bottom: 32px; padding-bottom: 20px; }
+  .home-product-links a { font-weight: 700; }
+  .adoption-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .developer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+  .developer-grid article { border-top: 1px solid var(--registry-rule); padding-top: 22px; }
+  .developer-grid h3 { font-size: var(--type-subhead); }
+  .developer-grid p { font-size: var(--type-body-sm); }
+  .developer-grid a { font-size: var(--type-base); }
+  .developer-note { font-size: var(--type-base); margin-top: 28px; }
+  @media (max-width: 900px) { .hero-top, .featured-solutions { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) { .adoption-grid, .developer-grid { grid-template-columns: 1fr; } }
+</style>

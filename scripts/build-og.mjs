@@ -1,5 +1,6 @@
 // Generates the social-sharing cards in public/ (1200x630 each): the default
-// card and the card shared by the AI pages.
+// card, the card shared by the AI pages, and the default card of the French
+// pages.
 // The brand fonts are embedded as base64 so the render is fully offline and
 // reproducible. Re-run with `npm run build:og` whenever a headline, the wordmark,
 // or brand colours change; the produced PNGs are committed to the repo.
@@ -24,10 +25,17 @@ const cards = [
     kicker: 'AI for public services',
     headline: 'Design, adapt and access<br>public services with AI.',
   },
+  {
+    file: 'public/og-image-fr.png',
+    lang: 'fr',
+    kicker: 'Logiciels open source pour les registres publics',
+    headline: 'Des logiciels pour les registres<br>officiels et les services<br>qui les utilisent.',
+    works: 'Adapter. Connecter. Garder la main.',
+  },
 ];
 
-const html = ({ kicker, headline }) => `<!doctype html>
-<html lang="en">
+const html = ({ kicker, headline, lang = 'en', works = 'Adapt. Connect. Keep control.' }) => `<!doctype html>
+<html lang="${lang}">
   <head>
     <meta charset="utf-8" />
     <style>
@@ -98,13 +106,23 @@ const html = ({ kicker, headline }) => `<!doctype html>
     </div>
     <div class="foot">
       <span class="url">registrystack.org</span>
-      <span class="works">Adapt. Connect. Keep control.</span>
+      <span class="works">${works}</span>
     </div>
   </body>
 </html>`;
 
+// `node scripts/build-og.mjs public/og-image-fr.png` renders only the named
+// cards; with no argument every card is rendered.
+const requested = process.argv.slice(2);
+const unknown = requested.filter((file) => !cards.some((card) => card.file === file));
+if (unknown.length > 0) {
+  console.error(`unknown og card(s): ${unknown.join(', ')}`);
+  process.exit(1);
+}
+const selected = requested.length > 0 ? cards.filter((card) => requested.includes(card.file)) : cards;
+
 const browser = await chromium.launch();
-for (const card of cards) {
+for (const card of selected) {
   const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
   await page.setContent(html(card));
   await page.evaluate(() => document.fonts.ready);

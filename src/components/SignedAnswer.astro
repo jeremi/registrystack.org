@@ -1,4 +1,6 @@
 ---
+import { localeForPath, translator } from '../i18n';
+
 interface Props {
   fieldLabel: string;
   value: string;
@@ -6,10 +8,11 @@ interface Props {
   issuer: string;
 }
 const { fieldLabel, value, recipient, issuer } = Astro.props;
+const t = translator(localeForPath(Astro.url.pathname));
 ---
 
-<section class="signed-answer" aria-label={`Signed answer for ${recipient}`}>
-  <p class="answer-recipient">{recipient} receives</p>
+<section class="signed-answer" aria-label={t(`Signed answer for ${recipient}`, `Réponse signée pour ${recipient}`)}>
+  <p class="answer-recipient">{t(`${recipient} receives`, `${recipient} reçoit`)}</p>
   <dl class="answer-result">
     <dt>{fieldLabel}</dt>
     <dd>{value}</dd>
@@ -18,7 +21,7 @@ const { fieldLabel, value, recipient, issuer } = Astro.props;
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
       <path d="M14 3H4v18h16V11M8 8h3M8 12h3m3 3 7-7-3-3-7 7-1 4 4-1Z" />
     </svg>
-    <span><strong>Digitally signed</strong><span class="answer-issuer">{issuer}</span></span>
+    <span><strong>{t('Digitally signed', 'Signée numériquement')}</strong><span class="answer-issuer">{issuer}</span></span>
   </div>
 </section>
 

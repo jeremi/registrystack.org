@@ -1,5 +1,6 @@
 ---
 // One counter slot or appointment as the person who booked it sees it.
+import { localeForPath, translator } from '../i18n';
 interface Props {
   service: string;
   place: string;
@@ -7,19 +8,20 @@ interface Props {
   status: string;
 }
 const { service, place, slot, status } = Astro.props;
+const t = translator(localeForPath(Astro.url.pathname));
 ---
 
-<section class="booking-card" aria-label={`Booking: ${service}, ${slot}`}>
+<section class="booking-card" aria-label={t(`Booking: ${service}, ${slot}`, `Rendez-vous : ${service}, ${slot}`)}>
   <p class="booking-kind">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
       <rect x="3" y="5" width="18" height="16" rx="1" /><path d="M3 10h18M8 3v4M16 3v4M8 14h3v3H8z" />
     </svg>
-    Booking
+    {t('Booking', 'Rendez-vous')}
   </p>
   <p class="booking-slot">{slot}</p>
   <dl class="booking-fields">
     <div><dt>Service</dt><dd>{service}</dd></div>
-    <div><dt>Where</dt><dd>{place}</dd></div>
+    <div><dt>{t('Where', 'Lieu')}</dt><dd>{place}</dd></div>
   </dl>
   <p class="booking-status"><span class="booking-dot" aria-hidden="true"></span>{status}</p>
 </section>

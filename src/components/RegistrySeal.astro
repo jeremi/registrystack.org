@@ -4,6 +4,7 @@
 // hidden from assistive technology. A page can customize the decorative text
 // and use a static instance. The default ring turns slowly, with reduced motion.
 // The ring text is fitted to its circle (2 x pi x 54 = 339.3 units).
+import { localeForPath, translator } from '../i18n';
 interface Props {
   size?: number;
   ringText?: string;
@@ -12,9 +13,10 @@ interface Props {
   pathId?: string;
 }
 
+const t = translator(localeForPath(Astro.url.pathname));
 const {
   size = 150,
-  ringText = 'REGISTRY STACK · SIGNED ANSWERS · OPEN SOURCE · ',
+  ringText = t('REGISTRY STACK · SIGNED ANSWERS · OPEN SOURCE · ', 'REGISTRY STACK · RÉPONSES SIGNÉES · OPEN SOURCE · '),
   monogram = 'RS',
   animated = true,
   pathId = 'seal-text-path',

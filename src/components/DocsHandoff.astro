@@ -1,5 +1,6 @@
 ---
 // Shared next steps for organizational readers and technical evaluators.
+import { englishHreflang, localeForPath, localizedPath, translator } from '../i18n';
 interface Props {
   eyebrow?: string;
   heading?: string;
@@ -11,12 +12,17 @@ interface Props {
   note?: string;
 }
 
+// The defaults follow the page's locale. A French page that passes its own
+// `primaryHref` to an English page says so in `primaryLabel`.
+const locale = localeForPath(Astro.url.pathname);
+const t = translator(locale);
+const pricingHref = localizedPath('/pricing/', locale);
 const {
-  eyebrow = 'Take the next step',
-  heading = 'Explore it with your team.',
-  primaryLabel = 'Try a developer tutorial',
-  primaryHref = '/#developers',
-  body = 'Evaluate the open-source software with your team, or work with us on implementation and ongoing support.',
+  eyebrow = t('Take the next step', 'Passer à l’étape suivante'),
+  heading = t('Explore it with your team.', 'Explorez-le avec votre équipe.'),
+  primaryLabel = t('Try a developer tutorial', 'Essayer un tutoriel pour développeurs'),
+  primaryHref = localizedPath('/#developers', locale),
+  body = t('Evaluate the open-source software with your team, or work with us on implementation and ongoing support.', 'Évaluez le logiciel open source avec votre équipe, ou confiez-nous la mise en œuvre et l’assistance technique dans la durée.'),
   emphasis = 'docs',
   note,
 } = Astro.props;
@@ -30,13 +36,13 @@ const {
     <div class="hero-actions">
       {emphasis === 'pilot' ? (
         <>
-          <a class="button button-primary" href="/pricing/">Implementation and pricing</a>
-          <a class="button button-secondary" href={primaryHref}>{primaryLabel}</a>
+          <a class="button button-primary" href={pricingHref}>{t('Implementation and pricing', 'Mise en œuvre et tarifs')}</a>
+          <a class="button button-secondary" href={primaryHref} hreflang={englishHreflang(primaryHref, locale)}>{primaryLabel}</a>
         </>
       ) : (
         <>
-          <a class="button button-primary" href={primaryHref}>{primaryLabel}</a>
-          <a class="button button-secondary" href="/pricing/">Implementation and pricing</a>
+          <a class="button button-primary" href={primaryHref} hreflang={englishHreflang(primaryHref, locale)}>{primaryLabel}</a>
+          <a class="button button-secondary" href={pricingHref}>{t('Implementation and pricing', 'Mise en œuvre et tarifs')}</a>
         </>
       )}
     </div>

@@ -6,6 +6,7 @@ import Base from './Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import type { SolutionArea } from '../data/solutions';
+import { localeForPath, translator } from '../i18n';
 
 interface Action {
   href: string;
@@ -22,13 +23,16 @@ interface Props {
 }
 
 const { area, heading, description } = Astro.props;
+// French solution pages pass the area from src/data/fr/solutions.ts; the
+// default actions follow the page's locale.
+const t = translator(localeForPath(Astro.url.pathname));
 // Every area leads to its service example first. A register family then offers
 // optional starting configurations; a cross-cutting area offers how it fits.
 const isFamily = area.kind === 'register-family';
-const primary = Astro.props.primary ?? { href: '#example', label: 'See a service example' };
+const primary = Astro.props.primary ?? { href: '#example', label: t('See a service example', 'Voir un exemple de service') };
 const secondary = Astro.props.secondary ?? (isFamily
-  ? { href: '#starters', label: 'Explore starting configurations' }
-  : { href: '#fit', label: 'How it fits' });
+  ? { href: '#starters', label: t('Explore starting configurations', 'Parcourir les configurations de départ') }
+  : { href: '#fit', label: t('How it fits', 'Comment elle s’intègre') });
 ---
 <Base title={area.pageTitle + ' | Registry Stack'} description={area.description ?? description}>
   <SiteHeader current={area.key} />
@@ -39,7 +43,7 @@ const secondary = Astro.props.secondary ?? (isFamily
           <p class="eyebrow">{area.name}</p>
           <h1 id="solution-title">{heading}</h1>
           <p class="hero-lead">{description}</p>
-          <div class="hero-actions" aria-label="Primary actions">
+          <div class="hero-actions" aria-label={t('Primary actions', 'Actions principales')}>
             <a class="button button-primary" href={primary.href}>{primary.label}</a>
             <a class="button button-secondary" href={secondary.href}>{secondary.label}</a>
           </div>

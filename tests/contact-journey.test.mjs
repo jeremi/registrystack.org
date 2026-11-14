@@ -67,3 +67,45 @@ test('contact links retain only their source path and keep bounded enquiry click
   listeners.get('click')({ target: skip });
   assert.equal(events.length, 0, 'same-document contact navigation is not an enquiry');
 });
+
+test('French contact links carry the French source path and count as enquiries', async () => {
+  const base = await readFile(new URL('../src/layouts/Base.astro', import.meta.url), 'utf8');
+  const script = [...base.matchAll(/<script is:inline>([\s\S]*?)<\/script>/g)]
+    .map(match => match[1]).find(script => script.includes('const journeyTargets'));
+  assert.ok(script);
+  const location = new URL('https://registrystack.org/fr/pricing/?email=private@example.invalid#private');
+  class Anchor {
+    constructor(href, text) {
+      this.rawHref = href;
+      this.href = new URL(href, location).href;
+      this.textContent = text;
+      this.dataset = {};
+    }
+    getAttribute(name) { return name === 'href' ? this.rawHref : null; }
+    setAttribute(name, value) { if (name === 'href') { this.rawHref = value; this.href = new URL(value, location).href; } }
+    closest() { return this; }
+  }
+  const anchors = [
+    new Anchor('/fr/contact/?type=proposal', 'Demander une proposition'),
+    new Anchor('/fr/faq/', 'Questions fréquentes'),
+  ];
+  const events = [];
+  const listeners = new Map();
+  runInNewContext(script, {
+    URL, Element: Anchor,
+    window: { location, umami: { track: (name, data) => events.push({ name, data }) } },
+    document: {
+      querySelectorAll: selector => selector === 'a[href]' ? anchors : [],
+      addEventListener: (name, handler) => listeners.set(name, handler),
+    },
+  });
+  const contact = new URL(anchors[0].href);
+  assert.equal(contact.pathname, '/fr/contact/');
+  assert.equal(contact.searchParams.get('source'), '/fr/pricing/');
+  assert.equal(contact.searchParams.get('type'), 'proposal');
+  assert.equal(new URL(anchors[1].href).searchParams.has('source'), false);
+  for (const anchor of anchors) listeners.get('click')({ target: anchor });
+  assert.deepEqual(JSON.parse(JSON.stringify(events.map(({ data }) => ({
+    target: data.target_site, path: data.target_path, source: data.source_path,
+  })))), [{ target: 'contact', path: '/fr/contact/', source: '/fr/pricing/' }]);
+});
