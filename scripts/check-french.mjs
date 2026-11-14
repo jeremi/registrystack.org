@@ -13,7 +13,7 @@ import { createServer } from 'node:http';
 import { extname, join, normalize, resolve } from 'node:path';
 import { chromium } from 'playwright';
 
-import { frenchPagePaths } from '../src/i18n.ts';
+import { episodesPagePath, frenchPagePaths as listedFrenchPagePaths } from '../src/i18n.ts';
 
 const dist = resolve('dist');
 const siteOrigin = 'https://registrystack.org';
@@ -22,6 +22,14 @@ if (!existsSync(resolve(dist, 'index.html'))) {
   console.error('dist/index.html does not exist. Run npm run build first.');
   process.exit(1);
 }
+
+// The episodes pair exists only while an episode is published: when the
+// English page was built, the pair is checked like the others (a missing
+// French twin is then reported); when it was not, nothing about episodes is
+// checked.
+const frenchPagePaths = existsSync(resolve(dist, `.${episodesPagePath}`, 'index.html'))
+  ? [...listedFrenchPagePaths, episodesPagePath]
+  : [...listedFrenchPagePaths];
 
 const frenchPath = (englishPath) => (englishPath === '/' ? '/fr/' : `/fr${englishPath}`);
 const sourceFileFor = (englishPath) => (englishPath === '/' ? 'index.astro' : `${englishPath.slice(1, -1)}.astro`);
@@ -166,6 +174,7 @@ const inspectFrenchPage = async (page, sourcePath) => {
         hreflang: anchor.getAttribute('hreflang'),
         text: (anchor.textContent ?? '').replace(/\s+/g, ' ').trim(),
         isSwitch: anchor.classList.contains('language-switch'),
+        languageUnknown: anchor.hasAttribute('data-language-unknown'),
       })),
       text: [(body.textContent ?? '').replace(/\s+/g, ' '), ...labels].join(' | '),
     };
@@ -188,7 +197,8 @@ const inspectFrenchPage = async (page, sourcePath) => {
     const saysEnglish = link.hreflang === 'en' || /\ben anglais\b/i.test(link.text);
     if (target.origin !== siteOrigin) {
       // An outside site states its language; most are in English.
-      if (!link.hreflang && !saysEnglish) failures.push(`${sourcePath}: external link must state its language (hreflang or "(en anglais)"): ${link.href}`);
+      // A link marked data-language-unknown (the video channel) names no language.
+      if (!link.hreflang && !saysEnglish && !link.languageUnknown) failures.push(`${sourcePath}: external link must state its language (hreflang or "(en anglais)"): ${link.href}`);
       continue;
     }
     if (missingFrenchPaths.has(target.pathname)) {

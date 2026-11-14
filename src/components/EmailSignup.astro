@@ -1,0 +1,195 @@
+---
+import { englishHreflang, localeForPath } from '../i18n';
+import { contactFormText } from '../lib/starter-request';
+import { emailAddressPattern, emailSignupText } from '../lib/email-signup';
+
+interface Props {
+  endpoint: string;
+}
+
+const { endpoint } = Astro.props;
+
+// The page's locale comes from its path. Only the words the reader sees
+// change; the submitted fields are the same in both languages.
+const locale = localeForPath(Astro.url.pathname);
+const text = emailSignupText(locale);
+const honeypot = contactFormText(locale).honeypot;
+const privacyHref = '/privacy/#privacy-email-updates';
+---
+
+<section class="email-signup" aria-labelledby="email-signup-title" data-email-signup>
+  <h2 id="email-signup-title">{text.heading}</h2>
+  <p>{text.body}</p>
+  <p class="email-signup-no-script" data-email-signup-no-script>{text.noScript}</p>
+  <form
+    method="post"
+    data-email-signup-form
+    data-endpoint={endpoint}
+    data-language={locale}
+    data-source-page={Astro.url.pathname}
+  >
+    <fieldset disabled data-email-signup-fields>
+      <label>
+        <span>{text.label}</span>
+        <input name="email" type="email" autocomplete="email" maxlength="254" pattern={emailAddressPattern} aria-describedby="email-signup-privacy" required />
+      </label>
+      <label class="email-signup-honeypot" aria-hidden="true">
+        <span>{honeypot}</span>
+        <input name="website" type="text" tabindex="-1" autocomplete="off" />
+      </label>
+      <button class="button button-primary" type="submit">{text.button}</button>
+    </fieldset>
+    <p class="email-signup-privacy" id="email-signup-privacy">
+      {text.privacyBefore}<a href={privacyHref} hreflang={englishHreflang(privacyHref, locale)}>{text.privacyLinkLabel}</a>.
+    </p>
+    <p class="email-signup-status" role="status" aria-live="polite" data-email-signup-sending hidden>{text.sending}</p>
+    <p class="email-signup-status email-signup-success" role="status" aria-live="polite" tabindex="-1" data-email-signup-success hidden>{text.success}</p>
+    <p class="email-signup-status email-signup-error" role="alert" tabindex="-1" data-email-signup-error hidden>{text.error}</p>
+  </form>
+</section>
+
+<script>
+  import { submitEmailSignup } from '../lib/email-signup';
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-email-signup-form]')) {
+    const fieldset = form.querySelector<HTMLFieldSetElement>('[data-email-signup-fields]');
+    const sending = form.querySelector<HTMLElement>('[data-email-signup-sending]');
+    const success = form.querySelector<HTMLElement>('[data-email-signup-success]');
+    const error = form.querySelector<HTMLElement>('[data-email-signup-error]');
+    const endpoint = form.dataset.endpoint;
+    if (!fieldset || !sending || !success || !error || !endpoint) continue;
+
+    let submissionInProgress = false;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (submissionInProgress || !form.reportValidity()) return;
+
+      // Disabled controls are omitted from FormData. Read them before locking
+      // the form against a second submission.
+      const data = new FormData(form);
+      submissionInProgress = true;
+      fieldset.disabled = true;
+      form.setAttribute('aria-busy', 'true');
+      success.hidden = true;
+      error.hidden = true;
+      sending.hidden = false;
+      try {
+        await submitEmailSignup(endpoint, {
+          email: String(data.get('email') ?? ''),
+          language: form.dataset.language ?? '',
+          sourcePage: form.dataset.sourcePage,
+          website: String(data.get('website') ?? ''),
+        });
+        success.hidden = false;
+        success.focus();
+      } catch (failure) {
+        console.error(failure);
+        error.hidden = false;
+        fieldset.disabled = false;
+        error.focus();
+      } finally {
+        sending.hidden = true;
+        submissionInProgress = false;
+        form.removeAttribute('aria-busy');
+      }
+    });
+    fieldset.disabled = false;
+  }
+</script>
+
+<style>
+  .email-signup {
+    background: var(--registry-white);
+    border: 1px solid var(--registry-rule);
+    border-left: 5px solid var(--registry-blue);
+    margin: 40px 0;
+    max-width: 720px;
+    padding: clamp(24px, 4vw, 40px);
+  }
+
+  .email-signup h2 {
+    font-size: clamp(24px, 3vw, 32px);
+    margin: 0 0 12px;
+  }
+
+  .email-signup p {
+    color: var(--registry-body);
+    line-height: 1.6;
+  }
+
+  .email-signup-no-script {
+    font-weight: 700;
+  }
+
+  :global(html.js) .email-signup-no-script,
+  :global(html:not(.js)) form {
+    display: none;
+  }
+
+  fieldset {
+    border: 0;
+    display: grid;
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+  }
+
+  label {
+    color: var(--registry-ink);
+    display: grid;
+    font-weight: 700;
+    gap: 7px;
+  }
+
+  input {
+    background: var(--registry-paper);
+    border: 1px solid var(--registry-paper-rule);
+    border-radius: 0;
+    color: var(--registry-ink);
+    font: inherit;
+    line-height: 1.45;
+    padding: 11px 12px;
+    width: 100%;
+  }
+
+  input:focus-visible {
+    outline: 3px solid var(--registry-brass);
+    outline-offset: 2px;
+  }
+
+  .email-signup-honeypot {
+    height: 1px;
+    left: -10000px;
+    overflow: hidden;
+    position: absolute;
+    top: auto;
+    width: 1px;
+  }
+
+  button {
+    justify-self: start;
+  }
+
+  .email-signup-privacy,
+  .email-signup-status {
+    color: var(--registry-muted);
+    font-size: var(--type-sm);
+    line-height: 1.55;
+  }
+
+  .email-signup-privacy a {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .email-signup-success {
+    color: var(--registry-blue);
+    font-weight: 700;
+  }
+
+  .email-signup-error {
+    color: var(--registry-stamp);
+    font-weight: 700;
+  }
+</style>

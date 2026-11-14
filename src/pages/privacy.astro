@@ -3,10 +3,19 @@ import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { contactHref } from '../data/contact';
+import { configuredPrivacyDate, configuredVideoChannelUrl, privacyEffectiveDate } from '../data/channels';
+import { emailSignupEndpointForSite, hasPublishedEpisodes } from '../data/episodes';
 
+// Email updates are described here exactly when the sign-up is on.
+const emailUpdates = Boolean(await emailSignupEndpointForSite());
+// The channel link and the episodes pages add the video service to the linked
+// third parties; any addition moves the effective date.
+const videoLinks = Boolean(configuredVideoChannelUrl()) || (await hasPublishedEpisodes());
+const changedDate = privacyEffectiveDate(videoLinks || emailUpdates, configuredPrivacyDate());
 const pageTitle = 'Privacy policy | Registry Stack';
-const pageDescription =
-  'What registrystack.org collects, why, and what it does not do: website enquiries, starter access requests, analytics, server logs, your rights, and the effective date.';
+const pageDescription = emailUpdates
+  ? 'What registrystack.org collects, why, and what it does not do: website enquiries, starter access requests, email updates, analytics, server logs, your rights, and the effective date.'
+  : 'What registrystack.org collects, why, and what it does not do: website enquiries, starter access requests, analytics, server logs, your rights, and the effective date.';
 ---
 
 <Base title={pageTitle} description={pageDescription}>
@@ -43,7 +52,7 @@ const pageDescription =
           <h2 id="privacy-collect-title">What this site collects</h2>
           <p>
             This site is a static set of pages with no accounts. Aggregate analytics, optional
-            visit tracking, website enquiries, and starter access requests serve different purposes,
+            visit tracking, website enquiries, {emailUpdates ? 'starter access requests, and email updates' : 'and starter access requests'} serve different purposes,
             described below.
           </p>
           <h3>Analytics</h3>
@@ -138,6 +147,23 @@ const pageDescription =
             erased automatically. Submitting an address does not verify that you own it or grant
             access to any account. There is no automatic marketing signup.
           </p>
+          {emailUpdates && (
+            <Fragment>
+              <h3 id="privacy-email-updates">Email updates</h3>
+              <p>
+                If you sign up for email updates, we store your email address, the language of the
+                page you signed up on, that page&rsquo;s address and the time of your sign-up in our
+                self-hosted Mautic system. We send you a message asking you to confirm the address,
+                and we send the notes only after you confirm. We use these details only to send the
+                notes, about once a month. The notes carry no open or click tracking. Signing up
+                does not turn on optional visit tracking: the sign-up sends no browser identifier
+                and does not attach your current visits. If you have also sent us an enquiry or
+                request with the same address, Mautic can keep both on one contact record, together
+                with any visit history already attached to it. Every note has an unsubscribe link,
+                and you can ask us to delete your details through our <a href={contactHref('privacy', 'delete email update details')}>privacy contact form</a>.
+              </p>
+            </Fragment>
+          )}
           <h3>Server logs</h3>
           <p>
             This site is hosted on GitHub Pages. GitHub, as the hosting provider, keeps its own
@@ -167,6 +193,7 @@ const pageDescription =
             Optional Mautic visit tracking relies on your consent, which you can withdraw at any time. If
             you submit a website enquiry or starter access request, that exchange proceeds on the basis
             that you chose to contact us and provided your information for that purpose.
+            {emailUpdates && ' If you sign up for email updates, we send the notes on the basis of your consent, which you give by confirming your address and can withdraw at any time through the unsubscribe link.'}
           </p>
 
           <h2 id="privacy-retention-title">Retention</h2>
@@ -179,12 +206,13 @@ const pageDescription =
             are separate from the six-month browser preference. Withdrawing consent does not
             automatically delete those records; you can request their deletion through the privacy
             contact form.
+            {emailUpdates && ' Email update details are kept in our self-hosted Mautic system while you are signed up. Unsubscribing stops the notes but does not automatically delete those details; you can request their deletion through the privacy contact form.'}
           </p>
 
           <h2 id="privacy-rights-title">Your rights</h2>
           <p>
             You can ask us to access, correct, or delete personal data you have given us, for
-            example a starter access request or website enquiry, through our <a href={contactHref('privacy', 'access, correction, or deletion request')}>privacy contact form</a>.
+            example {emailUpdates ? 'a starter access request, a website enquiry or your email update details' : 'a starter access request or website enquiry'}, through our <a href={contactHref('privacy', 'access, correction, or deletion request')}>privacy contact form</a>.
             We will respond. Aggregate analytics data is not tied to an identified person, so there
             is generally nothing to look up or erase per visitor. If you believe otherwise in your
             case, tell us and we will look into it.
@@ -194,7 +222,7 @@ const pageDescription =
           <p>
             This site links to GitHub for source code and releases, to docs.registrystack.org for
             documentation, to marketplace.registrystack.org for reusable packs and access
-            requests, and to lab.registrystack.org, a separate hosted lab.
+            requests, and to lab.registrystack.org, a separate hosted lab.{videoLinks && ' It also links to our video channel and to films on it, which a separate video service hosts; this site does not embed that service\u2019s player.'}
             Each property has its own privacy notice for its other processing. Marketplace visit
             tracking also requires the additional acceptance described above.
           </p>
@@ -205,7 +233,11 @@ const pageDescription =
             it last changed.
           </p>
 
-          <p class="legal-effective">Effective date: November 12, 2026.</p>
+          {changedDate ? (
+            <p class="legal-effective">Effective date: {changedDate}.</p>
+          ) : (
+            <p class="legal-effective">Effective date: November 12, 2026.</p>
+          )}
         </div>
       </div>
     </section>

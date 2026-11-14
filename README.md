@@ -97,6 +97,75 @@ switch, French link destinations and fragments, labelled English links, no
 English wording left from the shared components, and no horizontal overflow
 on a phone or desktop screen. It names each French page that is not built.
 
+## Video channel, episodes and email sign-up
+
+Three additions stay off until the site owner supplies an input. With none of
+them supplied, the site has no episodes pages, channel link, sign-up or Email
+updates section, and the build prints no added warning.
+
+- Video channel: set `videoChannelUrl` in `src/data/channels.ts` to an HTTPS
+  address without credentials, and without a `si`, `feature` or `utm_*` query
+  parameter (the build fails on anything else). The footer "Explore" column
+  then links to it as "Video channel" / « Chaîne vidéo ». The channel's language
+  is not known to the site, so the link names none. The channel is linked,
+  never embedded; no episodes page may load an iframe, embed, object or script
+  from another origin.
+- Episodes pages: `/episodes/` and `/fr/episodes/` are built only when at least
+  one episode is published in both languages. They then join the footer
+  ("Episodes" / « Épisodes »), the sitemap, the language switch and the French
+  pair check. A published episode that lacks either language fails the build.
+- Email sign-up: set `PUBLIC_EMAIL_SIGNUP_ENDPOINT` to a Mautic form address in
+  the form of the kiosk endpoint above, for example
+  `https://mautic.example.org/form/submit?formId=3&privacy=kiosk`. The form must
+  not be a form the contact page uses: the same server and `formId` as
+  `PUBLIC_STARTER_REQUEST_ENDPOINT` or `PUBLIC_STARTER_REQUEST_TRACKED_ENDPOINT`
+  fails the build. The sign-up renders below the list on the episodes pages,
+  and the privacy page gains its "Email updates" section, only when the setting
+  is valid and an episode is published. Setting it asserts that the receiving
+  form sends a confirmation message before subscribing, that every note has an
+  unsubscribe link, and that notes carry no open or click tracking, because the
+  page text says so. The sign-up posts `email`, `language`, `source_page`, a
+  honeypot `website` and `formId`, sends no browser identifier and never
+  attaches the visitor's current visits (Mautic can still keep a sign-up and an
+  enquiry from the same address on one contact record). The form needs the
+  Mautic fields `email`, `language` and `source_page`. Without JavaScript the
+  form is hidden and a line says it needs JavaScript. The contact form does not
+  subscribe anyone.
+
+The sign-up is not ready to switch on. `server/` describes a Mautic setup with
+two published forms, no form actions and no mail sent from a submission. A
+sign-up with a confirmation message needs a third form, a send action,
+confirmation and unsubscribe routes and a proxy route, and `server/` describes
+none of them yet. The deploy workflow does not pass `PUBLIC_EMAIL_SIGNUP_ENDPOINT`
+to the build, so setting the repository variable changes nothing. Add the
+server description, its acceptance checks (including a browser run with the
+visit tracker switched on) and the workflow line in one reviewed change before
+switching it on.
+
+Each addition adds wording to the privacy page (the channel link and episodes
+add the video service to the linked third parties; the sign-up adds the Email
+updates section). The page therefore shows a different effective date once any
+of them is on: set `channelsPrivacyDate` in `src/data/channels.ts`, written as
+on the page, for example `'January 12, 2027'`. The build fails when an
+addition is on and the date is missing or not in the form `Month D, YYYY`.
+With none on, the page keeps its own date.
+
+To add an episode, create two Markdown files with the same number and date:
+`src/content/episodes/en/NNN-<slug>.md` and `src/content/episodes/fr/NNN-<slug>.md`.
+Front matter holds `number` (a positive integer), `date` (`YYYY-MM-DD`),
+`status` (`published` or `draft`; the default `draft` keeps it off the site and
+any other value fails the build), `title` and `filmUrl` (an HTTPS address of the
+film on the channel; a `si`, `feature` or `utm_*` parameter fails the build,
+other parameters stay allowed). The body is the short written version, a few
+paragraphs of Markdown. Episodes list newest first.
+
+`npm run check:episodes` builds the site in three states (no episode; sample
+episodes without the setting; sample episodes with the setting and a sample
+channel) and checks the points above, driving the sign-up in a browser against
+an intercepted endpoint. It also fails when the repository's own `dist/` holds
+sample content. The sample episodes live in `tests/fixtures/episodes` and load
+only when `SITE_TEST_FIXTURES=episodes` is set, a switch for tests alone.
+
 ## Pages
 
 Routes, navigation and solution and product memberships live in

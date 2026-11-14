@@ -1,0 +1,35 @@
+---
+// The episodes page exists only while at least one episode is published;
+// with none, no path is returned and nothing is built.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import EpisodeList from '../../components/EpisodeList.astro';
+import { hasPublishedEpisodes } from '../../data/episodes';
+import { episodesPageText } from '../../lib/episodes';
+
+export async function getStaticPaths() {
+  return (await hasPublishedEpisodes()) ? [{ params: { slug: undefined } }] : [];
+}
+
+const text = episodesPageText('en');
+---
+
+<Base title={text.title} description={text.lead}>
+  <SiteHeader current="episodes" />
+  <main id="main-content" tabindex="-1">
+    <header class="blog-intro">
+      <div class="blog-intro-inner">
+        <div class="blog-intro-copy">
+          <p class="eyebrow">Films</p>
+          <h1 id="episodes-title">{text.heading}</h1>
+          <p>{text.lead}</p>
+        </div>
+      </div>
+    </header>
+    <EpisodeList />
+    <DocsHandoff />
+  </main>
+  <SiteFooter />
+</Base>

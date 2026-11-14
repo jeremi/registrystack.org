@@ -1,0 +1,64 @@
+---
+import { emailSignupEndpointForSite, publishedEpisodes } from '../data/episodes';
+import { localeForPath } from '../i18n';
+import { episodeLinkText, formatEpisodeDate } from '../lib/episodes';
+import EmailSignup from './EmailSignup.astro';
+
+// The published episodes of the page's language, newest first, then the email
+// sign-up when it is on.
+const locale = localeForPath(Astro.url.pathname);
+const episodes = (await publishedEpisodes())[locale];
+const signupEndpoint = await emailSignupEndpointForSite();
+---
+
+<section class="section" aria-label={locale === 'fr' ? 'Liste des épisodes' : 'Episode list'}>
+  <div class="section-inner episodes-wrap">
+    {episodes.map((episode) => (
+      <article class="episode" aria-labelledby={`episode-${episode.data.number}-title`}>
+        <p class="episode-kicker">
+          {locale === 'fr' ? 'Épisode' : 'Episode'} {episode.data.number}
+          <span aria-hidden="true"> · </span>
+          <time datetime={(episode.data.date as Date).toISOString().slice(0, 10)}>{formatEpisodeDate(episode.data.date as Date, locale)}</time>
+        </p>
+        <h2 id={`episode-${episode.data.number}-title`}>{episode.data.title}</h2>
+        <div class="episode-body"><episode.Content /></div>
+        <p class="episode-link">
+          <a href={episode.data.filmUrl} hreflang={locale}>{episodeLinkText(episode.data.number as number, locale)} <span aria-hidden="true">&rarr;</span></a>
+        </p>
+      </article>
+    ))}
+    {signupEndpoint && <EmailSignup endpoint={signupEndpoint} />}
+  </div>
+</section>
+
+<style>
+  .episodes-wrap {
+    max-width: 720px;
+  }
+
+  .episode {
+    border-bottom: 1px solid var(--registry-rule);
+    padding-bottom: 32px;
+    margin-bottom: 32px;
+  }
+
+  .episode-kicker {
+    color: var(--registry-muted);
+    font-size: var(--type-sm);
+    margin: 0 0 6px;
+  }
+
+  .episode h2 {
+    margin: 0 0 12px;
+  }
+
+  .episode-body :global(p) {
+    color: var(--registry-body);
+    line-height: 1.65;
+  }
+
+  .episode-link a {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+</style>
