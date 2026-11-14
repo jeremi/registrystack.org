@@ -29,10 +29,10 @@ const t = translator(localeForPath(Astro.url.pathname));
 // Every area leads to its service example first. A register family then offers
 // optional starting configurations; a cross-cutting area offers how it fits.
 const isFamily = area.kind === 'register-family';
-const primary = Astro.props.primary ?? { href: '#example', label: t('See a service example', 'Voir un exemple de service') };
+const primary = Astro.props.primary ?? { href: '#example', label: t('See a service example', 'Consultez un exemple de service') };
 const secondary = Astro.props.secondary ?? (isFamily
-  ? { href: '#starters', label: t('Explore starting configurations', 'Parcourir les configurations de départ') }
-  : { href: '#fit', label: t('How it fits', 'Comment cela s’intègre') });
+  ? { href: '#starters', label: t('Explore starting configurations', 'Parcourez les configurations de départ') }
+  : { href: '#fit', label: t('How it fits', 'Découvrez comment cela s’intègre') });
 ---
 <Base title={area.pageTitle + ' | Registry Stack'} description={area.description ?? description}>
   <SiteHeader current={area.key} />

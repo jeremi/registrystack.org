@@ -14,14 +14,14 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
 <Solution
   area={area}
   heading="Permettez à d’autres services de vérifier une information de votre registre."
-  description="Donnez aux services autorisés la réponse à une question précise, par exemple si un demandeur remplit une condition d’âge, sans leur envoyer la fiche complète. Chaque réponse est signée numériquement : le système destinataire peut vérifier qui l’a émise et si elle a été modifiée."
+  description="Les services autorisés obtiennent la réponse à une question précise, par exemple si un demandeur remplit une condition d’âge, sans recevoir la fiche complète. Chaque réponse est signée numériquement : le système destinataire peut vérifier qui l’a émise et si elle a été modifiée."
 >
   <section id="example" class="section section-muted" aria-labelledby="check-example-title">
     <div class="section-inner">
       <div class="section-heading center">
         <p class="eyebrow">Un exemple : un registre d’état civil</p>
         <h2 id="check-example-title">Répondre à des questions différentes à partir du même registre.</h2>
-        <p>Un service des pensions demande si une personne est enregistrée comme étant en vie. Un service des autorisations demande si un demandeur remplit une condition d’âge. L’autorité de l’état civil décide de la question que chaque service peut poser. Aucun des deux services ne reçoit la fiche complète de la personne.</p>
+        <p>Un service des pensions demande si une personne est toujours en vie d’après le registre. Un service des autorisations demande si un demandeur remplit une condition d’âge. L’autorité de l’état civil décide de la question que chaque service peut poser. Aucun des deux services ne reçoit la fiche complète de la personne.</p>
       </div>
       <MinimizationFunnel />
     </div>
@@ -34,22 +34,22 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
       </div>
       <div class="product-facts">
         <article><h3>Choisir ce que chaque vérification renvoie</h3><p>Votre équipe définit la question et la façon dont les informations du registre y répondent. Un service des autorisations peut savoir si un demandeur remplit une condition d’âge sans recevoir sa date de naissance.</p></article>
-        <article><h3>Contrôler qui peut faire chaque vérification</h3><p>Votre institution autorise chaque service connecté à poser des questions précises. Les demandes qui sortent de ces autorisations sont refusées. Votre équipe peut consulter les demandes enregistrées et leurs résultats.</p></article>
-        <article><h3>Vérifier qui a émis la réponse</h3><p>Le service destinataire vérifie la signature et la période de validité. Cela confirme qui a émis la réponse et si elle a été modifiée. Cela ne prouve pas que la fiche source est exacte et ne décide pas de ce que la réponse signifie pour le demandeur.</p></article>
+        <article><h3>Contrôler qui peut faire chaque vérification</h3><p>Votre institution autorise chaque service connecté à poser des questions précises. Toute demande hors de ce cadre est refusée. Votre équipe peut consulter les demandes enregistrées et leurs résultats.</p></article>
+        <article><h3>Vérifier qui a émis la réponse</h3><p>Le service destinataire vérifie la signature et la période de validité, ce qui confirme qui a émis la réponse et si elle a été modifiée. Cette vérification ne prouve pas que la fiche source est exacte, et elle ne tranche pas ce que la réponse implique pour le demandeur.</p></article>
       </div>
     </div>
   </section>
   <SolutionFit
     area={area}
-    heading="Se relier au registre que vous utilisez déjà."
+    heading="Se relier à votre registre actuel."
     jobs={{
-      'evidence-gateway': 'Répond à une question à partir des informations de votre registre, puis signe numériquement le résultat. La réponse peut être oui ou non, ou une valeur tirée d’une liste que votre institution définit.',
+      'evidence-gateway': 'Répond à une question à partir des informations de votre registre, puis signe numériquement le résultat. La réponse peut être oui ou non, ou une valeur tirée d’une liste définie par votre institution.',
     }}
     extra={[
       { term: 'Vos agents continuent d’utiliser leur registre', body: 'Votre équipe technique relie Evidence Gateway au système existant ou à une extraction en lecture seule. Les agents continuent de tenir les fiches dans ce système. Base Registry Engine est facultatif.' },
     ]}
   >
-    <p>Commencez par une question que votre équipe traite souvent. Convenez de qui peut la poser, des informations que la réponse peut contenir et de l’ancienneté maximale de ces informations.</p>
+    <p>Commencez par une question à laquelle votre équipe répond souvent. Fixez d’un commun accord qui peut la poser, ce que la réponse peut contenir et l’ancienneté maximale des informations.</p>
   </SolutionFit>
   <SolutionFaq
     muted
@@ -57,7 +57,7 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
       {
         q: 'Devons-nous déplacer notre registre ?',
         a: 'Non. Votre équipe technique relie Evidence Gateway à votre registre existant ou à une extraction de celui-ci. Les réponses reflètent les informations disponibles par cette connexion : la mise en œuvre doit donc tenir compte de tout délai de mise à jour d’une extraction.',
-        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’intègre aux systèmes existants (en anglais)' },
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il fonctionne aux côtés des systèmes existants (en anglais)' },
       },
       {
         q: 'Comment le service destinataire sait-il qu’une réponse est authentique ?',
@@ -66,20 +66,20 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
       },
       {
         q: 'Cela remplace-t-il nos accords de partage de données ?',
-        a: 'Non. Votre institution convient toujours de ce que chaque service peut savoir et pourquoi. Les questions et les autorisations d’accès doivent être configurées pour respecter cet accord.',
+        a: 'Non. Ce que chaque service peut savoir, et pourquoi, reste fixé par accord avec votre institution. Les questions et les autorisations d’accès doivent être configurées conformément à cet accord.',
       },
       {
-        q: 'Quelle est l’ancienneté des informations ?',
-        a: 'La réponse indique quand Evidence Gateway a fait la vérification et quand la réponse expire. Ces dates ne montrent pas quand la fiche source a été mise à jour pour la dernière fois. Si la connexion passe par une extraction, son heure de publication et son calendrier d’actualisation influent sur la fraîcheur des informations. Votre institution et le service destinataire conviennent de l’ancienneté acceptable pour cette vérification.',
+        q: 'De quand datent les informations ?',
+        a: 'La réponse indique la date de la vérification par Evidence Gateway et sa propre date d’expiration. Ces dates n’indiquent pas la dernière mise à jour de la fiche source. Si la connexion passe par une extraction, son heure de publication et son rythme d’actualisation influent sur l’ancienneté des informations. Votre institution et le service destinataire fixent ensemble l’ancienneté acceptable pour cette vérification.',
       },
       {
-        q: 'Par où votre équipe technique commence-t-elle ?',
-        a: `Le tutoriel ${evidence.name} montre comment répondre à une question par oui ou non à partir de données d’exemple et vérifier le résultat sur un ordinateur portable.`,
+        q: 'Par où l’équipe technique peut-elle commencer ?',
+        a: `Le tutoriel ${evidence.name} montre comment répondre par oui ou non à une question à partir de données d’exemple, puis vérifier le résultat sur un ordinateur portable.`,
         link: { href: evidence.tutorialHref, label: evidence.tutorialLabel },
       },
       {
         q: 'La réponse peut-elle être un statut ou une catégorie ?',
-        a: 'Oui. Elle peut être une valeur tirée d’une liste que votre institution définit, par exemple un statut d’inscription ou une région. Chaque question prédéfinie précise les informations que le service qui tient le registre accepte de renvoyer et les services qui peuvent les demander.',
+        a: 'Oui. Elle peut prendre une valeur dans une liste définie par votre institution, par exemple un statut d’inscription ou une région. Chaque question prédéfinie précise les informations que l’institution responsable du registre accepte de renvoyer, et les services autorisés à les demander.',
         link: { href: 'https://docs.registrystack.org/tutorials/return-a-governed-value/', label: 'Suivre le tutoriel sur la valeur encadrée (en anglais)' },
       },
     ]}
@@ -90,7 +90,7 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
     body="Dites-nous quel registre détient l’information, quel service en a besoin et ce que ce service doit savoir. Nous pouvons vous aider à définir la première question et à relier les deux systèmes."
     primaryLabel="Décrivez votre service"
     primaryHref={describeServiceHref(area.name, 'fr')}
-    note="Le cœur du logiciel est open source (Apache-2.0). Votre équipe, un prestataire que vous désignez ou nous pouvons le mettre en œuvre et l’exploiter. Nous établissons un devis distinct pour l’hébergement et l’exploitation."
+    note="Le cœur du logiciel est open source (Apache-2.0). Sa mise en œuvre et son exploitation peuvent être assurées par votre équipe, par un prestataire que vous désignez ou par nous. Nous établissons un devis distinct pour l’hébergement et l’exploitation."
     emphasis="docs"
   />
 </Solution>

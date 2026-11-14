@@ -15,7 +15,7 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
 
 <Base
   title="Assistants d’IA pour les services aux citoyens | Registry Stack"
-  description="Les personnes préparent la modification de leurs données avec un assistant d’IA que vous approuvez, puis la vérifient et l’envoient sur votre site officiel. Connexion par MCP."
+  description="Les usagers préparent la modification de leurs données avec un assistant d’IA que vous approuvez, la vérifient et l’envoient sur votre site officiel. Via MCP."
   ogImagePath="/og-ai.png"
   ogImageAlt="Registry Stack : concevoir, adapter et ouvrir l’accès aux services publics avec l’IA."
 >
@@ -23,11 +23,11 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
   <main id="main-content" tabindex="-1">
     <AiLandingHero
       eyebrow="L’IA pour les services aux citoyens"
-      heading="Laissez les personnes mettre à jour leurs données avec l’aide d’un assistant d’IA."
-      lead="Les personnes demandent à un assistant que vous approuvez de préparer une modification, puis la vérifient et l’envoient sur votre site officiel. L’assistant ne lit que les informations que vous autorisez. Il ne peut pas déposer une demande, l’approuver ni modifier une fiche."
+      heading="Permettez aux usagers de mettre à jour leurs données avec l’aide d’un assistant d’IA."
+      lead="Les usagers demandent à un assistant que vous approuvez de préparer une modification, puis la vérifient et l’envoient sur votre site officiel. L’assistant ne lit que les informations que vous autorisez. Il ne peut pas déposer une demande, l’approuver ni modifier une fiche."
       context={context}
       exampleHref="#correction-example"
-      exampleLabel="Voir l’exemple du changement d’adresse"
+      exampleLabel="Découvrez l’exemple du changement d’adresse"
       exampleNote="Exemple fictif : l’assistant d’Alex prépare un changement d’adresse ; Alex le vérifie et l’envoie sur le site de l’institution."
       note="Intégration d’assistants · Préversion, pour un service Base Registry Engine configuré."
     >
@@ -55,7 +55,7 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
       <div class="section-inner">
         <div class="section-heading"><p class="eyebrow">Exemple : un changement d’adresse</p><h2 id="example-title">D’une conversation à une demande officielle</h2><p>Alex a déménagé. Un assistant aide à préparer la modification ; Alex la vérifie et l’envoie sur le site officiel.</p></div>
         <figure class="ai-film"><video controls playsinline preload="none" width="1280" height="720" poster="/films/registry-stack-ai-film-poster.jpg" aria-describedby="film-note"><source src="/films/registry-stack-ai-film-720.mp4" type="video/mp4" /><track kind="captions" src="/films/registry-stack-ai-film-fr.vtt" srclang="fr" label="Français" default /><track kind="captions" src="/films/registry-stack-ai-film-en.vtt" srclang="en" label="English" /></video><figcaption id="film-note">Changement d’adresse fictif. Film : 1 minute 25 secondes, musique sans parole ; le texte à l’écran est en anglais et des sous-titres facultatifs en français expliquent chaque scène. Les étapes ci-dessous décrivent le même exemple par écrit. <a href="/films/registry-stack-ai-film-720.mp4">Télécharger le film (MP4, 4,5 Mo)</a>.</figcaption></figure>
-        <ol class="approach-steps"><li><strong>L’assistant prépare</strong><span>Une fois la connexion d’Alex établie, l’assistant lit les informations autorisées dans la fiche d’Alex et prépare un brouillon de modification.</span></li><li><strong>Alex vérifie et envoie</strong><span>Alex se connecte sur le site officiel, compare le brouillon avec la fiche actuelle et choisit de l’envoyer ou non.</span></li><li><strong>L’institution applique ses règles</strong><span>Le registre contrôle la demande. Les agents examinent les cas que l’institution choisit. Alex peut demander à l’assistant où en est la demande, si cette option est activée.</span></li></ol>
+        <ol class="approach-steps"><li><strong>L’assistant prépare</strong><span>Après la connexion d’Alex, l’assistant lit les informations autorisées de la fiche d’Alex et prépare un brouillon de modification.</span></li><li><strong>Alex vérifie et envoie</strong><span>Alex se connecte sur le site officiel, compare le brouillon avec la fiche actuelle et choisit de l’envoyer ou non.</span></li><li><strong>L’institution applique ses règles</strong><span>Le registre contrôle la demande. Les agents examinent les cas que l’institution choisit. Alex peut demander à l’assistant où en est la demande, si cette option est activée.</span></li></ol>
       </div>
     </section>
 
@@ -84,23 +84,23 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
     <section class="section section-muted" aria-labelledby="fit-title">
       <div class="section-inner">
         <div class="section-heading">
-          <h2 id="fit-title">Ajoutez un assistant une tâche à la fois</h2>
+          <h2 id="fit-title">Ajoutez un assistant tâche par tâche</h2>
         </div>
         <div class="value-grid">
           <article>
-            <h3>Les personnes peuvent toujours passer par votre site et votre guichet</h3>
-            <p>Les personnes qui n’utilisent pas d’assistant continuent comme aujourd’hui. L’assistant est une voie de plus vers le même service, sous les mêmes règles.</p>
+            <h3>Les usagers peuvent toujours passer par votre site et votre guichet</h3>
+            <p>Les usagers qui n’utilisent pas d’assistant continuent comme aujourd’hui. L’assistant offre un accès de plus au même service, selon les mêmes règles.</p>
           </article>
           <article>
-            <h3>Choisissez la tâche et les informations dont elle a besoin</h3>
-            <p>Approuvez les informations que l’assistant peut lire et les modifications qu’il peut aider à préparer. Le registre contrôle l’autorisation à chaque demande reçue.</p>
+            <h3>Vous choisissez la tâche et les informations nécessaires</h3>
+            <p>Vous approuvez les informations que l’assistant peut lire et les modifications qu’il peut aider à préparer. Le registre contrôle l’autorisation à chaque demande reçue.</p>
           </article>
           <article>
-            <h3>Choisissez l’assistant</h3>
+            <h3>Vous choisissez l’assistant</h3>
             <p>La connexion utilise MCP (<span lang="en">Model Context Protocol</span>), un standard ouvert. Votre institution peut enregistrer un ou plusieurs assistants compatibles avec MCP et conformes aux exigences d’authentification du guide d’intégration, chez un seul fournisseur d’IA ou chez plusieurs.</p>
           </article>
         </div>
-        <p class="section-note">Pour les équipes techniques, le <a href={mcpDocsHref} hreflang="en">guide d’intégration de MCP (en anglais)</a> décrit l’authentification, le service distinct qui accorde l’accès à chaque brouillon et le site de relecture. Voir aussi <a href="/fr/architecture/headless/">comment Registry Stack s’intègre à vos interfaces existantes</a> et <a href="/fr/security/">comment il gère les accès et la responsabilité</a>. La connexion est une préversion ; la foire aux questions ci-dessous explique ce que cela signifie pour la compatibilité.</p>
+        <p class="section-note">Pour les équipes techniques, le <a href={mcpDocsHref} hreflang="en">guide d’intégration de MCP (en anglais)</a> décrit l’authentification, le service distinct qui accorde l’accès à chaque brouillon et le site de relecture. Voir aussi <a href="/fr/architecture/headless/">comment Registry Stack s’intègre à vos interfaces existantes</a> et <a href="/fr/security/">comment il gère les accès et la responsabilité</a>. La connexion est une préversion ; la foire aux questions ci-dessous précise ce que cela implique pour la compatibilité.</p>
       </div>
     </section>
 
@@ -130,7 +130,7 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
         },
         {
           q: 'Pouvons-nous connecter un assistant dès aujourd’hui ?',
-          a: 'Oui. Les outils de l’assistant et la page de relecture sont publiés et documentés. Ils sont en préversion, hors de la promesse de compatibilité : une version mineure peut donc modifier ou retirer une interface sans période de dépréciation. Commencez par une seule tâche, et convenez avec nous du moment où connecter de vraies fiches.',
+          a: 'Oui. Les outils de l’assistant et la page de relecture sont publiés et documentés. Ils sont en préversion, hors de la promesse de compatibilité : une version mineure peut donc modifier ou retirer une interface sans période de dépréciation. Commencez par une seule tâche, et convenez avec nous du moment où vous connecterez de vraies fiches.',
           link: { href: 'https://docs.registrystack.org/reference/api-stability/#experimental-surfaces', label: 'Lire ce que couvre la promesse de compatibilité (en anglais)' },
         },
       ]}
@@ -138,11 +138,11 @@ const mcpDocsHref = 'https://docs.registrystack.org/configure/breg-mcp/';
 
     <section class="final-cta" aria-labelledby="next-title">
       <div class="section-inner">
-        <h2 id="next-title">Choisissez une demande que les personnes peuvent essayer</h2>
-        <p>Dites-nous pour quelle tâche les personnes ont besoin d’aide, de quelles informations elle a besoin et où les personnes doivent vérifier le brouillon. Nous verrons avec votre équipe comment l’évaluer.</p>
+        <h2 id="next-title">Choisissez une demande que les usagers pourront essayer</h2>
+        <p>Indiquez-nous la tâche pour laquelle les usagers ont besoin d’aide, les informations qu’elle nécessite et l’endroit où ils devront vérifier le brouillon. Nous verrons avec votre équipe comment l’évaluer.</p>
         <div class="section-links">
           <a class="button button-primary" href={describeServiceHref(context, 'fr')} data-journey="service-inquiry">Décrivez votre service</a>
-          <a class="button button-secondary" href="/fr/pricing/">Voir les options de mise en œuvre</a>
+          <a class="button button-secondary" href="/fr/pricing/">Consultez les options de mise en œuvre</a>
         </div>
       </div>
     </section>

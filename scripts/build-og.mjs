@@ -29,7 +29,7 @@ const cards = [
     file: 'public/og-image-fr.png',
     lang: 'fr',
     kicker: 'Logiciels open source pour les registres publics',
-    headline: 'Des logiciels pour les registres<br>officiels et les services<br>qui les utilisent.',
+    headline: 'Le logiciel des registres officiels<br>et des services qui en dépendent.',
     works: 'Adapter. Connecter. Garder la main.',
   },
 ];

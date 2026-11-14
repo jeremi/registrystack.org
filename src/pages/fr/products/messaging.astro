@@ -7,7 +7,7 @@ const product = products.find((p) => p.key === 'messaging')!;
 <Product
   product={product}
   heading="Envoyez des notifications depuis vos services publics."
-  description="Registry Messaging envoie des courriels et des SMS à partir de modèles approuvés, par les fournisseurs que vous configurez. Votre application choisit le destinataire et le moment de l’envoi ; Messaging prépare le message, l’expédie et consigne le résultat."
+  description="Registry Messaging envoie des courriels et des SMS à partir de modèles approuvés, par l’intermédiaire des fournisseurs que vous configurez. Votre application choisit le destinataire et le moment de l’envoi ; Messaging prépare le message, l’expédie et consigne le résultat."
   note="Messagerie open source pour un nouveau service ou un service que vous exploitez déjà."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="messaging-example-title">
@@ -15,7 +15,7 @@ const product = products.find((p) => p.key === 'messaging')!;
       <div class="section-heading">
         <p class="eyebrow">Un exemple : un document d’autorisation est prêt</p>
         <h2 id="messaging-example-title">Indiquez au demandeur où trouver son document.</h2>
-        <p>Le service de délivrance des autorisations a préparé et conservé le document d’autorisation. Il demande à Registry Messaging d’envoyer un courriel à partir du modèle approuvé de l’autorité. La notification invite le demandeur à se connecter au service officiel pour le consulter.</p>
+        <p>Le service de délivrance des autorisations a préparé et conservé le document d’autorisation. Il demande à Registry Messaging d’envoyer un courriel à partir du modèle approuvé de l’autorité. La notification invite le demandeur à se connecter au service officiel pour consulter son document.</p>
       </div>
       <figure class="messaging-example" aria-labelledby="messaging-example-caption">
         <section class="request-panel" aria-labelledby="messaging-request-title">
@@ -50,12 +50,12 @@ const product = products.find((p) => p.key === 'messaging')!;
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">Fonctions pratiques</p>
-        <h2 id="messaging-capabilities-title">Assurez la cohérence des notifications et suivez leur progression.</h2>
+        <h2 id="messaging-capabilities-title">Harmonisez les notifications et suivez leur acheminement.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Approuver la formulation</h3><p>Définissez les modèles de courriel et de SMS, leurs versions, leurs langues et les informations requises. Les applications choisissent un modèle approuvé et fournissent les informations de chaque message.</p></article>
-        <article><h3>Contrôler quels services peuvent envoyer</h3><p>Autorisez des applications à utiliser des expéditeurs et des modèles précis. Reliez les fournisseurs de courriel ou de SMS que votre institution choisit.</p></article>
-        <article><h3>Distinguer l’envoi de la remise</h3><p>Voyez si un message est en file d’attente, accepté par le fournisseur, ou s’il a un résultat de remise signalé. Le statut de remise est disponible lorsque le fournisseur le signale ; il n’indique pas si la personne a lu la notification.</p></article>
+        <article><h3>Approuver la formulation</h3><p>Les modèles de courriel et de SMS sont définis avec leurs versions, leurs langues et les informations requises. Les applications choisissent un modèle approuvé et fournissent les informations propres à chaque message.</p></article>
+        <article><h3>Contrôler les services autorisés à envoyer</h3><p>Vous autorisez chaque application à utiliser des expéditeurs et des modèles précis. Les fournisseurs de courriel ou de SMS reliés sont ceux que choisit votre institution.</p></article>
+        <article><h3>Distinguer l’envoi de la remise</h3><p>Pour chaque message, vous savez s’il est en file d’attente, s’il a été accepté par le fournisseur ou si un résultat de remise a été signalé. Le statut de remise n’est disponible que si le fournisseur le communique ; il n’indique pas si le destinataire a lu la notification.</p></article>
       </div>
     </div>
   </section>
@@ -63,13 +63,13 @@ const product = products.find((p) => p.key === 'messaging')!;
     <div class="section-inner product-fit">
       <div class="section-heading compact">
         <p class="eyebrow">Comment il s’intègre à votre service</p>
-        <h2 id="messaging-fit-title">Envoyez des messages quand votre application en a besoin.</h2>
-        <p>Reliez Messaging à votre application ou à votre flux de travail. Utilisez-le pour des accusés de réception, des demandes d’informations, des rappels ou des notifications de décision. Le service appelant garde la maîtrise du processus ; Messaging traite chaque message demandé par le fournisseur configuré.</p>
+        <h2 id="messaging-fit-title">Envoyez des messages au moment voulu par votre application.</h2>
+        <p>Messaging se relie à votre application ou à votre flux de travail et sert aux accusés de réception, aux demandes d’informations, aux rappels ou aux notifications de décision. Le service appelant garde la maîtrise du processus ; Messaging traite chaque message demandé en passant par le fournisseur configuré.</p>
       </div>
       <dl>
-        <dt>L’application choisit pourquoi, quand et à qui</dt><dd>Gardez dans votre service les coordonnées et l’autorisation de contacter une personne. Fournissez le destinataire, le modèle et les données du message au moment de demander l’envoi.</dd>
-        <dt>La mise en œuvre relie le fournisseur</dt><dd>Convenez de l’expéditeur, du compte chez le fournisseur, des identifiants, des modèles et des liens de retour vers le service officiel. Les documents et leurs contrôles d’accès restent dans ce service.</dd>
-        <dt>Choisissez qui l’exploite</dt><dd>Votre institution ou un prestataire désigné peut héberger et exploiter Messaging, ou nous pouvons l’exploiter pour vous. Nous établissons un devis distinct pour l’hébergement et l’exploitation dans la proposition.</dd>
+        <dt>L’application choisit pourquoi, quand et à qui</dt><dd>Les coordonnées d’une personne et l’autorisation de la contacter restent dans votre service. La demande d’envoi fournit le destinataire, le modèle et les données du message.</dd>
+        <dt>La mise en œuvre relie le fournisseur</dt><dd>L’expéditeur, le compte chez le fournisseur, les identifiants, les modèles et les liens de retour vers le service officiel sont à convenir. Les documents et leurs contrôles d’accès restent dans ce service.</dd>
+        <dt>Choisissez qui l’exploite</dt><dd>Votre institution ou un prestataire désigné peut héberger et exploiter Messaging, ou nous pouvons l’exploiter pour vous. L’hébergement et l’exploitation font l’objet d’un devis distinct dans notre proposition.</dd>
       </dl>
     </div>
   </section>
@@ -77,8 +77,8 @@ const product = products.find((p) => p.key === 'messaging')!;
     <div class="section-inner">
       <div class="section-heading compact">
         <p class="eyebrow">Évaluer le logiciel</p>
-        <h2 id="messaging-developers-title">Envoyez et inspectez un message local.</h2>
-        <p>Le tutoriel utilise une boîte de courriel locale et un fournisseur de SMS fictif pour inspecter les messages et leur statut. Poursuivez avec la <a href="https://docs.registrystack.org/start/messaging/" hreflang="en">présentation de Messaging (en anglais)</a> et le <a href="https://docs.registrystack.org/operate/messaging/" hreflang="en">guide d’exploitation (en anglais)</a> pour relier les fournisseurs que vous avez choisis.</p>
+        <h2 id="messaging-developers-title">Envoyez un message en local et examinez-le.</h2>
+        <p>Le tutoriel s’appuie sur une boîte de courriel locale et un fournisseur de SMS fictif pour examiner les messages et leur statut. Poursuivez avec la <a href="https://docs.registrystack.org/start/messaging/" hreflang="en">présentation de Messaging (en anglais)</a> et le <a href="https://docs.registrystack.org/operate/messaging/" hreflang="en">guide d’exploitation (en anglais)</a> pour relier les fournisseurs que vous avez choisis.</p>
         <p><a class="inline-cta" href={product.tutorialHref} hreflang="en">{product.tutorialLabel} →</a></p>
       </div>
     </div>

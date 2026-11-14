@@ -19,8 +19,8 @@ const steps: WeekStep[] = [
   {
     when: 'Avant la première demande',
     ...weekProduct('base-registry'),
-    title: 'Le ministère décide de ce que le registre enregistre',
-    text: 'Un ministère à qui l’on confie un nouveau mandat d’enregistrement des agriculteurs n’a encore ni formulaire ni registre. Il décide de ce que contiennent la fiche d’un agriculteur et celle d’une exploitation, des champs obligatoires, et des rôles autorisés à les enregistrer ou à les modifier.',
+    title: 'Le ministère définit le contenu du registre',
+    text: 'Investi d’un nouveau mandat d’enregistrement des agriculteurs, le ministère n’a encore ni formulaire ni registre. Il définit le contenu de la fiche d’un agriculteur et de celle d’une exploitation, les champs obligatoires et les rôles autorisés à enregistrer ou à modifier ces fiches.',
     card: { kind: 'record', recordType: 'Registre des agriculteurs', recordId: 'Définition', icon: 'data', fields: [
       { label: 'Fiches', value: 'Agriculteur, exploitation' },
       { label: 'Obligatoire pour une exploitation', value: 'District, cultures' },
@@ -31,7 +31,7 @@ const steps: WeekStep[] = [
     when: 'Demande et examen',
     ...weekProduct('casework'),
     title: 'Un agriculteur fait sa demande et un agent décide',
-    text: 'Un agriculteur dépose sa demande au bureau du district. La demande entre dans la file d’examen des enregistrements. D. Mwangi vérifie que l’exploitation n’est pas déjà enregistrée sous un autre nom et approuve la demande. Le registre ne change pas tant que l’agent n’a pas décidé.',
+    text: 'Un agriculteur dépose sa demande au bureau du district. La demande entre dans la file d’examen des enregistrements. D. Mwangi vérifie que l’exploitation n’est pas déjà enregistrée sous un autre nom et approuve la demande. Le registre reste inchangé tant que l’agent n’a pas statué.',
     card: { kind: 'history', items: [
       { state: 'Reçue', note: 'Dirigée vers les enregistrements' },
       { state: 'Prise en charge', note: 'Confiée à D. Mwangi' },
@@ -42,7 +42,7 @@ const steps: WeekStep[] = [
     when: 'Première inscription au registre',
     ...weekProduct('base-registry'),
     title: 'L’agent enregistre l’exploitation et son historique',
-    text: 'L’agent enregistre l’exploitation comme première inscription de cet agriculteur. Le registre consigne le nom de l’agent et conserve chaque statut antérieur lorsque la fiche change.',
+    text: 'L’agent enregistre l’exploitation comme première inscription de cet agriculteur. Le registre consigne le nom de l’agent et, à chaque modification de la fiche, conserve le statut antérieur.',
     card: { kind: 'record', recordType: 'Fiche d’exploitation', recordId: 'HLD-5582', icon: 'data', fields: [
       { label: 'Statut', value: 'Enregistrée' },
       { label: 'District', value: 'Nord' },
@@ -61,7 +61,7 @@ const steps: WeekStep[] = [
 <Solution
   area={area}
   heading="Tenez les fiches des producteurs, exploitations, établissements et autorisations."
-  description="Les agents peuvent examiner les enregistrements et consigner les modifications approuvées des exploitations, des établissements et des autorisations. Les programmes habilités peuvent vérifier une information, comme le statut d’enregistrement, sans recevoir la fiche complète. Votre institution fixe les règles et les accès du registre."
+  description="Les agents peuvent examiner les demandes d’enregistrement et consigner les modifications approuvées concernant les exploitations, les établissements et les autorisations. Les programmes habilités peuvent vérifier une information, comme le statut d’enregistrement, sans recevoir la fiche complète. Votre institution fixe les règles et les accès du registre."
 >
   <section class="section" id="example" aria-labelledby="agriculture-example-title">
     <div class="section-inner">
@@ -86,9 +86,9 @@ const steps: WeekStep[] = [
         <h2 id="agriculture-change-title">Tenez les fiches d’exploitation et l’historique de leur statut.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Reliez chaque autorisation au site qu’elle couvre</h3><p>Chaque exploitation, établissement ou site a sa propre fiche, et chaque enregistrement ou autorisation y est relié. Si une entreprise alimentaire exploite deux établissements, chacun peut avoir son propre enregistrement et son statut enregistré.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre tient une fiche <span aria-hidden="true">→</span></a></article>
-        <article><h3>Gardez les statuts antérieurs lorsqu’une autorisation change</h3><p>Une suspension ou un retrait est enregistré avec le nom de l’agent et la date. Les agents peuvent voir quel statut le registre indiquait le jour d’une inspection.</p><a class="inline-cta" href="/fr/solutions/review-changes/">Comment une décision parvient au registre <span aria-hidden="true">→</span></a></article>
-        <article><h3>Publiez le nombre d’inscriptions par district</h3><p>Publiez chaque mois ou chaque trimestre les effectifs par district dans des publications examinées, en masquant les petits effectifs et en arrondissant les autres.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/" hreflang="en">Comment fonctionnent les publications statistiques (en anglais) <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Reliez chaque autorisation au site qu’elle couvre</h3><p>Chaque exploitation, établissement ou site a sa propre fiche, et chaque enregistrement ou autorisation y est relié. Si une entreprise alimentaire exploite deux établissements, chacun peut avoir son propre enregistrement et son propre statut au registre.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre tient une fiche <span aria-hidden="true">→</span></a></article>
+        <article><h3>Gardez les statuts antérieurs lorsqu’une autorisation change</h3><p>Une suspension ou un retrait est enregistré avec le nom de l’agent et la date. Les agents peuvent retrouver le statut qu’indiquait le registre le jour d’une inspection.</p><a class="inline-cta" href="/fr/solutions/review-changes/">Comment une décision parvient au registre <span aria-hidden="true">→</span></a></article>
+        <article><h3>Publiez le nombre d’inscriptions par district</h3><p>Diffusez chaque mois ou chaque trimestre les effectifs par district, après examen de chaque publication ; les petits effectifs sont masqués et les autres arrondis.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/" hreflang="en">Comment fonctionnent les publications statistiques (en anglais) <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
@@ -98,16 +98,16 @@ const steps: WeekStep[] = [
       {
         q: 'Cela remplace-t-il notre registre des agriculteurs ou notre système d’identification des animaux ?',
         a: 'Vous pouvez garder le registre que vous tenez aujourd’hui et y connecter Evidence Gateway pour répondre aux questions convenues. Utilisez Base Registry Engine lorsqu’il vous faut un nouveau registre ou que vous décidez d’en migrer un, y compris un registre tenu dans des tableurs.',
-        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’intègre aux systèmes existants (en anglais)' },
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il fonctionne aux côtés des systèmes existants (en anglais)' },
       },
       {
         q: 'Un programme de subventions peut-il vérifier un agriculteur sans compte sur notre système ?',
-        a: 'Le service du programme pose à votre registre une question que vous avez convenu de traiter, par exemple si un agriculteur est enregistré, et reçoit cette réponse, et rien d’autre. Votre institution décide quels services peuvent poser des questions, et lesquelles.',
+        a: 'Le service du programme pose à votre registre une question que vous avez accepté de traiter, par exemple si un agriculteur est enregistré ; il reçoit cette réponse, et rien de plus. Votre institution décide quels services peuvent interroger le registre, et sur quelles questions.',
         link: { href: '/solutions/check-a-fact/', label: 'Comment un service vérifie une information' },
       },
       {
         q: 'Qui peut consulter la fiche d’un agriculteur ?',
-        a: 'Votre institution décide, rôle par rôle : qui peut consigner une inscription, qui peut consigner une autorisation, qui peut en consulter une, et pour quel motif. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit pour l’ensemble du registre et des applications connectées est convenue lors de la mise en œuvre.',
+        a: 'Votre institution décide, rôle par rôle : qui peut consigner une inscription, qui peut consigner une autorisation, qui peut les consulter, et pour quel motif. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit du registre et des applications connectées est convenue lors de la mise en œuvre.',
         link: { href: '/security/', label: 'Qui est responsable de quoi' },
       },
       ...sharedFamilyFaq,
@@ -116,10 +116,10 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Travaillons ensemble"
     heading="Parlons de votre service."
-    body="Dites-nous quels producteurs, établissements ou autorisations vous devez enregistrer, qui saisit les informations de terrain et ce que les autres programmes doivent pouvoir vérifier. Nous pouvons vous montrer comment Registry Stack pourrait s’intégrer."
+    body="Dites-nous quels producteurs, établissements ou autorisations vous devez enregistrer, qui saisit les informations de terrain et ce que les autres programmes doivent pouvoir vérifier. Nous pouvons vous montrer comment Registry Stack pourrait s’y intégrer."
     primaryLabel="Décrivez votre service"
     primaryHref={describeServiceHref(area.name, 'fr')}
-    note="Le cœur du logiciel est open source (Apache-2.0). Votre équipe, un prestataire que vous désignez ou nous pouvons le mettre en œuvre et l’exploiter. L’hébergement et l’exploitation font l’objet d’un devis distinct."
+    note="Le cœur du logiciel est open source (Apache-2.0). Sa mise en œuvre et son exploitation peuvent être assurées par votre équipe, par un prestataire que vous désignez ou par nous. Nous établissons un devis distinct pour l’hébergement et l’exploitation."
     emphasis="docs"
   />
 </Solution>

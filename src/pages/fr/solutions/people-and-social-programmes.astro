@@ -20,7 +20,7 @@ const steps: WeekStep[] = [
     when: 'Demande déposée',
     product: 'Votre application de réception des demandes',
     title: 'Un ménage fait une demande',
-    text: 'Un ménage demande son inscription au bureau du district. Le service de réception recueille les informations d’évaluation du programme, dont le rapport de visite à domicile, avant d’envoyer le dossier complet pour décision. Le registre ne change pas encore.',
+    text: 'Un ménage dépose une demande d’inscription au bureau du district. Le service de réception recueille les informations nécessaires à l’évaluation du programme, dont le rapport de visite à domicile, puis transmet le dossier complet pour décision. À ce stade, le registre ne change pas.',
     card: { kind: 'record', recordType: 'Demande', recordId: 'APP-5120', icon: 'household', fields: [
       { label: 'Ménage', value: 'HH-30944' },
       { label: 'Programme', value: 'Protection sociale' },
@@ -42,7 +42,7 @@ const steps: WeekStep[] = [
     when: 'Fiche du ménage mise à jour',
     ...weekProduct('base-registry'),
     title: 'La fiche du ménage change et garde son historique',
-    text: 'L’agent enregistre l’inscription sous son propre nom. La version 4 contient le statut ; la version 3 reste consultable.',
+    text: 'L’agent enregistre l’inscription sous son propre nom. Le statut figure dans la version 4, et la version 3 reste consultable.',
     card: { kind: 'record', recordType: 'Fiche du ménage', recordId: 'HH-30944', icon: 'household', fields: [
       { label: 'Statut', value: 'Inscrit' },
       { label: 'Modifiée par', value: 'A. Haddad' },
@@ -53,7 +53,7 @@ const steps: WeekStep[] = [
     when: 'Vérification par un programme autorisé',
     ...weekProduct('evidence-gateway'),
     title: 'Un autre programme vérifie l’inscription',
-    text: 'Un programme de cantines scolaires habilité à faire cette vérification demande si le ménage est inscrit et reçoit une réponse signée numériquement. Les informations sur les revenus et les notes du dossier ne sont pas communiquées.',
+    text: 'Un programme de cantines scolaires habilité à faire cette vérification demande si le ménage est inscrit ; il reçoit une réponse signée numériquement. Ni les informations sur les revenus ni les notes du dossier ne lui sont communiquées.',
     card: { kind: 'answer', fieldLabel: 'Ménage inscrit', value: 'Oui', recipient: 'Programme de cantines scolaires', issuer: 'Registre social' },
   },
 ];
@@ -61,7 +61,7 @@ const steps: WeekStep[] = [
 <Solution
   area={area}
   heading="Tenez les fiches des personnes, des ménages et des inscriptions."
-  description="Enregistrez l’identité, les liens entre membres d’un ménage, l’inscription ou le statut pour un registre de population, un registre social ou un programme que votre institution gère. Les agents examinent les demandes et les corrections ; les services autorisés peuvent vérifier une information précise sans recevoir le dossier complet. Chaque institution reste responsable de ses règles d’éligibilité et de ses décisions."
+  description="Enregistrez l’identité, les liens au sein du ménage, l’inscription ou le statut, pour un registre de population, un registre social ou un programme géré par votre institution. Les agents examinent les demandes et les corrections ; les services autorisés peuvent vérifier une information précise sans recevoir le dossier complet. Chaque institution reste responsable de ses règles d’éligibilité et de ses décisions."
 >
   <section class="section" id="example" aria-labelledby="people-example-title">
     <div class="section-inner">
@@ -85,9 +85,9 @@ const steps: WeekStep[] = [
         <h2 id="people-change-title">Contrôlez ce que chaque programme peut vérifier.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Reliez les personnes à la fiche de leur ménage</h3><p>Lorsqu’une personne quitte un ménage, votre équipe modifie le lien et le ménage précédent reste dans l’historique.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre tient les personnes et les ménages <span aria-hidden="true">→</span></a></article>
-        <article><h3>Limitez les vérifications à la personne sur laquelle un service doit se renseigner</h3><p>Votre institution peut autoriser un programme à vérifier le statut d’une personne connue tout en l’empêchant de lister tous les inscrits du registre. La mise en œuvre définit les permissions et la couverture de l’audit pour chaque connexion.</p><a class="inline-cta" href="/fr/security/">Qui est responsable de quoi <span aria-hidden="true">→</span></a></article>
-        <article><h3>Délivrez une attestation confirmant l’inscription à un programme</h3><p>Une mise en œuvre peut utiliser Evidence Gateway pour délivrer une attestation numérique indiquant si une personne est inscrite. La mise en œuvre connecte et teste le portefeuille numérique qui la reçoit et le service qui l’accepte.</p><a class="inline-cta" href="/fr/solutions/verifiable-credentials/">Découvrir les attestations vérifiables <span aria-hidden="true">→</span></a></article>
+        <article><h3>Reliez les personnes à la fiche de leur ménage</h3><p>Lorsqu’une personne quitte un ménage, votre équipe modifie le lien ; l’ancien ménage reste dans l’historique.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre gère les personnes et les ménages <span aria-hidden="true">→</span></a></article>
+        <article><h3>Limitez chaque vérification à la personne concernée</h3><p>Votre institution peut autoriser un programme à vérifier le statut d’une personne déjà identifiée, sans lui permettre de dresser la liste de tous les inscrits du registre. La mise en œuvre définit les permissions et la couverture de l’audit pour chaque connexion.</p><a class="inline-cta" href="/fr/security/">Qui est responsable de quoi <span aria-hidden="true">→</span></a></article>
+        <article><h3>Délivrez une attestation confirmant l’inscription à un programme</h3><p>La mise en œuvre peut s’appuyer sur Evidence Gateway pour délivrer une attestation numérique indiquant si une personne est inscrite. Elle connecte et teste le portefeuille numérique qui reçoit l’attestation et le service qui l’accepte.</p><a class="inline-cta" href="/fr/solutions/verifiable-credentials/">Découvrir les attestations vérifiables <span aria-hidden="true">→</span></a></article>
       </div>
     </div>
   </section>
@@ -96,21 +96,21 @@ const steps: WeekStep[] = [
     items={[
       {
         q: 'Cela remplace-t-il notre registre de population ou notre registre social ?',
-        a: 'Vous pouvez garder le registre que vous tenez déjà et y connecter Evidence Gateway pour répondre aux questions convenues. Utilisez Base Registry Engine lorsqu’il vous faut un nouveau registre ou que vous décidez de migrer un registre existant.',
-        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’intègre aux systèmes existants (en anglais)' },
+        a: 'Vous pouvez garder le registre que vous tenez déjà et y connecter Evidence Gateway pour répondre aux questions convenues. Base Registry Engine convient lorsqu’il vous faut un nouveau registre ou que vous décidez de migrer un registre existant.',
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il fonctionne aux côtés des systèmes existants (en anglais)' },
       },
       {
         q: 'Un programme peut-il vérifier une information sans voir le dossier de la personne ?',
-        a: 'Oui. Le programme pose une question que votre institution a convenu de traiter, par exemple si un ménage est inscrit, et reçoit cette réponse, et rien d’autre. Votre institution décide quels programmes peuvent poser des questions, lesquelles, et pour quel motif.',
+        a: 'Oui. Le programme pose une question que votre institution a accepté de traiter, par exemple si un ménage est inscrit ; il reçoit cette réponse, et rien de plus. Votre institution décide quels programmes peuvent interroger le registre, sur quelles questions et pour quel motif.',
         link: { href: '/solutions/check-a-fact/', label: 'Comment un service vérifie une information' },
       },
       {
-        q: 'Cela évalue-t-il l’éligibilité ou calcule-t-il les prestations ?',
+        q: 'Le logiciel évalue-t-il l’éligibilité ou calcule-t-il les prestations ?',
         a: 'Votre programme reste responsable de l’évaluation de l’éligibilité et du calcul des prestations. Un programme destinataire applique ses propres règles à la réponse qu’il reçoit ; le registre consigne la décision prise par l’organisation responsable.',
       },
       {
         q: 'Qui peut consulter la fiche d’une personne ?',
-        a: 'Votre institution décide qui peut enregistrer une personne, modifier un ménage ou rechercher quelqu’un, et pour quel motif. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit pour l’ensemble du registre et des applications connectées est convenue lors de la mise en œuvre.',
+        a: 'Votre institution décide qui peut enregistrer une personne, modifier un ménage ou rechercher quelqu’un, et pour quel motif. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit du registre et des applications connectées est convenue lors de la mise en œuvre.',
         link: { href: '/security/', label: 'Qui est responsable de quoi' },
       },
       ...sharedFamilyFaq,
@@ -119,10 +119,10 @@ const steps: WeekStep[] = [
   <DocsHandoff
     eyebrow="Travaillons ensemble"
     heading="Parlons de votre service."
-    body="Dites-nous quelles fiches de personnes et quels services de programme vous devez gérer, qui prend chaque décision et quels systèmes doivent échanger des informations. Nous pouvons vous montrer comment Registry Stack pourrait s’intégrer en ne partageant que ce dont chaque service a besoin."
+    body="Indiquez-nous les fiches de personnes et les services de programme à gérer, qui prend chaque décision et quels systèmes doivent échanger des informations. Nous pouvons vous montrer comment Registry Stack pourrait s’y intégrer, chaque service ne recevant que les informations qui lui sont nécessaires."
     primaryLabel="Décrivez votre service"
     primaryHref={describeServiceHref(area.name, 'fr')}
-    note="Le cœur du logiciel est open source (Apache-2.0). Votre équipe, un prestataire que vous désignez ou nous pouvons le mettre en œuvre et l’exploiter. L’hébergement et l’exploitation font l’objet d’un devis distinct."
+    note="Le cœur du logiciel est open source (Apache-2.0). Sa mise en œuvre et son exploitation peuvent être assurées par votre équipe, par un prestataire que vous désignez ou par nous. Nous établissons un devis distinct pour l’hébergement et l’exploitation."
     emphasis="docs"
   />
 </Solution>

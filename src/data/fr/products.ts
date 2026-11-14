@@ -19,7 +19,7 @@ const productText: readonly ProductText[] = [
     key: 'base-registry',
     solution: 'Tenue du registre',
     intent: 'Tenir les fiches et leur historique',
-    description: 'Tenez votre registre, contrôlez les accès et conservez l’historique des modifications. Un logiciel open source relié à vos services publics.',
+    description: 'Tenue du registre, contrôle des accès et historique des modifications : un logiciel open source relié à vos services publics.',
     tutorialLabel: 'Suivre le tutoriel du registre (en anglais)',
     firstResult: 'Créer un registre de contacts en local, ajouter et lire une fiche, puis vérifier qu’un service relevant d’une autre juridiction ne peut pas la lister.',
   },
@@ -35,7 +35,7 @@ const productText: readonly ProductText[] = [
     key: 'casework',
     solution: 'Instruction des demandes',
     intent: 'Attribuer les examens et consigner les décisions des agents',
-    description: 'Attribuez les demandes aux agents, suivez les échéances et consignez leurs décisions. Un logiciel d’examen open source relié à vos services publics.',
+    description: 'Attribution des demandes aux agents, suivi des échéances, consignation de leurs décisions : un logiciel d’examen open source relié à vos services publics.',
     tutorialLabel: 'Lire le tutoriel sur l’examen des modifications (en anglais)',
     firstResult: 'Préparer et valider la configuration d’une modification de registre qui doit être examinée par un agent.',
   },
@@ -70,7 +70,7 @@ export const products = englishProducts.map((product) => ({
 
 const companionText: readonly { key: string; job: string }[] = [
   { key: 'scheduling', job: 'définit les capacités, les réservations provisoires et les règles de prise de rendez-vous' },
-  { key: 'manifest', job: 'publie le contenu du registre sous forme de catalogue lisible par d’autres services' },
+  { key: 'manifest', job: 'publie la description du contenu du registre sous forme de catalogue lisible par d’autres services' },
 ];
 
 export const companionServices = englishCompanionServices.map((service) => ({
