@@ -1,60 +1,62 @@
 ---
 import RecordCard from './RecordCard.astro';
 import SignedAnswer from './SignedAnswer.astro';
+import { localeForPath, translator } from '../i18n';
+const t = translator(localeForPath(Astro.url.pathname));
 
 const sourceFields = [
-  { label: 'Registration status', value: 'Active' },
-  { label: 'Registered address', value: '12 Market Road' },
-  { label: 'Filing history', value: '4 filings' },
+  { label: t('Registration status', 'Statut de l’immatriculation'), value: t('Active', 'Active') },
+  { label: t('Registered address', 'Adresse du siège'), value: '12 Market Road' },
+  { label: t('Filing history', 'Historique des dépôts'), value: t('4 filings', '4 dépôts') },
 ];
 ---
 
 <figure class="evidence-flow" aria-labelledby="evidence-flow-title">
-  <figcaption id="evidence-flow-title">Illustrative example with a fictional business registration</figcaption>
+  <figcaption id="evidence-flow-title">{t('Illustrative example with a fictional business registration', 'Exemple illustratif avec une immatriculation d’entreprise fictive')}</figcaption>
 
-  <section class="request-strip" aria-label="Request from the procurement service">
+  <section class="request-strip" aria-label={t('Request from the procurement service', 'Demande du service de passation des marchés')}>
     <div class="request-origin">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="m3 8 9-5 9 5M4 9h16M5 20h14M7 10v7m5-7v7m5-7v7" />
       </svg>
-      <p class="flow-label">Procurement service</p>
+      <p class="flow-label">{t('Procurement service', 'Service de passation des marchés')}</p>
     </div>
-    <h3 id="request-title">Does this supplier have an active business registration?</h3>
+    <h3 id="request-title">{t('Does this supplier have an active business registration?', 'Ce fournisseur a-t-il une immatriculation active au registre du commerce ?')}</h3>
     <span class="request-reference">A-1042</span>
   </section>
 
   <div class="request-path">
     <section class="source-step" aria-labelledby="evidence-source-title">
       <div class="panel-heading">
-        <p class="flow-label">Business register</p>
-        <h3 id="evidence-source-title">Source record</h3>
+        <p class="flow-label">{t('Business register', 'Registre du commerce')}</p>
+        <h3 id="evidence-source-title">{t('Source record', 'Fiche source')}</h3>
       </div>
-      <RecordCard recordType="Business registration" recordId="A-1042" icon="business" fields={sourceFields} />
-      <p class="source-note">The registration authority continues to maintain the record.</p>
+      <RecordCard recordType={t('Business registration', 'Immatriculation')} recordId="A-1042" icon="business" fields={sourceFields} />
+      <p class="source-note">{t('The registration authority continues to maintain the record.', 'L’autorité chargée des immatriculations continue de tenir la fiche.')}</p>
     </section>
 
     <section class="authority-step" aria-labelledby="authority-title">
       <p class="flow-label">Evidence Gateway</p>
-      <h3 id="authority-title">Check registration status</h3>
+      <h3 id="authority-title">{t('Check registration status', 'Vérifier le statut d’immatriculation')}</h3>
       <svg class="evidence-arrow" viewBox="0 0 120 32" fill="none" aria-hidden="true">
         <path d="M1 16h114m-11-11 11 11-11 11" />
       </svg>
-      <p>Checks whether the procurement service may ask.<br />Reads the source and returns a signed answer about registration status.</p>
+      <p>{t('Checks whether the procurement service may ask.', 'Vérifie que le service de passation des marchés peut poser la question.')}<br />{t('Reads the source and returns a signed answer about registration status.', 'Lit la source et renvoie une réponse signée sur le statut d’immatriculation.')}</p>
     </section>
 
     <section class="answer-step" aria-labelledby="answer-title">
       <div class="panel-heading">
-        <p class="flow-label">Returned to the service</p>
-        <h3 id="answer-title">Digitally signed answer</h3>
+        <p class="flow-label">{t('Returned to the service', 'Renvoyée au service')}</p>
+        <h3 id="answer-title">{t('Digitally signed answer', 'Réponse signée numériquement')}</h3>
       </div>
-      <SignedAnswer fieldLabel="Registration status" value="Active" recipient="Procurement service" issuer="Business registration authority" />
-      <p class="verification-note">The procurement service verifies the answer before using it.</p>
+      <SignedAnswer fieldLabel={t('Registration status', 'Statut de l’immatriculation')} value={t('Active', 'Active')} recipient={t('Procurement service', 'Service de passation des marchés')} issuer={t('Business registration authority', 'Autorité d’immatriculation des entreprises')} />
+      <p class="verification-note">{t('The procurement service verifies the answer before using it.', 'Le service de passation des marchés vérifie la réponse avant de l’utiliser.')}</p>
     </section>
   </div>
 
   <div class="flow-caption">
-    <p><strong>Not returned to the procurement service</strong> Address, filing history, and other source fields.</p>
-    <p><strong>Audit</strong> The request and its outcome are recorded.</p>
+    <p><strong>{t('Not returned to the procurement service', 'Non renvoyé au service de passation des marchés')}</strong> {t('Address, filing history, and other source fields.', 'Adresse, historique des dépôts et autres champs de la source.')}</p>
+    <p><strong>{t('Audit', 'Audit')}</strong> {t('The request and its outcome are recorded.', 'La demande et son résultat sont consignés.')}</p>
   </div>
 </figure>
 

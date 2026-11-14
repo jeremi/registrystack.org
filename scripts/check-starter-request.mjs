@@ -305,6 +305,44 @@ try {
   await page.goto(`${origin}/contact/?type=starter&context=Professional+licensing`);
   assert.equal(await page.getByRole('heading', { level: 2, name: 'Request access to this starter' }).count(), 1);
   assert.equal(await page.getByRole('textbox', { name: 'What are you trying to do?' }).getAttribute('required'), null);
+
+  // The French contact page shows French wording and posts the same fields to
+  // the same form. A direct visit records the French page as its source.
+  submissions = [];
+  await page.goto('about:blank');
+  await page.goto(`${origin}/fr/contact/?type=service&context=Examen+des+autorisations`);
+  const frenchForm = page.locator('[data-starter-request-form]');
+  assert.equal(await page.locator('html').getAttribute('lang'), 'fr');
+  assert.match(await page.locator('[data-contact-context]').textContent(), /^Au sujet de\s: Examen des autorisations$/u);
+  assert.equal(await page.getByRole('heading', { level: 2, name: 'Parlons de votre service' }).count(), 1);
+  assert.match(await page.locator('[data-request-privacy-copy]').textContent(), /Ce formulaire ne vous inscrit à aucune liste d’envoi commercial\./);
+  const frenchPrivacyLink = page.locator('#starter-request-privacy a');
+  assert.equal(await frenchPrivacyLink.getAttribute('href'), '/privacy/');
+  assert.equal(await frenchPrivacyLink.getAttribute('hreflang'), 'en');
+  await frenchForm.getByRole('textbox', { name: 'Adresse électronique' }).fill('responsable@example.invalid');
+  await frenchForm.getByRole('textbox', { name: 'Votre service et vos besoins' }).fill('Nous devons examiner des demandes d’autorisation.');
+  await frenchForm.getByRole('button', { name: 'Envoyer le message' }).click();
+  await Promise.race([
+    frenchForm.locator('[data-starter-request-success]').waitFor({ state: 'visible' }),
+    frenchForm.locator('[data-starter-request-error]').waitFor({ state: 'visible' }).then(() => {
+      throw new Error('French contact submission failed.');
+    }),
+  ]);
+  assert.match(await frenchForm.locator('[data-starter-request-success]').textContent(), /Message reçu\. Nous allons l’examiner et vous répondre\./);
+  assert.equal(submissions.length, 1);
+  assert.deepEqual({ ...submissions[0], 'mauticform[request_token]': '<uuid>' }, {
+    'mauticform[email]': 'responsable@example.invalid',
+    'mauticform[organization]': '',
+    'mauticform[role]': '',
+    'mauticform[message]': 'Nous devons examiner des demandes d’autorisation.',
+    'mauticform[starter_id]': '',
+    'mauticform[source_page]': '/fr/contact/',
+    'mauticform[request_token]': '<uuid>',
+    'mauticform[request_type]': 'service',
+    'mauticform[request_context]': 'Examen des autorisations',
+    'mauticform[website]': '',
+    'mauticform[formId]': '1',
+  });
   await context.close();
 
   // Disabling the integration must ignore identifiers left by an earlier visit.

@@ -1,6 +1,10 @@
 ---
 // "One example" section for a solution area page: who asks, what the team
-// wants, what happens, and what stays with the institution.
+// wants, what happens, and what stays with the institution. Pages pass the
+// English route in `link.href`; French pages get the French route, or an
+// English-only page marked with hreflang.
+import { englishHreflang, localeForPath, localizedPath } from '../i18n';
+
 interface Item {
   term: string;
   body: string;
@@ -16,6 +20,8 @@ interface Props {
 }
 
 const { eyebrow, heading, intro, items, note, link } = Astro.props;
+const locale = localeForPath(Astro.url.pathname);
+const linkHref = link && localizedPath(link.href, locale);
 ---
 <section id="example" class="section section-muted" aria-labelledby="solution-example-title">
   <div class="section-inner product-fit">
@@ -24,7 +30,7 @@ const { eyebrow, heading, intro, items, note, link } = Astro.props;
       <h2 id="solution-example-title">{heading}</h2>
       <p>{intro}</p>
       {note && <p class="product-note">{note}</p>}
-      {link && <p><a class="inline-cta" href={link.href}>{link.label} <span aria-hidden="true">→</span></a></p>}
+      {link && <p><a class="inline-cta" href={linkHref} hreflang={link && englishHreflang(linkHref!, locale)}>{link.label} <span aria-hidden="true">→</span></a></p>}
     </div>
     <dl>
       {items.map((item) => (

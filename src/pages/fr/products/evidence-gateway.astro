@@ -1,0 +1,65 @@
+---
+// French twin of the English page of the same name.
+import Product from '../../../layouts/Product.astro';
+import EvidenceGatewayFlow from '../../../components/EvidenceGatewayFlow.astro';
+import { products } from '../../../data/fr/products';
+const product = products.find((p) => p.key === 'evidence-gateway')!;
+---
+<Product
+  product={product}
+  heading="Permettez à d’autres services de vérifier une information de votre registre."
+  description="Un service de passation des marchés peut avoir besoin de confirmer l’immatriculation d’un fournisseur sans recevoir sa fiche complète. Evidence Gateway interroge votre registre et renvoie l’information convenue avec une signature numérique. Votre institution décide quels services peuvent poser la question et ce qu’ils reçoivent."
+>
+  <section id="product-example" class="section section-muted" aria-labelledby="evidence-example-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">Un exemple : la vérification de l’immatriculation d’un fournisseur</p>
+        <h2 id="evidence-example-title">Ce fournisseur a-t-il une immatriculation active au registre du commerce ?</h2>
+        <p>Le service de passation des marchés d’une administration doit vérifier l’immatriculation d’un fournisseur avant de traiter une demande. L’autorité chargée des immatriculations relie Evidence Gateway à son registre du commerce. Le service reçoit le statut de l’immatriculation, sans l’adresse, l’historique des dépôts ni d’autres informations.</p>
+      </div>
+      <EvidenceGatewayFlow />
+      <p class="product-note">La signature numérique permet au service de vérifier que l’émetteur attendu a produit la réponse et qu’elle n’a pas été altérée. Elle ne prouve pas que la fiche source est exacte. Le service de passation des marchés reste responsable de décider ce que la réponse signifie pour la demande.</p>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="evidence-define-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">Fonctions pratiques</p>
+        <h2 id="evidence-define-title">Définissez la question, sa source et qui peut la poser.</h2>
+        <p>Le service qui tient le registre convient de chaque réponse avec les services qui l’utiliseront. Evidence Gateway applique cette définition et les règles d’accès de l’institution chaque fois qu’un service connecté pose la question.</p>
+      </div>
+      <div class="product-facts">
+        <article><h3>Ne renvoyer que l’information nécessaire</h3><p>Définissez la réponse à partir d’informations sources approuvées. Renvoyez la région de résidence d’une personne sans son adresse, ou confirmez qu’elle a 18 ans ou plus sans renvoyer sa date de naissance.</p></article>
+        <article><h3>Limiter qui peut poser la question</h3><p>Autorisez des services connectés pour des réponses et des finalités précises. Evidence Gateway vérifie cette autorisation avant de lire la source et consigne le résultat de la demande.</p></article>
+        <article><h3>Vérifier les dates de la réponse</h3><p>La réponse indique quand Evidence Gateway a fait la vérification et quand elle expire. Ces dates n’indiquent pas quand la fiche source a été mise à jour pour la dernière fois. Votre mise en œuvre vérifie aussi l’actualité des informations de la source.</p></article>
+      </div>
+    </div>
+  </section>
+  <section id="fit" class="section section-muted" aria-labelledby="evidence-fit-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">Comment il s’intègre à votre organisation</p>
+        <h2 id="evidence-fit-title">Ajoutez des vérifications d’informations à côté du registre que vous utilisez déjà.</h2>
+        <p>Evidence Gateway peut lire une source existante. Votre organisation garde ses fiches dans le système actuel, en maintient la qualité et décide quels services connectés peuvent recevoir chaque réponse.</p>
+        <p>Utiliser Evidence Gateway n’exige pas <a href="/fr/products/base-registry/">Base Registry Engine</a>. Si vous choisissez les deux, votre équipe technique configure la connexion entre eux.</p>
+        <p><a href="/fr/data-spaces/">Voir comment proposer une réponse signée par un espace de données</a>.</p>
+      </div>
+      <dl>
+        <dt>Votre institution définit chaque réponse</dt><dd>Convenez de ce que signifient la question et la réponse, de la source qui fournit l’information, de son degré d’actualité requis et des services qui peuvent l’utiliser.</dd>
+        <dt>Choisissez qui assure la mise en œuvre</dt><dd>Aubex, un autre partenaire de mise en œuvre ou votre propre équipe peut connecter la source et les services destinataires, configurer les accès et la signature, et tester l’échange complet. Votre équipe ou un prestataire désigné peut l’exploiter, ou nous l’hébergeons et l’exploitons pour vous. Notre hébergement et notre exploitation font l’objet d’un devis distinct.</dd>
+        <dt>Le service destinataire garde sa décision</dt><dd>Son équipe utilise la réponse avec ses propres règles et d’autres informations. La réponse ne décide pas de l’éligibilité et n’autorise pas à modifier une fiche.</dd>
+        <dt>Permettre aux personnes de partager une attestation délivrée</dt><dd>Evidence Gateway peut aussi délivrer une déclaration signée numériquement, appelée attestation vérifiable, qu’une personne peut conserver dans un portefeuille numérique. La mise en œuvre relie et teste un portefeuille compatible et un service qui l’accepte. Une attestation montre l’information au jour de sa délivrance et reste valide jusqu’à la date d’expiration que vous fixez. <a href="/fr/solutions/verifiable-credentials/">Découvrir les attestations vérifiables</a>.</dd>
+      </dl>
+    </div>
+  </section>
+  <section id="developers" class="section" aria-labelledby="evidence-developers-title">
+    <div class="section-inner">
+      <div class="section-heading compact">
+        <p class="eyebrow">Pour les développeurs et les équipes de mise en œuvre</p>
+        <h2 id="evidence-developers-title">Demandez et vérifiez votre première réponse signée.</h2>
+        <p>Le tutoriel d’introduction demande et vérifie une réponse indiquant que la personne est majeure, sans renvoyer son nom ni sa date de naissance. La <a href="https://docs.registrystack.org/products/registry-evidence/" hreflang="en">documentation du produit (en anglais)</a> couvre les connexions aux sources et l’exploitation ; le <a href="https://docs.registrystack.org/tutorials/return-a-governed-value/" hreflang="en">tutoriel sur les valeurs définies (en anglais)</a> couvre les réponses telles qu’une région de résidence.</p>
+        <p><a class="inline-cta" href={product.tutorialHref} hreflang="en">{product.tutorialLabel} →</a></p>
+      </div>
+    </div>
+  </section>
+</Product>

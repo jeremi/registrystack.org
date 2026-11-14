@@ -190,6 +190,24 @@ dd a {
   color: var(--registry-blue);
 }
 
+/* French labels are longer than English ones. Between the stacked layout and
+   wide screens the French row tightens its spacing, so that it stays on one
+   line from about 1160 pixels. The header keeps its side padding, which
+   aligns the site name with the page content. */
+@media (min-width: 901px) and (max-width: 1279px) {
+  html[lang='fr'] .site-header {
+    gap: 16px;
+  }
+
+  html[lang='fr'] .top-nav {
+    gap: 12px;
+  }
+
+  html[lang='fr'] .top-nav a.language-switch {
+    padding-left: 12px;
+  }
+}
+
 /* Solutions and Products each fold into a disclosure. Plain <details> keeps
    the menus usable without JavaScript. */
 .nav-group {

@@ -3,7 +3,7 @@
 // work and showing the thing that exists at the end of it. The cards are the
 // site's civic-print figures, never screens: the screens come from the
 // office's own application.
-import { products, companionServices } from './products';
+import { products, companionServices } from './products.ts';
 
 export type WeekCard =
   | { kind: 'record'; recordType: string; recordId: string; icon?: 'person' | 'household' | 'business' | 'data'; fields: Array<{ label: string; value: string }> }

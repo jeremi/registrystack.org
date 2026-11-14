@@ -83,3 +83,15 @@ export const englishHreflang = (href: string, locale: Locale): 'en' | undefined 
   }
   return 'en';
 };
+
+// The picture a page shows. A French page shows the French version of a
+// picture when one exists under public/illustrations/fr/; otherwise it shows
+// the English picture and says that its labels are in English.
+export const illustrationSource = (
+  name: string,
+  locale: Locale,
+  hasFrenchVersion: boolean,
+): { base: string; labelsInEnglish: boolean } =>
+  locale === 'fr' && hasFrenchVersion
+    ? { base: `/illustrations/fr/${name}`, labelsInEnglish: false }
+    : { base: `/illustrations/${name}`, labelsInEnglish: locale === 'fr' };

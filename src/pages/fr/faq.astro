@@ -1,0 +1,286 @@
+---
+// French twin of src/pages/faq.astro. The FAQPage structured data is built from
+// the same array as the visible questions. Links to pages that exist only in
+// English carry their language.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import DocsHandoff from '../../components/DocsHandoff.astro';
+import { askQuestionHref, describeServiceHref } from '../../data/contact';
+
+const pageTitle = 'Questions fréquentes | Registry Stack';
+const pageDescription =
+  'Réponses pour les équipes de l’administration : adéquation au service, maîtrise des fiches, configurations de départ, mise en œuvre, coûts, assistance.';
+
+// Regroupées pour que le lecteur retrouve sa préoccupation. Chaque réponse reste
+// courte et renvoie à la page qui détaille le sujet.
+const groups = [
+  {
+    heading: 'Adéquation à votre service',
+    items: [
+      {
+        q: 'À quoi Registry Stack nous sert-il ?',
+        a: 'Les institutions utilisent Registry Stack pour tenir des registres, examiner les demandes qui appellent une décision d’un agent et permettre à d’autres services de vérifier une information. Par exemple, une autorité qui délivre des autorisations d’exercice peut tenir les fiches des autorisations, attribuer les demandes de renouvellement à des agents et laisser un autre service vérifier le statut enregistré d’une autorisation.',
+        link: { label: 'Découvrir les domaines de solutions', href: '/fr/solutions/' },
+      },
+      {
+        q: 'De quels produits avons-nous besoin ?',
+        a: 'Choisissez selon le travail que votre service doit accomplir : tenir des fiches, examiner des demandes, générer un document, envoyer une notification ou vérifier une information. Vous pouvez utiliser un seul produit ou en relier plusieurs à vos systèmes existants.',
+        link: { label: 'Comparer les produits', href: '/fr/products/' },
+      },
+      {
+        q: 'Registry Stack convient-il à une administration nationale, régionale ou locale ?',
+        a: 'Registry Stack peut répondre aux trois. Une autorité de régulation nationale, une administration régionale ou une collectivité territoriale peut adapter les fiches, les règles d’accès et les étapes d’examen à ses responsabilités. Décrivez le service dont vous avez besoin, par exemple la délivrance d’autorisations, l’immatriculation des entreprises ou la tenue d’un registre des agriculteurs.',
+        link: { label: 'Voir les domaines de solutions', href: '/fr/solutions/' },
+      },
+      {
+        q: 'Qui est derrière Registry Stack ?',
+        a: 'Aubex Consulting LLC conçoit et assure l’assistance technique de Registry Stack, et propose la mise en œuvre et l’assistance technique payantes. L’entreprise est établie à San Francisco, aux États-Unis.',
+        link: { label: 'Lire les informations sur l’entreprise (en anglais)', href: '/imprint/', lang: 'en' },
+      },
+      {
+        q: 'Pouvons-nous conserver notre registre actuel ?',
+        a: 'Oui, si votre système peut fournir les informations nécessaires. Evidence Gateway peut, par exemple, permettre à un autre service de vérifier le statut d’immatriculation d’un fournisseur, pendant que votre registre reste dans son système actuel. L’équipe de mise en œuvre examine comment relier les systèmes. Votre institution décide de ce qu’un autre service peut recevoir, et l’équipe configure ces règles.',
+        link: { label: 'Découvrir Evidence Gateway', href: '/fr/products/evidence-gateway/' },
+      },
+      {
+        q: 'Que faut-il ajouter pour obtenir un service qui fonctionne ?',
+        a: 'Les produits de base gèrent les fiches, l’examen par les agents et la vérification d’informations. Votre service a aussi besoin d’écrans pour les usagers, de la connexion, de connexions à d’autres systèmes et de dispositions pour l’hébergement et l’assistance technique. Votre équipe ou un partenaire de mise en œuvre assure ces travaux. La mise en œuvre d’un registre pilote peut comprendre les éléments que vous convenez avec nous.',
+        link: { label: 'Voir les options de mise en œuvre', href: '/fr/pricing/' },
+      },
+    ],
+  },
+  {
+    heading: 'Vos fiches et la mise en œuvre',
+    items: [
+      {
+        q: 'Qui garde la maîtrise de nos fiches ?',
+        a: 'Votre institution fixe les règles d’accès : qui peut consulter, ajouter ou modifier des fiches, et ce que d’autres services peuvent recevoir. Vous, ou un prestataire que vous désignez, exploitez le logiciel. Votre équipe garde la maîtrise des systèmes auxquels le déploiement se connecte.',
+        link: { label: 'Lire la page sur la sécurité et les responsabilités', href: '/fr/security/' },
+      },
+      {
+        q: 'Que devra faire notre institution ?',
+        a: 'Votre institution définit les règles du service, approuve qui peut accéder aux informations ou les recevoir, et désigne les responsables du service et de ses fiches. Vous convenez aussi de la manière de vérifier que le service répond à vos exigences. La proposition répartit le reste des travaux de réalisation et de transfert entre votre équipe, nous ou un autre prestataire.',
+        link: { label: 'Parler de mise en œuvre et d’assistance technique', href: '/fr/pricing/' },
+      },
+      {
+        q: 'Pouvons-nous partir d’un tableur ou d’une base de données existante ?',
+        a: 'Oui, moyennant une préparation des données. Votre équipe peut préparer les données existantes pour un nouveau registre ou pour des vérifications d’informations précises. La mise en œuvre doit définir la correspondance entre les champs, la façon de contrôler les erreurs et la façon de tenir les données à jour. Ce travail est convenu dans le cadre de la mise en œuvre.',
+        link: { label: 'Voir comment nous adaptons un service', href: '/fr/customization/' },
+      },
+      {
+        q: 'Une même connexion peut-elle servir à plusieurs vérifications d’informations ?',
+        a: 'Oui, lorsque les vérifications reposent sur le même système source et les mêmes modalités d’accès. Une connexion à un registre du commerce pourrait servir à vérifier à la fois le statut d’immatriculation et l’adresse enregistrée. Votre institution définit toujours ce que chaque vérification peut renvoyer et qui peut la demander. D’autres sources peuvent nécessiter des connexions distinctes.',
+        link: { label: 'Découvrir la vérification d’informations', href: '/fr/solutions/check-a-fact/' },
+      },
+      {
+        q: 'Comment savoir si une information est à jour ?',
+        a: 'L’heure à laquelle une réponse a été vérifiée n’est pas l’heure de la dernière mise à jour de la fiche source. Votre mise en œuvre doit prévoir des règles sur l’ancienneté acceptable des informations, en particulier lorsqu’elle utilise une copie d’un registre. Une signature numérique permet au service destinataire de vérifier qui a émis la réponse et si elle a été modifiée ; elle ne prouve pas que les informations de la source sont à jour ou exactes.',
+        link: { label: 'Lire la page sur la vérification d’informations et les dates', href: '/fr/solutions/check-a-fact/#faq' },
+      },
+      {
+        q: 'Pouvons-nous délivrer des attestations vérifiables ?',
+        a: 'Oui. Un ordre professionnel peut délivrer une déclaration signée numériquement sur le statut d’une autorisation d’exercice. Le professionnel la conserve dans un portefeuille numérique et la présente à un employeur. Votre mise en œuvre choisit le portefeuille et teste le parcours complet, y compris le service qui reçoit l’attestation chez l’employeur, avant le lancement. Une attestation indique le statut de l’autorisation le jour de sa délivrance et reste valable jusqu’à la date d’expiration que vous fixez.',
+        link: { label: 'Découvrir les attestations vérifiables', href: '/fr/solutions/verifiable-credentials/' },
+      },
+    ],
+  },
+  {
+    heading: 'Configurations de départ',
+    items: [
+      {
+        q: 'Qu’est-ce qu’une configuration de départ ?',
+        a: 'Une configuration de départ, appelée « starter » dans le catalogue, définit les fiches, les modifications autorisées et les rôles d’accès pour un type de registre. Votre équipe peut l’adapter aux règles de votre institution. Elle fournit un point de départ pour un service ; les écrans, les connexions entre systèmes et les dispositions d’exploitation restent à prévoir.',
+        link: { label: 'Parcourir les configurations de départ (en anglais)', href: 'https://marketplace.registrystack.org/', lang: 'en' },
+      },
+      {
+        q: 'Comment accéder à une configuration de départ ?',
+        a: 'L’accès aux configurations de départ est gratuit. Utilisez la demande d’accès sur la page d’une configuration dans le catalogue, ou dites-nous ce dont vous avez besoin si vous ne savez pas laquelle convient. Nous examinerons votre demande et vous répondrons.',
+        link: { label: 'Trouver une configuration de départ (en anglais)', href: 'https://marketplace.registrystack.org/', lang: 'en' },
+      },
+      {
+        q: 'Faut-il choisir une configuration avant de vous contacter ?',
+        a: 'Non. Décrivez le service, les personnes qui l’utiliseront et ce qu’il doit permettre de faire. Nous pouvons vous aider à repérer une configuration de départ adaptée et discuter des modifications nécessaires.',
+        link: { label: 'Décrire le service dont vous avez besoin', href: describeServiceHref('un service qui demande une configuration de départ', 'fr') },
+      },
+    ],
+  },
+  {
+    heading: 'Coûts, évaluation et assistance technique',
+    items: [
+      {
+        q: 'Y a-t-il une redevance de licence pour le logiciel ?',
+        a: 'Base Registry Engine, Evidence Gateway et Registry Casework sont open source sous licence Apache 2.0, sans redevance de licence. La mise en œuvre et l’assistance technique sont des services payants. Des produits distincts, comme Registry Studio, ont leurs propres conditions.',
+        link: { label: 'Lire le résumé des licences (en anglais)', href: '/terms/#terms-license-title', lang: 'en' },
+      },
+      {
+        q: 'Devons-nous acheter l’assistance technique pour utiliser le logiciel ?',
+        a: 'Non. Vous pouvez utiliser le logiciel de base avec votre propre équipe ou avec un prestataire de votre choix. Vous devez prévoir l’hébergement et la maintenance, et les exigences de licence et d’attribution fournies s’appliquent toujours.',
+        link: { label: 'Utiliser Registry Stack avec votre propre équipe', href: '/fr/pricing/#self-service' },
+      },
+      {
+        q: 'Quel est le niveau de maturité du logiciel ?',
+        a: 'Registry Stack est publié en versions numérotées, avec des notes de version et une documentation publiées. Votre organisation ou un prestataire que vous désignez l’exploite, ou nous pouvons l’exploiter pour vous. Vous convenez par écrit des responsabilités d’hébergement, d’assistance technique et de mise à niveau avant le début des travaux.',
+        link: { label: 'Lire les limites connues dans la documentation (en anglais)', href: 'https://docs.registrystack.org/explanation/known-limitations/', lang: 'en' },
+      },
+      {
+        q: 'Comment une équipe technique peut-elle l’évaluer ?',
+        a: 'Commencez par les tutoriels d’introduction. Ils montrent comment créer un petit registre, définir des droits d’accès et essayer une vérification d’informations. Votre équipe peut ensuite examiner la documentation et le code source au regard de vos exigences. Les instructions d’installation et de configuration se trouvent dans la documentation.',
+        link: { label: 'Choisir un tutoriel d’introduction', href: '/fr/#developers' },
+      },
+      {
+        q: 'Quels services de mise en œuvre et d’assistance technique proposez-vous ?',
+        a: 'La mise en œuvre d’un registre pilote consiste à mettre en œuvre avec votre équipe un registre et son service, configurés selon vos règles et testés avec vos agents. La proposition indique ce qui est inclus et si votre registre pilote fonctionne avec des données de test ou avec des fiches réelles. L’assistance technique annuelle est disponible pour les équipes qui mettent en œuvre et exploitent elles-mêmes Registry Stack. Les travaux, les responsabilités et le forfait sont convenus par écrit avant le début.',
+        link: { label: 'Voir les tarifs de mise en œuvre et d’assistance technique', href: '/fr/pricing/' },
+      },
+      {
+        q: 'L’IA peut-elle nous aider à concevoir ou à adapter un service ?',
+        a: 'Oui. L’IA aide votre équipe à transformer les résultats de ses recherches et les exigences du service en un dossier de conception, en s’appuyant au besoin sur vos formulaires existants. Lorsque nous mettons en œuvre votre registre pilote, nous utilisons l’IA pour rédiger la configuration et les cas de test de vos fiches, de vos formulaires et de vos étapes d’examen. Votre institution examine et approuve les règles ; le service configuré fonctionne sans modèle d’IA. Registry Studio est un espace de création disponible en préversion, qui comprend une aide à la rédaction à partir de documents.',
+        link: { label: 'Voir la place de l’IA dans les services publics', href: '/fr/ai/' },
+      },
+      {
+        q: 'Une personne peut-elle utiliser un assistant d’IA pour faire une demande ?',
+        a: 'Oui, dans une intégration en préversion pour un service configuré avec Base Registry Engine. Un assistant approuvé aide une personne connectée à préparer une demande de modification et à en suivre l’état. La personne vérifie puis envoie la demande sur le site de l’institution. L’assistant ne peut ni envoyer une demande, ni l’approuver, ni modifier une fiche. L’institution choisit les assistants et les actions qu’elle autorise.',
+        link: { label: 'Découvrir l’accès des citoyens par un assistant', href: '/fr/ai/citizen-access/' },
+      },
+    ],
+  },
+];
+
+// Données structurées FAQPage, construites à partir de chaque question et de
+// chaque réponse pour que le balisage reste identique à la FAQ affichée.
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: groups.flatMap((group) =>
+    group.items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    })),
+  ),
+};
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="faq" />
+
+  <main id="main-content" tabindex="-1">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    <section class="hero" aria-labelledby="faq-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Questions fréquentes</p>
+          <h1 id="faq-hero-title">Questions fréquentes.</h1>
+          <p class="hero-lead">
+            Découvrez comment Registry Stack peut répondre aux besoins de votre service,
+            qui garde la maîtrise de vos fiches, et ce que comprennent la mise en œuvre
+            et l’assistance technique.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {groups.map((group, index) => (
+      <section class={index % 2 === 1 ? 'section section-muted' : 'section'} aria-labelledby={`faq-group-${index}`}>
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2 id={`faq-group-${index}`}>{group.heading}</h2>
+          </div>
+          <div class="faq-list">
+            {group.items.map((item) => (
+              <details class="faq-item">
+                <summary>{item.q}</summary>
+                <div class="faq-answer">
+                  <p>{item.a}</p>
+                  <a class="inline-cta" href={item.link.href} hreflang={item.link.lang}>{item.link.label} &rarr;</a>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))}
+  </main>
+
+  <DocsHandoff
+    heading="Une question ?"
+    body="Parlez-nous du service dont vous avez besoin et de ce que vous aimeriez savoir."
+    primaryLabel="Posez une question"
+    primaryHref={askQuestionHref('Registry Stack', 'fr')}
+    emphasis="docs"
+  />
+  <SiteFooter />
+</Base>
+
+<style>
+  .faq-list {
+    display: grid;
+    gap: 12px;
+    margin-top: clamp(20px, 3vw, 28px);
+    max-width: 820px;
+  }
+
+  .faq-item {
+    background: var(--registry-white);
+    border: 1px solid var(--registry-rule);
+  }
+
+  .faq-item summary {
+    align-items: center;
+    color: var(--registry-ink);
+    cursor: pointer;
+    display: flex;
+    font-size: var(--type-body);
+    font-weight: 700;
+    gap: 16px;
+    justify-content: space-between;
+    list-style: none;
+    padding: 18px 20px;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* A register tick that opens into a cross, so the control reads without
+     relying on a dash glyph. */
+  .faq-item summary::after {
+    color: var(--registry-blue);
+    content: '+';
+    font-family: var(--registry-mono);
+    font-size: var(--type-subhead);
+    line-height: 1;
+    transition: transform 0.15s ease;
+  }
+
+  .faq-item[open] summary::after {
+    transform: rotate(45deg);
+  }
+
+  .faq-item summary:hover {
+    color: var(--registry-blue);
+  }
+
+  .faq-answer {
+    border-top: 1px solid var(--registry-rule);
+    display: grid;
+    gap: 12px;
+    padding: 16px 20px 20px;
+  }
+
+  .faq-answer p {
+    color: var(--registry-body);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-item summary::after {
+      transition: none;
+    }
+  }
+</style>

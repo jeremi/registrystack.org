@@ -1,71 +1,73 @@
 ---
 import RecordCard from './RecordCard.astro';
+import { localeForPath, translator } from '../i18n';
+const t = translator(localeForPath(Astro.url.pathname));
 
 const requestFields = [
-  { label: 'Licence', value: 'LIC-4471' },
-  { label: 'Requested change', value: 'Correct recorded activities' },
-  { label: 'Submitted by', value: 'Licence holder' },
-  { label: 'Received', value: 'Tuesday 09:14' },
+  { label: t('Licence', 'Autorisation'), value: 'LIC-4471' },
+  { label: t('Requested change', 'Modification demandée'), value: t('Correct recorded activities', 'Corriger les activités inscrites') },
+  { label: t('Submitted by', 'Déposée par'), value: t('Licence holder', 'Titulaire de l’autorisation') },
+  { label: t('Received', 'Reçue'), value: t('Tuesday 09:14', 'Mardi 9 h 14') },
 ];
 const licenceFields = [
-  { label: 'Permitted activities', value: 'Corrected' },
-  { label: 'Changed by', value: 'Licensing application' },
-  { label: 'Applied', value: 'Wednesday 10:02' },
-  { label: 'Revision', value: '12' },
+  { label: t('Permitted activities', 'Activités autorisées'), value: t('Corrected', 'Corrigées') },
+  { label: t('Changed by', 'Modifiée par'), value: t('Licensing application', 'Application de délivrance des autorisations') },
+  { label: t('Applied', 'Appliquée'), value: t('Wednesday 10:02', 'Mercredi 10 h 02') },
+  { label: t('Revision', 'Révision'), value: '12' },
 ];
 ---
 
 <figure class="casework-flow" aria-labelledby="casework-flow-title">
   <div class="flow-intro">
-    <p class="flow-kicker">An illustrative correction request</p>
-    <h3 id="casework-flow-title">Staff review the request. The licensing application updates the professional register after approval.</h3>
+    <p class="flow-kicker">{t('An illustrative correction request', 'Exemple de demande de correction')}</p>
+    <h3 id="casework-flow-title">{t('Staff review the request. The licensing application updates the professional register after approval.', 'Les agents examinent la demande. Après approbation, l’application de délivrance des autorisations met à jour le registre professionnel.')}</h3>
   </div>
 
-  <div class="work-journey" role="group" aria-label="Fictional licence correction moving from request to inbox to applied change">
+  <div class="work-journey" role="group" aria-label={t('Fictional licence correction moving from request to inbox to applied change', 'Correction fictive d’une autorisation, de la demande à la file d’examen puis à la modification appliquée')}>
     <section class="request-panel" aria-labelledby="request-panel-title">
       <div class="panel-heading">
-        <p class="panel-label">Licensing application</p>
-        <h4 id="request-panel-title">Correction request</h4>
+        <p class="panel-label">{t('Licensing application', 'Application de délivrance des autorisations')}</p>
+        <h4 id="request-panel-title">{t('Correction request', 'Demande de correction')}</h4>
       </div>
-      <RecordCard recordType="Correction request" recordId="REQ-3106" icon="data" fields={requestFields} />
-      <p class="panel-note">The licensing application collects the request and supporting documents.</p>
+      <RecordCard recordType={t('Correction request', 'Demande de correction')} recordId="REQ-3106" icon="data" fields={requestFields} />
+      <p class="panel-note">{t('The licensing application collects the request and supporting documents.', 'L’application de délivrance des autorisations recueille la demande et les pièces justificatives.')}</p>
     </section>
 
     <section class="inbox-panel" aria-labelledby="inbox-panel-title">
       <div class="panel-heading">
         <p class="panel-label">Registry Casework</p>
-        <h4 id="inbox-panel-title">Licence correction reviews</h4>
+        <h4 id="inbox-panel-title">{t('Licence correction reviews', 'Examens des corrections d’autorisations')}</h4>
       </div>
       <ol class="item-history">
-        <li><strong>Request sent for review</strong><span>The request enters the licence corrections queue with a due date.</span></li>
-        <li><strong>Missing certificate identified</strong><span>The reviewer asks for the certificate. This completes the first review.</span></li>
-        <li><strong>Certificate provided</strong><span>The licensing application collects the certificate and submits a new review request.</span></li>
-        <li><strong>Revised request approved</strong><span>A reviewer records the approval. This review has its own due date.</span></li>
+        <li><strong>{t('Request sent for review', 'Demande transmise pour examen')}</strong><span>{t('The request enters the licence corrections queue with a due date.', 'La demande entre dans la file des corrections d’autorisations avec une échéance.')}</span></li>
+        <li><strong>{t('Missing certificate identified', 'Attestation manquante repérée')}</strong><span>{t('The reviewer asks for the certificate. This completes the first review.', 'L’agent demande l’attestation. Ce premier examen est alors terminé.')}</span></li>
+        <li><strong>{t('Certificate provided', 'Attestation fournie')}</strong><span>{t('The licensing application collects the certificate and submits a new review request.', 'L’application recueille l’attestation et soumet une nouvelle demande d’examen.')}</span></li>
+        <li><strong>{t('Revised request approved', 'Demande corrigée approuvée')}</strong><span>{t('A reviewer records the approval. This review has its own due date.', 'Un agent consigne l’approbation. Cet examen a sa propre échéance.')}</span></li>
       </ol>
-      <p class="panel-note">Supervisors can see who is responsible for each review and when it is due.</p>
+      <p class="panel-note">{t('Supervisors can see who is responsible for each review and when it is due.', 'Les responsables voient qui est chargé de chaque examen et quand il est dû.')}</p>
     </section>
 
     <section class="register-panel" aria-labelledby="register-panel-title">
       <div class="panel-heading">
-        <p class="panel-label">Professional register</p>
-        <h4 id="register-panel-title">Change applied</h4>
+        <p class="panel-label">{t('Professional register', 'Registre professionnel')}</p>
+        <h4 id="register-panel-title">{t('Change applied', 'Modification appliquée')}</h4>
       </div>
       <div class="applied-record">
-        <p class="applied-label"><span aria-hidden="true">↳</span> Updated by the licensing application</p>
-        <RecordCard recordType="Licence record" recordId="LIC-4471" icon="person" fields={licenceFields} />
+        <p class="applied-label"><span aria-hidden="true">↳</span> {t('Updated by the licensing application', 'Mise à jour par l’application de délivrance des autorisations')}</p>
+        <RecordCard recordType={t('Licence record', 'Fiche d’autorisation')} recordId="LIC-4471" icon="person" fields={licenceFields} />
       </div>
-      <p class="panel-note">The licensing application asks the professional register to apply the approved correction. The register checks permission before accepting the change.</p>
+      <p class="panel-note">{t('The licensing application asks the professional register to apply the approved correction. The register checks permission before accepting the change.', 'L’application demande au registre professionnel d’appliquer la correction approuvée. Le registre vérifie les droits d’accès avant d’accepter la modification.')}</p>
     </section>
 
     <div class="audit-slip">
       <svg class="audit-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h4" />
       </svg>
-      <p><strong>Review history</strong> When each review was submitted, assigned and completed, and who made the decision. The register keeps the history of record changes.</p>
+      <p><strong>{t('Review history', 'Historique des examens')}</strong> {t('When each review was submitted, assigned and completed, and who made the decision. The register keeps the history of record changes.', 'Date de dépôt, d’attribution et de clôture de chaque examen, et auteur de la décision. Le registre conserve l’historique des modifications des fiches.')}</p>
     </div>
   </div>
 
-  <figcaption>Fictional licence data. In this example, the licensing application submits the approved correction to the professional register. Registry Casework records each staff review.</figcaption>
+  <figcaption>{t('Fictional licence data. In this example, the licensing application submits the approved correction to the professional register. Registry Casework records each staff review.', 'Données d’autorisation fictives. Dans cet exemple, l’application de délivrance des autorisations soumet la correction approuvée au registre professionnel. Registry Casework consigne chaque examen par un agent.')}</figcaption>
 </figure>
 
 <style>

@@ -1,0 +1,61 @@
+---
+// French twin of the English page of the same name.
+import Product from '../../../layouts/Product.astro';
+import CaseworkFlow from '../../../components/CaseworkFlow.astro';
+import { products } from '../../../data/fr/products';
+const product = products.find((p) => p.key === 'casework')!;
+---
+<Product
+  product={product}
+  heading="Examinez les demandes et consignez les décisions."
+  description="Les équipes de l’administration doivent attribuer les demandes d’examen, voir qui en est responsable et quand une décision est due, puis consigner le résultat. Registry Casework gère ce travail et renvoie la décision au service qui a demandé l’examen."
+>
+  <section id="product-example" class="section section-muted" aria-labelledby="casework-example-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">Un exemple : la correction d’une autorisation d’exercice</p>
+        <h2 id="casework-example-title">Attribuez la demande, suivez son échéance et consignez la décision.</h2>
+        <p>Le titulaire d’une autorisation demande de corriger les activités inscrites au registre professionnel. L’application de délivrance des autorisations envoie la demande à l’examen des agents dans Registry Casework. Les agents vérifient les pièces justificatives et consignent leur décision.</p>
+      </div>
+      <CaseworkFlow />
+      <p class="product-note">Une approbation consigne la décision de l’agent. L’autorisation de modifier un registre reste régie par les règles de ce registre.</p>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="casework-inbox-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">Fonctions pratiques</p>
+        <h2 id="casework-inbox-title">Voyez qui est responsable, ce qui est dû et ce que les agents ont décidé.</h2>
+        <p>Les demandes d’examen peuvent venir d’un registre, d’un système de gestion des dossiers ou d’un autre service. Registry Casework place chaque demande dans la file convenue et consigne son avancement jusqu’à la décision des agents.</p>
+      </div>
+      <div class="product-facts">
+        <article><h3>Attribuer le travail et en prendre la responsabilité</h3><p>Dirigez chaque type de demande vers la bonne file. Un agent prend la responsabilité d’une demande et peut la libérer s’il ne peut pas poursuivre. Les superviseurs peuvent réattribuer le travail quand les effectifs changent.</p></article>
+        <article><h3>Suivre le délai accordé</h3><p>Fixez le délai de chaque étape d’examen et le calendrier des jours ouvrés. Les agents voient quand une demande est due. Registry Casework repère quand une relance est due, et un service connecté envoie les notifications par courriel ou SMS.</p></article>
+        <article><h3>Consigner et renvoyer la décision</h3><p>Consignez une approbation, un refus, une demande de modifications ou un autre résultat configuré. Le service qui a demandé l’examen reçoit le résultat et passe à l’étape suivante selon ses propres règles.</p></article>
+      </div>
+    </div>
+  </section>
+  <section id="fit" class="section section-muted" aria-labelledby="casework-fit-title">
+    <div class="section-inner product-fit">
+      <div class="section-heading compact">
+        <p class="eyebrow">Comment il s’intègre à votre organisation</p>
+        <h2 id="casework-fit-title">Reliez l’examen par les agents à votre service.</h2>
+        <p>Registry Casework gère les examens par les agents. Une mise en œuvre fournit ou adapte les écrans des agents, et relie l’authentification et le service qui demande les examens. Il peut accepter seul des demandes d’examen ou se relier aux modifications proposées dans Base Registry Engine. Relier un autre registre demande un travail d’intégration supplémentaire.</p>
+      </div>
+      <dl>
+        <dt>Votre institution définit l’examen</dt><dd>Décidez quelles demandes exigent l’examen d’un agent, quelle équipe reçoit chaque type, quels résultats sont permis et quand la décision est due.</dd>
+        <dt>Choisissez qui assure la mise en œuvre</dt><dd>Aubex, un autre partenaire de mise en œuvre ou votre propre équipe peut fournir ou adapter les écrans des agents, relier l’authentification et le service qui demande les examens, et tester le processus complet. Votre équipe ou un prestataire désigné peut l’exploiter, ou nous l’hébergeons et l’exploitons pour vous. Notre hébergement et notre exploitation font l’objet d’un devis distinct.</dd>
+      </dl>
+    </div>
+  </section>
+  <section id="developers" class="section" aria-labelledby="casework-developers-title">
+    <div class="section-inner">
+      <div class="section-heading compact">
+        <p class="eyebrow">Pour les développeurs et les équipes de mise en œuvre</p>
+        <h2 id="casework-developers-title">Préparez une modification proposée pour examen.</h2>
+        <p>Le tutoriel d’introduction prépare et valide une configuration correspondante de Base Registry Engine et de Registry Casework. Il n’exécute pas d’examen et n’applique aucune modification. Poursuivez avec le <a href="https://docs.registrystack.org/configure/casework/" hreflang="en">guide de configuration (en anglais)</a> et la <a href="https://docs.registrystack.org/operate/casework/" hreflang="en">documentation d’exploitation (en anglais)</a> pour la mise en œuvre.</p>
+        <p><a class="inline-cta" href={product.tutorialHref} hreflang="en">{product.tutorialLabel} →</a></p>
+      </div>
+    </div>
+  </section>
+</Product>

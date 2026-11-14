@@ -1,0 +1,146 @@
+WEBVTT
+
+00:00:00.400 --> 00:00:03.300
+Les administrations gèrent de nombreux
+services publics, tous différents.
+
+00:00:03.700 --> 00:00:06.600
+Chacun est souvent construit de zéro.
+
+00:00:07.000 --> 00:00:13.400
+Registry Stack, logiciel open source, permet aux
+autorités de les bâtir avec les mêmes composants.
+
+00:00:13.800 --> 00:00:17.800
+Fiches et registres. Étapes et rôles.
+Réponses signées et certificats.
+
+00:00:18.200 --> 00:00:21.400
+Chaque service en fait simplement
+un autre assemblage.
+
+NOTE Les mêmes définitions
+
+00:00:22.000 --> 00:00:26.700
+Ils peuvent aussi partager les mêmes
+définitions. PublicSchema les publie ouvertement.
+
+00:00:27.100 --> 00:00:31.500
+Chaque registre copie celles dont il a besoin,
+comme Personne ou Ménage,
+
+00:00:31.900 --> 00:00:36.900
+et ajoute les siennes : une inscription,
+une exploitation agricole, une naissance.
+
+00:00:37.700 --> 00:00:41.500
+Ensuite, aucun registre ne consulte
+PublicSchema pendant son fonctionnement.
+
+00:00:41.900 --> 00:00:47.500
+Une réponse signée sur une Personne
+a donc le même sens des deux côtés.
+
+00:00:47.900 --> 00:00:50.900
+Des fiches séparées. Les mêmes définitions.
+
+NOTE Une demande
+
+00:00:51.400 --> 00:00:53.600
+Prenons un renouvellement d’autorisation.
+
+00:00:53.700 --> 00:00:57.900
+Demande déposée. Puis vérification :
+une autre autorité envoie une réponse signée.
+
+00:00:58.500 --> 00:01:02.300
+Une question revient au demandeur :
+en attente de votre réponse.
+
+00:01:02.500 --> 00:01:05.900
+Sa réponse arrive,
+et la demande est approuvée.
+
+00:01:06.100 --> 00:01:09.500
+Le renouvellement est enregistré,
+et une notification part.
+
+00:01:09.900 --> 00:01:12.500
+D’autres services réutilisent les mêmes étapes.
+
+NOTE Des réponses, pas des copies
+
+00:01:13.100 --> 00:01:17.500
+Une entreprise s’immatricule. Sa fiche
+change, et reste où elle est.
+
+00:01:17.700 --> 00:01:20.500
+Un certificat scellé est tiré de la fiche.
+
+00:01:20.900 --> 00:01:23.700
+Qui le vérifie obtient un oui signé.
+
+00:01:23.900 --> 00:01:27.200
+Les systèmes reçoivent une réponse,
+pas une copie.
+
+00:01:27.400 --> 00:01:33.100
+D’autres autorités demandent aussi : commune,
+ministère. Chacune ne reçoit qu’une réponse signée.
+
+00:01:33.500 --> 00:01:36.500
+Les fiches restent en place.
+Seules les réponses signées circulent.
+
+NOTE Des installations propres
+
+00:01:37.100 --> 00:01:39.500
+Chaque autorité exploite sa propre installation :
+
+00:01:39.800 --> 00:01:45.700
+ses registres, un moteur qui exécute les étapes,
+la connexion, des rôles et un journal d’audit,
+
+00:01:46.000 --> 00:01:48.700
+le tout sur ses propres serveurs.
+
+00:01:49.500 --> 00:01:53.300
+Prenons du recul : de nombreuses installations,
+les mêmes composants.
+
+00:01:53.500 --> 00:01:56.100
+L’une peut tenir plusieurs registres.
+
+00:01:56.300 --> 00:01:59.500
+Elles échangent directement des réponses
+signées, jamais des copies.
+
+00:01:59.800 --> 00:02:03.100
+Deux partagent des serveurs de l’administration,
+mais pas leurs fiches.
+
+NOTE Des modèles
+
+00:02:03.700 --> 00:02:07.500
+Le service d’une commune peut devenir
+le modèle d’une autre.
+
+00:02:07.800 --> 00:02:12.900
+Chacune l’adapte : l’une ajoute une visite
+sur place, l’autre supprime les frais.
+
+00:02:13.100 --> 00:02:17.900
+La conception voyage. Les fiches, jamais.
+
+NOTE Conclusion
+
+00:02:19.100 --> 00:02:23.100
+De nombreux services publics,
+construits avec les mêmes composants.
+
+00:02:23.300 --> 00:02:26.100
+Chaque autorité garde ses propres fiches.
+
+00:02:26.900 --> 00:02:29.900
+Registry Stack. Open source,
+sur registrystack.org.

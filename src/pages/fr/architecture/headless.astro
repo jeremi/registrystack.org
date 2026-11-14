@@ -1,0 +1,236 @@
+---
+// French twin of src/pages/architecture/headless.astro. The styles repeat the
+// English page's, which are scoped to that file.
+import Base from '../../../layouts/Base.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import DocsHandoff from '../../../components/DocsHandoff.astro';
+import Illustration from '../../../components/Illustration.astro';
+
+const pageTitle = 'Architecture headless (sans interface imposée) pour les services publics | Registry Stack';
+const pageDescription =
+  'Reliez votre portail ou votre application métier par des API documentées. Les produits Registry Stack appliquent les règles d’accès de l’institution.';
+const adoptionDocsHref = 'https://docs.registrystack.org/start/adopt/';
+const pythonExampleHref =
+  'https://github.com/registrystack/registry-stack/tree/v0.46.0/products/platform/examples/python-composition';
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="headless" />
+
+  <main id="main-content" tabindex="-1">
+    <section class="hero hero-cover" aria-labelledby="headless-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Architecture <span lang="en">headless</span> (sans interface imposée)</p>
+          <h1 id="headless-title">Utilisez Registry Stack derrière le portail que vous exploitez déjà.</h1>
+          <p class="hero-lead">
+            Reliez votre portail ou votre application métier existants par des API documentées.
+            Vous choisissez les écrans que les personnes utilisent. Chaque produit vérifie ce que
+            l’appelant peut voir et faire.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href={adoptionDocsHref} hreflang="en">Examiner les parcours d’adoption (en anglais)</a>
+            <a class="button button-secondary" href="/fr/customization/">Planifier votre mise en œuvre</a>
+          </div>
+          <p class="hero-note">Ajoutez ou changez une interface en gardant le même registre et les mêmes règles d’accès.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="channels-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Des interfaces autour de produits encadrés</p>
+          <h2 id="channels-title">Placez l’expérience du service là où les personnes travaillent déjà.</h2>
+          <p>
+            Un portail ou une application métier peut appeler les produits dont il a besoin. Vous
+            pouvez aussi relier un assistant approuvé à une tâche de registre configurée. Chaque
+            produit vérifie l’accès à la réception d’une demande.
+          </p>
+        </div>
+
+        <figure class="channel-map" aria-labelledby="channel-map-title channel-map-caption">
+          <h3 id="channel-map-title">Comment une interface atteint le service</h3>
+          <div class="channel-map-grid">
+            <section aria-labelledby="experience-layer-title">
+              <p class="map-label">Expérience</p>
+              <h4 id="experience-layer-title">L’interface que vous choisissez</h4>
+              <ul>
+                <li>Portail existant pour les usagers</li>
+                <li>Écrans de traitement des dossiers pour les agents</li>
+                <li>Assistant approuvé</li>
+              </ul>
+            </section>
+            <span class="map-arrow" aria-hidden="true">&rarr;</span>
+            <section aria-labelledby="interface-layer-title">
+              <p class="map-label">Interface</p>
+              <h4 id="interface-layer-title">Un canal documenté</h4>
+              <ul>
+                <li>Contrat HTTP public</li>
+                <li>Client publié pour un langage de programmation</li>
+                <li>Outils MCP configurés</li>
+              </ul>
+            </section>
+            <span class="map-arrow" aria-hidden="true">&rarr;</span>
+            <section aria-labelledby="authority-layer-title">
+              <p class="map-label">Autorité</p>
+              <h4 id="authority-layer-title">Le produit qui est responsable de l’effet</h4>
+              <ul>
+                <li>Fiches de Base Registry Engine</li>
+                <li>Décisions de Registry Casework</li>
+                <li>Réponses d’Evidence Gateway</li>
+              </ul>
+            </section>
+          </div>
+          <figcaption id="channel-map-caption">
+            Un portail ou une application métier peut utiliser les API des produits auxquels il
+            est relié. L’intégration d’un assistant représentée ici utilise MCP pour atteindre
+            une tâche configurée de Base Registry Engine.
+          </figcaption>
+        </figure>
+
+        <Illustration
+          name="requests-and-signed-answers"
+          alt="Des demandes arrivent à un registre du commerce tenu par le Service du registre du commerce sur ses propres serveurs : depuis un portail en ligne où un demandeur sollicite l’immatriculation d’une entreprise, depuis une application métier où un agent examine les demandes, et depuis un assistant d’IA facultatif qui aide les personnes à demander un service. Le registre conserve les fiches des entreprises et exécute les étapes du service : vérifier, examiner, décider et lancer une action. Il demande une réponse signée au registre de population du Service de l’état civil, et atteint le système existant de l’administration fiscale par un connecteur. Des réponses signées sont envoyées au registre des autorisations de la Ville et au registre des agriculteurs du ministère de l’Agriculture, qui demandent chacun si une entreprise est immatriculée, aux systèmes d’autres institutions par une API, et à un vérificateur qui scanne le code QR du certificat ou lit une attestation vérifiable d’un portefeuille numérique."
+          caption="Un registre du commerce fictif : un portail, une application métier et un assistant facultatif envoient des demandes. Les autres services et systèmes reçoivent des réponses signées, jamais la fiche."
+        />
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="contract-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Choisir le bon contrat d’interface</p>
+          <h2 id="contract-title">Adaptez l’interface à la tâche et à la responsabilité.</h2>
+          <p>Chaque canal a un périmètre différent. L’autorisation propre à chaque produit reste en vigueur pour tous.</p>
+        </div>
+        <div class="value-grid">
+          <article>
+            <h3>HTTP et clients publiés</h3>
+            <p>Votre application peut utiliser les API publiques des produits, les clients Node.js et Python publiés, ou le client Rust à partir du code source. Votre équipe gère la connexion, suit les demandes à chaque étape et traite les échecs.</p>
+          </article>
+          <article>
+            <h3>Des outils MCP plus restreints</h3>
+            <p>Le <span lang="en">Model Context Protocol</span> (MCP, protocole de contexte de modèle) relie un assistant approuvé à certaines tâches. Les outils publiés pour les citoyens peuvent lire des informations autorisées et préparer un brouillon que la personne envoie sur le site de l’institution.</p>
+          </article>
+          <article>
+            <h3>Des décisions indépendantes par produit</h3>
+            <p>Une approbation dans Casework consigne une décision d’examen. Base Registry Engine exige toujours une autorisation indépendante avant qu’une application puisse modifier une fiche.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="python-example-title">
+      <div class="section-inner approach-split">
+        <div class="section-heading">
+          <p class="eyebrow">Un exemple de code source public</p>
+          <h2 id="python-example-title">Voir comment une application coordonne la modification d’une fiche.</h2>
+          <p>
+            L’exemple Python de la version v0.46.0 soumet une proposition à Base Registry Engine
+            et donne aux agents les commandes pour l’examiner dans Registry Casework. Il utilise
+            un appelant autorisé séparément pour appliquer la version approuvée, et peut envoyer
+            une notification par Registry Messaging.
+          </p>
+          <p>
+            L’application suit les étapes et gère les nouvelles tentatives. Chaque produit
+            vérifie les identifiants qui lui sont présentés et applique ses propres règles.
+          </p>
+          <a class="inline-cta" href={pythonExampleHref} hreflang="en">Consulter l’application de référence Python de la version v0.46.0 (en anglais) <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <div class="editorial-callout" aria-labelledby="proof-limit-title">
+          <h3 id="proof-limit-title">Qui construit l’interface ?</h3>
+          <p>Votre propre équipe, Aubex ou un autre partenaire de réalisation peut construire ou adapter les écrans, relier la connexion et prévoir la reprise lorsqu’une demande échoue. Convenez de ce travail dans le périmètre de mise en œuvre.</p>
+        </div>
+      </div>
+    </section>
+
+    <DocsHandoff
+      eyebrow="Pour votre équipe technique"
+      heading="Choisissez l’ensemble de produits le plus restreint et l’interface dont votre service a besoin."
+      body="Examinez les parcours d’adoption tenus à jour (en anglais), puis définissez dans le périmètre de mise en œuvre le parcours des utilisateurs, les identifiants, les limites de chaque produit et le travail de reprise."
+      primaryLabel="Examiner les parcours d’adoption (en anglais)"
+      primaryHref={adoptionDocsHref}
+      emphasis="docs"
+    />
+  </main>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  .channel-map {
+    background: var(--registry-paper);
+    border: 1px solid var(--registry-paper-rule);
+    margin: 0;
+    padding: clamp(24px, 5vw, 48px);
+  }
+
+  .channel-map > h3 {
+    font-size: var(--type-2xl);
+    line-height: 1.35;
+    margin-bottom: 28px;
+  }
+
+  .channel-map-grid {
+    align-items: stretch;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  .channel-map-grid section {
+    background: var(--registry-white);
+    border-top: 3px solid var(--registry-blue);
+    padding: 24px;
+  }
+
+  .channel-map-grid h4 {
+    font-size: var(--type-xl);
+    line-height: 1.35;
+    margin: 6px 0 14px;
+  }
+
+  .map-label {
+    color: var(--registry-blue);
+    font: 700 var(--type-2xs)/1.5 var(--registry-mono);
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .channel-map-grid ul {
+    line-height: 1.6;
+    margin-bottom: 0;
+    padding-left: 1.2rem;
+  }
+
+  .channel-map-grid li + li {
+    margin-top: 8px;
+  }
+
+  .map-arrow {
+    align-self: center;
+    color: var(--registry-red);
+    font: 700 var(--type-2xl)/1 var(--registry-mono);
+  }
+
+  .channel-map figcaption {
+    color: var(--registry-muted);
+    font-size: var(--type-sm);
+    line-height: 1.6;
+    margin-top: 24px;
+  }
+
+  @media (max-width: 920px) {
+    .channel-map-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .map-arrow {
+      justify-self: center;
+      transform: rotate(90deg);
+    }
+  }
+</style>

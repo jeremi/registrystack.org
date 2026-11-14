@@ -1,26 +1,28 @@
 ---
 import RecordCard from './RecordCard.astro';
+import { localeForPath, translator } from '../i18n';
+const t = translator(localeForPath(Astro.url.pathname));
 ---
 
 <div class="linked-records">
   <RecordCard
-    recordType="Person record"
+    recordType={t('Person record', 'Fiche de personne')}
     recordId="P-1042"
     name="Amara Mensah"
     icon="person"
-    fields={[{ label: 'Date of birth', value: '16 March 1992' }]}
+    fields={[{ label: t('Date of birth', 'Date de naissance'), value: t('16 March 1992', '16 mars 1992') }]}
   />
   <div class="record-relationship">
     <svg width="28" height="34" viewBox="0 0 28 34" fill="none" aria-hidden="true">
       <path d="M14 0v30m-4-4 4 4 4-4" stroke="currentColor" stroke-width="1.5" />
     </svg>
-    <span>Member of household</span>
+    <span>{t('Member of household', 'Membre du ménage')}</span>
   </div>
   <RecordCard
-    recordType="Household record"
+    recordType={t('Household record', 'Fiche de ménage')}
     recordId="H-208"
     icon="household"
-    fields={[{ label: 'District', value: 'Northfield' }]}
+    fields={[{ label: t('District', 'District'), value: 'Northfield' }]}
   />
 </div>
 

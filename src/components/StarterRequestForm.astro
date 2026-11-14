@@ -4,7 +4,8 @@ import {
   contactNeutralRecoveryHref,
   contactRecoveryHref,
 } from '../data/contact';
-import { contactRequestPresentation, type ContactRequestType } from '../lib/starter-request';
+import { localeForPath } from '../i18n';
+import { contactFormText, contactRequestPresentation, type ContactRequestType } from '../lib/starter-request';
 
 interface Props {
   endpoint?: string;
@@ -48,7 +49,11 @@ const {
   successMessage,
 } = Astro.props;
 
-const presentation = contactRequestPresentation(requestType);
+// The page's locale comes from its path. Only the words the reader sees change;
+// the submitted fields and values are the same in both languages.
+const locale = localeForPath(Astro.url.pathname);
+const text = contactFormText(locale);
+const presentation = contactRequestPresentation(requestType, locale);
 const displayedEyebrow = eyebrow ?? presentation.eyebrow;
 const displayedHeading = heading ?? presentation.heading;
 const displayedIntro = intro ?? presentation.intro;
@@ -57,8 +62,11 @@ const displayedSubmitLabel = submitLabel ?? presentation.submitLabel;
 const displayedSuccessMessage = successMessage ?? presentation.successMessage;
 
 const recoveryHref = requestHref ?? (requestFromUrl
-  ? contactNeutralRecoveryHref()
-  : contactRecoveryHref(requestType, requestContext));
+  ? contactNeutralRecoveryHref(locale)
+  : locale === 'fr'
+    ? contactRecoveryHref(requestType, requestContext, 'fr')
+    : contactRecoveryHref(requestType, requestContext));
+const privacyHref = '/privacy/';
 ---
 
 <section
@@ -66,6 +74,7 @@ const recoveryHref = requestHref ?? (requestFromUrl
   id="starter-request-form"
   aria-labelledby="starter-request-title"
   data-request-panel
+  data-locale={locale}
   data-request-type={requestType}
   data-request-context={requestContext}
   data-request-from-url={requestFromUrl ? 'true' : undefined}
@@ -93,57 +102,58 @@ const recoveryHref = requestHref ?? (requestFromUrl
       <fieldset disabled data-starter-request-fields>
         <div class="starter-request-fields">
           <label>
-            <span>Email address <span data-required-marker aria-hidden="true">*</span></span>
+            <span>{text.email} <span data-required-marker aria-hidden="true">*</span></span>
             <input name="email" type="email" autocomplete="email" maxlength="254" required />
           </label>
           <label>
-            <span>Organization <span class="optional">Optional</span></span>
+            <span>{text.organization} <span class="optional">{text.optional}</span></span>
             <input name="organization" type="text" autocomplete="organization" maxlength="200" />
           </label>
           <label>
-            <span>Your role <span class="optional">Optional</span></span>
+            <span>{text.role} <span class="optional">{text.optional}</span></span>
             <input name="role" type="text" autocomplete="organization-title" maxlength="200" />
           </label>
           <label class="starter-request-message">
             <span>
               <span data-message-label>{displayedMessageLabel}</span>{' '}
               <span data-required-marker data-message-required-marker aria-hidden="true" hidden={!messageRequired}>*</span>
-              <span class="optional" data-message-optional-marker hidden={messageRequired}>Optional</span>
+              <span class="optional" data-message-optional-marker hidden={messageRequired}>{text.optional}</span>
             </span>
             <textarea name="message" rows="5" maxlength="2000" required={messageRequired}></textarea>
           </label>
           <label class="starter-request-honeypot" aria-hidden="true">
-            <span>Leave this empty</span>
+            <span>{text.honeypot}</span>
             <input name="website" type="text" tabindex="-1" autocomplete="off" />
           </label>
         </div>
 
         <p class="starter-request-privacy" id="starter-request-privacy">
-          <span data-request-privacy-copy>{presentation.privacyCopy}</span> Read the <a href="/privacy/">privacy policy</a>.
+          <span data-request-privacy-copy>{presentation.privacyCopy}</span> {text.readThe} <a href={privacyHref} hreflang={locale === 'fr' ? 'en' : undefined}>{text.privacyLinkLabel}</a>.
         </p>
         <button class="button button-primary" type="submit" data-starter-request-submit>{displayedSubmitLabel}</button>
       </fieldset>
 
       <p class="starter-request-status" role="status" aria-live="polite" data-starter-request-submitting hidden>
-        Sending your request&hellip;
+        {text.sending}
       </p>
       <p class="starter-request-status starter-request-success" role="status" aria-live="polite" tabindex="-1" data-starter-request-success hidden>
         <span data-request-success-copy>{displayedSuccessMessage}</span>
       </p>
       <p class="starter-request-status starter-request-error" role="alert" tabindex="-1" data-starter-request-error hidden>
-        We could not confirm your request. Your details are still here. You can try again or use the email option below.
+        {locale === 'fr' ? text.error : 'We could not confirm your request. Your details are still here. You can try again or use the email option below.'}
       </p>
     </form>}
 
     <p class="starter-request-fallback">
-      {endpoint ? 'If the form does not work, ' : 'Contact us by email: '}
-      <a href={recoveryHref} data-request-recovery>Email {contactEmail}</a>.
+      {endpoint ? text.fallbackWithForm : text.fallbackAlone}
+      <a href={recoveryHref} data-request-recovery>{endpoint ? text.emailLinkWithForm : text.emailLinkAlone} {contactEmail}</a>.
     </p>
 </section>
 
 <script>
   import {
     isContactRequestType,
+    contactFormText,
     contactRequestPresentation,
     requestContext as normalizeRequestContext,
     requestSourcePage,
@@ -157,6 +167,9 @@ const recoveryHref = requestHref ?? (requestFromUrl
     const form = panel.querySelector<HTMLFormElement>('[data-starter-request-form]');
     const recoveryLink = panel.querySelector<HTMLAnchorElement>('[data-request-recovery]');
     const requestedType = panel.dataset.requestType;
+    const locale = panel.dataset.locale === 'fr' ? 'fr' : 'en';
+    // A request with no valid source page records the contact page it was sent from.
+    const contactPage = locale === 'fr' ? '/fr/contact/' : '/contact/';
     let type = isContactRequestType(requestedType) ? requestedType : 'question';
     let context = normalizeRequestContext(panel.dataset.requestContext) ?? '';
 
@@ -165,8 +178,8 @@ const recoveryHref = requestHref ?? (requestFromUrl
       const urlType = params.get('type') ?? undefined;
       type = isContactRequestType(urlType) ? urlType : 'question';
       context = normalizeRequestContext(params.get('context') ?? undefined) ?? '';
-      const sourcePage = requestSourcePage(params.get('source') ?? undefined) ?? '/contact/';
-      const presentation = contactRequestPresentation(type);
+      const sourcePage = requestSourcePage(params.get('source') ?? undefined) ?? contactPage;
+      const presentation = contactRequestPresentation(type, locale);
       const setText = (selector: string, value: string) => {
         const node = panel.querySelector<HTMLElement>(selector);
         if (node) node.textContent = value;
@@ -179,9 +192,10 @@ const recoveryHref = requestHref ?? (requestFromUrl
       setText('[data-request-success-copy]', presentation.successMessage);
       setText('[data-request-privacy-copy]', presentation.privacyCopy);
       if (recoveryLink) recoveryLink.href = contactRecoveryHref(type, context);
+      if (recoveryLink && locale === 'fr') recoveryLink.href = contactRecoveryHref(type, context, 'fr');
       const contextSummary = panel.querySelector<HTMLElement>('[data-request-context-summary]');
       if (contextSummary) {
-        contextSummary.textContent = context ? `About: ${context}` : '';
+        contextSummary.textContent = context ? `${contactFormText(locale).about}${context}` : '';
         contextSummary.hidden = !context;
       }
       if (form) {
@@ -228,7 +242,7 @@ const recoveryHref = requestHref ?? (requestFromUrl
 
       try {
         const type = isContactRequestType(form.dataset.requestType) ? form.dataset.requestType : undefined;
-        const sourcePage = requestSourcePage(form.dataset.sourcePage) ?? '/contact/';
+        const sourcePage = requestSourcePage(form.dataset.sourcePage) ?? contactPage;
         const association = type !== 'privacy' && trackedEndpoint && import.meta.env.PUBLIC_MAUTIC_URL?.trim()
           ? await getConsentedTrackingAssociation()
           : undefined;

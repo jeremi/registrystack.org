@@ -29,7 +29,7 @@ const productText: readonly ProductText[] = [
     intent: 'Permettre à des services autorisés de vérifier une information du registre',
     description: 'Permettez à des services autorisés de vérifier une information de votre registre. Seule la réponse convenue est renvoyée, signée par l’émetteur.',
     tutorialLabel: 'Suivre le tutoriel de vérification (en anglais)',
-    firstResult: 'Examiner le projet prédéfini sur la majorité, demander sa réponse signée à une source de données fictives, puis vérifier la réponse JWS.',
+    firstResult: 'Examiner le projet prédéfini de vérification de la majorité, demander sa réponse signée à une source de données fictives, puis vérifier la réponse JWS.',
   },
   {
     key: 'casework',

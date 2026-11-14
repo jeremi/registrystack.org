@@ -1,40 +1,42 @@
 ---
 import RegistrySeal from './RegistrySeal.astro';
+import { localeForPath, translator } from '../i18n';
+const t = translator(localeForPath(Astro.url.pathname));
 ---
 
 <figure class="licence-illustration" aria-labelledby="render-licence-caption">
   <div class="illustration-composition">
     <div class="licence-source">
-      <p class="licence-source-owner">Your licensing service</p>
+      <p class="licence-source-owner">{t('Your licensing service', 'Votre service de délivrance des autorisations')}</p>
       <div class="licence-input-stack">
-        <div class="licence-template-sheet"><span>Document template</span><i></i><i></i><i></i></div>
-        <div class="licence-input-record"><p>Approved record</p><span>LIC-2093</span><strong>Maya Chen</strong><p>Architecture</p></div>
+        <div class="licence-template-sheet"><span>{t('Document template', 'Modèle de document')}</span><i></i><i></i><i></i></div>
+        <div class="licence-input-record"><p>{t('Approved record', 'Fiche approuvée')}</p><span>LIC-2093</span><strong>Maya Chen</strong><p>Architecture</p></div>
       </div>
     </div>
 
     <div class="licence-render-handoff">
       <p>Registry Render</p>
       <svg class="licence-handoff-right" viewBox="0 0 72 24" fill="none" aria-hidden="true"><path d="M1 12h66M59 4l8 8-8 8" stroke="currentColor" stroke-width="1.5" /></svg>
-      <span>Generates<br />and signs</span>
+      <span>{t('Generates', 'Produit')}<br />{t('and signs', 'et signe')}</span>
       <svg class="licence-handoff-down" viewBox="0 0 24 40" fill="none" aria-hidden="true"><path d="M12 1v34M5 28l7 7 7-7" stroke="currentColor" stroke-width="1.5" /></svg>
     </div>
 
     <div class="licence-output">
-      <article class="licence-paper" aria-label="Professional licence for Maya Chen">
-        <header class="licence-masthead"><p>Professional<br />Licensing Authority</p></header>
-        <h3>Professional licence</h3>
-        <div class="licence-holder"><p>Issued to</p><strong>Maya Chen</strong></div>
+      <article class="licence-paper" aria-label={t('Professional licence for Maya Chen', 'Autorisation d’exercice délivrée à Maya Chen')}>
+        <header class="licence-masthead"><p>{t('Professional', 'Autorité')}<br />{t('Licensing Authority', 'des professions')}</p></header>
+        <h3>{t('Professional licence', 'Autorisation d’exercice')}</h3>
+        <div class="licence-holder"><p>{t('Issued to', 'Délivrée à')}</p><strong>Maya Chen</strong></div>
         <dl class="licence-facts">
-          <div><dt>Licence number</dt><dd class="licence-number">LIC-2093</dd></div>
-          <div><dt>Category</dt><dd>Architecture</dd></div>
-          <div class="licence-validity"><dt>Valid until</dt><dd>31 October 2029</dd></div>
+          <div><dt>{t('Licence number', 'Numéro d’autorisation')}</dt><dd class="licence-number">LIC-2093</dd></div>
+          <div><dt>{t('Category', 'Catégorie')}</dt><dd>Architecture</dd></div>
+          <div class="licence-validity"><dt>{t('Valid until', 'Valable jusqu’au')}</dt><dd>{t('31 October 2029', '31 octobre 2029')}</dd></div>
         </dl>
-        <footer class="licence-status-check"><img src="/illustrations/example-licence-qr.svg" width="60" height="60" alt="" /><p>Check licence status</p></footer>
+        <footer class="licence-status-check"><img src="/illustrations/example-licence-qr.svg" width="60" height="60" alt="" /><p>{t('Check licence status', 'Vérifier le statut de l’autorisation')}</p></footer>
       </article>
-      <div class="licence-corner-seal"><RegistrySeal size={126} ringText="PROFESSIONAL LICENSING AUTHORITY · " monogram="PLA" animated={true} pathId="render-licence-seal" /></div>
+      <div class="licence-corner-seal"><RegistrySeal size={126} ringText={t('PROFESSIONAL LICENSING AUTHORITY · ', 'AUTORITÉ DES PROFESSIONS · ')} monogram={t('PLA', 'ADP')} animated={true} pathId="render-licence-seal" /></div>
     </div>
   </div>
-  <figcaption class="licence-figure-footer" id="render-licence-caption">Illustrative professional licence, generated and signed from the service’s approved record.</figcaption>
+  <figcaption class="licence-figure-footer" id="render-licence-caption">{t('Illustrative professional licence, generated and signed from the service’s approved record.', 'Autorisation d’exercice fictive, produite et signée à partir de la fiche approuvée du service.')}</figcaption>
 </figure>
 
 

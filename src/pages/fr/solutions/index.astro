@@ -1,0 +1,106 @@
+---
+// French twin of src/pages/solutions/index.astro.
+import Base from '../../../layouts/Base.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import DocsHandoff from '../../../components/DocsHandoff.astro';
+import { solutionAreas, registerFamilies } from '../../../data/fr/solutions';
+import { describeServiceHref } from '../../../data/contact';
+
+const pageTitle = 'Solutions pour les registres et les services publics | Registry Stack';
+const pageDescription = 'Trouvez le registre ou le service public proche du travail de votre institution, voyez ce que font demandeurs et agents, puis choisissez une suite.';
+const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
+const fr = (href: string) => `/fr${href}`;
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="solutions" />
+  <main id="main-content" tabindex="-1" class="solutions-index">
+    <section class="hero directory-hero" aria-labelledby="solutions-title">
+      <div class="hero-inner"><div class="hero-copy">
+        <p class="eyebrow">Solutions</p>
+        <h1 id="solutions-title">Registres et services</h1>
+        <p class="hero-lead">Parcourez les domaines de registres, ou voyez comment relier des services, examiner des demandes et délivrer des attestations.</p>
+      </div></div>
+    </section>
+
+    <section id="registers" class="section directory-section" aria-labelledby="registers-title">
+      <div class="section-inner">
+        <h2 id="registers-title" class="directory-label">Par domaine de service</h2>
+        <ul class="solution-area-grid">
+          {registerFamilies.map((area) => (
+            <li>
+              <a href={fr(area.slug)}>
+                <span class="solution-area-name">{area.name}</span>
+                <span class="solution-area-intent">{area.intent}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p class="directory-note">Vous cherchez un modèle ? <a href="https://marketplace.registrystack.org/" hreflang="en">Parcourez les configurations de départ dans le catalogue de configurations</a> (en anglais).</p>
+      </div>
+    </section>
+
+    <section id="services" class="section section-muted" aria-labelledby="shared-work-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Fonctions communes</p>
+          <h2 id="shared-work-title">Vérifications, examens et attestations.</h2>
+        </div>
+        <ul class="solution-area-grid">
+          {crossCutting.map((area) => (
+            <li>
+              <a href={fr(area.slug)}>
+                <span class="solution-area-name">{area.name}</span>
+                {area.example && <span class="solution-area-example">{area.example}</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section technical-handoff" id="products" aria-labelledby="products-title">
+      <div class="section-inner">
+        <h2 id="products-title">Vous évaluez le logiciel ?</h2>
+        <p>Retrouvez le détail des composants et les tutoriels locaux dans le <a href="/fr/#developers">guide d’évaluation technique</a>. Vous pouvez adopter les composants open source avec votre propre équipe ou avec un autre prestataire.</p>
+      </div>
+    </section>
+
+    <DocsHandoff
+      eyebrow="Décrivez votre service"
+      heading="Parlons d’un registre ou d’un service."
+      body="Dites-nous de quelles fiches, de quelles tâches des agents ou de quelles vérifications d’informations vous avez besoin, et quels systèmes doivent être reliés. Nous pouvons vous aider à évaluer l’adéquation et à délimiter la mise en œuvre."
+      primaryLabel="Décrivez votre service"
+      primaryHref={describeServiceHref(undefined, 'fr')}
+    />
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .directory-hero .hero-inner { padding-top: 44px; padding-bottom: 32px; }
+  .directory-hero h1 { font-size: clamp(30px, 3.8vw, 46px); max-width: 800px; }
+  .directory-hero .hero-lead { max-width: 720px; margin-bottom: 0; }
+  .directory-section .section-inner { padding-top: 24px; }
+  .directory-label { font-size: var(--type-base); font-family: var(--registry-mono); font-weight: 500; color: var(--registry-body); margin: 0 0 20px; }
+  .directory-note { margin: 28px 0 0; font-size: var(--type-base); }
+  .technical-handoff .section-inner { padding-top: 40px; padding-bottom: 40px; }
+  .technical-handoff h2 { font-size: var(--type-subhead); margin-bottom: 12px; }
+  .technical-handoff p { font-size: var(--type-body-sm); margin-bottom: 0; max-width: 760px; }
+
+  .solution-area-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; list-style: none; margin: 0; padding: 0; }
+  .solution-area-grid li { border-top: 1px solid #c9d0c5; }
+  .solution-area-grid a { display: grid; gap: 4px; padding: 18px 0 20px; }
+  .solution-area-grid a:hover { text-decoration: none; }
+  .solution-area-grid a:hover .solution-area-name { color: var(--registry-blue); }
+  .solution-area-name { color: var(--registry-ink); font-size: var(--type-body); font-weight: 700; }
+  .solution-area-intent { color: var(--registry-muted); font-size: var(--type-md); }
+  .solution-area-example { color: var(--registry-body); font-size: var(--type-md); }
+  @media (max-width: 900px) {
+    .solution-area-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 620px) {
+    .solution-area-grid { grid-template-columns: 1fr; }
+  }
+</style>

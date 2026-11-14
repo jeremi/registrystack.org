@@ -1,0 +1,96 @@
+---
+// French twin of src/pages/ai/service-design.astro: the same sections in the
+// same order.
+import Base from '../../../layouts/Base.astro';
+import AiLandingHero from '../../../components/AiLandingHero.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import { describeServiceHref } from '../../../data/contact';
+
+const context = 'Conception de service assistée par l’IA';
+---
+
+<Base
+  title="Concevoir un service public avec l’IA | Registry Stack"
+  description="Appuyez-vous sur les recherches et les exigences du service pour concevoir un service public. Testez un prototype avec agents et demandeurs, puis remettez une note claire à votre équipe."
+  ogImagePath="/og-ai.png"
+  ogImageAlt="Registry Stack : concevoir, adapter et ouvrir l’accès aux services publics avec l’IA."
+>
+  <SiteHeader current="ai-service-design" />
+  <main id="main-content" tabindex="-1">
+    <AiLandingHero
+      eyebrow="Conception du service avec l’IA"
+      heading="Concevez un service que vous pouvez tester avant de le construire."
+      lead="Transformez les recherches et les exigences du service en note de cadrage avec l’IA. Testez un prototype avec les demandeurs et les agents avant de décider quoi construire."
+      context={context}
+      exampleHref="#worked-example"
+      exampleLabel="Voir l’exemple de l’inscription scolaire"
+      exampleNote="Exemple fictif : la note de cadrage provisoire d’un partenaire de réalisation repère un contrôle de l’âge et une règle que l’autorité chargée de l’éducation doit confirmer."
+      note="Proposé comme une mission cadrée, principalement par l’intermédiaire de nos partenaires."
+    >
+      <p class="ai-example-label">Exemple : note préparée par votre partenaire de réalisation</p>
+      <p class="ai-example-title">Inscription scolaire</p>
+      <dl class="ai-example-rows">
+        <div><dt>Élément 1 du formulaire</dt><dd>Le parent indique la date de naissance de l’enfant.</dd></div>
+        <div><dt>Modification proposée</dt><dd>Demander au registre de l’état civil si l’enfant remplit la condition d’âge.</dd></div>
+        <div><dt>Décision pour l’autorité chargée de l’éducation</dt><dd>Quelle date limite s’applique pour cette année scolaire ?</dd></div>
+      </dl>
+    </AiLandingHero>
+
+    <section class="section section-muted" id="worked-example" aria-labelledby="example-title">
+      <div class="section-inner approach-split">
+        <div class="section-heading">
+          <p class="eyebrow">Exemple : l’inscription scolaire</p>
+          <h2 id="example-title">Aider un parent à inscrire son enfant à l’école</h2>
+          <p>Un parent apporte un formulaire au secrétariat de l’école. L’agent saisit la date de naissance de l’enfant et la confirme avec le parent.</p>
+          <p>L’équipe essaie un prototype qui demande un contrôle de l’âge à un registre de l’état civil approuvé. Si la source ne peut pas répondre, l’écran invite l’agent à examiner la pièce justificative avec le parent.</p>
+          <p>L’autorité chargée de l’éducation confirme la règle d’âge. L’autorité de l’état civil décide si elle peut proposer ce contrôle et quelles informations elle peut renvoyer.</p>
+        </div>
+        <div class="editorial-callout">
+          <h3>Trois situations à tester</h3>
+          <ol class="approach-steps">
+            <li><strong>L’enfant relève de l’école de son secteur</strong><span>Confirmer l’affectation et remettre une référence au parent.</span></li>
+            <li><strong>La source ne peut pas confirmer l’âge de l’enfant</strong><span>Guider l’agent dans le contrôle manuel convenu.</span></li>
+            <li><strong>Le parent demande une autre école</strong><span>Consigner la décision de l’agent du District. Une personne ou un service habilité l’applique au registre.</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="outputs-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <h2 id="outputs-title">Remettez à votre équipe de réalisation une note à partir de laquelle construire</h2>
+        </div>
+        <div class="value-grid">
+          <article>
+            <h3>Repérer où les personnes ont besoin d’aide</h3>
+            <p>Parcourez le service prévu avec les agents et les demandeurs. Conservez les références des sources et, si vous adaptez un formulaire existant, les numéros de ses éléments : chacun peut ainsi vérifier chaque modification proposée.</p>
+          </article>
+          <article>
+            <h3>Trancher les questions qui pèsent sur la construction</h3>
+            <p>Utilisez l’IA pour organiser les éléments de preuve et signaler les lacunes. Demandez aux équipes responsables de confirmer quelles règles s’appliquent, quelles sources peuvent servir et qui peut décider d’une exception.</p>
+          </article>
+          <article>
+            <h3>Trouver les problèmes dans un prototype</h3>
+            <p>Demandez aux demandeurs et aux agents d’essayer des cas courants et des cas difficiles. Servez-vous de ce que vous apprenez pour réviser la note et convenir de ce qu’il faudra tester dans le service en fonctionnement.</p>
+          </article>
+        </div>
+        <p class="section-note">Nous proposons cette méthode de conception comme une mission cadrée, réalisée principalement par l’intermédiaire de nos partenaires. La note guide <a href="/fr/customization/">la façon dont nous utilisons l’IA dans la mise en œuvre</a>.</p>
+      </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="next-title">
+      <div class="section-inner">
+        <h2 id="next-title">Parlons du service que vous devez concevoir</h2>
+        <p>Apportez les exigences d’un nouveau service, ou un formulaire et une procédure que vous voulez adapter. Nous menons la conception du service avec nos partenaires, et la note guide une mise en œuvre cadrée.</p>
+        <div class="section-links">
+          <a class="button button-primary" href={describeServiceHref(context, 'fr')} data-journey="service-inquiry">Décrivez votre service</a>
+          <a class="button button-secondary" href="/fr/pricing/#process">Voir comment se déroule la mise en œuvre</a>
+        </div>
+        <p class="final-cta-note"><a href="/fr/pricing/">Voir les options de mise en œuvre et d’assistance technique</a></p>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Base>

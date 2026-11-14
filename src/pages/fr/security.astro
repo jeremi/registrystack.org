@@ -1,0 +1,248 @@
+---
+// French twin of src/pages/security.astro. The styles repeat the English
+// page's, which are scoped to that file. Every outside destination is in
+// English and is labelled as such.
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { askQuestionHref } from '../../data/contact';
+
+const pageTitle = 'Sécurité des registres et des données | Registry Stack';
+const pageDescription =
+  'Contrôles et responsabilités d’exploitation : modifications encadrées, communication limitée des informations, réponses signées et examen traçable.';
+const securityDocsHref = 'https://docs.registrystack.org/spec/rs-sec-g/';
+const securityReportHref =
+  'https://github.com/registrystack/registry-stack/security/advisories/new';
+const releaseVerifyHref = 'https://github.com/registrystack/registry-stack/blob/main/release/VERIFY.md';
+
+// Le contrôle utile d’abord ; le détail de mise en œuvre et d’exploitation se
+// trouve dans la documentation de sécurité tenue à jour.
+const properties = [
+  {
+    title: 'Autoriser les modifications du registre',
+    body:
+      'Base Registry Engine vérifie qui peut modifier une fiche et si la modification respecte les règles que vous avez configurées. Il conserve les versions, de sorte que les utilisateurs autorisés peuvent consulter l’historique par l’intermédiaire de votre application.',
+  },
+  {
+    title: 'Limiter ce que reçoit chaque service',
+    body:
+      'Evidence Gateway vérifie l’autorisation pour une question prédéfinie avant d’interroger sa source. Il consigne l’accès autorisé à la source et la communication de l’information avant de transmettre la réponse. Votre organisation définit le destinataire autorisé, la finalité, la source et la réponse.',
+  },
+  {
+    title: 'Vérifier l’origine d’une réponse',
+    body:
+      'Evidence Gateway signe ses réponses afin que le service destinataire puisse vérifier l’émetteur, l’intégrité, l’usage prévu et la validité. Le propriétaire de la source reste responsable de l’exactitude des informations ; le service destinataire prend sa propre décision.',
+  },
+  {
+    title: 'Garder les décisions humaines attribuables',
+    body:
+      'Registry Casework consigne qui a examiné chaque élément et qui a décidé. L’application d’une modification est une étape distincte. Le registre vérifie l’autorisation de la personne ou du service qui l’applique et consigne qui a effectué la modification.',
+  },
+];
+
+const responsibilities = [
+  {
+    title: 'Votre organisation fixe les règles',
+    body:
+      'Vous êtes propriétaire des fiches et vous décidez qui peut les tenir à jour, quels services peuvent demander des informations, et dans quel but. Votre équipe définit les règles, examine les autorisations configurées et décide de l’usage des informations renvoyées.',
+  },
+  {
+    title: 'Votre exploitant fait fonctionner le déploiement',
+    body:
+      'Votre organisation, ou un exploitant qu’elle désigne, fait fonctionner le logiciel dans un environnement qu’elle maîtrise. L’exploitant gère l’accès à la base de données et aux sources, les identifiants, les journaux d’audit, la supervision, les mises à jour, les sauvegardes et la réponse aux incidents. Votre équipe garde la maîtrise des systèmes auxquels le déploiement se connecte.',
+  },
+];
+
+const evidence = [
+  {
+    label: 'Modèle de sécurité et responsabilités (en anglais)',
+    href: securityDocsHref,
+    description: 'Les limites de confiance, les vérifications de chaque demande et les contrôles que fournit votre exploitant.',
+  },
+  {
+    label: 'Auto-évaluation de sécurité (en anglais)',
+    href: 'https://docs.registrystack.org/security/self-assessment/',
+    description: 'Des questions contrôle par contrôle et des références de mise en œuvre pour un évaluateur.',
+  },
+  {
+    label: 'Vérification des versions (en anglais)',
+    href: releaseVerifyHref,
+    description: 'Comment vérifier les fichiers d’une version à l’aide de sommes de contrôle signées et consulter la nomenclature logicielle (SBOM).',
+  },
+  {
+    label: 'Limites connues (en anglais)',
+    href: 'https://docs.registrystack.org/explanation/known-limitations/',
+    description: 'Ce que le logiciel ne fait pas encore, l’état de ses versions et les plateformes prises en charge par une version.',
+  },
+  {
+    label: 'Code source et versions (en anglais)',
+    href: 'https://github.com/registrystack/registry-stack',
+    description: 'L’implémentation publique et l’historique de ses versions, pour votre équipe technique et vos auditeurs.',
+  },
+];
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <SiteHeader current="security" />
+
+  <main id="main-content" tabindex="-1">
+    <section class="hero" aria-labelledby="security-hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Sécurité</p>
+          <h1 id="security-hero-title">Gardez l’autorité et la responsabilité au sein de votre organisation.</h1>
+          <p class="hero-lead">
+            Registry Stack applique les règles d’accès, de modification, d’examen et de
+            communication que votre organisation configure. Votre équipe de gouvernance définit
+            ces règles, et votre exploitant protège le déploiement et ses fiches.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="security-properties-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Ce que fait le logiciel</p>
+          <h2 id="security-properties-title">Rendre chaque modification et chaque communication traçables.</h2>
+          <p>
+            Base Registry Engine, Evidence Gateway et Registry Casework ont des responsabilités
+            distinctes et peuvent être utilisés indépendamment. Chacun applique sa propre limite d’accès.
+          </p>
+        </div>
+        <div class="security-properties">
+          {properties.map((item) => (
+            <article class="quiet-card">
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="security-shared-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Responsabilité de l’organisation</p>
+          <h2 id="security-shared-title">Attribuer explicitement les responsabilités de politique et d’exploitation.</h2>
+          <p>
+            Les contrôles du logiciel mettent en œuvre une partie du modèle de sécurité. La
+            gouvernance, la qualité des sources, l’identification, l’infrastructure et les
+            procédures d’exploitation restent du ressort du service.
+          </p>
+        </div>
+        <div class="security-pair">
+          {responsibilities.map((item) => (
+            <article class="quiet-card">
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+        <p class="security-note">
+          Votre équipe technique limite les comptes de base de données, les connexions aux
+          sources et les accès réseau au travail dont chaque déploiement a besoin. La
+          documentation de sécurité tenue à jour (en anglais) explique le modèle de menaces, la
+          protection des serveurs, la gestion des clés et la durée de conservation des journaux d’audit.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="security-verify-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Pour l’examen par la gouvernance, la sécurité et les équipes techniques</p>
+          <h2 id="security-verify-title">Examinez les contrôles avant d’adopter le logiciel.</h2>
+          <p>
+            Vos évaluateurs peuvent consulter le code source, vérifier les fichiers des versions,
+            examiner le modèle de sécurité et suivre des tutoriels locaux avec des données
+            d’exemple. La documentation tenue à jour (en anglais) détaille davantage les
+            menaces, les responsabilités d’exploitation et les limites connues.
+          </p>
+        </div>
+        <div class="security-properties">
+          {evidence.map((item) => (
+            <article class="quiet-card">
+              <h3><a href={item.href} hreflang="en">{item.label}</a></h3>
+              <p>{item.description}</p>
+            </article>
+          ))}
+        </div>
+        <div class="security-contact">
+          <a class="button button-secondary" href={askQuestionHref('sécurité et gouvernance de Registry Stack', 'fr')}>Parlez-nous de vos exigences</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" aria-labelledby="security-report-title">
+      <div class="section-inner">
+        <div class="section-heading center">
+          <p class="eyebrow">Divulgation coordonnée</p>
+          <h2 id="security-report-title">Signaler une faille de sécurité de manière confidentielle.</h2>
+          <p>
+            Utilisez le signalement privé de vulnérabilités de GitHub (en anglais) pour que le
+            problème puisse être examiné avant d’être rendu public, dans le cadre d’une
+            divulgation coordonnée.
+          </p>
+        </div>
+        <div class="solution-choice-row">
+          <a class="button button-primary" href={securityReportHref} hreflang="en">Signaler une vulnérabilité (en anglais)</a>
+          <a class="button button-secondary" href={securityDocsHref} hreflang="en">Lire la documentation de sécurité (en anglais)</a>
+        </div>
+        <p class="security-disclosure-extra">
+          <a class="inline-cta" href="/.well-known/security.txt" hreflang="en">Coordonnées de signalement lisibles par machine dans security.txt (en anglais) &rarr;</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  /* Balanced pairs keep the controls and organizational responsibilities easy
+     to compare without ranking them. */
+  .security-properties,
+  .security-pair {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: clamp(24px, 4vw, 36px);
+  }
+
+  .quiet-card h3 {
+    margin-top: 0;
+  }
+
+  .quiet-card p:last-child {
+    margin-bottom: 0;
+  }
+
+  .security-note {
+    color: var(--registry-body);
+    margin: clamp(24px, 3vw, 32px) auto 0;
+    max-width: 760px;
+    text-align: center;
+  }
+
+  .security-disclosure-extra {
+    margin-top: 20px;
+  }
+
+  .security-contact {
+    margin-top: clamp(24px, 3vw, 32px);
+  }
+
+  .security-contact p {
+    font-size: var(--type-sm);
+    margin: 12px 0 0;
+  }
+
+  @media (max-width: 620px) {
+    .security-properties,
+    .security-pair {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

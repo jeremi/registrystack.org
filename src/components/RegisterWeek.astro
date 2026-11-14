@@ -5,6 +5,7 @@
 // When the script may move, the highlight walks through the steps and a button
 // pauses it; otherwise the first step stays highlighted.
 import type { WeekStep } from '../data/register-week';
+import { englishHreflang, localeForPath, localizedPath, translator } from '../i18n';
 import RecordCard from './RecordCard.astro';
 import SignedAnswer from './SignedAnswer.astro';
 import DocumentCard from './DocumentCard.astro';
@@ -21,11 +22,13 @@ interface Props {
 }
 
 const { id = 'register-week', kicker, heading, steps, caption } = Astro.props;
+const locale = localeForPath(Astro.url.pathname);
+const t = translator(locale);
 const titleId = `${id}-title`;
 const captionId = `${id}-caption`;
 ---
 
-<figure class="register-week" id={id} aria-labelledby={titleId} aria-describedby={captionId} data-register-day>
+<figure class="register-week" id={id} aria-labelledby={titleId} aria-describedby={captionId} data-register-day data-pause-label={t('Pause', 'Pause')} data-play-label={t('Play', 'Reprendre')}>
   <div class="day-intro">
     <div>
       <p class="day-kicker">{kicker}</p>
@@ -37,7 +40,7 @@ const captionId = `${id}-caption`;
     {steps.map((step, index) => (
       <li class:list={['day-step', { 'is-active': index === 0 }]} data-day-step>
         <p class="step-when"><span class="step-count" aria-hidden="true">{index + 1}</span> {step.when}</p>
-        <p class="step-product">{step.productHref ? <a href={step.productHref}>{step.product}</a> : step.product}</p>
+        <p class="step-product">{step.productHref ? <a href={localizedPath(step.productHref, locale)} hreflang={englishHreflang(localizedPath(step.productHref, locale), locale)}>{step.product}</a> : step.product}</p>
         <h4>{step.title}</h4>
         <p class="step-text" set:html={step.text} />
         {step.card.kind === 'record' && (
@@ -131,11 +134,13 @@ const captionId = `${id}-caption`;
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'day-pause';
-    button.textContent = 'Pause';
+    const pauseLabel = figure.dataset.pauseLabel ?? 'Pause';
+    const playLabel = figure.dataset.playLabel ?? 'Play';
+    button.textContent = pauseLabel;
     button.setAttribute('aria-pressed', 'false');
     button.addEventListener('click', () => {
       paused = !paused;
-      button.textContent = paused ? 'Play' : 'Pause';
+      button.textContent = paused ? playLabel : pauseLabel;
       button.setAttribute('aria-pressed', String(paused));
       if (paused) stop();
       else start();

@@ -45,7 +45,9 @@ test('the contact page owns native request forms and validates both endpoint var
   assert.doesNotMatch(page, /starterId=/);
   assert.match(form, /panel\.dataset\.requestFromUrl === 'true'/);
   assert.match(form, /type = isContactRequestType\(urlType\) \? urlType : 'question'/);
-  assert.match(form, /requestSourcePage\(params\.get\('source'\) \?\? undefined\) \?\? '\/contact\/'/);
+  assert.match(form, /const contactPage = locale === 'fr' \? '\/fr\/contact\/' : '\/contact\/';/);
+  assert.match(form, /requestSourcePage\(params\.get\('source'\) \?\? undefined\) \?\? contactPage/);
+  assert.match(form, /requestSourcePage\(form\.dataset\.sourcePage\) \?\? contactPage/);
 
   for (const field of ['email', 'organization', 'role', 'message']) {
     assert.match(form, new RegExp(`name=["']${field}["']`));

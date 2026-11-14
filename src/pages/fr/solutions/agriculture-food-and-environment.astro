@@ -1,0 +1,125 @@
+---
+// Lecteur : le responsable d’un registre agricole, alimentaire ou
+// environnemental, qui se demande à quoi ressemblerait une semaine avec ce
+// logiciel pour son registre. Les sections suivent ses questions : montrez-moi
+// une semaine, ce qui change pour mon institution, par où commencer, les
+// doutes, qui contacter. Jumelle française de
+// src/pages/solutions/agriculture-food-and-environment.astro.
+import Solution from '../../../layouts/Solution.astro';
+import RegisterWeek from '../../../components/RegisterWeek.astro';
+import SolutionStarters from '../../../components/SolutionStarters.astro';
+import SolutionFaq from '../../../components/SolutionFaq.astro';
+import DocsHandoff from '../../../components/DocsHandoff.astro';
+import { solutionAreas, sharedFamilyFaq } from '../../../data/fr/solutions';
+import { describeServiceHref } from '../../../data/contact';
+import { weekProduct, type WeekStep } from '../../../data/fr/register-week';
+const area = solutionAreas.find((a) => a.key === 'agriculture-food-and-environment')!;
+
+const steps: WeekStep[] = [
+  {
+    when: 'Avant la première demande',
+    ...weekProduct('base-registry'),
+    title: 'Le ministère décide de ce que le registre enregistre',
+    text: 'Un ministère à qui l’on confie un nouveau mandat d’enregistrement des agriculteurs n’a encore ni formulaire ni registre. Il décide de ce que contiennent la fiche d’un agriculteur et celle d’une exploitation, des champs obligatoires, et des rôles autorisés à les enregistrer ou à les modifier.',
+    card: { kind: 'record', recordType: 'Registre des agriculteurs', recordId: 'Définition', icon: 'data', fields: [
+      { label: 'Fiches', value: 'Agriculteur, exploitation' },
+      { label: 'Obligatoire pour une exploitation', value: 'District, cultures' },
+      { label: 'Peut enregistrer des modifications', value: 'Agents d’enregistrement' },
+    ] },
+  },
+  {
+    when: 'Demande et examen',
+    ...weekProduct('casework'),
+    title: 'Un agriculteur fait sa demande et un agent décide',
+    text: 'Un agriculteur dépose sa demande au bureau du district. La demande entre dans la file des enregistrements. D. Mwangi vérifie que l’exploitation n’est pas déjà enregistrée sous un autre nom et approuve la demande. Le registre ne change pas tant que l’agent n’a pas décidé.',
+    card: { kind: 'history', items: [
+      { state: 'Reçue', note: 'Dirigée vers les enregistrements' },
+      { state: 'Prise en charge', note: 'Confiée à D. Mwangi' },
+      { state: 'Approuvée', note: 'Contrôle des doublons terminé' },
+    ] },
+  },
+  {
+    when: 'Première entrée au registre',
+    ...weekProduct('base-registry'),
+    title: 'L’agent enregistre l’exploitation et son historique',
+    text: 'L’agent enregistre l’exploitation comme première entrée de cet agriculteur. Le registre consigne le nom de l’agent et conserve chaque statut antérieur lorsque la fiche change.',
+    card: { kind: 'record', recordType: 'Fiche d’exploitation', recordId: 'HLD-5582', icon: 'data', fields: [
+      { label: 'Statut', value: 'Enregistrée' },
+      { label: 'District', value: 'Nord' },
+      { label: 'Modifiée par', value: 'D. Mwangi' },
+    ] },
+  },
+  {
+    when: 'Vérification par un programme autorisé',
+    ...weekProduct('evidence-gateway'),
+    title: 'Un programme de subventions reçoit uniquement le district d’enregistrement',
+    text: 'Un programme de subventions habilité à faire cette vérification demande dans quel district l’exploitation est enregistrée. Il reçoit cette valeur dans une réponse signée numériquement, sans les coordonnées des parcelles ni les données du ménage.',
+    card: { kind: 'answer', fieldLabel: 'Enregistrée dans le district', value: 'Nord', recipient: 'Programme de subventions', issuer: 'Registre des agriculteurs' },
+  },
+];
+---
+<Solution
+  area={area}
+  heading="Tenez les fiches des producteurs, exploitations, établissements et autorisations."
+  description="Les agents peuvent examiner les enregistrements et consigner les modifications approuvées des exploitations, des établissements et des autorisations. Les programmes habilités peuvent vérifier une information, comme le statut d’enregistrement, sans recevoir la fiche complète. Votre institution fixe les règles et les accès du registre."
+>
+  <section class="section" id="example" aria-labelledby="agriculture-example-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">Un nouveau registre, du début à la fin</p>
+        <h2 id="agriculture-example-title">Créez un registre des agriculteurs et enregistrez sa première exploitation.</h2>
+        <p>Un ministère fictif crée un registre des agriculteurs dans le cadre d’un nouveau mandat, sans formulaire ni registre antérieur. L’exemple montre la définition du registre, la demande et la décision des agents, la première entrée, puis sa vérification par un programme.</p>
+      </div>
+      <RegisterWeek
+        id="agriculture-week"
+        kicker="Un nouveau registre des agriculteurs, première exploitation HLD-5582"
+        heading="Suivez le premier enregistrement."
+        caption="Un nouveau registre, de sa définition à sa première vérification autorisée. Les fiches sont fictives."
+        steps={steps}
+      />
+    </div>
+  </section>
+  <section class="section section-muted" id="what-changes" aria-labelledby="agriculture-change-title">
+    <div class="section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">Ce qui change pour votre institution</p>
+        <h2 id="agriculture-change-title">Tenez les fiches d’exploitation et l’historique de leur statut.</h2>
+      </div>
+      <div class="product-facts">
+        <article><h3>Reliez chaque autorisation au site qu’elle couvre</h3><p>Chaque exploitation, établissement ou site a sa propre fiche, et chaque enregistrement ou autorisation y est relié. Si une entreprise alimentaire exploite deux établissements, chacun peut avoir son propre enregistrement et son statut enregistré.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre tient une entrée <span aria-hidden="true">→</span></a></article>
+        <article><h3>Gardez les statuts antérieurs lorsqu’une autorisation change</h3><p>Une suspension ou un retrait est enregistré avec le nom de l’agent et la date. Les agents peuvent voir quel statut le registre indiquait le jour d’une inspection.</p><a class="inline-cta" href="/fr/solutions/review-changes/">Comment une décision parvient au registre <span aria-hidden="true">→</span></a></article>
+        <article><h3>Publiez le nombre d’inscriptions par district</h3><p>Publiez chaque mois ou chaque trimestre les effectifs par district dans des diffusions examinées, en masquant les petits effectifs et en arrondissant les autres.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/" hreflang="en">Comment fonctionnent les diffusions statistiques (en anglais) <span aria-hidden="true">↗</span></a></article>
+      </div>
+    </div>
+  </section>
+  <SolutionStarters area={area} />
+  <SolutionFaq
+    items={[
+      {
+        q: 'Cela remplace-t-il notre registre des agriculteurs ou notre système d’identification des animaux ?',
+        a: 'Vous pouvez garder le registre que vous tenez aujourd’hui et y connecter Evidence Gateway pour répondre aux questions convenues. Utilisez Base Registry Engine lorsqu’il vous faut un nouveau registre ou que vous décidez d’en migrer un, y compris un registre tenu dans des tableurs.',
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’intègre aux systèmes existants (en anglais)' },
+      },
+      {
+        q: 'Un programme de subventions peut-il vérifier un agriculteur sans compte sur notre système ?',
+        a: 'Le service du programme pose à votre registre une question que vous avez convenu de traiter, par exemple si un agriculteur est enregistré, et reçoit cette réponse, et rien d’autre. Votre institution décide quels services peuvent poser des questions, et lesquelles.',
+        link: { href: '/solutions/check-a-fact/', label: 'Comment un service vérifie une information' },
+      },
+      {
+        q: 'Qui peut consulter la fiche d’un agriculteur ?',
+        a: 'Votre institution décide, rôle par rôle : qui peut consigner une inscription, qui peut consigner une autorisation, qui peut en consulter une, et pour quel motif. Base Registry Engine conserve un historique des modifications qu’il traite. La mise en œuvre convient de la couverture de l’audit pour l’ensemble du registre et des applications connectées.',
+        link: { href: '/security/', label: 'Qui est responsable de quoi' },
+      },
+      ...sharedFamilyFaq,
+    ]}
+  />
+  <DocsHandoff
+    eyebrow="Travaillons ensemble"
+    heading="Parlons de votre service."
+    body="Dites-nous quels producteurs, établissements ou autorisations vous devez enregistrer, qui saisit les informations de terrain et ce que les autres programmes doivent pouvoir vérifier. Nous pouvons vous montrer comment Registry Stack pourrait s’intégrer."
+    primaryLabel="Décrivez votre service"
+    primaryHref={describeServiceHref(area.name, 'fr')}
+    note="Le cœur du logiciel est open source (Apache-2.0). Votre équipe, un prestataire que vous désignez ou nous pouvons le mettre en œuvre et l’exploiter. L’hébergement et l’exploitation font l’objet d’un devis distinct."
+    emphasis="docs"
+  />
+</Solution>

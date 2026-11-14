@@ -3,8 +3,12 @@
 // register change are separate steps; the illustration does not imply timing.
 import RegisterWeek from './RegisterWeek.astro';
 import type { WeekStep } from '../data/register-week';
+import { localeForPath, translator } from '../i18n';
 
-const steps: WeekStep[] = [
+const locale = localeForPath(Astro.url.pathname);
+const t = translator(locale);
+
+const englishSteps: WeekStep[] = [
   {
     when: 'Request',
     product: 'Applicant service',
@@ -47,12 +51,60 @@ const steps: WeekStep[] = [
     card: { kind: 'answer', fieldLabel: 'Licence in good standing', value: 'Yes', recipient: 'Procurement service', issuer: 'Licensing board' },
   },
 ];
+
+const frenchSteps: WeekStep[] = [
+  {
+    when: 'Demande',
+    product: 'Service du demandeur',
+    title: 'Une demande arrive',
+    text: 'Un titulaire d’autorisation demande à l’autorité de délivrance de corriger le champ d’exercice de son autorisation. Le registre ne change pas tant qu’un agent n’a pas décidé.',
+    card: { kind: 'record', recordType: 'Demande de correction', recordId: 'REQ-3106', icon: 'data', fields: [
+      { label: 'Autorisation', value: 'LIC-4471' },
+      { label: 'Modification demandée', value: 'Champ d’exercice' },
+      { label: 'Déposée par', value: 'Titulaire de l’autorisation' },
+    ] },
+  },
+  {
+    when: 'Examen',
+    product: 'Registry Casework',
+    title: 'Un agent décide',
+    text: 'Un agent prend la demande en charge, vérifie les pièces justificatives déposées et consigne sa décision d’examen.',
+    card: { kind: 'history', items: [
+      { state: 'Reçue', note: 'Correction de l’autorisation demandée' },
+      { state: 'Attribuée', note: 'R. Adeyemi examine la demande' },
+      { state: 'Pièces vérifiées', note: 'Certificat déposé examiné' },
+      { state: 'Approuvée', note: 'Décision et motif consignés' },
+    ] },
+  },
+  {
+    when: 'Mise à jour',
+    product: 'Base Registry Engine',
+    title: 'La fiche change et garde son historique',
+    text: 'Un agent habilité applique la correction approuvée. Le registre consigne qui a modifié l’autorisation et conserve la version précédente.',
+    card: { kind: 'record', recordType: 'Fiche d’autorisation', recordId: 'LIC-4471', icon: 'person', fields: [
+      { label: 'Champ d’exercice', value: 'Corrigé' },
+      { label: 'Modifié par', value: 'R. Adeyemi' },
+      { label: 'Révision', value: '12' },
+    ] },
+  },
+  {
+    when: 'Vérification',
+    product: 'Evidence Gateway',
+    title: 'Un service connecté vérifie l’autorisation',
+    text: 'Un service de passation des marchés habilité demande si l’autorisation est en règle. Il reçoit la réponse, signée numériquement par l’autorité de délivrance, sans recevoir le dossier complet de l’autorisation.',
+    card: { kind: 'answer', fieldLabel: 'Autorisation en règle', value: 'Oui', recipient: 'Service de passation des marchés', issuer: 'Autorité de délivrance' },
+  },
+];
+const steps = locale === 'fr' ? frenchSteps : englishSteps;
 ---
 
 <RegisterWeek
   id="register-day"
-  kicker="One licence, one request"
-  heading="Follow a licence correction from request to updated record."
-  caption="A licence correction, from the holder's request through the officer's decision to the corrected record and a procurement service's status check. The records are fictional."
+  kicker={t('One licence, one request', 'Une autorisation, une demande')}
+  heading={t('Follow a licence correction from request to updated record.', 'Suivez la correction d’une autorisation, de la demande à la fiche mise à jour.')}
+  caption={t(
+    "A licence correction, from the holder's request through the officer's decision to the corrected record and a procurement service's status check. The records are fictional.",
+    'Correction d’une autorisation, de la demande du titulaire à la fiche corrigée en passant par la décision de l’agent, puis vérification du statut par un service de passation des marchés. Les fiches sont fictives.',
+  )}
   steps={steps}
 />
