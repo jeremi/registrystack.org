@@ -20,7 +20,7 @@ const pageDescription =
           <p class="eyebrow">About</p>
           <h1 id="about-hero-title">Who builds and supports Registry Stack.</h1>
           <p class="hero-lead">
-            Aubex Consulting LLC, based in San Francisco, United States, builds and supports Registry Stack. The core software is open
+            Aubex Consulting LLC builds and supports Registry Stack. The core software is open
             source under Apache-2.0, so your team can use it with or without us.
           </p>
         </div>
@@ -84,6 +84,9 @@ const pageDescription =
             <li>The <a href="https://docs.registrystack.org/">documentation</a> is public.</li>
             <li>Any provider you appoint can run and support it.</li>
           </ul>
+          <p class="company-note">
+            Aubex Consulting LLC is based in San Francisco, United States. See the <a href="/imprint/">legal notice</a>.
+          </p>
         </div>
       </div>
     </section>
@@ -130,9 +133,18 @@ const pageDescription =
     padding-left: 1.2em;
   }
 
+  /* The company note follows the list as one more ruled row. */
+  .company-note {
+    border-top: 1px solid var(--registry-rule);
+    line-height: 1.5;
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+
   /* Links in these lists sit inside running text, so they are underlined. */
   .person-roles a,
-  .check-list a {
+  .check-list a,
+  .company-note a {
     text-decoration: underline;
   }
 
