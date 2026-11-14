@@ -41,7 +41,12 @@ export const frenchPagePaths = [
   '/architecture/headless/',
 ] as const;
 
-const translatedPaths: ReadonlySet<string> = new Set(frenchPagePaths);
+// The episodes page exists in both languages, but only while at least one
+// episode is published, so it is not in `frenchPagePaths`. Nothing links to it
+// while it is not built, and the French check adds it when it is built.
+export const episodesPagePath = '/episodes/';
+
+const translatedPaths: ReadonlySet<string> = new Set([...frenchPagePaths, episodesPagePath]);
 
 export const localeForPath = (pathname: string): Locale =>
   pathname === '/fr' || pathname.startsWith('/fr/') ? 'fr' : 'en';

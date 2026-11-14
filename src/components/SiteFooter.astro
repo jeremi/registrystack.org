@@ -4,8 +4,12 @@ import { products as productsFr } from '../data/fr/products';
 import { solutionAreas } from '../data/solutions';
 import { solutionAreas as solutionAreasFr } from '../data/fr/solutions';
 import { askQuestionHref, describeServiceHref } from '../data/contact';
+import { configuredVideoChannelUrl } from '../data/channels';
+import { hasPublishedEpisodes } from '../data/episodes';
 import { marketingTrackingUrl } from '../lib/marketing-tracking';
 import { englishHreflang, localeForPath, localizedPath, translator } from '../i18n';
+const videoChannelHref = configuredVideoChannelUrl();
+const episodesPublished = await hasPublishedEpisodes();
 const year = new Date().getFullYear();
 const repoHref = 'https://github.com/registrystack/registry-stack';
 const trackingPreferencesAvailable = Boolean(
@@ -13,7 +17,9 @@ const trackingPreferencesAvailable = Boolean(
 );
 // Under /fr/ the footer is French and internal links go to the French page
 // where one exists. An `fr` label for an English destination ends
-// "(en anglais)", and the link carries hreflang="en".
+// "(en anglais)", and the link carries hreflang="en". The video channel's
+// language is not known here, so its link carries no hreflang and
+// is marked data-language-unknown.
 const locale = localeForPath(Astro.url.pathname);
 const isFrench = locale === 'fr';
 const t = translator(locale);
@@ -44,6 +50,8 @@ const columns: { title: string; fr: string; links: FooterEntry[] }[] = [
     { href: '/digital-public-infrastructure/', label: 'Digital public infrastructure', fr: 'Infrastructure publique numérique' },
     { href: '/data-spaces/', label: 'Data spaces', fr: 'Espaces de données' },
     { href: '/blog/', label: 'Blog', fr: 'Blog (en anglais)' },
+    ...(episodesPublished ? [{ href: '/episodes/', label: 'Episodes', fr: 'Épisodes' }] : []),
+    ...(videoChannelHref ? [{ href: videoChannelHref, label: 'Video channel', fr: 'Chaîne vidéo' }] : []),
     { href: '/security/', label: 'Security', fr: 'Sécurité' },
     { href: '/faq/', label: 'FAQ', fr: 'Questions fréquentes' },
   ] },
@@ -76,7 +84,7 @@ const columns: { title: string; fr: string; links: FooterEntry[] }[] = [
           <p class="footer-col-title">{t(column.title, column.fr)}</p>
           <ul>{column.links.map((link) => 'heading' in link
             ? <li class="footer-col-label">{t(link.heading, link.fr)}</li>
-            : <li><a href={l(link.href)} hreflang={englishTarget(link.href)}>{link.fr ? t(link.label, link.fr) : link.label}</a></li>)}</ul>
+            : <li><a href={l(link.href)} hreflang={link.href === videoChannelHref ? undefined : englishTarget(link.href)} data-language-unknown={link.href === videoChannelHref ? '' : undefined}>{link.fr ? t(link.label, link.fr) : link.label}</a></li>)}</ul>
         </div>
       ))}
     </nav>
