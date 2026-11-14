@@ -315,7 +315,7 @@ try {
   assert.equal(await page.locator('html').getAttribute('lang'), 'fr');
   assert.match(await page.locator('[data-contact-context]').textContent(), /^Au sujet de\s: Examen des autorisations$/u);
   assert.equal(await page.getByRole('heading', { level: 2, name: 'Parlons de votre service' }).count(), 1);
-  assert.match(await page.locator('[data-request-privacy-copy]').textContent(), /Ce formulaire ne vous inscrit à aucune liste d’envoi commercial\./);
+  assert.match(await page.locator('[data-request-privacy-copy]').textContent(), /Ce formulaire ne vous inscrit à aucune liste de diffusion commerciale\./);
   const frenchPrivacyLink = page.locator('#starter-request-privacy a');
   assert.equal(await frenchPrivacyLink.getAttribute('href'), '/privacy/');
   assert.equal(await frenchPrivacyLink.getAttribute('hreflang'), 'en');

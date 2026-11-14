@@ -10,10 +10,10 @@ interface Props {
 }
 const { channel, to, subject, status } = Astro.props;
 const t = translator(localeForPath(Astro.url.pathname));
-const frenchChannel = channel === 'SMS' ? 'SMS' : 'e-mail';
+const frenchChannel = channel === 'SMS' ? 'SMS' : 'courriel';
 ---
 
-<section class="notice-card" aria-label={t(`${channel} notice to ${to}`, `Notification par ${frenchChannel} à ${to}`)}>
+<section class="notice-card" aria-label={t(`${channel} notice to ${to}`, `Notification par ${frenchChannel}, destinataire : ${to}`)}>
   <p class="notice-channel">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
       {channel === 'SMS' ? (

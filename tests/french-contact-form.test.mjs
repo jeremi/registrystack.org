@@ -55,7 +55,7 @@ test('French privacy copy keeps the English promises, no more and no less', () =
   assert.match(fr('starter'), /Si vous acceptez le suivi, nous pouvons relier vos visites à cette demande/);
   assert.match(fr('privacy'), /n’utilisons pas cette demande pour relier votre navigateur actuel à votre message/);
   assert.doesNotMatch(fr('privacy'), /suivi/);
-  for (const type of contactRequestTypes) assert.match(fr(type), /liste d’envoi commercial/);
+  for (const type of contactRequestTypes) assert.match(fr(type), /liste de diffusion commerciale/);
 });
 
 test('form text has French twins for every key and keeps the English wording by default', () => {

@@ -49,13 +49,13 @@ const sourceFields = [
         <p class="flow-label">{t('Returned to the service', 'Renvoyée au service')}</p>
         <h3 id="answer-title">{t('Digitally signed answer', 'Réponse signée numériquement')}</h3>
       </div>
-      <SignedAnswer fieldLabel={t('Registration status', 'Statut de l’immatriculation')} value={t('Active', 'Active')} recipient={t('Procurement service', 'Service de passation des marchés')} issuer={t('Business registration authority', 'Autorité d’immatriculation des entreprises')} />
+      <SignedAnswer fieldLabel={t('Registration status', 'Statut de l’immatriculation')} value={t('Active', 'Active')} recipient={t('Procurement service', 'Service de passation des marchés')} issuer={t('Business registration authority', 'Autorité chargée des immatriculations')} />
       <p class="verification-note">{t('The procurement service verifies the answer before using it.', 'Le service de passation des marchés vérifie la réponse avant de l’utiliser.')}</p>
     </section>
   </div>
 
   <div class="flow-caption">
-    <p><strong>{t('Not returned to the procurement service', 'Non renvoyé au service de passation des marchés')}</strong> {t('Address, filing history, and other source fields.', 'Adresse, historique des dépôts et autres champs de la source.')}</p>
+    <p><strong>{t('Not returned to the procurement service', 'Non renvoyés au service de passation des marchés')}</strong> {t('Address, filing history, and other source fields.', 'Adresse, historique des dépôts et autres champs de la source.')}</p>
     <p><strong>{t('Audit', 'Audit')}</strong> {t('The request and its outcome are recorded.', 'La demande et son résultat sont consignés.')}</p>
   </div>
 </figure>

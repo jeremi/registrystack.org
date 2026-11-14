@@ -46,18 +46,18 @@ const steps: WeekStep[] = [
     card: { kind: 'record', recordType: 'Fiche de la parcelle', recordId: 'P-11-0482', icon: 'data', fields: [
       { label: 'Titulaire', value: 'Nouveau titulaire enregistré' },
       { label: 'Modifiée par', value: 'S. Nakamura' },
-      { label: 'Révision', value: '9' },
+      { label: 'Version', value: '9' },
     ] },
   },
   {
     when: 'Extrait demandé',
     ...weekProduct('render'),
     title: 'Le nouveau titulaire reçoit un extrait imprimé',
-    text: 'Le service demande un extrait à partir de la révision enregistrée et en conserve l’empreinte. À partir des mêmes données d’émission, Registry Render reproduit l’extrait afin qu’une copie ultérieure corresponde à l’original.',
+    text: 'Le service demande un extrait à partir de la version enregistrée et en conserve l’empreinte. À partir des mêmes données d’émission, Registry Render reproduit l’extrait afin qu’une copie ultérieure corresponde à l’original.',
     card: { kind: 'document', documentType: 'Extrait de titre foncier', title: 'Parcelle P-11-0482, extrait des droits', fields: [
-      { label: 'Titulaire', value: 'Tel qu’enregistré à la révision 9' },
-      { label: 'Révision', value: '9' },
-      { label: 'Émis à partir de', value: 'Révision 9' },
+      { label: 'Titulaire', value: 'Tel qu’enregistré dans la version 9' },
+      { label: 'Version', value: '9' },
+      { label: 'Émis à partir de', value: 'Version 9' },
     ], hash: '3f9a…c21e' },
   },
 ];
@@ -90,7 +90,7 @@ const steps: WeekStep[] = [
       </div>
       <div class="product-facts">
         <article><h3>Enregistrez qui détient chaque droit</h3><p>Les agents consignent chaque droit ou détenteur dans la fiche de la parcelle, du bâtiment, du véhicule ou du navire concerné, avec la quote-part et la période d’application. Un service d’évaluation foncière lit le titulaire et la quote-part tels que votre registre les détient.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre sert d’autres services <span aria-hidden="true">→</span></a></article>
-        <article><h3>C’est votre législation qui décide de ce qui est public</h3><p>Votre institution décide quelles informations sont publiques et lesquelles exigent la permission d’un agent ou d’un service connecté. Les accès sont configurés pour le registre et selon les responsabilités de chaque lecteur.</p><a class="inline-cta" href="/fr/security/">Qui est responsable de quoi <span aria-hidden="true">→</span></a></article>
+        <article><h3>C’est votre législation qui décide de ce qui est public</h3><p>Votre institution décide quelles informations sont publiques et lesquelles ne sont accessibles qu’aux agents ou aux services connectés autorisés. Les accès sont configurés pour le registre et selon les responsabilités de chaque lecteur.</p><a class="inline-cta" href="/fr/security/">Qui est responsable de quoi <span aria-hidden="true">→</span></a></article>
         <article><h3>Reproduisez un extrait quand une autre copie est nécessaire</h3><p>À partir des mêmes données d’émission, Registry Render reproduit l’extrait afin que la copie ultérieure corresponde à l’original. Le service de l’institution contrôle quand un extrait peut être délivré et quel effet juridique il a.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/" hreflang="en">Comment Registry Render reproduit un document (en anglais) <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
@@ -110,12 +110,12 @@ const steps: WeekStep[] = [
       },
       {
         q: 'Un extrait imprimé prouve-t-il ce que contient le registre ?',
-        a: 'L’extrait représente la révision de la fiche utilisée pour le produire, et son empreinte peut être conservée avec cette fiche. Qu’un extrait prouve un titre ou ait un autre effet juridique dépend du droit et des procédures de l’institution ; Registry Stack ne porte pas cette appréciation juridique.',
+        a: 'L’extrait représente la version de la fiche utilisée pour le produire, et son empreinte peut être conservée avec cette fiche. Qu’un extrait prouve un titre ou ait un autre effet juridique dépend du droit et des procédures de l’institution ; Registry Stack ne porte pas cette appréciation juridique.',
         link: { href: 'https://docs.registrystack.org/explanation/render-determinism/', label: 'Pourquoi une réimpression correspond à l’original (en anglais)' },
       },
       {
         q: 'Qui peut voir qui détient une parcelle ou un véhicule ?',
-        a: 'Votre institution décide qui peut enregistrer un droit, qui peut consulter un titulaire et pour quel motif. Base Registry Engine conserve un historique des modifications qu’il traite. La mise en œuvre convient de la couverture de l’audit pour l’ensemble du registre et des applications connectées.',
+        a: 'Votre institution décide qui peut enregistrer un droit, qui peut consulter un titulaire et pour quel motif. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit pour l’ensemble du registre et des applications connectées est convenue lors de la mise en œuvre.',
         link: { href: '/security/', label: 'Qui est responsable de quoi' },
       },
       ...sharedFamilyFaq,

@@ -40,19 +40,19 @@ const steps: WeekStep[] = [
   {
     when: 'Fiche de l’entreprise mise à jour',
     ...weekProduct('base-registry'),
-    title: 'L’entrée change et garde son historique',
-    text: 'L’agent du registre enregistre la nouvelle adresse, et le registre consigne qui a fait la modification. La révision 23 la contient ; la révision 22 reste consultable.',
+    title: 'La fiche change et garde son historique',
+    text: 'L’agent du registre enregistre la nouvelle adresse, et le registre consigne qui a fait la modification. La version 23 la contient ; la version 22 reste consultable.',
     card: { kind: 'record', recordType: 'Fiche de l’entreprise', recordId: 'BR-20417', icon: 'business', fields: [
       { label: 'Siège social', value: 'Mis à jour' },
-      { label: 'Modifié par', value: 'L. Mensah' },
-      { label: 'Révision', value: '23' },
+      { label: 'Modifiée par', value: 'L. Mensah' },
+      { label: 'Version', value: '23' },
     ] },
   },
   {
     when: 'Notification demandée',
     ...weekProduct('messaging'),
     title: 'L’entreprise est informée',
-    text: 'Après la mise à jour de la fiche de l’entreprise, le service de dépôt appelle Messaging pour envoyer le modèle de courriel approuvé. Messaging n’envoie que lorsqu’un appelant autorisé le déclenche, et renvoie le résultat de l’envoi au service de dépôt.',
+    text: 'Après la mise à jour de la fiche de l’entreprise, le service de dépôt appelle Messaging pour envoyer le modèle de courriel relu. Messaging n’envoie que lorsqu’un appelant autorisé le déclenche, et renvoie le résultat de l’envoi au service de dépôt.',
     card: { kind: 'notice', channel: 'Email', to: 'Représentant de l’entreprise', subject: 'Changement de siège social enregistré, BR-20417', status: 'Remis' },
   },
 ];
@@ -60,7 +60,7 @@ const steps: WeekStep[] = [
 <Solution
   area={area}
   heading="Gérez les immatriculations d’entreprises et leurs modifications."
-  description="Les entreprises déposent leurs immatriculations et leurs modifications. Les agents du registre examinent chaque dépôt et consignent les informations approuvées dans le registre du commerce. Une banque, un système de passation des marchés ou un autre service approuvé peut vérifier une information permise sans recevoir les pièces du dépôt."
+  description="Les entreprises déposent leurs immatriculations et leurs modifications. Les agents du registre examinent chaque dépôt et consignent les informations approuvées dans le registre du commerce. Une banque, un système de passation des marchés ou un autre service habilité peut vérifier une information autorisée sans recevoir les pièces du dépôt."
 >
   <section class="section" id="example" aria-labelledby="business-example-title">
     <div class="section-inner">
@@ -84,7 +84,7 @@ const steps: WeekStep[] = [
         <h2 id="business-change-title">Gardez un historique clair des modifications des entreprises.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Reliez une entreprise à ses immatriculations</h3><p>Les agents peuvent consigner, dans la fiche d’une entreprise, ses immatriculations au registre du commerce, ses immatriculations fiscales et ses autorisations. Lorsqu’une autre institution détient une immatriculation, la mise en œuvre doit convenir de la manière d’identifier l’entreprise et de relier cette information.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre tient une entrée <span aria-hidden="true">→</span></a></article>
+        <article><h3>Reliez une entreprise à ses immatriculations</h3><p>Les agents peuvent consigner, dans la fiche d’une entreprise, ses immatriculations au registre du commerce, ses immatriculations fiscales et ses autorisations. Lorsqu’une autre institution détient une immatriculation, la mise en œuvre doit convenir de la manière d’identifier l’entreprise et de relier cette information.</p><a class="inline-cta" href="/fr/products/base-registry/">Comment le registre tient une fiche <span aria-hidden="true">→</span></a></article>
         <article><h3>Vérifiez une immatriculation sans le dossier complet</h3><p>Une banque ou un service des marchés publics reçoit seulement la réponse que votre institution autorise, par exemple si l’entreprise est immatriculée. L’historique des dépôts, les adresses et les propriétaires restent dans votre registre.</p><a class="inline-cta" href="/fr/solutions/check-a-fact/">Comment un service vérifie une information <span aria-hidden="true">→</span></a></article>
         <article><h3>Reproduisez un certificat quand une autre copie est nécessaire</h3><p>À partir des mêmes données d’émission, Registry Render reproduit le certificat afin que la copie ultérieure corresponde à l’original. L’application décide quand un certificat ou un extrait peut être délivré.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/" hreflang="en">Comment Registry Render reproduit un document (en anglais) <span aria-hidden="true">↗</span></a></article>
       </div>
@@ -95,17 +95,17 @@ const steps: WeekStep[] = [
     items={[
       {
         q: 'Cela remplace-t-il notre système d’immatriculation des entreprises ?',
-        a: 'Cela dépend de ce qui tient votre registre aujourd’hui. Si un système d’immatriculation reçoit les demandes, encaisse les frais et délivre l’immatriculation, ce système reste en place et consigne le résultat dans le registre. Si votre registre est un tableur, ou vit dans une application que vous retirez, Base Registry Engine peut être le registre, votre équipe planifiant la reprise des fiches existantes.',
+        a: 'Cela dépend de ce qui tient votre registre aujourd’hui. Si un système d’immatriculation reçoit les demandes, encaisse les frais et délivre l’immatriculation, ce système reste en place et consigne le résultat dans le registre. Si votre registre est un tableur, ou vit dans une application que vous retirez, Base Registry Engine peut être le registre, et votre équipe planifie la reprise des fiches existantes.',
         link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’intègre aux systèmes existants (en anglais)' },
       },
       {
         q: 'Une banque peut-elle vérifier qu’une entreprise est immatriculée sans compte sur notre système ?',
-        a: 'Deux cas. Un particulier ou une banque qui consulte une seule entreprise utilise le registre public que publie votre application en vertu de votre législation. Un service qui doit vérifier des entreprises dans le cadre de son propre processus pose à votre registre une question que vous avez convenu de traiter, par exemple si le registre enregistre une entreprise comme active, et reçoit cette réponse, et rien d’autre. Votre institution décide quels services peuvent poser des questions, et lesquelles.',
+        a: 'Deux cas. Un particulier ou une banque qui consulte une seule entreprise utilise le registre public que publie votre application en vertu de votre législation. Un service qui doit vérifier des entreprises dans le cadre de son propre processus pose à votre registre une question que vous avez convenu de traiter, par exemple si une entreprise figure au registre comme active, et reçoit cette réponse, et rien d’autre. Votre institution décide quels services peuvent poser des questions, et lesquelles.',
         link: { href: '/solutions/check-a-fact/', label: 'Comment un service vérifie une information' },
       },
       {
         q: 'Qui peut savoir à qui appartient une entreprise ?',
-        a: 'Votre institution décide qui peut enregistrer un propriétaire, qui peut en consulter un et au titre de quelle obligation légale. Base Registry Engine conserve un historique des modifications qu’il traite. La mise en œuvre convient de la couverture de l’audit pour l’ensemble du registre et des applications connectées.',
+        a: 'Votre institution décide qui peut enregistrer un propriétaire, qui peut en consulter un et au titre de quelle obligation légale. Base Registry Engine conserve un historique des modifications qu’il traite. La couverture de l’audit pour l’ensemble du registre et des applications connectées est convenue lors de la mise en œuvre.',
         link: { href: '/security/', label: 'Qui est responsable de quoi' },
       },
       {

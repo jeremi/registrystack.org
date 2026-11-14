@@ -21,7 +21,7 @@ const areaText: readonly AreaText[] = [
     pageTitle: 'Logiciel pour les licences, autorisations et registres professionnels',
     intent: 'Relier les demandes, les décisions, les fiches d’autorisation et les renouvellements',
     audience: 'Pour les autorités qui délivrent licences et autorisations, et pour les ordres professionnels.',
-    description: 'Reliez demandes, décisions, fiches d’autorisation et renouvellements, avec des vérifications encadrées par les employeurs et d’autres services.',
+    description: 'Reliez demandes, décisions, fiches d’autorisation et renouvellements, et ouvrez aux employeurs et à d’autres services des vérifications encadrées.',
   },
   {
     key: 'business-and-tax',
@@ -37,7 +37,7 @@ const areaText: readonly AreaText[] = [
     pageTitle: 'Logiciel pour les registres agricoles, animaliers et environnementaux',
     intent: 'Inscrire les producteurs, sites, établissements, autorisations et ressources',
     audience: 'Pour les ministères de l’agriculture, les services vétérinaires et de sécurité sanitaire des aliments, et les agences de l’environnement.',
-    description: 'Inscrivez producteurs, sites, entreprises alimentaires, autorisations et ressources. Enregistrez les modifications et encadrez les vérifications.',
+    description: 'Inscrivez producteurs, sites, entreprises alimentaires, permis et ressources naturelles. Suivez les changements ; statut vérifiable par les services autorisés.',
   },
   {
     key: 'people-and-social-programmes',
@@ -61,7 +61,7 @@ const areaText: readonly AreaText[] = [
     pageTitle: 'Logiciel pour les registres de santé et de sécurité',
     intent: 'Tenir les fiches des établissements, opérateurs, produits et risques',
     audience: 'Pour les registres d’établissements de santé, les autorités du médicament et des dispositifs médicaux, et la radioprotection.',
-    description: 'Tenez les fiches des établissements, essais, dispositifs, opérateurs et risques. Enregistrez les décisions et laissez vérifier les statuts.',
+    description: 'Tenez les fiches des établissements, essais, dispositifs, opérateurs et risques. Consignez les décisions et laissez les services autorisés vérifier le statut.',
   },
   {
     key: 'reference-registers',
@@ -73,7 +73,7 @@ const areaText: readonly AreaText[] = [
   },
   {
     key: 'check-a-fact',
-    name: 'Vérifier une information',
+    name: 'Vérifier une information auprès d’un autre registre',
     pageTitle: 'Vérifier une information entre administrations',
     intent: 'Obtenir la réponse à une question précise sans recevoir toute la fiche',
     example: 'Par exemple, un système de marchés publics peut vérifier qu’un fournisseur est inscrit. L’institution qui tient le registre décide des vérifications autorisées.',
@@ -81,19 +81,19 @@ const areaText: readonly AreaText[] = [
   },
   {
     key: 'review-changes',
-    name: 'Examiner les modifications',
+    name: 'Examiner les demandes et consigner les décisions',
     pageTitle: 'Examen des modifications de registre et décisions des agents',
     intent: 'Attribuer les demandes aux agents, suivre les échéances et consigner le résultat',
     example: 'Par exemple, les agents chargés des autorisations peuvent examiner une demande de correction d’une fiche d’autorisation.',
-    description: 'Attribuez les demandes aux agents, suivez les échéances et consignez les décisions. Seuls les agents ou systèmes autorisés appliquent la modification.',
+    description: 'Attribuez les demandes, suivez les échéances et consignez les décisions. Seuls les agents ou systèmes autorisés peuvent appliquer la modification approuvée.',
   },
   {
     key: 'verifiable-credentials',
-    name: 'Attestations vérifiables',
+    name: 'Délivrer des attestations vérifiables',
     pageTitle: 'Attestations vérifiables à partir des registres publics',
-    intent: 'Délivrer une déclaration signée numériquement, comme le statut d’une autorisation, vers un portefeuille numérique compatible',
+    intent: 'Délivrer une déclaration signée numériquement, comme le statut d’une autorisation, dans un portefeuille numérique compatible',
     example: 'Par exemple, un ordre professionnel peut délivrer une attestation du statut d’une autorisation d’exercice sans y inclure son historique.',
-    description: 'Délivrez des attestations vérifiables à partir du registre. Le portefeuille compatible et le service destinataire sont connectés lors de la mise en œuvre.',
+    description: 'Délivrez des attestations vérifiables à partir du registre. Connectez un portefeuille compatible et le service destinataire lors de votre mise en œuvre.',
   },
 ];
 

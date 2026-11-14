@@ -32,7 +32,7 @@ const isFamily = area.kind === 'register-family';
 const primary = Astro.props.primary ?? { href: '#example', label: t('See a service example', 'Voir un exemple de service') };
 const secondary = Astro.props.secondary ?? (isFamily
   ? { href: '#starters', label: t('Explore starting configurations', 'Parcourir les configurations de départ') }
-  : { href: '#fit', label: t('How it fits', 'Comment elle s’intègre') });
+  : { href: '#fit', label: t('How it fits', 'Comment cela s’intègre') });
 ---
 <Base title={area.pageTitle + ' | Registry Stack'} description={area.description ?? description}>
   <SiteHeader current={area.key} />

@@ -37,7 +37,7 @@ const areaProducts = area.products.map((key) => {
 <section id="fit" class={muted ? 'section section-muted' : 'section'} aria-labelledby="solution-fit-title">
   <div class="section-inner product-fit">
     <div class="section-heading compact">
-      <p class="eyebrow">{t('How it fits your institution', 'Comment elle s’intègre dans votre institution')}</p>
+      <p class="eyebrow">{t('How it fits your institution', 'Comment cela s’intègre dans votre institution')}</p>
       <h2 id="solution-fit-title">{heading}</h2>
       <slot />
       {area.kind === 'register-family' && <p><a class="inline-cta" href={localizedPath('/solutions/review-changes/#what-your-office-calls-it', locale)}>{t('See how staff review a request', 'Voir comment les agents examinent une demande')} <span aria-hidden="true">→</span></a></p>}

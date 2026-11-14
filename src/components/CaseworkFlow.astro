@@ -13,7 +13,7 @@ const licenceFields = [
   { label: t('Permitted activities', 'Activités autorisées'), value: t('Corrected', 'Corrigées') },
   { label: t('Changed by', 'Modifiée par'), value: t('Licensing application', 'Application de délivrance des autorisations') },
   { label: t('Applied', 'Appliquée'), value: t('Wednesday 10:02', 'Mercredi 10 h 02') },
-  { label: t('Revision', 'Révision'), value: '12' },
+  { label: t('Revision', 'Version'), value: '12' },
 ];
 ---
 
@@ -40,11 +40,11 @@ const licenceFields = [
       </div>
       <ol class="item-history">
         <li><strong>{t('Request sent for review', 'Demande transmise pour examen')}</strong><span>{t('The request enters the licence corrections queue with a due date.', 'La demande entre dans la file des corrections d’autorisations avec une échéance.')}</span></li>
-        <li><strong>{t('Missing certificate identified', 'Attestation manquante repérée')}</strong><span>{t('The reviewer asks for the certificate. This completes the first review.', 'L’agent demande l’attestation. Ce premier examen est alors terminé.')}</span></li>
-        <li><strong>{t('Certificate provided', 'Attestation fournie')}</strong><span>{t('The licensing application collects the certificate and submits a new review request.', 'L’application recueille l’attestation et soumet une nouvelle demande d’examen.')}</span></li>
+        <li><strong>{t('Missing certificate identified', 'Certificat manquant repéré')}</strong><span>{t('The reviewer asks for the certificate. This completes the first review.', 'L’agent demande le certificat. Ce premier examen est alors terminé.')}</span></li>
+        <li><strong>{t('Certificate provided', 'Certificat fourni')}</strong><span>{t('The licensing application collects the certificate and submits a new review request.', 'L’application métier recueille le certificat et soumet une nouvelle demande d’examen.')}</span></li>
         <li><strong>{t('Revised request approved', 'Demande corrigée approuvée')}</strong><span>{t('A reviewer records the approval. This review has its own due date.', 'Un agent consigne l’approbation. Cet examen a sa propre échéance.')}</span></li>
       </ol>
-      <p class="panel-note">{t('Supervisors can see who is responsible for each review and when it is due.', 'Les responsables voient qui est chargé de chaque examen et quand il est dû.')}</p>
+      <p class="panel-note">{t('Supervisors can see who is responsible for each review and when it is due.', 'Les responsables peuvent voir qui est chargé de chaque examen et quelle est son échéance.')}</p>
     </section>
 
     <section class="register-panel" aria-labelledby="register-panel-title">

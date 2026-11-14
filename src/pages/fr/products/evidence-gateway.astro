@@ -15,7 +15,7 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
       <div class="section-heading">
         <p class="eyebrow">Un exemple : la vérification de l’immatriculation d’un fournisseur</p>
         <h2 id="evidence-example-title">Ce fournisseur a-t-il une immatriculation active au registre du commerce ?</h2>
-        <p>Le service de passation des marchés d’une administration doit vérifier l’immatriculation d’un fournisseur avant de traiter une demande. L’autorité chargée des immatriculations relie Evidence Gateway à son registre du commerce. Le service reçoit le statut de l’immatriculation, sans l’adresse, l’historique des dépôts ni d’autres informations.</p>
+        <p>Le service de passation des marchés d’une administration doit vérifier l’immatriculation d’un fournisseur avant de traiter une demande. L’autorité chargée des immatriculations relie Evidence Gateway à son registre du commerce. Le service de passation des marchés reçoit le statut de l’immatriculation, sans l’adresse, l’historique des dépôts ni d’autres informations.</p>
       </div>
       <EvidenceGatewayFlow />
       <p class="product-note">La signature numérique permet au service de vérifier que l’émetteur attendu a produit la réponse et qu’elle n’a pas été altérée. Elle ne prouve pas que la fiche source est exacte. Le service de passation des marchés reste responsable de décider ce que la réponse signifie pour la demande.</p>
@@ -42,12 +42,12 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
         <h2 id="evidence-fit-title">Ajoutez des vérifications d’informations à côté du registre que vous utilisez déjà.</h2>
         <p>Evidence Gateway peut lire une source existante. Votre organisation garde ses fiches dans le système actuel, en maintient la qualité et décide quels services connectés peuvent recevoir chaque réponse.</p>
         <p>Utiliser Evidence Gateway n’exige pas <a href="/fr/products/base-registry/">Base Registry Engine</a>. Si vous choisissez les deux, votre équipe technique configure la connexion entre eux.</p>
-        <p><a href="/fr/data-spaces/">Voir comment proposer une réponse signée par un espace de données</a>.</p>
+        <p><a href="/fr/data-spaces/">Voir comment proposer une réponse signée au sein d’un espace de données</a>.</p>
       </div>
       <dl>
         <dt>Votre institution définit chaque réponse</dt><dd>Convenez de ce que signifient la question et la réponse, de la source qui fournit l’information, de son degré d’actualité requis et des services qui peuvent l’utiliser.</dd>
-        <dt>Choisissez qui assure la mise en œuvre</dt><dd>Aubex, un autre partenaire de mise en œuvre ou votre propre équipe peut connecter la source et les services destinataires, configurer les accès et la signature, et tester l’échange complet. Votre équipe ou un prestataire désigné peut l’exploiter, ou nous l’hébergeons et l’exploitons pour vous. Notre hébergement et notre exploitation font l’objet d’un devis distinct.</dd>
-        <dt>Le service destinataire garde sa décision</dt><dd>Son équipe utilise la réponse avec ses propres règles et d’autres informations. La réponse ne décide pas de l’éligibilité et n’autorise pas à modifier une fiche.</dd>
+        <dt>Choisissez qui assure la mise en œuvre</dt><dd>Aubex, un autre partenaire de réalisation ou votre propre équipe peut connecter la source et les services destinataires, configurer les accès et la signature, et tester l’échange complet. Votre équipe ou un prestataire désigné peut l’exploiter, ou nous l’hébergeons et l’exploitons pour vous. Notre hébergement et notre exploitation font l’objet d’un devis distinct.</dd>
+        <dt>Le service destinataire reste maître de sa décision</dt><dd>Son équipe utilise la réponse avec ses propres règles et d’autres informations. La réponse ne décide pas de l’éligibilité et n’autorise pas à modifier une fiche.</dd>
         <dt>Permettre aux personnes de partager une attestation délivrée</dt><dd>Evidence Gateway peut aussi délivrer une déclaration signée numériquement, appelée attestation vérifiable, qu’une personne peut conserver dans un portefeuille numérique. La mise en œuvre relie et teste un portefeuille compatible et un service qui l’accepte. Une attestation montre l’information au jour de sa délivrance et reste valide jusqu’à la date d’expiration que vous fixez. <a href="/fr/solutions/verifiable-credentials/">Découvrir les attestations vérifiables</a>.</dd>
       </dl>
     </div>

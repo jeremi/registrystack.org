@@ -21,7 +21,7 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
       <div class="section-heading center">
         <p class="eyebrow">Un exemple : un registre d’état civil</p>
         <h2 id="check-example-title">Répondre à des questions différentes à partir du même registre.</h2>
-        <p>Un service des pensions demande si une personne est enregistrée comme étant en vie. Un service des autorisations demande si un demandeur remplit une condition d’âge. L’autorité de l’état civil décide de la question que chaque service peut poser. Aucun des deux services ne reçoit la fiche complète de la personne, avec les informations de son acte de naissance.</p>
+        <p>Un service des pensions demande si une personne est enregistrée comme étant en vie. Un service des autorisations demande si un demandeur remplit une condition d’âge. L’autorité de l’état civil décide de la question que chaque service peut poser. Aucun des deux services ne reçoit la fiche complète de la personne.</p>
       </div>
       <MinimizationFunnel />
     </div>
@@ -29,7 +29,7 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
   <section class="section" aria-labelledby="check-change-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">Ce qui change pour votre service</p>
+        <p class="eyebrow">Ce qui change pour votre institution</p>
         <h2 id="check-change-title">Répondre à la question sans envoyer toute la fiche.</h2>
       </div>
       <div class="product-facts">
@@ -57,12 +57,12 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
       {
         q: 'Devons-nous déplacer notre registre ?',
         a: 'Non. Votre équipe technique relie Evidence Gateway à votre registre existant ou à une extraction de celui-ci. Les réponses reflètent les informations disponibles par cette connexion : la mise en œuvre doit donc tenir compte de tout délai de mise à jour d’une extraction.',
-        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’utilise à côté des systèmes existants (en anglais)' },
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Comment il s’intègre aux systèmes existants (en anglais)' },
       },
       {
         q: 'Comment le service destinataire sait-il qu’une réponse est authentique ?',
         a: 'Le service destinataire vérifie la signature numérique de l’émetteur et la période de validité de la réponse. Une signature valide confirme qui a émis la réponse et qu’elle n’a pas été modifiée. L’institution qui la reçoit applique toujours ses propres règles pour prendre sa décision.',
-        link: { href: evidence.href, label: `À propos de ${evidence.name}` },
+        link: { href: evidence.href, label: `À propos d’${evidence.name}` },
       },
       {
         q: 'Cela remplace-t-il nos accords de partage de données ?',
@@ -79,14 +79,14 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
       },
       {
         q: 'La réponse peut-elle être un statut ou une catégorie ?',
-        a: 'Oui. Elle peut être une valeur tirée d’une liste que votre institution définit, par exemple un statut d’inscription ou une région. Chaque question prédéfinie précise les informations que le propriétaire du registre accepte de renvoyer et les services qui peuvent les demander.',
+        a: 'Oui. Elle peut être une valeur tirée d’une liste que votre institution définit, par exemple un statut d’inscription ou une région. Chaque question prédéfinie précise les informations que le service qui tient le registre accepte de renvoyer et les services qui peuvent les demander.',
         link: { href: 'https://docs.registrystack.org/tutorials/return-a-governed-value/', label: 'Suivre le tutoriel sur la valeur encadrée (en anglais)' },
       },
     ]}
   />
   <DocsHandoff
     eyebrow="Travaillons ensemble"
-    heading="Parlons d’une vérification d’information avec nous."
+    heading="Parlons d’une vérification d’information."
     body="Dites-nous quel registre détient l’information, quel service en a besoin et ce que ce service doit savoir. Nous pouvons vous aider à définir la première question et à relier les deux systèmes."
     primaryLabel="Décrivez votre service"
     primaryHref={describeServiceHref(area.name, 'fr')}

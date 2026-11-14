@@ -6,13 +6,13 @@ import SiteFooter from '../../../components/SiteFooter.astro';
 import Film from '../../../components/Film.astro';
 import { askQuestionHref } from '../../../data/contact';
 ---
-<Base title="Registry Studio (préversion) | Registry Stack" description="Examinez et configurez des registres et des services avec votre équipe technique. Registry Studio est un espace de rédaction en préversion.">
+<Base title="Registry Studio (préversion) | Registry Stack" description="Examinez et configurez des registres et des services avec votre équipe technique. Registry Studio est un espace de conception en préversion.">
   <SiteHeader current="studio" />
   <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="studio-title"><div class="hero-inner"><div class="hero-copy">
       <p class="eyebrow">Registry Studio · Préversion</p>
       <h1 id="studio-title">Examinez et configurez ensemble les registres et les services.</h1>
-      <p class="hero-lead">Un espace de rédaction pour les équipes de programme et les équipes de mise en œuvre. Comprenez les fiches et les étapes du service, examinez les modifications proposées et préparez une version que votre équipe technique exploitera.</p>
+      <p class="hero-lead">Un espace de conception pour les équipes de programme et les équipes de mise en œuvre. Comprenez les fiches et les étapes du service, examinez les modifications proposées et préparez une version que votre équipe technique exploitera.</p>
       <div class="hero-actions"><a class="button button-primary" href={askQuestionHref('Registry Studio', 'fr')}>Posez une question sur Studio</a><a class="button button-secondary" href="#workspace">Explorer l’espace de travail</a></div>
     </div></div></section>
 
@@ -22,15 +22,15 @@ import { askQuestionHref } from '../../../data/contact';
       <Film
         name="registry-stack-studio-film"
         title="Registry Stack Studio : construire un service avec les mêmes composants"
-        caption="Une Ville fictive construit dans Studio un service d’autorisation d’emplacement de marché. Un approbateur signe avant la remise, et une modification ultérieure passe par les mêmes vérifications et la même approbation."
+        caption="Une ville fictive construit dans Studio un service d’autorisation d’emplacement de marché. Un approbateur signe avant le transfert, et une modification ultérieure passe par les mêmes vérifications et la même approbation."
       />
     </div></section>
 
     <section class="section section-muted" id="fit" aria-labelledby="review-title"><div class="section-inner approach-split">
-      <div class="section-heading"><h2 id="review-title">Examinez une modification avant de la remettre.</h2><p>Vérifiez les modifications proposées avec les contrôles du produit et enregistrez une version. Préparez les fichiers du produit et les informations de remise pour l’équipe chargée d’exploiter le service.</p><p>Studio rédige la configuration. Votre équipe d’exploitation reste responsable du déploiement et de l’exploitation du service.</p></div>
-      <div class="editorial-callout"><h3>Démarrer un brouillon à partir de documents existants</h3><p>Studio comprend une aide à la rédaction par IA. Utilisez des documents sources pour préparer un brouillon de cadrage, examinez les questions et les constats, puis confirmez ce que le service doit faire.</p><p>Le brouillon est un point de départ pour l’examen, pas une définition approuvée du service.</p><a class="inline-cta" href="/fr/ai/service-design/">Voir la démarche de conception du service <span aria-hidden="true">→</span></a></div>
+      <div class="section-heading"><h2 id="review-title">Examinez une modification avant son transfert.</h2><p>Vérifiez les modifications proposées avec les contrôles du produit et enregistrez une version. Préparez les fichiers du produit et les informations de transfert pour l’équipe chargée d’exploiter le service.</p><p>Studio sert à concevoir la configuration. Votre équipe d’exploitation reste responsable du déploiement et de l’exploitation du service.</p></div>
+      <div class="editorial-callout"><h3>Démarrer un brouillon à partir de documents existants</h3><p>Studio comprend une aide à la rédaction par IA. Utilisez des documents sources pour préparer une ébauche de note de cadrage, examinez les questions et les constats, puis confirmez ce que le service doit faire.</p><p>Le brouillon est un point de départ pour l’examen, pas une définition approuvée du service.</p><a class="inline-cta" href="/fr/ai/service-design/">Voir la démarche de conception du service <span aria-hidden="true">→</span></a></div>
     </div></section>
 
-    <section class="final-cta" aria-labelledby="access-title"><div class="section-inner"><h2 id="access-title">Parlez de Studio avec Aubex.</h2><p>Studio est en préversion. Contactez Aubex pour y accéder. C’est un outil de rédaction commercial, soumis à des conditions de licence distinctes ; la licence Apache-2.0 du logiciel d’exécution ne couvre pas Studio. Vous n’avez pas besoin de Studio pour exploiter ou modifier un service : il écrit les mêmes fichiers de configuration que votre équipe peut examiner et modifier sans lui.</p><div class="section-links"><a class="button button-primary" href={askQuestionHref('Registry Studio', 'fr')}>Posez une question sur Studio</a><a class="button button-secondary" href="/fr/customization/">Découvrir l’aide à la mise en œuvre</a></div></div></section>
+    <section class="final-cta" aria-labelledby="access-title"><div class="section-inner"><h2 id="access-title">Parlez de Studio avec Aubex.</h2><p>Studio est en préversion. Contactez Aubex au sujet de l’accès. C’est un outil de conception commercial, soumis à des conditions de licence distinctes ; la licence Apache-2.0 du cœur du logiciel d’exécution ne couvre pas Studio. Vous n’avez pas besoin de Studio pour exploiter ou modifier un service : il écrit les mêmes fichiers de configuration que votre équipe peut examiner et modifier sans lui.</p><div class="section-links"><a class="button button-primary" href={askQuestionHref('Registry Studio', 'fr')}>Posez une question sur Studio</a><a class="button button-secondary" href="/fr/customization/">Découvrir l’aide à la mise en œuvre</a></div></div></section>
   </main><SiteFooter />
 </Base>

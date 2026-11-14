@@ -5,7 +5,7 @@ Voici le studio, où les équipes
 construisent des services publics.
 
 00:00:04.600 --> 00:00:08.800
-Pas de zéro, mais avec les mêmes composants,
+Sans partir de zéro, avec les mêmes composants,
 puis vérifiés et approuvés.
 
 NOTE Ce dont le vendeur a besoin
@@ -55,13 +55,13 @@ Chaque composant vérifie ses propres réglages,
 
 00:00:46.400 --> 00:00:49.600
 et s’ils ne s’accordent pas,
-la remise est impossible.
+le transfert est impossible.
 
 00:00:52.000 --> 00:00:54.400
 Un approbateur de la Ville signe.
 
 00:00:54.800 --> 00:00:57.000
-Alors seulement, elle est remise.
+Alors seulement, elle est transférée.
 
 00:00:57.300 --> 00:01:00.400
 Sa fiche de catalogue vient du même fichier.
@@ -80,7 +80,7 @@ Les vérifications repèrent ce qui a été oublié.
 
 00:01:10.300 --> 00:01:13.400
 Approuvée de nouveau, la version deux
-est remise.
+est transférée.
 
 00:01:13.800 --> 00:01:16.600
 Une modification relue, pas un nouveau projet.
@@ -91,7 +91,7 @@ NOTE Conclusion
 Construit avec les mêmes composants.
 
 00:01:19.400 --> 00:01:20.800
-Approuvé avant la remise.
+Approuvé avant le transfert.
 
 00:01:22.200 --> 00:01:23.600
 Registry Stack.
