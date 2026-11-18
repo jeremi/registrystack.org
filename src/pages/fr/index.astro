@@ -69,7 +69,7 @@ const fr = (href: string) => `/fr${href}`;
           <h2 id="ownership-title">Construisez avec votre équipe, ou avec nous.</h2>
         </div>
         <div class="value-grid adoption-grid">
-          <article><h3>Utiliser et adapter le logiciel</h3><p>Le cœur du logiciel est open source, sous licence Apache-2.0. Votre équipe ou le prestataire de votre choix peut l’examiner, l’adapter et l’exploiter. Votre institution décide où il est hébergé et qui peut utiliser ses fiches.</p><a class="inline-cta" href="/fr/faq/">Propriété, licences et hébergement <span aria-hidden="true">→</span></a></article>
+          <article><h3>Choisissez qui exploite le logiciel, et où</h3><p>Le cœur du logiciel est open source, sous licence Apache-2.0. Votre équipe ou le prestataire de votre choix peut l’examiner, l’adapter et l’exploiter. Nous pouvons aussi l’héberger et l’exploiter pour vous. Ce poste est chiffré à part dans votre proposition. Votre institution décide où il est hébergé et qui peut utiliser ses fiches.</p><a class="inline-cta" href="/fr/faq/">Propriété, licences et hébergement <span aria-hidden="true">→</span></a></article>
           <article><h3>Travailler avec Aubex</h3><p>Aubex développe Registry Stack et en assure l’assistance technique. Partons d’un seul service : nous définissons ensemble, dans un périmètre écrit, la configuration, les écrans, les intégrations et les responsabilités du registre pilote de votre institution. La mise en œuvre et l’assistance dans la durée sont des prestations payantes.</p><a class="inline-cta" href="/fr/pricing/">Mise en œuvre et assistance technique <span aria-hidden="true">→</span></a></article>
         </div>
         <p class="team-record"><strong>Une expérience acquise sur de précédents projets de registres.</strong> {teamRecordFull}</p>
@@ -81,7 +81,7 @@ const fr = (href: string) => `/fr${href}`;
         <div class="section-heading">
           <p class="eyebrow">L’IA pour les services publics</p>
           <h2 id="customization-title">L’IA, là où elle est utile à votre service.</h2>
-          <p>Découvrez comment l’IA aide à concevoir un service, à le mettre en œuvre et à accéder aux informations du registre. Votre institution fixe les règles ; les demandes comme les décisions restent sous responsabilité humaine.</p>
+          <p>L’IA peut aider à définir un service, à préparer les modifications de sa mise en œuvre ou à accompagner les usagers dans leurs demandes. Votre institution fixe les règles ; les demandes comme les décisions restent sous responsabilité humaine.</p>
           <a class="inline-cta" href="/fr/ai/">Découvrir les usages de l’IA <span aria-hidden="true">→</span></a>
         </div>
       </div>
@@ -89,14 +89,14 @@ const fr = (href: string) => `/fr${href}`;
 
     <section class="section section-muted" id="developers" aria-labelledby="developers-title">
       <div class="section-inner" id="start-testing">
-        <div class="section-heading"><p class="eyebrow">Pour les équipes techniques</p><h2 id="developers-title">Examinez le logiciel. Lancez un exemple.</h2><p>Suivez un tutoriel en local, avec des données d’exemple, pour évaluer les fonctions principales.</p></div>
+        <div class="section-heading"><p class="eyebrow">Pour les équipes techniques</p><h2 id="developers-title">Examinez le logiciel. Lancez un exemple.</h2><p>Suivez un tutoriel en local, avec des données d’exemple, pour évaluer les fonctions principales. Vous n’avez pas besoin de nous contacter.</p></div>
         <div id="products"><div id="how-it-works" class="home-product-links" aria-label="Détail des produits">{products.map((product) => <a href={fr(product.href)}>{product.name}</a>)}</div></div>
         <div class="developer-grid">{products.filter((product) => product.featured).map((product) => (<article><h3>{product.solution}</h3><p>{product.firstResult}</p><a class="inline-cta developer-tutorial" href={product.tutorialHref} hreflang="en">{product.tutorialLabel} <span aria-hidden="true">↗</span></a></article>))}</div>
         <p class="developer-note" id="project-status">Consultez la <a href="https://docs.registrystack.org/" hreflang="en">documentation (en anglais)</a> et parcourez le <a href="https://github.com/registrystack/registry-stack" hreflang="en">code source et les versions (en anglais)</a>.</p>
       </div>
     </section>
 
-    <section class="final-cta" aria-labelledby="pilot-title"><div class="section-inner"><p class="eyebrow">Votre prochain service</p><h2 id="pilot-title">Parlez-nous des besoins de votre institution.</h2><p>Décrivez le service, qui l’utilisera et ce qu’il doit faire. Nous pouvons vous aider à évaluer si Registry Stack convient et à cadrer le travail.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref(undefined, 'fr')} data-journey="service-inquiry">Décrivez votre service</a><a class="button button-secondary" href="/fr/pricing/">Consultez les options de mise en œuvre</a></div></div></section>
+    <section class="final-cta" aria-labelledby="pilot-title"><div class="section-inner"><p class="eyebrow">Votre prochain service</p><h2 id="pilot-title">Parlez-nous des besoins de votre institution.</h2><p>Décrivez le service, qui l’utilisera et ce qu’il doit faire. Nous pouvons vous aider à évaluer si Registry Stack convient et à cadrer le travail. Vous pouvez partir d’un nouveau mandat, sans formulaire ni registre antérieur.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref(undefined, 'fr')} data-journey="service-inquiry">Décrivez votre service</a><a class="button button-secondary" href="/fr/pricing/">Consultez les options de mise en œuvre</a></div></div></section>
   </main>
   <SiteFooter />
 </Base>
