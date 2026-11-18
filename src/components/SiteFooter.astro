@@ -73,10 +73,10 @@ const columns: { title: string; fr: string; links: FooterEntry[] }[] = [
   <div class="site-footer-inner">
     <div class="footer-brand">
       <a class="footer-brand-name" href={l('/')}>Registry Stack</a>
-      <p>{t('Public registers and services for national, regional and local government.', 'Registres et services publics pour les administrations nationales, régionales et locales.')}</p>
+      <p>{t('Software for public registers and services in national, regional and local government.', 'Registres et services publics pour les administrations nationales, régionales et locales.')}</p>
       {isFrench
         ? <p>Développement et assistance technique : <a href={l('/about/')}>Aubex</a>.</p>
-        : <p>Built and supported by <a href="/about/">Aubex</a>.</p>}
+        : <p><a href="/about/">Aubex</a> builds and supports Registry Stack.</p>}
     </div>
     <nav class="footer-nav" aria-label={t('Footer', 'Pied de page')}>
       {columns.map((column) => (
@@ -90,7 +90,7 @@ const columns: { title: string; fr: string; links: FooterEntry[] }[] = [
     </nav>
   </div>
   <div class="site-footer-base">
-    <p>&copy; {year} Aubex Consulting LLC. {t('Core software: Apache-2.0.', 'Cœur du logiciel sous licence Apache-2.0.')}</p>
+    <p>&copy; {year} Aubex Consulting LLC. {t('The core software is licensed under Apache-2.0.', 'Cœur du logiciel sous licence Apache-2.0.')}</p>
     <p>
       {isFrench
         ? <Fragment><a href="/privacy/" hreflang="en">Confidentialité (en anglais)</a> · <a href="/terms/" hreflang="en">Conditions d’utilisation (en anglais)</a> · <a href="/imprint/" hreflang="en">Mentions légales (en anglais)</a></Fragment>

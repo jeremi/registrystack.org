@@ -7,16 +7,16 @@ import { askQuestionHref, proposalHref } from '../data/contact';
 // Timing and budget are optional so a reader without a budget or date can
 // still request a proposal.
 const brief = [
-  'Your organization and role.',
-  'The service you need, who will use it, and what it needs to do.',
-  'Any records or systems to connect, and where you want help.',
-  'Timing: when you want to start and any funding deadline (optional).',
-  'Budget range and currency, if you can share it (optional).',
+  'Your organisation and your role',
+  'The service you need, who will use it and what it needs to do',
+  'Any records or systems to connect, and where you want help',
+  'Timing: when you want to start and any funding deadline (optional)',
+  'Budget: your budget range and currency, if you can share it (optional)',
 ];
 const proposalRoute = proposalHref();
 ---
 
-<Base title="Implementation and pricing | Registry Stack" description="See how Registry Stack implementation works and compare starting prices for pilot register implementation and annual support. Discuss your service and request a proposal.">
+<Base title="Implementation and pricing | Registry Stack" description="See how implementation works. Compare starting prices for pilot register implementation and annual support. Discuss your service and request a proposal.">
   <SiteHeader current="pricing" />
   <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="pricing-title">
@@ -24,10 +24,10 @@ const proposalRoute = proposalHref();
         <div class="hero-copy">
           <p class="eyebrow">Implementation and pricing</p>
           <h1 id="pricing-title">Implementation and support for your service.</h1>
-          <p class="hero-lead">Work with us to configure and test a service, or get annual technical support while your team leads the implementation.</p>
+          <p class="hero-lead">We can configure and test your service with you. Or your own team can lead the implementation and get annual technical support from us.</p>
           <div class="hero-actions" aria-label="Primary actions">
-            <a class="button button-primary" href="#scope">Explore paid options</a>
-            <a class="button button-secondary" href="#self-service">Use the software yourself</a>
+            <a class="button button-primary" href="#scope">Compare the two paid options</a>
+            <a class="button button-secondary" href="#self-service">Use the software with your own team</a>
           </div>
         </div>
       </div>
@@ -36,31 +36,31 @@ const proposalRoute = proposalHref();
     <section class="section" id="scope" aria-labelledby="options-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">Two ways we can help</p>
-          <h2 id="options-title">Starting prices</h2>
-          <p>We agree the work, who does what and a fixed fee with you in writing before starting.</p>
+          <p class="eyebrow">Two kinds of paid help</p>
+          <h2 id="options-title">Compare the starting price of each option.</h2>
+          <p>We agree the work, who does what and a fixed fee with you. We do this in writing before work starts.</p>
         </div>
         <div class="service-options">
           <article id="pilot" aria-labelledby="implementation-title">
-            <p class="option-label">Hands-on delivery</p>
+            <p class="option-label">We implement it with you</p>
             <h3 id="implementation-title">Pilot register implementation</h3>
             <p class="starting-fee"><span>From</span> <strong>US$20,000</strong></p>
             <p class="fee-basis">Per register, with an agreed scope</p>
-            <p>We implement one register and its service with your team, configured to your rules and tested with your staff. The proposal states whether your pilot register runs with test data or live records.</p>
+            <p>We implement one register and its service together with your own team. We configure it to your rules. We test it with your staff. The proposal states whether your pilot register runs with test data or live records.</p>
             <h4>What we agree before work starts</h4>
-            <p>Agree the screens, sign-in, integrations, data preparation, hosting and handover, who does each part and how your team will evaluate the result. The scope lists the configuration, tests, instructions and service-specific code you receive, with licensing and maintenance terms.</p>
-            <p>The fee depends on the service steps, connections, data preparation and deployment work. See <a href="#process">how implementation works</a>.</p>
+            <p>We agree the screens, sign-in and integrations. We agree the data preparation, hosting and handover. We also agree who does each part and how your own team will evaluate the result. The written scope lists what you receive: the configuration, tests, instructions and service-specific code. It also states the licensing and maintenance terms.</p>
+            <p>The fee depends on the steps in your service and its connections. It also depends on the data preparation and the deployment work. Read <a href="#process">how implementation works</a>.</p>
           </article>
           <article id="support" aria-labelledby="support-title">
-            <p class="option-label">Your team leads</p>
+            <p class="option-label">Your own team leads</p>
             <h3 id="support-title">Annual support</h3>
             <p class="starting-fee"><span>From</span> <strong>US$7,500</strong> <span>/ year</span></p>
-            <p class="fee-basis">For teams implementing and operating Registry Stack</p>
-            <p>Your team implements and operates the solution. Support can cover technical questions, upgrade planning and troubleshooting for the Registry Stack products and versions you run. The contract states the coverage and who is responsible for what.</p>
-            <p>Your proposal lists the deployments covered, how to contact support, when support is available and the agreed response times.</p>
+            <p class="fee-basis">For teams that implement and operate Registry Stack</p>
+            <p>Your own team implements and operates the service. Support can cover technical questions, upgrade planning and troubleshooting for the Registry Stack products and versions you run. The contract states what support covers and who is responsible for what.</p>
+            <p>The proposal lists the deployments covered and how to contact support. It also lists when support is available and the agreed response times.</p>
           </article>
         </div>
-        <p class="hosting-note">We can also host and operate the service for you, priced separately in your proposal.</p>
+        <p class="hosting-note">We can also host and operate the service for you. We price hosting separately in the proposal.</p>
         <p class="options-next"><a class="inline-cta" href="#inquiry">Discuss your needs <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
@@ -69,13 +69,13 @@ const proposalRoute = proposalHref();
       <div class="section-inner split">
         <div class="section-heading compact">
           <p class="eyebrow">Discuss your needs</p>
-          <h2 id="inquiry-title">Ask a question.</h2>
-          <p>Say who you are and describe the service or need. You do not need a budget to ask.</p>
+          <h2 id="inquiry-title">Ask us a question about your service.</h2>
+          <p>Tell us who you are. Describe the service or what you need. You do not need a budget to ask.</p>
           <a class="button button-secondary" href={askQuestionHref()} data-journey="ask-question">Ask a question</a>
         </div>
         <div class="pilot-brief" aria-labelledby="brief-title">
-          <h3 id="brief-title">Request a proposal.</h3>
-          <p>Describe what you need so we can propose the work and its cost. Include these points in your request.</p>
+          <h3 id="brief-title">Request a proposal</h3>
+          <p>Describe what you need so that we can propose the work and its cost. Include:</p>
           <ol>
             {brief.map((item) => <li>{item}</li>)}
           </ol>
@@ -90,13 +90,13 @@ const proposalRoute = proposalHref();
     <section class="section" id="process" aria-labelledby="process-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <p class="eyebrow">Implementation process</p>
+          <p class="eyebrow">The implementation process</p>
           <h2 id="process-title">How implementation works</h2>
           <ol class="next-steps">
-            <li>Discuss your needs. We review your service and follow up with any questions.</li>
-            <li>Agree the scope, who does what and a fixed fee in writing, in a proposal your procurement team can review.</li>
-            <li>Configure and test with your team. We use AI to draft configuration and test cases; your team reviews and approves each change. The configured service needs no AI model to run. <a href="/customization/">See how we use AI</a>.</li>
-            <li>Hand over. Your team or a provider you appoint runs the service, or we run it for you. <a href="#support">Annual support</a> is available when your team runs it.</li>
+            <li>We discuss your needs. We review your service and follow up with any questions.</li>
+            <li>We agree the scope, who does what and a fixed fee in writing. Your procurement team can review this proposal.</li>
+            <li>We configure and test the service with your own team. We use AI to draft configuration and test cases. That team reviews and approves each change. The configured service needs no AI model to run. <a href="/customization/">See how we use AI</a>.</li>
+            <li>We hand over the service. Your own team or a provider you appoint runs it. Or we run it for you. <a href="#support">Annual support</a> is available when your own team runs it.</li>
           </ol>
         </div>
       </div>
@@ -107,8 +107,8 @@ const proposalRoute = proposalHref();
         <div class="section-heading compact">
           <p class="eyebrow">Open-source self-service</p>
           <h2 id="self-service-title">Use Registry Stack with your own team.</h2>
-          <p>The core Registry Stack software is available under Apache 2.0, with no software licence fee. Your team can evaluate, implement, and operate it using the documentation and source code.</p>
-          <a class="button button-secondary" href="/#developers">Explore developer tutorials</a>
+          <p>The core software is open source under the Apache-2.0 licence. There is no software licence fee. Your own team can evaluate, implement and operate it using the documentation and the source code.</p>
+          <a class="button button-secondary" href="/#developers">See the developer tutorials</a>
         </div>
       </div>
     </section>

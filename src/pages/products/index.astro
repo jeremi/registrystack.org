@@ -5,34 +5,34 @@ import SiteFooter from '../../components/SiteFooter.astro';
 import ProductServiceJourney from '../../components/ProductServiceJourney.astro';
 import { describeServiceHref } from '../../data/contact';
 ---
-<Base title="Registry Stack products | Registers, reviews, documents and notices" description="See how Registry Stack products fit into a licensing service: records, staff review, digitally signed PDF documents, notices and authorized information checks.">
+<Base title="Registry Stack products | Records, review, documents, notices" description="See how Registry Stack products fit a licensing service: records, staff review, digitally sealed PDF documents, notices and information checks you authorise.">
   <SiteHeader current="products" />
   <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="products-title"><div class="hero-inner"><div class="hero-copy">
       <p class="eyebrow">Registry Stack products</p>
-      <h1 id="products-title">The software behind a register service.</h1>
-      <p class="hero-lead">Maintain records, send requests to staff and connect the next steps. Registry Stack products handle records, reviews, documents, notices and information checks. Use the parts you need with an existing application or when creating a new service.</p>
-      <div class="hero-actions"><a class="button button-primary" href="#service-example">See how they fit together</a><a class="button button-secondary" href={describeServiceHref('Registry Stack products')}>Discuss your service</a></div>
+      <h1 id="products-title">Software that keeps records and connects the steps of your register service.</h1>
+      <p class="hero-lead">The products keep records, send requests to your staff and connect the next steps. They cover records, reviews, documents, notices and information checks. Use the parts you need. Use them beside an application you already run or in a new service.</p>
+      <div class="hero-actions"><a class="button button-primary" href="#service-example">See how the products fit together</a><a class="button button-secondary" href={describeServiceHref('Registry Stack products')}>Discuss your service</a></div>
     </div></div></section>
 
     <section class="section" id="service-example" aria-labelledby="service-title"><div class="section-inner">
-      <div class="section-heading"><h2 id="service-title">How the products work together.</h2></div>
+      <div class="section-heading"><h2 id="service-title">See how the products work together in a licence renewal.</h2></div>
       <ProductServiceJourney />
-      <nav class="service-paths" aria-label="Priority service areas"><p>Explore the service you need:</p><ul><li><a href="/solutions/licensing/">Licensing and professional registers</a></li><li><a href="/solutions/business-and-tax/">Business registers</a></li><li><a href="/solutions/agriculture-food-and-environment/">Agricultural registers</a></li></ul></nav>
+      <nav class="service-paths" aria-label="Priority service areas"><p>Choose the service you need:</p><ul><li><a href="/solutions/licensing/">Licensing and professional registers</a></li><li><a href="/solutions/business-and-tax/">Business registers</a></li><li><a href="/solutions/agriculture-food-and-environment/">Agricultural registers</a></li></ul></nav>
     </div></section>
 
     <section class="section section-muted" id="connections" aria-labelledby="connections-title"><div class="section-inner">
-      <div class="section-heading"><h2 id="connections-title">Connect the steps and the systems you keep.</h2><p>Your application can call the products directly. Add integration components when the service needs them.</p></div>
+      <div class="section-heading"><h2 id="connections-title">Connect the steps and keep the systems you already have.</h2><p>Your application can call the products directly. Add integration components when your service needs them.</p></div>
       <div class="connection-grid">
-        <article><h3>Coordinate calls and wait for reviews</h3><p>Registry Coordinator runs reviewed sequences of product calls, including waits for a staff decision. Each product still checks the permissions for its own operation.</p><a class="inline-cta" href="https://docs.registrystack.org/start/coordinator/">Explore workflow coordination <span aria-hidden="true">↗</span></a></article>
-        <article><h3>Keep an existing source of records</h3><p>Registry Adapter exposes configured operations over a system your institution already runs. The source keeps its records and authority; the integration defines which operations are available.</p><a class="inline-cta" href="https://github.com/registrystack/registry-stack/blob/v0.46.0/products/adapter/CONSULTATION.md">Read the Adapter integration contract <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Registry Coordinator runs calls and waits for reviews</h3><p>It runs reviewed sequences of product calls. These can include waits for a staff decision. Each product still checks the permissions for its own operation.</p><a class="inline-cta" href="https://docs.registrystack.org/start/coordinator/">Read the Coordinator documentation <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Registry Adapter lets you keep your existing source of records</h3><p>It exposes configured operations over a system you already run. The source system keeps its records and its authority. The integration defines which operations are available.</p><a class="inline-cta" href="https://github.com/registrystack/registry-stack/blob/v0.46.0/products/adapter/CONSULTATION.md">Read the Adapter integration contract <span aria-hidden="true">↗</span></a></article>
       </div>
-      <p class="additional-parts">If a service includes appointments, <a href="https://docs.registrystack.org/start/scheduling/">Registry Scheduling</a> manages capacity and bookings. Where participating sources publish information-provider descriptions, <a href="https://docs.registrystack.org/start/discovery/">Registry Discovery</a> helps technical teams find them.</p>
+      <p class="additional-parts">If your service includes appointments, <a href="https://docs.registrystack.org/start/scheduling/">Registry Scheduling</a> manages capacity and bookings. Where participating sources publish information-provider descriptions, <a href="https://docs.registrystack.org/start/discovery/">Registry Discovery</a> helps technical teams find them.</p>
     </div></section>
 
     <section class="section" id="evaluation" aria-labelledby="evaluation-title"><div class="section-inner adoption-grid">
-      <div><p class="eyebrow">For implementers</p><h2 id="evaluation-title">Try a connected example.</h2><p>The review-and-notice tutorial connects a workflow, staff review and a notice sent through a mock provider. Use it to inspect the handoffs.</p><a class="inline-cta" href="https://docs.registrystack.org/tutorials/review-an-application-and-send-a-notice/">Follow the review-and-notice tutorial <span aria-hidden="true">↗</span></a></div>
-      <div><p class="eyebrow">Implementation and operation</p><h2>Choose who delivers and runs it.</h2><p>Your team or an appointed provider can build the service and operate the software, or we do it with you and run it for you. Agree the records, screens, sign-in, connections and responsibilities in the implementation scope. Our hosting and operation are quoted separately.</p><a class="inline-cta" href="/pricing/#process">How implementation works <span aria-hidden="true">→</span></a></div>
+      <div><p class="eyebrow">For implementers</p><h2 id="evaluation-title">Try an example that connects staff review to a notice.</h2><p>The tutorial connects a workflow, staff review and a notice sent through a mock provider. Use it to inspect the handoffs.</p><a class="inline-cta" href="https://docs.registrystack.org/tutorials/review-an-application-and-send-a-notice/">Follow the review and notice tutorial <span aria-hidden="true">↗</span></a></div>
+      <div><p class="eyebrow">Implementation and operation</p><h2>Choose who delivers and runs your service.</h2><p>Your own team or a provider you appoint can build the service and run the software. Or we build it with you and run it for you. You agree the records, screens, sign-in, connections and responsibilities in a written implementation scope. We quote our hosting and operation separately.</p><a class="inline-cta" href="/pricing/#process">Read how implementation works <span aria-hidden="true">→</span></a></div>
     </div></section>
   </main>
   <SiteFooter />

@@ -20,7 +20,7 @@ interface Props {
 // exists, and a link to an English page carries hreflang="en".
 const locale = localeForPath(Astro.url.pathname);
 const t = translator(locale);
-const { heading = t('Questions for planning the service', 'Questions pour préparer le service'), items, muted = false } = Astro.props;
+const { heading = t('These questions can help you plan your service.', 'Questions pour préparer le service'), items, muted = false } = Astro.props;
 ---
 <section id="faq" class={muted ? 'section section-muted' : 'section'} aria-labelledby="solution-faq-title">
   <div class="section-inner">

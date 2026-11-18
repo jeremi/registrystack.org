@@ -6,31 +6,31 @@ import SiteFooter from '../../components/SiteFooter.astro';
 import Film from '../../components/Film.astro';
 import { askQuestionHref } from '../../data/contact';
 ---
-<Base title="Registry Studio | Registry Stack" description="Review and configure registries and services with your technical team. Registry Studio is an authoring workspace available as a Preview.">
+<Base title="Registry Studio | Registry Stack" description="Registry Studio is an authoring workspace available as a Preview. Programme teams and implementers can use it to define and review a register service.">
   <SiteHeader current="studio" />
   <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="studio-title"><div class="hero-inner"><div class="hero-copy">
       <p class="eyebrow">Registry Studio · Preview</p>
-      <h1 id="studio-title">Review and configure registries and services together.</h1>
-      <p class="hero-lead">An authoring workspace for programme teams and implementers. Understand the records and service steps, review proposed changes and prepare a version for your technical team to run.</p>
+      <h1 id="studio-title">Programme teams and implementers review and configure a register service together.</h1>
+      <p class="hero-lead">Registry Studio is an authoring workspace for programme teams and implementers. Use it to understand the records and steps of a service. You can review proposed changes. You can then prepare a version for the technical team that runs the service.</p>
       <div class="hero-actions"><a class="button button-primary" href={askQuestionHref('Registry Studio')}>Ask about Studio</a><a class="button button-secondary" href="#workspace">Explore the workspace</a></div>
     </div></div></section>
 
     <section class="section" id="workspace" aria-labelledby="model-title"><div class="section-inner">
-      <div class="section-heading"><h2 id="model-title">See the service your team is defining.</h2><p>Review the record model, the changes people may request and the steps used to handle a service. Keep programme and technical discussions connected to the same definitions.</p></div>
-      <div class="value-grid"><article><h3>Records</h3><p>Inspect the information the register keeps and review changes to its structure.</p></article><article><h3>Permitted changes</h3><p>See the actions that can change a record and the rules your team must confirm.</p></article><article><h3>Service steps</h3><p>Follow the service map and review how the work is organized.</p></article></div>
+      <div class="section-heading"><h2 id="model-title">See the service your team is defining.</h2><p>Your team can review the record model and the changes people may request. You can also review the steps used to handle a service. Programme staff and technical staff work from the same definitions.</p></div>
+      <div class="value-grid"><article><h3>Records</h3><p>Inspect the information your register keeps. Review changes to its structure.</p></article><article><h3>Permitted changes</h3><p>See the actions that can change a record. See the rules your team must confirm.</p></article><article><h3>Service steps</h3><p>Follow the service map. Review how the work is organised.</p></article></div>
       <Film
         name="registry-stack-studio-film"
-        title="Registry Stack Studio: build a service from the same parts"
-        caption="A fictional city council builds a market stall permit service in Studio. An approver signs before handover, and a later change goes through the same checks and approval."
+        title="Building a service in Studio from the same parts"
+        caption="A fictional city council builds a market stall permit service in Studio. An approver signs before the service is handed over. A later change passes through the same checks and approval."
       />
     </div></section>
 
     <section class="section section-muted" id="fit" aria-labelledby="review-title"><div class="section-inner approach-split">
-      <div class="section-heading"><h2 id="review-title">Review a change before handing it over.</h2><p>Check proposed edits against the product’s checks and save a version. Prepare the product files and handover information for the team responsible for running the service.</p><p>Studio authors the configuration. Your operating team remains responsible for deploying and operating the service.</p></div>
-      <div class="editorial-callout"><h3>Start a draft from existing documents</h3><p>Studio includes AI-assisted drafting. Use source documents to prepare a draft brief, review the questions and findings, and confirm what the service should do.</p><p>The draft is a starting point for review, not an approved service definition.</p><a class="inline-cta" href="/ai/service-design/">See the service design approach <span aria-hidden="true">→</span></a></div>
+      <div class="section-heading"><h2 id="review-title">Review each change before you hand it over.</h2><p>Studio checks proposed edits against the product’s checks. Then you can save a version. Studio prepares the product files and handover information for the team that runs the service.</p><p>Studio authors the configuration. The operating team stays responsible for deploying and operating the service.</p></div>
+      <div class="editorial-callout"><h3>Start a draft from your existing documents</h3><p>Studio includes AI-assisted drafting. Your team uses source documents to prepare a draft brief. The brief contains questions and findings. Your team reviews them and confirms what the service should do.</p><p>The draft is a starting point for review. It is not an approved service definition.</p><a class="inline-cta" href="/ai/service-design/">Read about the service design approach <span aria-hidden="true">→</span></a></div>
     </div></section>
 
-    <section class="final-cta" aria-labelledby="access-title"><div class="section-inner"><h2 id="access-title">Discuss Studio with Aubex.</h2><p>Studio is available as a Preview. Contact Aubex about access. It is a commercial authoring tool with separate licensing terms; the core runtime software’s Apache-2.0 licence does not cover Studio. You do not need Studio to run or change a service: it writes the same configuration files your team can review and edit without it.</p><div class="section-links"><a class="button button-primary" href={askQuestionHref('Registry Studio')}>Ask about Studio</a><a class="button button-secondary" href="/customization/">Explore implementation support</a></div></div></section>
+    <section class="final-cta" aria-labelledby="access-title"><div class="section-inner"><h2 id="access-title">Talk to Aubex about Studio.</h2><p>Studio is available as a Preview. Contact Aubex about access. Studio is a commercial authoring tool with separate licensing terms. The Apache-2.0 licence of the core runtime software does not cover Studio. Your service does not need Studio to run or to change. Studio writes the same configuration files that your team can review and edit without it.</p><div class="section-links"><a class="button button-primary" href={askQuestionHref('Registry Studio')}>Ask about Studio</a><a class="button button-secondary" href="/customization/">Explore implementation support</a></div></div></section>
   </main><SiteFooter />
 </Base>

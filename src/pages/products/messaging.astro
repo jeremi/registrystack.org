@@ -5,16 +5,16 @@ const product = products.find((p) => p.key === 'messaging')!;
 ---
 <Product
   product={product}
-  heading="Send notices from your public services."
-  description="Registry Messaging sends email and SMS from approved templates through the providers you configure. Your application chooses the recipient and when to send; Messaging prepares the message, dispatches it and records the outcome."
-  note="Open-source messaging for a new service or one you already run."
+  heading="Registry Messaging sends notices from your public service by email and SMS."
+  description="It sends email and SMS from your approved templates. It uses the providers you configure. Your application chooses the recipient and when to send. Messaging prepares each message, sends it to the provider and records the outcome."
+  note="Open-source software for a new service or one you already run."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="messaging-example-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">One example: a licence document is ready</p>
-        <h2 id="messaging-example-title">Tell the applicant where to find their document.</h2>
-        <p>The licensing service has prepared and stored the licence document. It asks Registry Messaging to send an email from the authority’s approved template. The notice tells the applicant to sign in to the official service to view it.</p>
+        <p class="eyebrow">Example: a licence document is ready</p>
+        <h2 id="messaging-example-title">Tell the applicant where to find their licence document.</h2>
+        <p>The licensing service has prepared and stored the licence document. It asks Messaging to send an email from the authority’s approved template. The email tells the applicant to sign in to the official service to view the document.</p>
       </div>
       <figure class="messaging-example" aria-labelledby="messaging-example-caption">
         <section class="request-panel" aria-labelledby="messaging-request-title">
@@ -41,20 +41,20 @@ const product = products.find((p) => p.key === 'messaging')!;
             <p>This confirms the handoff, not delivery to the applicant.</p>
           </div>
         </section>
-        <figcaption id="messaging-example-caption">A fictional licence-service email, requested by the application and sent through its configured provider. The document stays in the official service.</figcaption>
+        <figcaption id="messaging-example-caption">A fictional licence service email, requested by the application and sent through its configured provider. The licence document itself stays in the official service.</figcaption>
       </figure>
     </div>
   </section>
   <section class="section" aria-labelledby="messaging-capabilities-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">Practical capabilities</p>
-        <h2 id="messaging-capabilities-title">Keep notices consistent and follow their progress.</h2>
+        <p class="eyebrow">What Messaging does</p>
+        <h2 id="messaging-capabilities-title">Keep your notices consistent and follow their progress.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Approve the wording</h3><p>Define email and SMS templates, their versions, languages and required information. Applications select an approved template and supply the details for each message.</p></article>
-        <article><h3>Control which services may send</h3><p>Authorize applications to use specific senders and templates. Connect the email or SMS providers your institution chooses.</p></article>
-        <article><h3>Distinguish sending from delivery</h3><p>See whether a message is queued, accepted by the provider or has a reported delivery outcome. Delivery status is available where the provider reports it; it does not show whether the person read the notice.</p></article>
+        <article><h3>Approve the wording</h3><p>Define email and SMS templates with their versions, languages and required information. Applications choose an approved template and supply the details for each message.</p></article>
+        <article><h3>Control which services may send</h3><p>Authorise applications to use specific senders and templates. Connect the email or SMS providers you choose.</p></article>
+        <article><h3>See the difference between sending and delivery</h3><p>See whether a message is queued, accepted by the provider or has a delivery outcome from the provider. Delivery status is available where the provider reports it. It does not show whether the person read the notice.</p></article>
       </div>
     </div>
   </section>
@@ -62,13 +62,13 @@ const product = products.find((p) => p.key === 'messaging')!;
     <div class="section-inner product-fit">
       <div class="section-heading compact">
         <p class="eyebrow">How it fits your service</p>
-        <h2 id="messaging-fit-title">Send messages when your application needs them.</h2>
-        <p>Connect Messaging to your application or workflow. Use it for acknowledgements, requests for information, reminders or decision notices. The calling service owns the process; Messaging handles each requested message through the configured provider.</p>
+        <h2 id="messaging-fit-title">Your application asks Messaging to send a message when it needs one.</h2>
+        <p>Connect Messaging to your application or workflow. Use it for acknowledgements, requests for information, reminders or decision notices. The calling service owns the process. Messaging handles each requested message through the configured provider.</p>
       </div>
       <dl>
-        <dt>The application chooses why, when and whom</dt><dd>Keep contact details and permission to contact someone in your service. Supply the recipient, template and message data when requesting a send.</dd>
-        <dt>The implementation connects the provider</dt><dd>Agree the sender, provider account, credentials, templates and links back to the official service. Documents and their access controls remain with that service.</dd>
-        <dt>Choose who runs it</dt><dd>Your institution or appointed provider can host and operate Messaging, or we can run it for you. We quote hosting and operation separately in the proposal.</dd>
+        <dt>Your application chooses why, when and to whom</dt><dd>Contact details and permission to contact someone stay in your service. Your service supplies the recipient, template and message data with each request.</dd>
+        <dt>The implementation connects the provider</dt><dd>Agree the sender, provider account and credentials. Agree the templates and the links back to the official service. Documents and their access controls stay with that service.</dd>
+        <dt>Choose who runs it</dt><dd>Your own team or a provider you appoint can host and operate Messaging. Or we run it for you. We quote hosting and operation separately in the proposal.</dd>
       </dl>
     </div>
   </section>
@@ -76,8 +76,8 @@ const product = products.find((p) => p.key === 'messaging')!;
     <div class="section-inner">
       <div class="section-heading compact">
         <p class="eyebrow">Evaluate the software</p>
-        <h2 id="messaging-developers-title">Send and inspect a local message.</h2>
-        <p>The tutorial uses a local email inbox and mock SMS provider to inspect messages and status. Continue with the <a href="https://docs.registrystack.org/start/messaging/">Messaging overview</a> and <a href="https://docs.registrystack.org/operate/messaging/">operations guide</a> when connecting your chosen providers.</p>
+        <h2 id="messaging-developers-title">Send a message on your own computer and inspect it.</h2>
+        <p>The tutorial uses a local email inbox and a mock SMS provider. Use it to inspect messages and their status. When you connect the providers you choose, read the <a href="https://docs.registrystack.org/start/messaging/">Messaging overview</a> and the <a href="https://docs.registrystack.org/operate/messaging/">operations guide</a>.</p>
         <p><a class="inline-cta" href={product.tutorialHref}>{product.tutorialLabel} →</a></p>
       </div>
     </div>

@@ -40,7 +40,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/licensing/',
     name: 'Licensing and professional registers',
     pageTitle: 'Licensing register software',
-    intent: 'Connect applications, decisions, licence records and renewal',
+    intent: 'Connect licence applications to decisions, records and renewals',
     kind: 'register-family',
     starters: [
       'driver-licensing',
@@ -54,7 +54,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'professional-licensing',
     audience: 'For licensing authorities and professional councils.',
-    description: 'Connect licensing applications, decisions, licence records and renewals, with controlled checks by employers and other services.',
+    description: 'You can connect licence applications, decisions, records and renewals. Employers and other services can run the checks you control.',
     products: ['base-registry', 'evidence-gateway', 'casework'],
   },
   {
@@ -62,7 +62,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/business-and-tax/',
     name: 'Business, tax and finance registers',
     pageTitle: 'Business and tax register software',
-    intent: 'Record business registrations and changes, and let approved services check their status',
+    intent: 'Record business registrations and changes so approved services can check a business’s status',
     kind: 'register-family',
     starters: [
       'bank-account-register',
@@ -85,8 +85,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'trade-authorizations',
     ],
     featuredStarter: 'business-register',
-    audience: 'For company registrars, tax administrations, customs and financial supervisors.',
-    description: 'Record business and taxpayer registrations, review changes and let approved services check registration status.',
+    audience: 'For company registrars, tax administrations, customs authorities and financial supervisors.',
+    description: 'You can record business and taxpayer registrations. Staff review changes. Approved services can check registration status.',
     products: ['base-registry', 'evidence-gateway'],
   },
   {
@@ -115,8 +115,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'water-bodies-and-monitoring-sites',
     ],
     featuredStarter: 'farmer-registry',
-    audience: 'For agriculture ministries, veterinary and food safety authorities and environment agencies.',
-    description: 'Register producers, sites, food businesses, permits and natural resources. Record changes and let approved services check their status.',
+    audience: 'For agriculture ministries, veterinary authorities, food safety authorities and environment agencies.',
+    description: 'You can register producers, sites, food businesses, permits and natural resources. You can record changes. Approved services can check status.',
     products: ['base-registry', 'evidence-gateway'],
   },
   {
@@ -124,7 +124,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/people-and-social-programmes/',
     name: 'People, households and social programmes',
     pageTitle: 'People, population and programme register software',
-    intent: 'Maintain identity, household, enrollment and status records for public services',
+    intent: 'Keep identity, household, enrolment and status records for public services',
     kind: 'register-family',
     starters: [
       'alerts-watchlist',
@@ -142,8 +142,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'voter-registration',
     ],
     openFirst: ['population-register', 'social-registry'],
-    audience: 'For population and civil registration offices, social protection ministries, education, immigration and electoral authorities.',
-    description: 'Maintain population registers, social registries and enrollment records. Review corrections and let authorized services check specific information.',
+    audience: 'For population and civil registration offices, social protection ministries, and education, immigration and electoral authorities.',
+    description: 'You can keep population registers, social registries and enrolment records. Staff review corrections. Authorised services can check specific information.',
     products: ['base-registry', 'evidence-gateway', 'casework'],
   },
   {
@@ -151,7 +151,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/land-property-and-assets/',
     name: 'Land, property, vehicles and places',
     pageTitle: 'Land, property and vehicle register software',
-    intent: 'Record assets, their holders and rights, and the history of changes',
+    intent: 'Record assets with their holders and rights, and the history of changes',
     kind: 'register-family',
     starters: [
       'address-building-register',
@@ -171,8 +171,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'vehicle-titles',
     ],
     featuredStarter: 'land-parcels',
-    audience: 'For cadastres, land registries, vehicle and vessel registries.',
-    description: 'Maintain records of parcels, buildings, vehicles, vessels and their holders or rights, with a history of changes.',
+    audience: 'For cadastres and for land, vehicle and vessel registries.',
+    description: 'You can record parcels, buildings, vehicles and vessels. You can record who holds them or has rights over them. The register keeps the history of changes.',
     products: ['base-registry'],
   },
   {
@@ -180,7 +180,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/health-and-safety/',
     name: 'Health, safety and regulated products',
     pageTitle: 'Health and safety register software',
-    intent: 'Maintain facility, operator, product and hazard records',
+    intent: 'Keep facility, operator, product and hazard records',
     kind: 'register-family',
     starters: [
       'clinical-trials',
@@ -193,8 +193,8 @@ export const solutionAreas: readonly SolutionArea[] = [
       'radiation-protection',
     ],
     featuredStarter: 'health-facilities',
-    audience: 'For health facility registrars, medicines and device regulators and radiation protection authorities.',
-    description: 'Maintain facility, trial, device, operator and hazard records. Record decisions and let approved services check their status.',
+    audience: 'For health facility registrars, medicines regulators, device regulators and radiation protection authorities.',
+    description: 'You can keep facility, trial, device, operator and hazard records. You can record decisions. Approved services can check status.',
     products: ['base-registry', 'evidence-gateway'],
   },
   {
@@ -202,7 +202,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/reference-registers/',
     name: 'Public bodies, reference lists and catalogues',
     pageTitle: 'Reference register and public body directory software',
-    intent: 'Maintain shared classifications, directories and reference data',
+    intent: 'Keep shared classifications, directories and reference data',
     kind: 'register-family',
     starters: [
       'administrative-metadata-catalogue',
@@ -214,7 +214,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     ],
     featuredStarter: 'geographic-reference',
     audience: 'For statistics offices, national mapping and gazetteer authorities, and any office that keeps a code list.',
-    description: 'Maintain the code lists, place names and public-body directories that other registers and services rely on.',
+    description: 'You can keep the code lists, place names and public-body directories that other registers and services rely on.',
     products: ['base-registry'],
   },
   {
@@ -222,11 +222,11 @@ export const solutionAreas: readonly SolutionArea[] = [
     slug: '/solutions/check-a-fact/',
     name: 'Check information from another register',
     pageTitle: 'Check information between government services',
-    intent: 'Get an answer to a specific question without receiving the full record',
-    example: 'For example, a procurement system can check whether a supplier is registered. The institution that maintains the register decides which checks are allowed.',
+    intent: 'Give a service the answer to a specific question, not the full record',
+    example: 'For example, a procurement system can check whether a supplier is registered. The institution that keeps the register decides which checks to allow.',
     kind: 'cross-cutting',
     starters: [],
-    description: 'Let an authorized service check information such as an age threshold or licence status without receiving the full record.',
+    description: 'You can let an authorised service check a fact without receiving the full record. For example, it can check an age threshold or a licence status.',
     products: ['evidence-gateway'],
   },
   {
@@ -238,7 +238,7 @@ export const solutionAreas: readonly SolutionArea[] = [
     example: 'For example, a licensing team can review a request to correct a licence record.',
     kind: 'cross-cutting',
     starters: [],
-    description: 'Assign requests to staff, track due dates and record decisions. Only authorized staff or systems can apply the approved change.',
+    description: 'You can assign requests to staff, track due dates and record decisions. Only authorised staff or systems can apply an approved change.',
     products: ['casework', 'base-registry'],
   },
   {
@@ -247,10 +247,10 @@ export const solutionAreas: readonly SolutionArea[] = [
     name: 'Issue verifiable credentials',
     pageTitle: 'Verifiable credentials from government registers',
     intent: 'Issue a digitally signed statement, such as licence status, to a compatible wallet',
-    example: 'For example, a professional council can issue a credential containing licence status without including the licence history.',
+    example: 'For example, a professional council can issue a credential that contains licence status but not the licence history.',
     kind: 'cross-cutting',
     starters: [],
-    description: 'Issue verifiable credentials from register information. Connect a compatible wallet and receiving service as part of your implementation.',
+    description: 'You can issue verifiable credentials from register information. A compatible wallet and a receiving service are connected as part of the implementation.',
     products: ['evidence-gateway'],
   },
 ] as const;
@@ -259,13 +259,13 @@ export const solutionAreas: readonly SolutionArea[] = [
 export const sharedFamilyFaq: readonly { q: string; a: string; link?: { href: string; label: string } }[] = [
   {
     q: 'How do we plan an implementation?',
-    a: 'Start with one service. Agree the records, staff tasks, screens, integrations and migration it needs. A written scope identifies who delivers, hosts and operates it, including access, backups and handover.',
-    link: { href: '/faq/', label: 'Ownership, delivery and operating questions' },
+    a: 'Start with one service. Agree its records, staff tasks, screens, system connections and data migration. A written scope names who delivers, hosts and runs it. It covers access, backups and handover.',
+    link: { href: '/faq/', label: 'Read about ownership, delivery and operation' },
   },
   {
     q: 'How can our technical team evaluate the software?',
-    a: 'Use the component tutorials to test core behavior with sample data. A complete service still needs its own rules, connected applications and end-to-end testing.',
-    link: { href: '/#developers', label: 'Technical evaluation' },
+    a: 'The component tutorials let your team test core behaviour with sample data. Your service still needs its own rules, connected applications and end-to-end tests.',
+    link: { href: '/#developers', label: 'Evaluate the software' },
   },
 ];
 

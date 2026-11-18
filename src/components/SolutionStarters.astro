@@ -19,9 +19,9 @@ const collectionHref = marketplaceCollectionHref(area.key);
       <h2 id="solution-starters-title">{t('Find a starting configuration.', 'Trouvez une configuration de départ.')}</h2>
       <p>{locale === 'fr'
         ? `Dans le catalogue de configurations, la collection « ${area.name} » présente chaque modèle et ses composants ; vous pouvez y demander un accès. Une configuration est un point de départ : la mise en œuvre doit encore l’adapter à vos règles, à vos canaux de service et à vos systèmes existants.`
-        : `Explore the ${area.name.toLowerCase()} collection in the marketplace, with models, included parts and access requests. A configuration is a starting point: an implementation still needs to fit your rules, service channels and existing systems.`}</p>
+        : `The marketplace has a collection called ${area.name}. It shows each model, the parts it includes and how to request access. Each model is a starting point, not a finished service. Your implementation must still fit your rules, your service channels and your existing systems.`}</p>
     </div>
-    <a class="button button-primary" href={collectionHref} hreflang={englishHreflang(collectionHref, locale)}>{t('Browse this service area in the marketplace', 'Parcourez ce domaine de service dans le catalogue (en anglais)')} <span aria-hidden="true">→</span></a>
+    <a class="button button-primary" href={collectionHref} hreflang={englishHreflang(collectionHref, locale)}>{t('Open the marketplace collection', 'Parcourez ce domaine de service dans le catalogue (en anglais)')} <span aria-hidden="true">→</span></a>
     <p class="marketplace-note">{t('Current starting configurations are free to request. You can also discuss your service with us without choosing one first.', 'Les configurations de départ actuelles peuvent être demandées gratuitement. Vous pouvez aussi nous parler de votre service sans en choisir une au préalable.')}</p>
   </div>
 </section>

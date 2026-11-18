@@ -6,7 +6,7 @@ import { askQuestionHref } from '../data/contact';
 
 const pageTitle = 'Security | Registry Stack';
 const pageDescription =
-  'Controls and operating responsibilities for governed changes, limited disclosure, signed answers, and accountable review.';
+  'Read about the Registry Stack controls for governed changes, limited disclosure, signed answers and accountable review. See who owns each operating duty.';
 const securityDocsHref = 'https://docs.registrystack.org/spec/rs-sec-g/';
 const securityReportHref =
   'https://github.com/registrystack/registry-stack/security/advisories/new';
@@ -16,37 +16,31 @@ const releaseVerifyHref = 'https://github.com/registrystack/registry-stack/blob/
 // available through the maintained security documentation.
 const properties = [
   {
-    title: 'Authorize changes to the register',
-    body:
-      'Base Registry Engine checks who may change a record and whether the change follows your configured rules. It keeps revisions so authorized users can inspect the history through your application.',
+    title: 'Check each change to a record',
+    body: 'Base Registry Engine checks who may change a record. It checks whether the change follows your configured rules. It keeps the record’s revisions. Authorised users can inspect the history through your institution’s application.',
   },
   {
-    title: 'Limit what each service receives',
-    body:
-      'Evidence Gateway checks permission for a predefined question before consulting its source. It records authorized source access and disclosure before releasing the answer. Your organization defines the permitted recipient, purpose, source, and answer.',
+    title: 'Check permission before each answer',
+    body: 'Evidence Gateway checks permission for a predefined question before it consults the source. It records the authorised source access and the disclosure before it releases the answer. You define the permitted recipient, purpose, source and answer.',
   },
   {
-    title: 'Verify where an answer came from',
-    body:
-      'Evidence Gateway signs its answers so a receiving service can verify the issuer, integrity, intended use and validity. The source owner remains responsible for the information’s accuracy; the receiving service makes its own decision.',
+    title: 'Sign each answer',
+    body: 'Evidence Gateway signs its answers. A receiving service can verify who issued the answer and whether it was altered. It can also verify the intended use and whether the answer is valid. The source owner stays responsible for the accuracy of the information. The receiving service makes its own decision.',
   },
   {
-    title: 'Keep human decisions attributable',
-    body:
-      'Registry Casework records who reviewed each item and who decided. Applying a change is a separate step. The register checks the permission of the person or service applying it and records who made the change.',
+    title: 'Record who reviews and who decides',
+    body: 'Registry Casework records who reviewed each item and who decided. Applying the change is a separate step. The register checks the permission of the person or service that applies the change. It also records who made the change.',
   },
 ];
 
 const responsibilities = [
   {
-    title: 'Your organization sets the rules',
-    body:
-      'You own the records and decide who may maintain them, which services may ask for information, and for what purpose. Your team defines the rules, reviews the configured permissions, and decides how returned information is used.',
+    title: 'Own the records and set the rules',
+    body: 'Your institution owns the records. It decides who may maintain them. It decides which services may ask for information and for what purpose. Your institution’s team defines the rules and reviews the configured permissions. It also decides how returned information is used.',
   },
   {
-    title: 'Your operator runs the deployment',
-    body:
-      'Your organization or an operator it appoints runs the software in an environment it controls. The operator manages database and source access, credentials, audit logs, monitoring, updates, backups, and incident response. Your team controls the systems to which the deployment connects.',
+    title: 'Run and protect the deployment',
+    body: 'Your institution or an operator it appoints runs the software in an environment it controls. Or we run it for you. The operator manages database access, source access and credentials. It also manages audit logs, monitoring and updates. It manages backups and incident response too. Your institution’s team controls the systems the deployment connects to.',
   },
 ];
 
@@ -54,27 +48,27 @@ const evidence = [
   {
     label: 'Security model and responsibilities',
     href: securityDocsHref,
-    description: 'Trust boundaries, request checks, and the controls your operator supplies.',
+    description: 'The trust boundaries, the checks on each request and the controls your operator supplies.',
   },
   {
     label: 'Security self-assessment',
     href: 'https://docs.registrystack.org/security/self-assessment/',
-    description: 'Control-by-control questions and implementation references for an evaluator.',
+    description: 'Questions on each control for your evaluators, with references to the implementation.',
   },
   {
     label: 'Release verification',
     href: releaseVerifyHref,
-    description: 'How to check release assets against signed checksums and inspect the software bill of materials.',
+    description: 'How to check release assets against signed checksums and how to inspect the software bill of materials.',
   },
   {
     label: 'Known limitations',
     href: 'https://docs.registrystack.org/explanation/known-limitations/',
-    description: 'What the software does not do yet, its release status, and the platforms a release supports.',
+    description: 'What the software does not do, its release status and the platforms a release supports.',
   },
   {
     label: 'Source code and releases',
     href: 'https://github.com/registrystack/registry-stack',
-    description: 'The public implementation and its release history for your technical team and auditors.',
+    description: 'The public source code and its release history, for your technical team and your auditors.',
   },
 ];
 ---
@@ -87,12 +81,8 @@ const evidence = [
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Security</p>
-          <h1 id="security-hero-title">Keep authority and accountability with your organization.</h1>
-          <p class="hero-lead">
-            Registry Stack applies the access, change, review, and disclosure rules your
-            organization configures. Your governance team defines those rules, and your operator
-            protects the deployment and its records.
-          </p>
+          <h1 id="security-hero-title">Your institution keeps authority over its register and stays accountable for it.</h1>
+          <p class="hero-lead">Registry Stack applies the access, change, review and disclosure rules that you configure. Your governance team defines those rules. Your operator protects the deployment and its records.</p>
         </div>
       </div>
     </section>
@@ -101,11 +91,8 @@ const evidence = [
       <div class="section-inner">
         <div class="section-heading center">
           <p class="eyebrow">What the software does</p>
-          <h2 id="security-properties-title">Make each change and disclosure accountable.</h2>
-          <p>
-            Base Registry Engine, Evidence Gateway, and Registry Casework have separate
-            responsibilities and can be used independently. Each enforces its own access boundary.
-          </p>
+          <h2 id="security-properties-title">You can trace each change and each disclosure to a person or service.</h2>
+          <p><a href="/products/base-registry/">Base Registry Engine</a>, <a href="/products/evidence-gateway/">Evidence Gateway</a> and <a href="/products/casework/">Registry Casework</a> have separate responsibilities. You can use them independently. Each one enforces its own access boundary.</p>
         </div>
         <div class="security-properties">
           {properties.map((item) => (
@@ -121,12 +108,9 @@ const evidence = [
     <section class="section section-muted" aria-labelledby="security-shared-title">
       <div class="section-inner">
         <div class="section-heading center">
-          <p class="eyebrow">Organizational responsibility</p>
-          <h2 id="security-shared-title">Assign policy and operating responsibilities explicitly.</h2>
-          <p>
-            Software controls implement part of the security model. Governance, source quality,
-            identity, infrastructure, and operating procedures remain part of the service.
-          </p>
+          <p class="eyebrow">Your institution’s responsibilities</p>
+          <h2 id="security-shared-title">Each policy and operating duty for your register has a named owner.</h2>
+          <p>The software controls cover one part of the security model. Governance, source quality, identity, infrastructure and operating procedures stay part of your service.</p>
         </div>
         <div class="security-pair">
           {responsibilities.map((item) => (
@@ -136,24 +120,16 @@ const evidence = [
             </article>
           ))}
         </div>
-        <p class="security-note">
-          Your technical team scopes database accounts, source connections, and network access
-          to the work each deployment needs. The maintained security docs explain the threat
-          model, host protection, key management, and audit retention.
-        </p>
+        <p class="security-note">Your technical team limits database accounts, source connections and network access to what each deployment needs. The maintained security documentation explains the threat model, host protection, key management and audit retention.</p>
       </div>
     </section>
 
     <section class="section" aria-labelledby="security-verify-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">For governance, security, and technical review</p>
-          <h2 id="security-verify-title">Review the controls before adoption.</h2>
-          <p>
-            Your evaluators can inspect the source, verify release assets, review the security
-            model, and run local tutorials with sample data. The maintained documentation covers
-            threats, operating responsibilities, and known limitations in more detail.
-          </p>
+          <p class="eyebrow">For governance, security and technical review</p>
+          <h2 id="security-verify-title">You can check the controls before you adopt Registry Stack.</h2>
+          <p>Your evaluators can inspect the source code and verify the release assets. They can review the security model. They can also run tutorials locally with sample data. The maintained documentation covers threats, operating responsibilities and known limitations in more detail.</p>
         </div>
         <div class="security-properties">
           {evidence.map((item) => (
@@ -174,17 +150,14 @@ const evidence = [
         <div class="section-heading center">
           <p class="eyebrow">Coordinated disclosure</p>
           <h2 id="security-report-title">Report a security issue privately.</h2>
-          <p>
-            Use GitHub private vulnerability reporting so an issue can be investigated before
-            it is made public and handled through coordinated disclosure.
-          </p>
+          <p>Use GitHub private vulnerability reporting. The issue can then be investigated before it is made public. It is handled through coordinated disclosure.</p>
         </div>
         <div class="solution-choice-row">
           <a class="button button-primary" href={securityReportHref}>Report a vulnerability</a>
           <a class="button button-secondary" href={securityDocsHref}>Read the security docs</a>
         </div>
         <p class="security-disclosure-extra">
-          <a class="inline-cta" href="/.well-known/security.txt">Machine-readable reporting details in security.txt &rarr;</a>
+          <a class="inline-cta" href="/.well-known/security.txt">See the machine-readable reporting details in security.txt &rarr;</a>
         </p>
       </div>
     </section>

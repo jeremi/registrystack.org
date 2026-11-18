@@ -6,44 +6,51 @@ const product = products.find((p) => p.key === 'casework')!;
 ---
 <Product
   product={product}
-  heading="Review requests and record decisions."
-  description="Government teams need to assign review requests, see who is responsible and when a decision is due, then record the outcome. Registry Casework manages that work and returns the decision to the service that requested the review."
+  heading="Staff review requests and record decisions in Registry Casework."
+  description="Your teams need to assign review requests and see who is responsible. They need to see when a decision is due and record the outcome. Registry Casework manages that work. It returns the decision to the service that asked for the review."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="casework-example-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">One example: a licence correction</p>
-        <h2 id="casework-example-title">Assign the request, track its due date, and record the decision.</h2>
-        <p>A licence holder asks to correct the activities listed in the professional register. The licensing application sends the request for staff review in Registry Casework. Staff check the supporting information and record their decision.</p>
+        <p class="eyebrow">Example: a licence correction</p>
+        <h2 id="casework-example-title">Assign the request, track its due date and record the decision.</h2>
+        <p>A licence holder asks to correct the activities listed in the professional register. The licensing application sends the request to Registry Casework for staff review. Staff check the supporting information and record their decision.</p>
       </div>
       <CaseworkFlow />
-      <p class="product-note">An approval records the staff decision. Permission to change a register remains controlled by that register’s rules.</p>
+      <p class="product-note">An approval records the staff decision. Permission to change a register stays under that register’s rules.</p>
     </div>
   </section>
   <section class="section" aria-labelledby="casework-inbox-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">Practical capabilities</p>
-        <h2 id="casework-inbox-title">See who is responsible, what is due, and what staff decided.</h2>
-        <p>Review requests can arrive from a register, a case system, or another service. Registry Casework places each request in the agreed queue and records its progress until staff reach a decision.</p>
+        <h2 id="casework-inbox-title">See who is responsible, what is due and what was decided.</h2>
+        <p>Review requests can come from:</p>
+        <ul class="prose-list">
+          <li>a register</li>
+          <li>a case system</li>
+          <li>another service</li>
+        </ul>
+        <p>Registry Casework places each request in the agreed queue. It records the request’s progress until staff reach a decision.</p>
       </div>
       <div class="product-facts">
-        <article><h3>Assign work and take responsibility</h3><p>Send each kind of request to the right queue. An officer takes responsibility for a request and can release it if they cannot continue. Supervisors can reassign work when staffing changes.</p></article>
-        <article><h3>Track the time allowed</h3><p>Set the time allowed for each review step and the working-day calendar. Staff can see when a request is due. Registry Casework identifies when follow-up is due, and a connected service sends any email or SMS notices.</p></article>
-        <article><h3>Record and return the decision</h3><p>Record an approval, refusal, request for changes, or other configured outcome. The service that requested the review receives the result and takes the next step under its own rules.</p></article>
+        <article><h3>Assign and reassign work</h3><p>You send each kind of request to the right queue. An officer takes responsibility for a request. They can release it if they cannot continue. Supervisors can reassign work when staffing changes.</p></article>
+        <article><h3>Track due dates</h3><p>You set the time allowed for each review step. You also set the working-day calendar. Staff can see when a request is due. Registry Casework identifies when a follow-up is due. It does not send messages. A connected service sends any email or SMS notice.</p></article>
+        <article><h3>Record the decision</h3><p>Staff can record an approval, a refusal or a request for changes. They can also record another outcome that you have configured. The service that asked for the review receives the result. That service takes the next step under its own rules.</p></article>
       </div>
     </div>
   </section>
   <section id="fit" class="section section-muted" aria-labelledby="casework-fit-title">
     <div class="section-inner product-fit">
       <div class="section-heading compact">
-        <p class="eyebrow">How it fits your organization</p>
+        <p class="eyebrow">How it fits your institution</p>
         <h2 id="casework-fit-title">Connect staff review to your service.</h2>
-        <p>Registry Casework manages staff reviews. An implementation provides or adapts staff screens and connects sign-in and the service requesting reviews. It can accept review requests on its own or connect to proposed changes in Base Registry Engine. Connecting another register requires additional integration work.</p>
+        <p>Registry Casework manages staff reviews. An implementation provides or adapts the staff screens. It also connects sign-in and the service that requests reviews.</p>
+        <p>Registry Casework can accept review requests on its own. It can also connect to proposed changes in <a href="/products/base-registry/">Base Registry Engine</a>, which keeps a register’s records. Connecting another register needs additional integration work.</p>
       </div>
       <dl>
-        <dt>Your institution defines the review</dt><dd>Decide which requests need staff review, which team receives each kind, which outcomes are allowed, and when the decision is due.</dd>
-        <dt>Choose who delivers the implementation</dt><dd>Aubex, another delivery partner, or your own team can provide or adapt staff screens, connect sign-in and the service that requests reviews, and test the complete process. Your team or an appointed provider can operate it, or we host and run it for you. Our hosting and operation are quoted separately.</dd>
+        <dt>You define the review</dt><dd>You decide which requests need staff review and which team receives each kind. You also decide which outcomes are allowed and when the decision is due.</dd>
+        <dt>You choose who delivers it</dt><dd>Your own team or another delivery partner can deliver the implementation. Or we can deliver it for you. The work covers providing or adapting the staff screens. It also covers connecting sign-in and the service that requests reviews, and testing the whole process. Your own team or a provider you appoint can operate Registry Casework. Or we can host and run it for you. We quote our hosting and operation separately.</dd>
       </dl>
     </div>
   </section>
@@ -52,7 +59,8 @@ const product = products.find((p) => p.key === 'casework')!;
       <div class="section-heading compact">
         <p class="eyebrow">For developers and implementers</p>
         <h2 id="casework-developers-title">Prepare a proposed change for review.</h2>
-        <p>The introductory tutorial prepares and validates matching Base Registry Engine and Registry Casework configuration. It does not execute a review or apply a change. Continue with the <a href="https://docs.registrystack.org/configure/casework/">configuration guide</a> and <a href="https://docs.registrystack.org/operate/casework/">operations documentation</a> for implementation.</p>
+        <p>The introductory tutorial prepares and validates matching configuration for Base Registry Engine and Registry Casework. It does not run a review. It does not apply a change.</p>
+        <p>To implement Registry Casework, read the <a href="https://docs.registrystack.org/configure/casework/">configuration guide</a> and the <a href="https://docs.registrystack.org/operate/casework/">operations documentation</a>.</p>
         <p><a class="inline-cta" href={product.tutorialHref}>{product.tutorialLabel} →</a></p>
       </div>
     </div>

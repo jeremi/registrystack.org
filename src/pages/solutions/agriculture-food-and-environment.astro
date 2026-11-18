@@ -18,7 +18,7 @@ const steps: WeekStep[] = [
     when: 'Before the first application',
     ...weekProduct('base-registry'),
     title: 'The ministry decides what the register records',
-    text: 'A ministry given a new mandate to register farmers has no form and no register yet. It decides what a farmer record and a holding record contain, which fields are required, and which roles may record or change them.',
+    text: 'The ministry has a new mandate to register farmers but no form or register yet. It decides what a farmer record and a holding record contain. It also decides which fields are required and which roles may record or change them.',
     card: { kind: 'record', recordType: 'Farmer register', recordId: 'Definition', icon: 'data', fields: [
       { label: 'Records', value: 'Farmer, holding' },
       { label: 'Required for a holding', value: 'District, crops' },
@@ -26,10 +26,10 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Application and review',
+    when: 'Application reviewed',
     ...weekProduct('casework'),
     title: 'A farmer applies and an officer decides',
-    text: 'A farmer applies at the district office. The request enters the registrations queue. D. Mwangi checks that the holding is not already registered under another name and approves the application. The register does not change until the officer decides.',
+    text: 'A farmer applies at the district office and the request enters the registrations queue. Officer D. Mwangi checks that the holding is not already registered under another name and approves the application. The register does not change until the officer decides.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Registrations' },
       { state: 'Claimed', note: 'Held by D. Mwangi' },
@@ -37,10 +37,10 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'First register entry',
+    when: 'Holding recorded',
     ...weekProduct('base-registry'),
-    title: 'The officer records the holding and its history',
-    text: 'The officer records the holding as the first entry for this farmer. The register records the officer’s name and retains each earlier status when the record changes.',
+    title: 'The officer records the first holding',
+    text: 'The officer records the holding as the first entry for this farmer. The register records the officer’s name. It keeps each earlier status when the record changes.',
     card: { kind: 'record', recordType: 'Holding record', recordId: 'HLD-5582', icon: 'data', fields: [
       { label: 'Status', value: 'Registered' },
       { label: 'District', value: 'Northern' },
@@ -48,31 +48,37 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Permitted programme check',
+    when: 'District checked',
     ...weekProduct('evidence-gateway'),
     title: 'A subsidy programme receives only the registered district',
-    text: 'A subsidy programme authorized to make this check asks which district the holding is registered in. It receives that value in a digitally signed answer, without plot coordinates or household details.',
+    text: 'A subsidy programme that is authorised to make this check asks which district the holding is registered in. It receives that value in a reply that the register signs digitally. It does not receive plot coordinates or household details.',
     card: { kind: 'answer', fieldLabel: 'Registered in district', value: 'Northern', recipient: 'Subsidy programme', issuer: 'Farm register' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Maintain producer, holding, establishment and permit records."
-  description="Staff can review registrations and record approved changes to holdings, establishments and permits. Authorized programmes can check information such as registration status without receiving the full record. Your institution sets the register’s rules and access."
+  heading="Maintain records of producers, holdings, establishments and permits."
+  description="Your staff can review registrations and record approved changes to holdings, establishments and permits. Authorised programmes can check information such as registration status without receiving the full record. You set the register’s rules and decide who can access it."
 >
   <section class="section" id="example" aria-labelledby="agriculture-example-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">A new register, start to finish</p>
+        <p class="eyebrow">One new register from start to finish</p>
         <h2 id="agriculture-example-title">Set up a farmer register and record its first holding.</h2>
-        <p>A fictional ministry establishes a farmer register under a new mandate, with no earlier form or register. The example shows the register definition, the application and staff decision, the first entry, and a programme checking it.</p>
+        <p>A fictional ministry sets up a farmer register under a new mandate. There is no earlier form and no earlier register. The example shows:</p>
+        <ul class="prose-list">
+          <li>the register definition</li>
+          <li>the application and the staff decision</li>
+          <li>the first entry</li>
+          <li>a programme checking that entry</li>
+        </ul>
       </div>
       <RegisterWeek
         id="agriculture-week"
-        kicker="A new farmer register, first holding HLD-5582"
-        heading="Follow the first registration."
-        caption="A new register, from its definition to its first permitted check. The records are fictional."
+        kicker="New farmer register, first holding HLD-5582"
+        heading="Follow the first registration step by step"
+        caption="This new register goes from its definition to its first permitted check. The records are fictional."
         steps={steps}
       />
     </div>
@@ -81,12 +87,12 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="agriculture-change-title">Maintain holding records and their status history.</h2>
+        <h2 id="agriculture-change-title">Your staff maintain holding records and their status history.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Link each permit to the site it covers</h3><p>Each farm, establishment or site has its own record, and each registration or permit links to it. If one food business operates two establishments, each establishment can have its own registration and recorded status.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
-        <article><h3>Keep earlier statuses when a permit changes</h3><p>A suspension or withdrawal is recorded with the name of the officer and the date. Staff can see which status the register showed on the day of an inspection.</p><a class="inline-cta" href="/solutions/review-changes/">How a decision reaches the register <span aria-hidden="true">→</span></a></article>
-        <article><h3>Publish district-level registration counts</h3><p>Publish monthly or quarterly counts by district in reviewed releases, with small counts hidden and the rest rounded.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/">How statistical releases work <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Link each permit to the site it covers</h3><p>Each farm, establishment or site has its own record. Each registration or permit links to it. If one food business operates two establishments, each can have its own registration and its own recorded status.</p><a class="inline-cta" href="/products/base-registry/">Read how the register holds an entry <span aria-hidden="true">→</span></a></article>
+        <article><h3>Keep earlier statuses when a permit changes</h3><p>A suspension or a withdrawal is recorded with the officer’s name and the date. Staff can see which status the register showed on the day of an inspection.</p><a class="inline-cta" href="/solutions/review-changes/">Read how a decision reaches the register <span aria-hidden="true">→</span></a></article>
+        <article><h3>Publish district-level registration counts</h3><p>You can publish monthly or quarterly counts by district in reviewed releases. Small counts are hidden. The other counts are rounded.</p><a class="inline-cta" href="https://docs.registrystack.org/configure/breg-statistics/">Read how statistical releases work <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
@@ -95,29 +101,29 @@ const steps: WeekStep[] = [
     items={[
       {
         q: 'Does this replace our farm register or animal identification system?',
-        a: 'You can keep the register you run today and connect Evidence Gateway to answer agreed questions from it. Use Base Registry Engine when you need a new register or decide to migrate one, including a register maintained in spreadsheets.',
-        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'How it sits beside existing systems' },
+        a: 'You can keep the register you run today. You can connect Evidence Gateway to answer agreed questions from it. You use Base Registry Engine when you need a new register or decide to migrate one. That includes a register kept in spreadsheets.',
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Read how Registry Stack sits beside existing systems' },
       },
       {
         q: 'Can a subsidy programme check a farmer without an account on our system?',
-        a: 'The programme’s service asks your register a question you have agreed to answer, such as whether a farmer is registered, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
-        link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
+        a: 'The programme’s service asks the register a question you have agreed to answer. For example, it asks whether a farmer is registered. It gets that answer and nothing else. You decide which services may ask and which questions they may ask.',
+        link: { href: '/solutions/check-a-fact/', label: 'Read how other services check a fact' },
       },
       {
         q: 'Who can see a farmer’s record?',
-        a: 'Your office decides, role by role: who may record a registration, who may record a permit, who may look one up, and for what reason. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
-        link: { href: '/security/', label: 'Who is responsible for what' },
+        a: 'Role by role, you decide who may record a registration and who may record a permit. You also decide who may look one up and for what reason. Base Registry Engine keeps a history of the changes it handles. Audit coverage across the register and the connected applications is agreed during implementation.',
+        link: { href: '/security/', label: 'Read who is responsible for what' },
       },
       ...sharedFamilyFaq,
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Discuss your service with us."
-    body="Tell us which producers, establishments or permits you need to register, who records field information and what other programmes need to check. We can show how Registry Stack could fit."
+    heading="Tell us about your farm, food or environmental register."
+    body="Tell us which producers, establishments or permits you need to register. Tell us who records information in the field and what other programmes need to check. We can show how Registry Stack could fit."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
-    note="The core software is Apache-2.0 open source. Your team, an appointed provider or we can implement and operate it. We quote hosting and operation separately."
+    note="The core software is open source under the Apache-2.0 licence. Your own team or a provider you choose can inspect it, adapt it and run it. Or we can implement, host and run it for you, priced separately in your proposal."
     emphasis="docs"
   />
 </Solution>

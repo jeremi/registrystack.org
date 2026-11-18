@@ -18,7 +18,7 @@ const steps: WeekStep[] = [
     when: 'Inspection report submitted',
     product: 'Your inspection application',
     title: 'An inspection report arrives',
-    text: 'The inspection service gives the clinic operator an opportunity to respond, then submits the inspection report, recommendation and response for a decision. The register does not change yet.',
+    text: 'The inspection service lets the clinic operator respond. It then submits the inspection report, the recommendation and the operator’s response for a decision. The register does not change yet.',
     card: { kind: 'record', recordType: 'Inspection report', recordId: 'INS-4410', icon: 'data', fields: [
       { label: 'Facility', value: 'Clinic HF-0732' },
       { label: 'Finding', value: 'Equipment not maintained' },
@@ -29,7 +29,7 @@ const steps: WeekStep[] = [
     when: 'Review and decision',
     ...weekProduct('casework'),
     title: 'An officer decides the suspension',
-    text: 'The complete case enters the authorizations queue. P. Castillo reviews the report and the operator’s response, then approves the suspension.',
+    text: 'The complete case enters the authorisations queue. Officer P. Castillo reviews the report and the operator’s response. The officer approves the suspension.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Authorizations' },
       { state: 'Claimed', note: 'Held by P. Castillo' },
@@ -39,8 +39,8 @@ const steps: WeekStep[] = [
   {
     when: 'Authorisation record updated',
     ...weekProduct('base-registry'),
-    title: 'The authorization is suspended and keeps its history',
-    text: 'The officer records the suspension against the authorization. The register records who made the change. Lift it later and both decisions stay in order.',
+    title: 'The authorisation is suspended and keeps its history',
+    text: 'The officer records the suspension against the authorisation. The register records who made the change. If the suspension is lifted later, both decisions stay in order in the history.',
     card: { kind: 'record', recordType: 'Facility record', recordId: 'HF-0732', icon: 'business', fields: [
       { label: 'Operating authorization', value: 'Suspended' },
       { label: 'Changed by', value: 'P. Castillo' },
@@ -48,30 +48,30 @@ const steps: WeekStep[] = [
     ] },
   },
   {
-    when: 'Insurer status check',
+    when: 'Insurer’s status check',
     ...weekProduct('evidence-gateway'),
     title: 'An insurer checks the current status',
-    text: 'A health insurance fund authorized to make this check asks whether the clinic is authorized to operate and receives a digitally signed answer. The inspection report and operator response are not disclosed.',
+    text: 'A health insurance fund asks whether the clinic is authorised to operate. The fund is authorised to make this check. It receives a digitally signed answer. It does not receive the inspection report or the operator’s response.',
     card: { kind: 'answer', fieldLabel: 'Authorized to operate', value: 'No', recipient: 'Health insurance fund', issuer: 'Health facility register' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Keep facility and safety registers current."
-  description="Staff can review inspection findings, record decisions and apply authorized status changes. Inspectors, insurers and other permitted services can use the same facility code and check a specific status without receiving the regulatory file."
+  heading="Keep your health facility and safety registers current."
+  description="Your staff can review inspection findings and record decisions. They can apply status changes that are authorised. Inspectors, insurers and other permitted services can use the same facility code. These services can check a specific status without receiving the regulatory file."
 >
   <section class="section" id="example" aria-labelledby="health-example-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">One request, start to finish</p>
+        <p class="eyebrow">One request from start to finish</p>
         <h2 id="health-example-title">Record a status change after an inspection.</h2>
       </div>
       <RegisterWeek
         id="health-week"
-        kicker="Clinic HF-0732, one request"
-        heading="Follow the inspection decision."
-        caption="A clinic suspension, from the inspection report through the officer's decision to the changed authorization and an insurer's status check. The records are fictional."
+        kicker="One request: clinic HF-0732"
+        heading="Follow the inspection decision"
+        caption="The example follows a clinic suspension from the inspection report to the officer’s decision. It ends with the changed authorisation and an insurer’s status check. The records are fictional."
         steps={steps}
       />
     </div>
@@ -80,12 +80,12 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="health-change-title">Use one facility code and return only permitted status information.</h2>
+        <h2 id="health-change-title">Use one facility code and return only permitted status information to other services.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Agree a facility code that connected systems can use</h3><p>Staff maintain separate records for the provider, its facilities and their authorizations. The implementation connects insurers, inspectorates and health information systems to the agreed facility codes.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
-        <article><h3>Keep earlier decisions when an authorization changes</h3><p>A renewal, suspension or withdrawal is recorded with the name of the officer and the date. Staff can see which status the register showed on the day of an inspection.</p><a class="inline-cta" href="/solutions/review-changes/">How a decision reaches the register <span aria-hidden="true">→</span></a></article>
-        <article><h3>Publish notices and restrict inspection records</h3><p>An approved medicine-shortage notice can be public. An inspection report can remain restricted to staff, while a permitted service receives only the facility status it is allowed to check.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
+        <article><h3>Agree a facility code that connected systems can use</h3><p>Your staff keep separate records for the provider, its facilities and their authorisations. The implementation connects insurers, inspectorates and health information systems to the agreed facility codes.</p><a class="inline-cta" href="/products/base-registry/">How the register holds an entry <span aria-hidden="true">→</span></a></article>
+        <article><h3>Keep earlier decisions when an authorisation changes</h3><p>A renewal, suspension or withdrawal is recorded with the officer’s name and the date. Staff can see which status the register showed on the day of an inspection.</p><a class="inline-cta" href="/solutions/review-changes/">How a decision reaches the register <span aria-hidden="true">→</span></a></article>
+        <article><h3>Publish notices and restrict inspection records</h3><p>An approved medicine-shortage notice can be public. An inspection report can stay restricted to staff. A permitted service receives only the facility status it is allowed to check.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
       </div>
     </div>
   </section>
@@ -94,21 +94,21 @@ const steps: WeekStep[] = [
     items={[
       {
         q: 'Does this hold patient or clinical data?',
-        a: 'The examples here cover regulatory registers, such as facilities, trials, devices, operators and radiation sources. Clinical care and patient records are outside the service examples shown here. A notice concerning a medicine can refer to the existing medicines catalogue.',
+        a: 'The examples cover regulatory registers. These include registers of facilities, trials, devices, operators and radiation sources. Clinical care and patient records are outside the service examples shown. A notice about a medicine can refer to the existing medicines catalogue.',
       },
       {
         q: 'Does this replace our system?',
-        a: 'It depends on what holds your register today. If an authorization system takes applications, collects fees and issues the authorization, that system stays and records the result in the register. If your register is a spreadsheet, or lives inside an application you are retiring, Base Registry Engine can be the register, with your team planning the migration of the existing entries.',
+        a: 'It depends on what holds your register today. An authorisation system may already take applications, collect fees and issue the authorisation. If so, that system stays and records the result in the register. If your register is a spreadsheet, Base Registry Engine can be the register. It can also be the register if yours lives inside an application you are retiring. Your team plans how to migrate the existing entries.',
         link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'How it sits beside existing systems' },
       },
       {
         q: 'Can an insurer check a clinic without an account on our system?',
-        a: 'The insurer’s service asks your register a question you have agreed to answer, such as whether a clinic’s authorization is current, and gets that answer and nothing else. Your office decides which services may ask, and which questions.',
+        a: 'The insurer’s service asks your register a question you have agreed to answer. For example, it can ask whether a clinic’s authorisation is current. It gets that answer and nothing else. Your office decides which services may ask. It also decides which questions they may ask.',
         link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
       },
       {
         q: 'Who can see an entry, and what does the public see?',
-        a: 'Your office decides, entry by entry and role by role: what the public may read, who may record an authorization, and who may look one up. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
+        a: 'Your office decides what the public may read. It also decides who may record an authorisation and who may look one up. It makes these choices entry by entry and role by role. Base Registry Engine keeps a history of the changes it handles. The implementation agrees audit coverage across the register and the connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
       ...sharedFamilyFaq,
@@ -116,11 +116,11 @@ const steps: WeekStep[] = [
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Discuss your service with us."
-    body="Describe the facilities, operators or products you need to register, who reports changes, who decides and which systems need the resulting status. We can show how Registry Stack could fit."
+    heading="Discuss your facility or safety register with us."
+    body="Describe the facilities, operators or products you need to register. Say who reports changes and who decides. Name the systems that need the resulting status. We can show how Registry Stack could fit."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
-    note="The core software is Apache-2.0 open source. Your team, an appointed provider or we can implement and operate it. We quote hosting and operation separately."
+    note="The core software is open source under the Apache-2.0 licence. Your own team or a provider you choose can inspect it, adapt it and run it. Or we can implement, host and run it for you, priced separately in your proposal."
     emphasis="docs"
   />
 </Solution>
