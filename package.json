@@ -26,6 +26,7 @@
     "check:episodes": "node scripts/check-episodes.mjs",
     "check": "npm test && npm run check:content && astro check && npm run build && npm run check:marketplace && npm run check:starter-request && npm run check:marketing-tracking && npm run check:episodes && npm run check:links && npm run check:french && npm run check:a11y && npm run check:visual && npm run check:funnel && npm run check:hero",
     "report:repetition": "node scripts/report-repetition.mjs",
+    "report:spelling": "node scripts/report-spelling.mjs",
     "check:marketplace": "node scripts/check-marketplace-redirects.mjs --mode current --dist dist"
   },
   "dependencies": {
