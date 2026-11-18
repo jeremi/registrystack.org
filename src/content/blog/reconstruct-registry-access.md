@@ -12,7 +12,7 @@ featured: true
 status: published
 ---
 
-> **Note, October 2026.** Registry Relay was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. The Relay-specific audit fields and the illustrated review views below are historical and must not be used as current implementation guidance. Audit formats have also changed since publication; use the operating documentation for the version you deploy. Evidence Gateway continues, and the general reconstruction method still applies.
+> **Note, October 2026.** Registry Relay was retired upstream on 3 October 2026 and receives no further releases or security fixes. Its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. The Relay-specific audit fields and the illustrated review views below are historical and must not be used as current implementation guidance. Audit formats have also changed since publication. Use the operating documentation for the version you deploy. Evidence Gateway continues, and the general reconstruction method still applies.
 
 “Every request is logged” sounds reassuring. It is not yet a review method.
 
@@ -188,7 +188,7 @@ service does not have the requested evidence.
 
 Use the audit format and operating instructions for the version you deploy.
 The current [Evidence audit guide](https://docs.registrystack.org/operate/evidence-audit/)
-explains admitted-operation records, refusal behavior and shipping to append-only
+explains admitted-operation records, refusal behaviour and shipping to append-only
 storage. Access control, retention, backup and recovery remain operator
 responsibilities.
 
@@ -212,7 +212,7 @@ Ask the operator to demonstrate the integrity and retention controls for the
 deployed format, including off-host handling and recovery. Do not accept the
 phrase “tamper-proof log” as evidence.
 
-## A sanitized reconstruction example
+## A sanitised reconstruction example
 
 The example below is a reviewer-facing view assembled from Registry Relay (retired in October 2026) and
 Evidence Gateway concepts as they were when this article was written. It is not a raw production log and contains no personal
@@ -233,7 +233,7 @@ identifier or source value.
 
 ### Evidence Gateway review view
 
-| Audit concept at publication   | Sanitized observation                                                                              |
+| Audit concept at publication   | Sanitised observation                                                                              |
 | ------------------------------ | -------------------------------------------------------------------------------------------------- |
 | `event_id` and `occurred_at`   | One bounded event and UTC time are present                                                         |
 | `principal_id_hash`            | A keyed pseudonym identifies the admitted workload without storing its raw identifier in this view |
@@ -247,7 +247,7 @@ identifier or source value.
 
 ### Relay review view (historical)
 
-| Audit concept at publication                 | Sanitized observation                                                                          |
+| Audit concept at publication                 | Sanitised observation                                                                          |
 | -------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | `request_id`                                 | The consultation request has a server-owned correlation identifier                             |
 | `principal_id` and `auth_mode`               | The configured Evidence Gateway workload was authenticated through the approved mode           |
@@ -285,7 +285,7 @@ A careful review records what the evidence cannot establish:
   current.
 - **Legal authority:** Configuration can encode reviewed rules. It cannot
   establish the legal basis or institutional mandate that justified them.
-- **Consumer behavior:** A minimized response does not prove that the
+- **Consumer behaviour:** A minimised response does not prove that the
   consuming service used it properly or deleted its own retained data.
 - **Complete history:** Audit records need protected storage, retention, and
   appropriate off-host evidence to support continuity claims. Historical local
@@ -306,12 +306,12 @@ The historical Relay field names above are not a current configuration recipe:
 
 1. The approved registry-question worksheet.
 2. The source authority and consuming-service decision owner.
-3. The reviewed source request, authorization and disclosure configuration
+3. The reviewed source request, authorisation and disclosure configuration
    relevant to the scenario.
 4. One allowed request and one denial.
 5. One `no_match`, ambiguity, or source-failure path where the scenario permits
    safe testing.
-6. The corresponding product audit records, sanitized through the approved
+6. The corresponding product audit records, sanitised through the approved
    review process, with any separately retained source records needed for the review.
 7. Evidence that the audit format, shipping, retention and integrity controls
    match the deployed version and the operator’s claims.

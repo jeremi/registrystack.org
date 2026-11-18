@@ -12,7 +12,7 @@ featured: true
 status: published
 ---
 
-> **Note, October 2026.** Registry Relay was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. Evidence Gateway continues, and the decision guidance in this article describes the current product boundary.
+> **Note, October 2026.** Registry Relay was retired upstream on 3 October 2026 and receives no further releases or security fixes. Its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. Evidence Gateway continues, and the decision guidance in this article describes the current product boundary.
 
 Most registry integrations start with the wrong question. "Which API do we
 need?" assumes the answer is an API. Two questions come first: who maintains the
@@ -32,7 +32,7 @@ stop. **An API over an unmaintained source does not fix the errors. It
 distributes them, with an institutional stamp.**
 
 That is the case for **Base Registry Engine**. The institution declares what
-records exist, how they relate, who may change them and who may read them; the
+records exist, how they relate, who may change them and who may read them. The
 engine provides storage, history, access control and the API. It has no built-in
 idea of what a registry is about, so a permit registry and a household registry
 are set up the same way.
@@ -51,7 +51,7 @@ It does not need the household record, and if it receives one it has to protect
 it.
 
 That is **Evidence Gateway**. The registry owner writes the questions it is
-willing to answer and what each answer may contain. A service asks one; the
+willing to answer and what each answer may contain. A service asks one. The
 gateway checks who is asking and why, consults the registry, and **returns the
 answer and nothing more**. The school-meal service gets "active enrolment: yes",
 keeps its own decision, and never sees the household.
@@ -71,17 +71,17 @@ to whom: a yes or no, a value, or a few fields, each released only to callers
 entitled to it.
 
 *A civil registry is asked whether a person is registered as a parent of a
-child.* Most callers get yes or no. A caller the registry has authorized also
+child.* Most callers get yes or no. A caller the registry has authorised also
 gets the recorded parent identifiers. One registered birth, two answers, decided
 in advance by the registry rather than at the time by the caller.
 
 *A service needs a birth extract.* The registry answers with given name, family
 name, date and place of birth, each disclosable on its own. A service that only
-needs to know whether the person is an adult should not ask for the extract; it
+needs to know whether the person is an adult should not ask for the extract. It
 should ask that.
 
 An answer can also be returned as a verifiable credential a person can carry and
-show elsewhere. Evidence Gateway produces it; the apps that hold it, the parties
+show elsewhere. Evidence Gateway produces it. The apps that hold it, the parties
 that check it and its withdrawal are a separate programme. The
 [credential tutorial](https://docs.registrystack.org/tutorials/request-evidence-as-sd-jwt-vc/)
 shows the boundary.
@@ -89,7 +89,7 @@ shows the boundary.
 **The test for an answer: it contains only what the service needs for the
 agreed task.** Even a yes-or-no answer can be personal or sensitive information.
 The receiving service must protect it and agree how it may be used and retained.
-Reviewing the question sets that disclosure boundary; responsibility for the
+Reviewing the question sets that disclosure boundary. Responsibility for the
 service decision stays with the service.
 
 ## Design for "cannot answer"

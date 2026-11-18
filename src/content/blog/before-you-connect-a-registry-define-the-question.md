@@ -12,7 +12,7 @@ featured: true
 status: published
 ---
 
-> **Note, October 2026.** Registry Relay was retired upstream on 3 October 2026 and receives no further releases or security fixes; its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. The Relay-specific product routes and audit boundaries below are historical and must not be used as current implementation guidance. Evidence Gateway continues, and the guidance here on agreeing questions and reviewing access still applies.
+> **Note, October 2026.** Registry Relay was retired upstream on 3 October 2026 and receives no further releases or security fixes. Its [decision record](https://docs.registrystack.org/decisions/registry-relay-retirement-2026-10-03/) explains why. The Relay-specific product routes and audit boundaries below are historical and must not be used as current implementation guidance. Evidence Gateway continues, and the guidance here on agreeing questions and reviewing access still applies.
 
 A service team asks a civil registry for access. The first response is often a
 list of fields: name, date of birth, address, family status, and perhaps a copy
@@ -86,14 +86,14 @@ several questions into “access to the registry.”
 | Decision to record   | Question to answer                                                                 | Why it matters                                                                                                     |
 | -------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | Service              | Which public service or administrative procedure is being delivered?               | A valid requester does not automatically have a valid purpose for every service                                    |
-| Decision owner       | Which institution owns the service decision or action?                             | Registry Stack returns access or evidence; it does not take over eligibility, payment, referral, or case decisions |
-| Requester            | Which system or role will make the request?                                        | Authentication identifies the caller; authorization still needs an explicit scope                                  |
+| Decision owner       | Which institution owns the service decision or action?                             | Registry Stack returns access or evidence. It does not take over eligibility, payment, referral, or case decisions |
+| Requester            | Which system or role will make the request?                                        | Authentication identifies the caller. Authorisation still needs an explicit scope                                  |
 | Purpose              | Why is this requester asking now?                                                  | Purpose must be reviewable and, where configured, checked on the request path                                      |
 | Authority            | Which institution owns the source and can attest the requested fact?               | The consuming service cannot make another institution authoritative by calling its API                             |
 | Target               | Who or what is the question about, and which identifier is permitted for matching? | Matching rules, ambiguity, and identifier exposure are part of the design                                          |
 | Question             | What single fact, status, value, or protected read is required?                    | A narrow question can be reviewed, reused, and tested                                                              |
 | Permitted answer     | What may leave the registry boundary?                                              | The answer may be selected fields, an aggregate, a boolean predicate, a bounded value, or an issued credential     |
-| Excluded information | Which fields and inferences must not leave?                                        | Minimization becomes an explicit acceptance criterion                                                              |
+| Excluded information | Which fields and inferences must not leave?                                        | Minimisation becomes an explicit acceptance criterion                                                              |
 | Freshness            | How current must the source and answer be?                                         | A live table scan, a local snapshot, and a portable credential have different freshness properties                 |
 | Failure states       | How will no match, ambiguity, denial, source failure, and stale data differ?       | Missing evidence must not silently become a negative fact                                                          |
 | Review owner         | Who approves the question, policy, source mapping, and later changes?              | Code review alone is not institutional approval                                                                    |
@@ -142,13 +142,13 @@ worksheet produces a smaller and more testable contract:
 | Question                  | Does the authoritative source contain one admissible active registration for this applicant?                                          |
 | Permitted answer          | A predicate result and its evaluation provenance                                                                                      |
 | Must not disclose         | Name, address, phone number, land parcels, household members, and the source row                                                      |
-| Freshness                 | Source consultation performed during the application review; any snapshot age recorded and accepted by the programme                  |
+| Freshness                 | Source consultation performed during the application review. Any snapshot age recorded and accepted by the programme                  |
 | Failure states            | `true`, `false` only for an admissible matched record with a false active status, `no_match`, `ambiguous`, `denied`, or `unavailable` |
 | Review owner              | Farmer registry data steward and voucher programme owner                                                                              |
 | Reviewer must reconstruct | Requester, purpose, claim and policy version, source consultation, disclosure mode, decision, and failure code                        |
 
 The evidence is one input to the voucher programme. The programme remains
-responsible for eligibility rules, prioritization, budget, approval, and
+responsible for eligibility rules, prioritisation, budget, approval, and
 payment. A positive registry answer is not, by itself, a voucher decision.
 
 The distinction around failure states is equally important. `no_match` does not
@@ -165,14 +165,14 @@ path.
 | Need identified by the worksheet                                   | Registry Stack role                                                                                                                                                               |
 | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Publish a protected, read-only view of selected entities or fields | Registry Relay (retired in October 2026) exposed declared routes over an existing source, checked the caller's dataset scope, limited filters and projections, and recorded the request                        |
-| Return a configured aggregate                                      | Registry Relay (retired) served the declared aggregate route; the deployment still needed to consider repeated-query disclosure because Relay did not provide a longitudinal privacy budget |
+| Return a configured aggregate                                      | Registry Relay (retired) served the declared aggregate route. The deployment still needed to consider repeated-query disclosure because Relay did not provide a longitudinal privacy budget |
 | Return a boolean or bounded value instead of a record              | Evidence Gateway evaluates the configured evidence claim and applies the claim's disclosure policy (this article's original design used a compiler-pinned Relay consultation, now retired)                                   |
-| Issue a portable credential from registry-backed evidence          | Evidence Gateway can issue the configured SD-JWT VC profile and deliver it to a wallet through a separate OID4VCI service; external wallet and verifier compatibility must be tested for the intended pilot |
-| Describe datasets, policies, and evidence offerings for discovery  | [Registry Manifest](https://docs.registrystack.org/products/registry-manifest/) validates a metadata description and renders portable catalogue files; publishing those files grants no access and enforces no policy |
+| Issue a portable credential from registry-backed evidence          | Evidence Gateway can issue the configured SD-JWT VC profile and deliver it to a wallet through a separate OID4VCI service. External wallet and verifier compatibility must be tested for the intended pilot |
+| Describe datasets, policies, and evidence offerings for discovery  | [Registry Manifest](https://docs.registrystack.org/products/registry-manifest/) validates a metadata description and renders portable catalogue files. Publishing those files grants no access and enforces no policy |
 
 In the retired Relay design, Relay and Evidence Gateway wrote separate audit records because they owned
 different boundaries. Relay owned source access and adaptation. Evidence
-Gateway owned evidence authorization, evaluation, disclosure, and issuance. Their correlation
+Gateway owned evidence authorisation, evaluation, disclosure, and issuance. Their correlation
 identifiers supported restricted reconciliation without merging the products into
 one undifferentiated log.
 
