@@ -22,12 +22,12 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
           <div class="hero-copy">
             <p class="eyebrow">Open-source software for public registers and services</p>
             <h1 id="hero-title">Software for official registers and the services that use them.</h1>
-            <p class="hero-lead">Create a register or adapt one you already run. Registry Stack keeps the records, staff reviews and change history, and works beside your portals and ID systems. The core is open source: no licence fee, and your institution keeps control of its data.</p>
+            <p class="hero-lead">Create a new register or adapt one you already run. Registry Stack keeps your records, staff reviews and the history of changes. It works alongside your existing portals and ID systems. The core software is open source, with no licence fee. You keep control of your data.</p>
             <div class="hero-actions" aria-label="Primary actions">
-              <a class="button button-primary" href="/solutions/">Explore solutions</a>
+              <a class="button button-primary" href="/solutions/">See solutions for your service</a>
               <a class="button button-secondary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a>
             </div>
-            <p class="hero-note">Start with a <a href="/pricing/#pilot">pilot register</a>: we implement it with your team.</p>
+            <p class="hero-note">Our paid services start with your <a href="/pricing/#pilot">pilot register</a>. We implement it together with your own team.</p>
           </div>
           <div class="hero-figure"><HomeServiceMockup /></div>
         </div>
@@ -38,8 +38,15 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
       <div class="section-inner" id="how-a-register-runs">
         <div class="section-heading">
           <p class="eyebrow">For national, regional and local government</p>
-          <h2 id="registers-title">Build and adapt public services.</h2>
-          <p>Issue a first licence or renew one, establish a business register, or keep facility records up to date. Keep applications, staff decisions and official records connected. Let authorized services check the information they need.</p>
+          <h2 id="registers-title">Build new public services and adapt existing ones.</h2>
+          <p>For example, you can:</p>
+          <ul class="home-list">
+            <li>issue a first licence</li>
+            <li>renew a licence</li>
+            <li>set up a business register</li>
+            <li>keep records of facilities up to date</li>
+          </ul>
+          <p>Applications, staff decisions and official records stay connected. Other services that you authorise can check the information they need from your register.</p>
         </div>
         <ul class="register-grid featured-solutions">
           {featured.map((area) => (
@@ -63,14 +70,14 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
     <section class="section section-muted" id="open-source" aria-labelledby="ownership-title">
       <div class="section-inner" id="get-started">
         <div class="section-heading">
-          <p class="eyebrow">Open-source software. Commercial implementation and support.</p>
-          <h2 id="ownership-title">Build with your team or work with us.</h2>
+          <p class="eyebrow">Open-source software with paid implementation and support</p>
+          <h2 id="ownership-title">Build your register with your own team or work with us.</h2>
         </div>
         <div class="value-grid adoption-grid">
-          <article><h3>Use and adapt the software</h3><p>The core software is Apache-2.0 open source. Your team or a provider you choose can inspect, adapt and operate it. Your institution decides where it runs and who can use its records.</p><a class="inline-cta" href="/faq/">Ownership, licensing and hosting <span aria-hidden="true">→</span></a></article>
-          <article><h3>Work with Aubex</h3><p>Aubex builds and supports Registry Stack. Bring one service: we agree the configuration, screens, integrations and responsibilities in a written scope for your institution’s pilot register. Implementation and ongoing support are paid services.</p><a class="inline-cta" href="/pricing/">Implementation and support <span aria-hidden="true">→</span></a></article>
+          <article><h3>Choose who runs the software and where</h3><p>The core software is open source under the Apache-2.0 licence. Your own team or a provider you choose can inspect it, adapt it and run it. Or we can host and run it for you, priced separately in your proposal. You decide where the software runs and who can use your records.</p><a class="inline-cta" href="/faq/">Read about ownership, licensing and hosting <span aria-hidden="true">→</span></a></article>
+          <article><h3>Work with us on your pilot register</h3><p>We are Aubex. We build and support Registry Stack. You bring one service. Together we agree a written scope for your pilot register. The scope sets out:</p><ul class="home-list"><li>the configuration</li><li>the screens</li><li>the connections to other systems</li><li>who is responsible for what</li></ul><p>Implementation and ongoing support are paid services.</p><a class="inline-cta" href="/pricing/">Read about implementation and pricing <span aria-hidden="true">→</span></a></article>
         </div>
-        <p class="team-record"><strong>Experience across previous registry projects.</strong> {teamRecordFull}</p>
+        <p class="team-record"><strong>Experience from earlier registry projects.</strong> {teamRecordFull}</p>
       </div>
     </section>
 
@@ -79,22 +86,28 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
         <div class="section-heading">
           <p class="eyebrow">AI for public services</p>
           <h2 id="customization-title">Use AI where it helps your service.</h2>
-          <p>Explore AI-assisted service design, implementation and access to register information. Your institution defines the rules, and people remain responsible for submissions and decisions.</p>
-          <a class="inline-cta" href="/ai/">Explore the AI approaches <span aria-hidden="true">→</span></a>
+          <p>You can use AI to:</p>
+          <ul class="home-list">
+            <li>help define a service</li>
+            <li>help prepare changes to a service</li>
+            <li>help people prepare a request</li>
+          </ul>
+          <p>You define the rules. People stay responsible for what is submitted and for each decision.</p>
+          <a class="inline-cta" href="/ai/">See the three ways to use AI <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
 
     <section class="section section-muted" id="developers" aria-labelledby="developers-title">
       <div class="section-inner" id="start-testing">
-        <div class="section-heading"><p class="eyebrow">For technical teams</p><h2 id="developers-title">Inspect the software. Run an example.</h2><p>Use a local tutorial with sample data to evaluate the core capabilities.</p></div>
+        <div class="section-heading"><p class="eyebrow">For technical teams</p><h2 id="developers-title">Inspect the software and run an example.</h2><p>Follow a tutorial that runs on your own computer with sample data. Use it to evaluate the core capabilities. You do not need to contact us.</p></div>
         <div id="products"><div id="how-it-works" class="home-product-links" aria-label="Product details">{products.map((product) => <a href={product.href}>{product.name}</a>)}</div></div>
         <div class="developer-grid">{products.filter((product) => product.featured).map((product) => (<article><h3>{product.solution}</h3><p>{product.firstResult}</p><a class="inline-cta developer-tutorial" href={product.tutorialHref}>{product.tutorialLabel} <span aria-hidden="true">↗</span></a></article>))}</div>
-        <p class="developer-note" id="project-status">Read the <a href="https://docs.registrystack.org/">documentation</a> and browse the <a href="https://github.com/registrystack/registry-stack">source and releases</a>.</p>
+        <p class="developer-note" id="project-status">Read the <a href="https://docs.registrystack.org/">documentation</a> at docs.registrystack.org. Find the <a href="https://github.com/registrystack/registry-stack">source code and releases</a> on GitHub.</p>
       </div>
     </section>
 
-    <section class="final-cta" aria-labelledby="pilot-title"><div class="section-inner"><p class="eyebrow">Your next service</p><h2 id="pilot-title">Tell us what your institution needs.</h2><p>Describe the service, who will use it and what it needs to do. We can help assess the fit and scope the work.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="/pricing/">View implementation options</a></div></div></section>
+    <section class="final-cta" aria-labelledby="pilot-title"><div class="section-inner"><p class="eyebrow">Your next service</p><h2 id="pilot-title">Tell us what your institution needs.</h2><p>Describe the service, who will use it and what it needs to do. We can help you check whether Registry Stack fits. We can also scope the work with you. You can start from a new mandate with no form or register yet.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref()} data-journey="service-inquiry">Discuss your service</a><a class="button button-secondary" href="/pricing/">See implementation and pricing</a></div></div></section>
   </main>
   <SiteFooter />
 </Base>
@@ -127,6 +140,10 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
   .developer-grid p { font-size: var(--type-body-sm); }
   .developer-grid a { font-size: var(--type-base); }
   .developer-note { font-size: var(--type-base); margin-top: 28px; }
+  .home-list { line-height: 1.58; margin: 0 0 16px; padding-left: 1.25em; }
+  .home-list li + li { margin-top: 4px; }
+  .section-heading .home-list { color: var(--registry-body); font-size: var(--type-lg); max-width: 760px; }
+  .value-grid .home-list { font-size: var(--type-body-sm); line-height: 1.65; }
   @media (max-width: 900px) { .hero-top, .featured-solutions { grid-template-columns: 1fr; } }
   @media (max-width: 700px) { .adoption-grid, .developer-grid { grid-template-columns: 1fr; } }
 </style>
