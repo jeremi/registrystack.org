@@ -7,7 +7,7 @@ import { solutionAreas, registerFamilies } from '../../data/solutions';
 import { describeServiceHref } from '../../data/contact';
 
 const pageTitle = 'Solutions | Registry Stack';
-const pageDescription = 'Find a public service or register close to your institution’s work, see what applicants and staff can do, and choose a next step.';
+const pageDescription = 'Find a public service or register close to your institution’s work. See what applicants and staff can do. Choose a next step.';
 const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting');
 ---
 
@@ -17,14 +17,14 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
     <section class="hero directory-hero" aria-labelledby="solutions-title">
       <div class="hero-inner"><div class="hero-copy">
         <p class="eyebrow">Solutions</p>
-        <h1 id="solutions-title">Registers and services</h1>
-        <p class="hero-lead">Browse by register area, or see how to connect services, review requests and issue credentials.</p>
+        <h1 id="solutions-title">Find the registers and services that Registry Stack supports.</h1>
+        <p class="hero-lead">You can browse by register area. You can also see how to connect services, review requests and issue credentials.</p>
       </div></div>
     </section>
 
     <section id="registers" class="section directory-section" aria-labelledby="registers-title">
       <div class="section-inner">
-        <h2 id="registers-title" class="directory-label">By service area</h2>
+        <h2 id="registers-title" class="directory-label">Browse registers by area of service.</h2>
         <ul class="solution-area-grid">
           {registerFamilies.map((area) => (
             <li>
@@ -35,7 +35,7 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
             </li>
           ))}
         </ul>
-        <p class="directory-note">Looking for a model? <a href="https://marketplace.registrystack.org/">Browse starting configurations in the marketplace</a>.</p>
+        <p class="directory-note">If you want a model to start from, you can browse <a href="https://marketplace.registrystack.org/">starting configurations</a> in the marketplace.</p>
       </div>
     </section>
 
@@ -43,7 +43,7 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">Shared capabilities</p>
-          <h2 id="shared-work-title">Checks, reviews and credentials.</h2>
+          <h2 id="shared-work-title">Three capabilities are shared across register areas: checks, reviews and credentials.</h2>
         </div>
         <ul class="solution-area-grid">
           {crossCutting.map((area) => (
@@ -60,15 +60,15 @@ const crossCutting = solutionAreas.filter((area) => area.kind === 'cross-cutting
 
     <section class="section technical-handoff" id="products" aria-labelledby="products-title">
       <div class="section-inner">
-        <h2 id="products-title">Evaluating the software?</h2>
-        <p>Find component details and local tutorials in the <a href="/#developers">technical evaluation guide</a>. You can adopt the open-source components with your own team or another provider.</p>
+        <h2 id="products-title">Evaluate Registry Stack with your technical team.</h2>
+        <p>The <a href="/#developers">technical evaluation guide on the home page</a> has component details and tutorials that run on your own computer. You can adopt the open-source components with your own team or another provider. Or we can run them for you. We charge for hosting separately.</p>
       </div>
     </section>
 
     <DocsHandoff
       eyebrow="Discuss your service"
-      heading="Discuss a register or service."
-      body="Tell us which records, staff tasks or information checks you need, and which systems must connect. We can help assess the fit and scope an implementation."
+      heading="Talk to us about your register or service."
+      body="Tell us which records, staff tasks or information checks you need. Name the systems that must connect. We can help you check whether Registry Stack fits. We can also help you scope the work. You can start from a new mandate with no form or register yet."
       primaryLabel="Discuss your service"
       primaryHref={describeServiceHref()}
     />

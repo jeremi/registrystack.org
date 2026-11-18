@@ -59,10 +59,10 @@ const englishComponentWording = [
   'How the products fit together',
   'Discuss your service',
   'Implementation and pricing',
-  'Take the next step',
-  'Try a developer tutorial',
+  'Next step',
+  'See the developer tutorials',
   'Open the full-size picture',
-  'Questions for planning the service',
+  'These questions can help you plan your service',
   'See an example',
   'See a service example',
   'Explore starting configurations',
@@ -70,7 +70,7 @@ const englishComponentWording = [
   'Digitally signed',
   'Not shared',
   'Printed document',
-  'Core software',
+  'The core software is licensed under Apache-2.0',
 ];
 
 const idsByFile = new Map();

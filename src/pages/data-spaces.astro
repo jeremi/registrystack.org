@@ -19,12 +19,12 @@ const registryEvidenceExample = `${releaseSource}/breg/evidence`;
       <div class="hero-inner"><div class="hero-copy">
         <p class="eyebrow">Data spaces</p>
         <h1 id="data-spaces-title">Share data from the systems your institution already runs.</h1>
-        <p class="hero-lead">Give approved partners access to selected records or a signed answer to a specific question. Registry Stack can manage the source register, connect an existing system or prepare the answer your institution agrees to share.</p>
+        <p class="hero-lead">You can give approved partners access to selected records. Or you can give them a signed answer to a specific question. The answer is signed by your institution, which holds the data. The receiving service can check who issued it and whether it was altered. It does not show that the source information is true. Registry Stack can manage the source register or connect an existing system. It can also prepare the answer your institution agrees to share.</p>
         <div class="hero-actions">
           <a class="button button-primary" href="#example">See a licence status example</a>
           <a class="button button-secondary" href={describeServiceHref('data space participation')} data-journey="service-inquiry">Discuss your exchange</a>
         </div>
-        <p class="hero-note">For data providers, data users and the teams connecting them.</p>
+        <p class="hero-note">This page is for data providers, data users and the teams who connect them.</p>
       </div></div>
     </section>
 
@@ -32,12 +32,12 @@ const registryEvidenceExample = `${releaseSource}/breg/evidence`;
       <div class="section-inner">
         <div class="approach-split">
           <div class="section-heading">
-            <h2 id="data-space-meaning-title">Agree how organizations will share and use data.</h2>
-            <p>A data space brings organizations together under shared rules and technical arrangements. The bodies governing the space set the rules for joining, requesting and using data. Each data holder decides what it can offer under those rules. An organization can provide data, use data from others or do both.</p>
+            <h2 id="data-space-meaning-title">In a data space, organisations agree how they will share and use data.</h2>
+            <p>A data space is a group of organisations that share data under shared rules and technical arrangements. The bodies that govern the space set the rules for joining, requesting and using data. Each data holder decides what it can offer under those rules. An organisation can provide data, use data from others or do both.</p>
           </div>
           <div class="editorial-callout">
             <h3>Start from a specific need</h3>
-            <p>One participant needs to check a fact another institution already holds. Agree which source can answer, who may ask and how much information the receiving service needs.</p>
+            <p>One participant needs to check a fact that another institution already holds. Agree which source can answer and who may ask. Also agree how much information the receiving service needs.</p>
           </div>
         </div>
         <Illustration
@@ -51,16 +51,16 @@ const registryEvidenceExample = `${releaseSource}/breg/evidence`;
     <section class="section section-muted" id="example" aria-labelledby="licence-example-title">
       <div class="section-inner">
         <div class="section-heading">
-          <p class="eyebrow">Illustrative exchange</p>
-          <h2 id="licence-example-title">Check a supplier’s licence without requesting the full file.</h2>
+          <p class="eyebrow">An illustrative exchange</p>
+          <h2 id="licence-example-title">Check a supplier’s licence without asking for the full file.</h2>
           <p>A licensing authority maintains the register. A public procurement service needs to check a supplier’s recorded licence status for an agreed purpose.</p>
         </div>
         <ol class="delivery-steps exchange-steps">
-          <li><h3>Describe the offer</h3><p>The authority describes the licence status check, which organizations can request it and the terms for using the answer.</p></li>
-          <li><h3>Answer an approved request</h3><p>The procurement service supplies the licence reference through the agreed exchange channel. Evidence Gateway checks the request, reads the approved source and returns a signed status.</p></li>
-          <li><h3>Use the answer</h3><p>The procurement service can verify the signature and apply its own rules. The licensing authority keeps the underlying file and controls access to the source.</p></li>
+          <li><h3>Describe the offer</h3><p>The licensing authority describes the licence status check. It states which organisations can request it. It also describes the terms for using the answer.</p></li>
+          <li><h3>Answer an approved request</h3><p>The procurement service supplies the licence reference through the agreed exchange channel. Evidence Gateway is the product that answers a predefined question from an approved source. It checks the request and reads the approved source. Then it returns a signed status.</p></li>
+          <li><h3>Use the answer</h3><p>The procurement service can verify the signature. This shows who issued the answer and whether it was altered. It does not show that the source information is true. The procurement service can then apply its own rules. The licensing authority keeps the underlying file and controls access to the source.</p></li>
         </ol>
-        <p class="section-note">Inspect the configuration and synthetic cases in the <a href={evidenceExample}>released Evidence Gateway licence status example</a>. To see how a register can provide the source, read the <a href={registryEvidenceExample}>Base Registry Engine and Evidence Gateway example</a>.</p>
+        <p class="section-note">See <a href={evidenceExample}>the released Evidence Gateway licence status example</a>. It holds the configuration and synthetic cases. Then see <a href={registryEvidenceExample}>the Base Registry Engine and Evidence Gateway example</a>. It shows how a register can provide the source. Base Registry Engine is the product that maintains records.</p>
       </div>
     </section>
 
@@ -68,17 +68,17 @@ const registryEvidenceExample = `${releaseSource}/breg/evidence`;
       <div class="section-inner">
         <div class="section-heading">
           <p class="eyebrow">What Registry Stack supplies</p>
-          <h2 id="data-space-components-title">Choose what your institution needs to participate.</h2>
+          <h2 id="data-space-components-title">Choose what your institution needs to take part.</h2>
         </div>
         <div class="value-grid component-grid">
           <article>
             <h3>Maintain the source register</h3>
-            <p>Base Registry Engine maintains records, defines which operations and fields a caller may use, and keeps a history of changes. Offer only the records and fields the institution has agreed to share.</p>
+            <p>Base Registry Engine maintains records. It defines which operations and fields a caller may use. It keeps a history of changes. Your institution offers only the records and fields it has agreed to share.</p>
             <a class="inline-cta" href="/products/base-registry/">Explore Base Registry Engine <span aria-hidden="true">→</span></a>
           </article>
           <article>
             <h3>Connect a system you already use</h3>
-            <p>Registry Adapter exposes an agreed API over an existing system. It checks who can call each operation, maps the request and returns the fields the project defines. The source applies its own access rules and keeps its records. The DHIS2 example shows different views over the same source.</p>
+            <p>Registry Adapter exposes an agreed interface (API) over an existing system. It checks who can call each operation. It maps the request and returns the fields the project defines. The source system applies its own access rules and keeps its records. DHIS2 is an open-source health information system. The DHIS2 example shows different views over the same source.</p>
             <a class="inline-cta" href={adapterExample}>Inspect how Adapter maps a DHIS2 source <span aria-hidden="true">↗</span></a>
           </article>
           <article>
@@ -88,7 +88,7 @@ const registryEvidenceExample = `${releaseSource}/breg/evidence`;
           </article>
           <article>
             <h3>Describe what others can request</h3>
-            <p>Registry Manifest produces portable descriptions of registers and information offerings. Your implementation connects those descriptions to the catalogue the data space uses, so other participants can find what your institution offers.</p>
+            <p>Registry Manifest produces portable descriptions of registers and the information they offer. Your implementation connects those descriptions to the catalogue the data space uses. Other participants can then find what your institution offers.</p>
             <a class="inline-cta" href="https://docs.registrystack.org/products/registry-manifest/">Explore Registry Manifest <span aria-hidden="true">↗</span></a>
           </article>
         </div>
@@ -98,9 +98,16 @@ const registryEvidenceExample = `${releaseSource}/breg/evidence`;
     <section class="section section-muted" id="exchange" aria-labelledby="exchange-integration-title">
       <div class="section-inner">
         <div class="section-heading compact">
-          <p class="eyebrow">Participation and integration</p>
-          <h2 id="exchange-integration-title">Connect the service to the data space’s exchange infrastructure.</h2>
-          <p>The data space sets its rules for membership, identity, agreements and use of data. Your integration team connects the participant’s API to the connector or exchange network the space requires and agrees how the provider will verify the caller’s identity. The provider’s service enforces its access rules on each request.</p>
+          <p class="eyebrow">Taking part and connecting</p>
+          <h2 id="exchange-integration-title">Connect your service to the exchange infrastructure of the data space.</h2>
+          <p>The data space sets its own rules for:</p>
+          <ul class="prose-list">
+            <li>membership</li>
+            <li>identity</li>
+            <li>agreements</li>
+            <li>use of data</li>
+          </ul>
+          <p>Your integration team connects the participant’s API to the connector or exchange network that the data space requires. You agree how the provider will verify the caller’s identity. The provider’s service enforces its access rules on each request.</p>
         </div>
       </div>
     </section>
@@ -109,7 +116,7 @@ const registryEvidenceExample = `${releaseSource}/breg/evidence`;
       <div class="section-inner">
         <p class="eyebrow">Start with one exchange</p>
         <h2 id="data-space-next-title">Bring one source, one partner and the data they need.</h2>
-        <p>Tell us which system holds the data, who needs to use it and which rules and exchange infrastructure apply. Agree what the receiving service may retain and how to test an allowed request, a refused request and an unavailable source.</p>
+        <p>Tell us which system holds the data and who needs to use it. Tell us which rules and exchange infrastructure apply. Then agree what the receiving service may keep. Agree how to test an allowed request, a refused request and an unavailable source.</p>
         <div class="hero-actions">
           <a class="button button-primary" href={describeServiceHref('data space participation')} data-journey="service-inquiry">Discuss your exchange</a>
           <a class="button button-secondary" href="/pricing/">Implementation and pricing</a>

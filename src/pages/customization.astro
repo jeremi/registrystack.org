@@ -19,13 +19,13 @@ const context = 'AI-assisted implementation';
   <main id="main-content" tabindex="-1">
     <AiLandingHero
       eyebrow="AI-assisted implementation"
-      heading="Build a service around your rules."
-      lead="Adapt open-source registry software to your forms, rules and review steps. We use AI to draft the configuration and test cases. Your institution reviews, tests and approves each change."
+      heading="Build a public service around your own rules."
+      lead="Adapt open-source registry software to your forms, rules and review steps. Your service reads these from a set of files called its configuration. We use AI to draft the configuration and the test cases. You review, test and approve each change."
       context={context}
       exampleHref="#change-example"
       exampleLabel="See a change example"
-      exampleNote="Fictional example: an AI-assisted change to the school-entry age rule, with test results awaiting the education authority’s approval."
-      note="Aubex · Pilot register implementation"
+      exampleNote="Fictional example: a change to the school-entry age rule. The test results are waiting for the education authority’s approval."
+      note="We are Aubex. We offer this as a paid service called Pilot register implementation."
     >
       <p class="ai-example-label">Example: change drafted by Aubex</p>
       <p class="ai-example-title">Open enrolment to five-year-olds</p>
@@ -41,17 +41,22 @@ const context = 'AI-assisted implementation';
       <div class="section-inner approach-split">
         <div class="section-heading">
           <p class="eyebrow">Example: school enrolment</p>
-          <h2 id="change-title">Change one rule across the whole service</h2>
-          <p>An education authority lowers the entry age for pre-primary school. That affects what the service checks, what staff tell parents and what appears in the assignment notice.</p>
-          <p>We use AI to draft the changes. The education authority reviews the proposed behavior and the test results, then approves the release.</p>
+          <h2 id="change-title">Change one rule across the whole service.</h2>
+          <p>An education authority lowers the entry age for pre-primary school. This changes:</p>
+          <ul class="prose-list">
+            <li>what the service checks</li>
+            <li>what staff tell parents</li>
+            <li>what the assignment notice says</li>
+          </ul>
+          <p>We use AI to draft the changes. The education authority reviews the proposed behaviour and the test results. Then it approves the release.</p>
         </div>
         <div class="editorial-callout">
           <h3>What we check before release</h3>
           <dl class="change-checks">
             <div><dt>Eligibility</dt><dd>The service applies the cut-off date for the correct school year.</dd></div>
-            <div><dt>Evidence</dt><dd>An approved age check uses the revised rule and has an agreed fallback.</dd></div>
+            <div><dt>Evidence</dt><dd>An approved age check uses the revised rule. It has an agreed fallback.</dd></div>
             <div><dt>Notice</dt><dd>The assignment letter names the right programme and start date.</dd></div>
-            <div><dt>Guidance</dt><dd>The portal and school office give parents the same information.</dd></div>
+            <div><dt>Guidance</dt><dd>The portal and the school office give parents the same information.</dd></div>
           </dl>
         </div>
       </div>
@@ -60,16 +65,16 @@ const context = 'AI-assisted implementation';
     <section class="section" id="change-checks" aria-labelledby="checks-title">
       <div class="section-inner">
         <div class="section-heading">
-          <h2 id="checks-title">Each change is tested before release</h2>
+          <h2 id="checks-title">Each change is tested before it is released.</h2>
         </div>
         <div class="value-grid">
           <article>
-            <h3>Your rules are files your team keeps</h3>
-            <p>The service reads its configuration from files kept in version control. Before release, a comparison lists each change from the version in use and marks the changes that need review.</p>
+            <h3>Keep your rules in files</h3>
+            <p>The service reads its configuration from files. Your team keeps these files in version control. Version control is a system that records every change to a file. Before release, a comparison with the version in use lists each change. It also marks the changes that need review.</p>
           </article>
           <article>
-            <h3>Test cases for allowed and refused requests</h3>
-            <p>Each service keeps test cases: requests that must be allowed and requests that must be refused. They run again on every change.</p>
+            <h3>Run test cases on every change</h3>
+            <p>Each service keeps test cases. These are requests that must be allowed and requests that must be refused. They run again on every change.</p>
           </article>
           <article>
             <h3>A failed check stops the release</h3>
@@ -78,10 +83,10 @@ const context = 'AI-assisted implementation';
         </div>
         <Illustration
           name="ai-drafted-change"
-          alt="A request from the office: also allow people to correct their phone number. An AI tool used by the delivery team drafts the change and the tests. Configuration version 5 adds Correct phone number to the changes a person may submit. Four test cases: a person correcting their own phone number or contact address is allowed; a person editing another person’s record, or an assistant submitting for a person, is refused. All four checks pass. An approver at the Civil Registration Office signs, and the change is published as version 5."
+          alt="A request from the office: also allow people to correct their phone number. An AI tool used by the delivery team drafts the change and the tests. Configuration version 5 adds Correct phone number to the changes a person may submit. Four test cases: a person correcting their own phone number or contact address is allowed. A person editing another person’s record, or an assistant submitting for a person, is refused. All four checks pass. An approver at the Civil Registration Office signs, and the change is published as version 5."
           caption="A second fictional example: a civil registration office asks to let people correct their phone number. The delivery team’s AI tool drafts the change and its tests, and the office’s approver signs once all four pass."
         />
-        <p class="section-note">For technical teams: <a href="https://docs.registrystack.org/operate/breg/#check-test-package">read how a configuration is checked, tested and packaged</a>.</p>
+        <p class="section-note">Technical teams can read <a href="https://docs.registrystack.org/operate/breg/#check-test-package">how a configuration is checked, tested and packaged</a>.</p>
       </div>
     </section>
 
@@ -89,14 +94,20 @@ const context = 'AI-assisted implementation';
       <div class="section-inner approach-split">
         <div class="section-heading">
           <p class="eyebrow">AI in delivery</p>
-          <h2 id="delivery-title">How we use AI in your implementation</h2>
-          <p>We work from your service requirements, any existing forms and fictional example cases. Agree the AI tools and data your institution allows before implementation starts. Your team reviews the proposed changes and test results before approving a release. The configured service runs on its rules without an AI model.</p>
-          <p>For the implementation scope and responsibilities, <a href="/pricing/#process">see how implementation works</a>. Still defining the service? <a href="/ai/service-design/">Prepare a service brief</a>.</p>
+          <h2 id="delivery-title">How we use AI in your implementation.</h2>
+          <p>We work from:</p>
+          <ul class="prose-list">
+            <li>your service requirements</li>
+            <li>any forms you already use</li>
+            <li>fictional example cases</li>
+          </ul>
+          <p>Before the implementation starts, you agree which AI tools and which data you allow. Your team reviews the proposed changes and the test results before it approves a release. Once configured, your service runs on its rules without an AI model. AI is a tool we use. It is not an autonomous product and it never decides.</p>
+          <p>To see the implementation scope and who is responsible for what, read <a href="/pricing/#process">how implementation works</a>. If you are still defining your service, read about <a href="/ai/service-design/">preparing a service brief</a>.</p>
         </div>
         <section id="studio" class="editorial-callout" aria-labelledby="studio-title">
           <p class="eyebrow">Preview</p>
           <h3 id="studio-title">Registry Studio</h3>
-          <p>An authoring workspace for reviewing records, service steps and proposed changes.</p>
+          <p>Registry Studio is an authoring workspace. You can use it to review records, service steps and proposed changes.</p>
           <a class="inline-cta" href="/products/studio/">Explore Registry Studio <span aria-hidden="true">→</span></a>
         </section>
       </div>
@@ -104,8 +115,8 @@ const context = 'AI-assisted implementation';
 
     <section class="final-cta" aria-labelledby="next-title">
       <div class="section-inner">
-        <h2 id="next-title">Scope your pilot register</h2>
-        <p>Bring the requirements or a public form, with a fictional example of what the service needs to do. We’ll discuss what to build and test. Tell us which AI tools and data your institution allows, and we will work within them.</p>
+        <h2 id="next-title">Scope your pilot register.</h2>
+        <p>Bring your requirements or a public form, and a fictional example of what the service needs to do. We discuss with you what to build and test. Tell us which AI tools and which data your institution allows. We work within them.</p>
         <div class="section-links">
           <a class="button button-primary" href={describeServiceHref(context)} data-journey="service-inquiry">Discuss your service</a>
           <a class="button button-secondary" href="/pricing/">Implementation and pricing</a>

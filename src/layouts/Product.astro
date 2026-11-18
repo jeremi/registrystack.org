@@ -35,7 +35,7 @@ const discussHref = describeServiceHref(product.name, locale);
             <a class="button button-primary" href="#product-example">{t('See an example', 'Consultez un exemple')}</a>
             <a class="button button-secondary" href="#fit">{t('How it fits', 'Découvrez comment il s’intègre')}</a>
           </div>
-          <p class="hero-note">{note ?? t('Open-source software. Your team or an appointed provider can operate it, or we run it for you. Screens and connections are agreed in the implementation.', 'Logiciel open source. Votre équipe ou un prestataire désigné peut l’exploiter, ou nous l’exploitons pour vous. Les écrans et les connexions sont convenus lors de la mise en œuvre.')}</p>
+          <p class="hero-note">{note ?? t('The software is open source. Your own team or a provider you appoint can run it. Or we can run it for you. You agree the screens and connections to other systems during implementation.', 'Logiciel open source. Votre équipe ou un prestataire désigné peut l’exploiter, ou nous l’exploitons pour vous. Les écrans et les connexions sont convenus lors de la mise en œuvre.')}</p>
         </div>
       </div>
     </section>
@@ -43,8 +43,8 @@ const discussHref = describeServiceHref(product.name, locale);
     <section class="final-cta" aria-labelledby="product-pilot-title">
       <div class="section-inner">
         <p class="eyebrow">{t('Discuss your service', 'Décrivez votre service')}</p>
-        <h2 id="product-pilot-title">{t('Start with the service you need to deliver.', 'Partons du service que vous devez rendre.')}</h2>
-        <p>{t('Tell us what your service needs to do. We can agree what to configure, which systems to connect and what help your team needs.', 'Expliquez-nous ce que votre service doit accomplir. Nous pourrons ensuite convenir de ce qu’il faut configurer, des systèmes à relier et de l’aide nécessaire à votre équipe.')}</p>
+        <h2 id="product-pilot-title">{t('Start from the service you need to deliver.', 'Partons du service que vous devez rendre.')}</h2>
+        <p>{t('Tell us what your service must do. Together we can agree what to configure and which systems to connect. We can also agree what help your own team needs.', 'Expliquez-nous ce que votre service doit accomplir. Nous pourrons ensuite convenir de ce qu’il faut configurer, des systèmes à relier et de l’aide nécessaire à votre équipe.')}</p>
         <div class="hero-actions">
           <a class="button button-primary" href={discussHref}>{t('Discuss your service', 'Décrivez votre service')}</a>
           <a class="button button-secondary" href={l('/pricing/')}>{t('Implementation and pricing', 'Mise en œuvre et tarifs')}</a>

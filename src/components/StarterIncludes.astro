@@ -9,11 +9,11 @@ interface Props {
 const { includes } = Astro.props;
 
 const parts: { key: keyof Starter['includes']; label: string; meaning: string }[] = [
-  { key: 'staffUi', label: 'Staff-screen definition', meaning: 'An optional description of staff screens and fields for an application to implement. It is separate from the core registry configuration and is not a deployed staff application.' },
-  { key: 'evidenceCompanion', label: 'Evidence Gateway companion', meaning: 'Definitions for limited evidence questions and their registry sources. They still require a configured Evidence Gateway deployment.' },
-  { key: 'clients', label: 'Client definitions', meaning: 'Definitions of the systems that may call the register and the access each receives.' },
-  { key: 'statistics', label: 'Statistics definitions', meaning: 'Definitions for counts and summaries that do not return individual records.' },
-  { key: 'modules', label: 'Reusable model modules', meaning: 'Shared parts of the record model, such as a common address structure.' },
+  { key: 'staffUi', label: 'Staff-screen definition', meaning: 'It is an optional description of staff screens and fields for an application to implement. It is separate from the core registry configuration. It is not a deployed staff application.' },
+  { key: 'evidenceCompanion', label: 'Evidence Gateway companion', meaning: 'It defines limited evidence questions and the registry sources that answer them. It still needs a configured Evidence Gateway deployment.' },
+  { key: 'clients', label: 'Client definitions', meaning: 'It defines the systems that may call the register. It also defines the access each system receives.' },
+  { key: 'statistics', label: 'Statistics definitions', meaning: 'It defines counts and summaries. They do not return individual records.' },
+  { key: 'modules', label: 'Reusable model modules', meaning: 'They are shared parts of the record model, such as a common address structure.' },
 ];
 ---
 <p class="starter-includes-head"><span>Part</span><span>In this starter</span></p>

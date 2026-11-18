@@ -18,7 +18,7 @@ const steps: WeekStep[] = [
     when: 'Application submitted',
     product: 'Your intake application',
     title: 'A household applies',
-    text: 'A household applies for enrollment at the district office. The intake service collects the programme’s assessment information, including the home-visit report, before sending the complete case for a decision. The register does not change yet.',
+    text: 'A household applies for enrolment at the district office. The intake service collects the programme’s assessment information, including the home-visit report. It then sends the complete case for a decision. The register does not change yet.',
     card: { kind: 'record', recordType: 'Application', recordId: 'APP-5120', icon: 'household', fields: [
       { label: 'Household', value: 'HH-30944' },
       { label: 'Programme', value: 'Social protection' },
@@ -29,7 +29,7 @@ const steps: WeekStep[] = [
     when: 'Assessment and decision',
     ...weekProduct('casework'),
     title: 'An officer decides',
-    text: 'The complete application enters the enrollment queue. A. Haddad reviews the application and assessment, then records the programme’s decision.',
+    text: 'The complete application enters the enrolment queue. Officer A. Haddad reviews the application and the assessment. The officer records the programme’s decision.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Enrollment' },
       { state: 'Claimed', note: 'Held by A. Haddad' },
@@ -40,7 +40,7 @@ const steps: WeekStep[] = [
     when: 'Household record updated',
     ...weekProduct('base-registry'),
     title: 'The household record changes and keeps its history',
-    text: 'The officer records the enrollment under their own name. Revision 4 holds the status; revision 3 stays readable.',
+    text: 'The officer records the enrolment under their own name. Revision 4 of the record holds the status. Revision 3 stays readable.',
     card: { kind: 'record', recordType: 'Household record', recordId: 'HH-30944', icon: 'household', fields: [
       { label: 'Status', value: 'Enrolled' },
       { label: 'Changed by', value: 'A. Haddad' },
@@ -50,28 +50,28 @@ const steps: WeekStep[] = [
   {
     when: 'Permitted programme check',
     ...weekProduct('evidence-gateway'),
-    title: 'Another programme checks enrollment',
-    text: 'A school meal programme authorized to make this check asks whether the household is enrolled and receives a digitally signed answer. Income information and case notes are not disclosed.',
+    title: 'Another programme checks enrolment',
+    text: 'A school meal programme asks whether the household is enrolled. The programme is authorised to make this check. It receives a digitally signed answer. It does not receive income information or case notes.',
     card: { kind: 'answer', fieldLabel: 'Household enrolled', value: 'Yes', recipient: 'School meal programme', issuer: 'Social registry' },
   },
 ];
 ---
 <Solution
   area={area}
-  heading="Maintain people, household and enrollment records."
-  description="Record identity, household relationships, enrollment or status for a population register, social registry or programme your institution runs. Staff review applications and corrections; authorized services can check specific information without receiving the full file. Each institution remains responsible for its eligibility rules and decisions."
+  heading="Maintain your records of people, households and enrolment."
+  description="You can record identity, household relationships, enrolment or status. The records can belong to a population register, a social registry or a programme you run. Your staff review applications and corrections. Services you authorise can check specific information without receiving the full file. Each institution remains responsible for its own eligibility rules and decisions."
 >
   <section class="section" id="example" aria-labelledby="people-example-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">One request, start to finish</p>
-        <h2 id="people-example-title">Follow a household enrollment application.</h2>
+        <p class="eyebrow">One request from start to finish</p>
+        <h2 id="people-example-title">Handle a household’s application for enrolment.</h2>
       </div>
       <RegisterWeek
         id="people-week"
-        kicker="Household HH-30944, one request"
-        heading="Follow the household application."
-        caption="A household application, from the request through the officer's decision to the changed record and another programme's enrollment check. The records are fictional."
+        kicker="One request: household HH-30944"
+        heading="Follow the household’s application"
+        caption="The example follows a household’s application from the request to the officer’s decision. It ends with the changed household record and another programme’s enrolment check. The records are fictional."
         steps={steps}
       />
     </div>
@@ -83,9 +83,9 @@ const steps: WeekStep[] = [
         <h2 id="people-change-title">Control what each programme can check.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Link people to their household records</h3><p>When someone moves out, your team changes the link and the earlier household stays in the history.</p><a class="inline-cta" href="/products/base-registry/">How the register holds people and households <span aria-hidden="true">→</span></a></article>
-        <article><h3>Limit checks to the person a service needs to ask about</h3><p>Your institution can allow a programme to check a known person’s status while preventing it from listing everyone in the register. The implementation defines permissions and audit coverage for each connection.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
-        <article><h3>Issue a credential confirming programme enrollment</h3><p>An implementation can use Evidence Gateway to issue a digital credential stating whether someone is enrolled. The implementation connects and tests the wallet that receives it and the service that accepts it.</p><a class="inline-cta" href="/solutions/verifiable-credentials/">Explore verifiable credentials <span aria-hidden="true">→</span></a></article>
+        <article><h3>Link people to their household records</h3><p>When someone moves out, your staff change the link. The earlier household stays in the history.</p><a class="inline-cta" href="/products/base-registry/">How the register holds people and households <span aria-hidden="true">→</span></a></article>
+        <article><h3>Limit each check to the person a service needs to ask about</h3><p>You can allow a programme to check a known person’s status. You can prevent it from listing everyone in the register. The implementation defines the permissions and the audit coverage for each connection.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
+        <article><h3>Issue a credential that confirms programme enrolment</h3><p>An implementation can use Evidence Gateway to issue a digital credential. The credential states whether someone is enrolled. The implementation connects and tests the wallet that receives it. It also connects and tests the service that accepts it.</p><a class="inline-cta" href="/solutions/verifiable-credentials/">Explore verifiable credentials <span aria-hidden="true">→</span></a></article>
       </div>
     </div>
   </section>
@@ -94,21 +94,21 @@ const steps: WeekStep[] = [
     items={[
       {
         q: 'Does this replace our population register or social registry?',
-        a: 'You can keep the register you already run and connect Evidence Gateway to answer agreed questions from it. Use Base Registry Engine when you need a new register or decide to migrate an existing one.',
+        a: 'You can keep the register you already run. You can then connect Evidence Gateway to answer agreed questions from it. Base Registry Engine fits when you need a new register. It also fits when you decide to migrate an existing one.',
         link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'How it sits beside existing systems' },
       },
       {
         q: 'Can a programme check a fact without seeing the person’s file?',
-        a: 'Yes. The programme asks a question your office has agreed to answer, such as whether a household is enrolled, and gets that answer and nothing else. Your office decides which programmes may ask, which questions, and for what reason.',
+        a: 'Yes. The programme asks a question your office has agreed to answer. For example, it can ask whether a household is enrolled. It gets that answer and nothing else. Your office decides which programmes may ask. It also decides which questions they may ask and for what reason.',
         link: { href: '/solutions/check-a-fact/', label: 'How a service checks a fact' },
       },
       {
         q: 'Does it assess eligibility or calculate benefits?',
-        a: 'Your programme remains responsible for eligibility assessment and benefit calculations. A receiving programme applies its own rules to the answer it receives; the register records the decision made by the responsible organization.',
+        a: 'The programme remains responsible for assessing eligibility and calculating benefits. A receiving programme applies its own rules to the answer it receives. The register records the decision made by the responsible organisation.',
       },
       {
         q: 'Who can see a person’s record?',
-        a: 'Your office decides who may record a person, change a household or look someone up, and for what reason. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
+        a: 'Your office decides who may record a person, change a household or look someone up. It also decides for what reason. Base Registry Engine keeps a history of the changes it handles. The implementation agrees audit coverage across the register and the connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
       ...sharedFamilyFaq,
@@ -116,11 +116,11 @@ const steps: WeekStep[] = [
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Discuss your service with us."
-    body="Tell us which people records and programme services you need, who makes each decision and which systems need to exchange information. We can show how Registry Stack could fit while sharing only what each service needs."
+    heading="Discuss your register or programme with us."
+    body="Describe the people records and programme services you need. Say who makes each decision. Name the systems that need to exchange information. We can show how Registry Stack could fit. Each service would share only what it needs."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
-    note="The core software is Apache-2.0 open source. Your team, an appointed provider or we can implement and operate it. We quote hosting and operation separately."
+    note="The core software is open source under the Apache-2.0 licence. Your own team or a provider you choose can inspect it, adapt it and run it. Or we can implement, host and run it for you, priced separately in your proposal."
     emphasis="docs"
   />
 </Solution>

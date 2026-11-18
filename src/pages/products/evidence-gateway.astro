@@ -6,48 +6,49 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
 ---
 <Product
   product={product}
-  heading="Let other services check information from your register."
-  description="A procurement service may need to confirm a supplier’s registration without receiving its full record. Evidence Gateway checks your register and returns the agreed information with a digital signature. Your institution decides which services may ask and what they can receive."
+  heading="Other services can check information from your register through Evidence Gateway."
+  description="A procurement service may need to confirm that a supplier is registered without receiving the supplier’s full record. Evidence Gateway checks your register and returns the agreed information with a digital signature. You decide which services may ask and what each can receive."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="evidence-example-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">One example: a supplier registration check</p>
+        <p class="eyebrow">Example: a supplier registration check</p>
         <h2 id="evidence-example-title">Does this supplier have an active business registration?</h2>
-        <p>A government procurement service needs to check a supplier’s registration before it processes an application. The business registration authority connects Evidence Gateway to its business register. The procurement service receives the registration status, without the address, filing history or other details.</p>
+        <p>A government procurement service needs to check a supplier’s registration before it processes an application. The business registration authority connects Evidence Gateway to its business register.</p>
+        <p>The procurement service receives the registration status. It does not receive the address, the filing history or any other detail.</p>
       </div>
       <EvidenceGatewayFlow />
-      <p class="product-note">The digital signature lets the service verify that the expected issuer produced the answer and that the answer has not been altered. It does not prove that the source record is correct. The procurement service remains responsible for deciding what the answer means for the application.</p>
+      <p class="product-note">The procurement service can use the digital signature to verify that the expected issuer produced the answer. It can also verify that nobody has altered the answer. The signature does not prove that the source record is correct. The procurement service remains responsible for deciding what the answer means for the application.</p>
     </div>
   </section>
   <section class="section" aria-labelledby="evidence-define-title">
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">Practical capabilities</p>
-        <h2 id="evidence-define-title">Define the question, its source, and who may ask.</h2>
-        <p>The office that maintains the register agrees each answer with the services that will use it. Evidence Gateway applies that definition and the institution’s access rules whenever a connected service asks the question.</p>
+        <h2 id="evidence-define-title">Define the question, its source and who may ask.</h2>
+        <p>The office that maintains the register agrees each answer with the services that will use it. Evidence Gateway applies that definition and your access rules each time a connected service asks the question.</p>
       </div>
       <div class="product-facts">
-        <article><h3>Return only the information needed</h3><p>Define the answer from approved source information. Return a person’s region of residence without a street address, or confirm that they are 18 or older without returning their date of birth.</p></article>
-        <article><h3>Limit who may ask</h3><p>Authorize connected services for specific answers and purposes. Evidence Gateway checks that permission before reading the source and records the request outcome.</p></article>
-        <article><h3>Check the answer’s dates</h3><p>The answer states when Evidence Gateway made the check and when the answer expires. Those dates do not show when the source record was last updated. Your implementation also checks how up to date the source information is.</p></article>
+        <article><h3>Return less than the full record</h3><p>You define the answer from approved source information. For example, you can return a person’s region of residence without their street address. Or you can confirm that a person is 18 or older without returning their date of birth.</p></article>
+        <article><h3>Control who may ask</h3><p>You authorise each connected service for specific answers and purposes. Evidence Gateway checks that permission before it reads the source. It records the outcome of each request.</p></article>
+        <article><h3>Show check and expiry dates</h3><p>Each answer states when Evidence Gateway made the check. It also states when the answer expires. Those dates do not show when the source record was last updated. Your implementation also checks how up to date the source information is.</p></article>
       </div>
     </div>
   </section>
   <section id="fit" class="section section-muted" aria-labelledby="evidence-fit-title">
     <div class="section-inner product-fit">
       <div class="section-heading compact">
-        <p class="eyebrow">How it fits your organization</p>
+        <p class="eyebrow">How it fits your institution</p>
         <h2 id="evidence-fit-title">Add information checks beside the register you already use.</h2>
-        <p>Evidence Gateway can read an existing source. Your organization keeps its records in the current system, maintains their quality, and decides which connected services may receive each answer.</p>
-        <p>Using Evidence Gateway does not require <a href="/products/base-registry/">Base Registry Engine</a>. If you choose both, your technical team configures the connection between them.</p>
-        <p><a href="/data-spaces/">See how to offer a signed answer through a data space</a>.</p>
+        <p>Evidence Gateway can read an existing source. You keep your records in your current system and maintain their quality. You also decide which connected services may receive each answer.</p>
+        <p><a href="/products/base-registry/">Base Registry Engine</a> keeps a register’s records. You do not need it to use Evidence Gateway. If you choose both, your technical team configures the connection between them.</p>
+        <p><a href="/data-spaces/">See how to offer a signed answer through a data space</a></p>
       </div>
       <dl>
-        <dt>Your institution defines each answer</dt><dd>Agree what the question and answer mean, which source provides the information, how recent that information must be, and which services may use it.</dd>
-        <dt>Choose who delivers the implementation</dt><dd>Aubex, another delivery partner, or your own team can connect the source and receiving services, configure access and signing, and test the complete exchange. Your team or an appointed provider can operate it, or we host and run it for you. Our hosting and operation are quoted separately.</dd>
-        <dt>The receiving service owns its decision</dt><dd>Its team uses the answer alongside its own rules and other information. The answer does not decide eligibility or grant authority to change a record.</dd>
-        <dt>Let people share an issued credential</dt><dd>Evidence Gateway can also issue a digitally signed statement, called a verifiable credential, that a person can keep in a digital wallet. The implementation connects and tests a compatible wallet and a service that accepts it. A credential shows the information on the day it was issued and stays valid until the expiry date you set. <a href="/solutions/verifiable-credentials/">Explore verifiable credentials</a>.</dd>
+        <dt>You define each answer</dt><dd>You agree what the question and the answer mean. You agree which source provides the information and how recent it must be. You also agree which services may use the answer.</dd>
+        <dt>You choose who delivers it</dt><dd>Your own team or another delivery partner can deliver the implementation. Or we can deliver it for you. The work covers connecting the source and the receiving services. It also covers configuring access and signing, and testing the whole exchange. Your own team or a provider you appoint can operate Evidence Gateway. Or we can host and run it for you. We quote our hosting and operation separately.</dd>
+        <dt>The receiving service owns its decision</dt><dd>Its team uses the answer together with its own rules and other information. The answer does not decide eligibility. It does not give authority to change a record.</dd>
+        <dt>People can share an issued credential</dt><dd>A verifiable credential is a digitally signed statement that a person can keep in a digital wallet. Evidence Gateway can also issue one. The implementation connects and tests a compatible wallet and a service that accepts the credential. A credential shows the information as it was on the day it was issued. It stays valid until the expiry date that you set. <a href="/solutions/verifiable-credentials/">Explore verifiable credentials</a>.</dd>
       </dl>
     </div>
   </section>
@@ -55,8 +56,9 @@ const product = products.find((p) => p.key === 'evidence-gateway')!;
     <div class="section-inner">
       <div class="section-heading compact">
         <p class="eyebrow">For developers and implementers</p>
-        <h2 id="evidence-developers-title">Request and verify your first signed answer.</h2>
-        <p>The introductory tutorial requests and verifies an adult-status answer without returning the person’s name or date of birth. The <a href="https://docs.registrystack.org/products/registry-evidence/">product documentation</a> covers source connections and operation; the <a href="https://docs.registrystack.org/tutorials/return-a-governed-value/">defined-value tutorial</a> covers answers such as a residence region.</p>
+        <h2 id="evidence-developers-title">Request and verify a first signed answer.</h2>
+        <p>The introductory tutorial requests an answer that says whether a person is an adult. It then verifies that answer. The answer does not contain the person’s name or date of birth.</p>
+        <p>The <a href="https://docs.registrystack.org/products/registry-evidence/">product documentation</a> explains how to connect sources and operate Evidence Gateway. The <a href="https://docs.registrystack.org/tutorials/return-a-governed-value/">defined-value tutorial</a> covers answers such as a region of residence.</p>
         <p><a class="inline-cta" href={product.tutorialHref}>{product.tutorialLabel} →</a></p>
       </div>
     </div>

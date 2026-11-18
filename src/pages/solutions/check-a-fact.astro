@@ -13,13 +13,13 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
 <Solution
   area={area}
   heading="Let other services check information in your register."
-  description="Give authorized services an answer to a specific question, such as whether an applicant meets an age requirement, without sending the full record. Each answer is digitally signed so the receiving system can check who issued it and whether it was altered."
+  description="Services that you authorise get an answer to a specific question, for example whether an applicant meets an age requirement. They do not receive the full record. Each answer is digitally signed. The receiving system can check who issued it and whether it was altered."
 >
   <section id="example" class="section section-muted" aria-labelledby="check-example-title">
     <div class="section-inner">
       <div class="section-heading center">
         <p class="eyebrow">One example: a civil register</p>
-        <h2 id="check-example-title">Answer different questions from the same register.</h2>
+        <h2 id="check-example-title">The same civil register answers different questions.</h2>
         <p>A pension service asks whether a person is recorded as alive. A licensing service asks whether an applicant meets an age requirement. The civil-registration authority decides which question each service may ask. Neither service receives the person’s full record.</p>
       </div>
       <MinimizationFunnel />
@@ -29,67 +29,67 @@ const evidence = products.find((p) => p.key === 'evidence-gateway')!;
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="check-change-title">Answer the question without sending the whole record.</h2>
+        <h2 id="check-change-title">A service gets the answer without receiving the whole record.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Choose what each check returns</h3><p>Your team defines the question and how the register’s information answers it. A licensing service can learn whether an applicant meets an age requirement without receiving their date of birth.</p></article>
-        <article><h3>Control who can make each check</h3><p>Your institution grants each connected service permission to ask specific questions. Requests outside those permissions are refused. Your team can review recorded requests and outcomes.</p></article>
-        <article><h3>Check who issued the answer</h3><p>The receiving service checks the signature and validity period. This confirms who issued the answer and whether it was altered. It does not prove that the source record is correct or decide what the answer means for the applicant.</p></article>
+        <article><h3>Choose what each check returns</h3><p>Your team defines the question and how your register’s information answers it. A licensing service can learn whether an applicant meets an age requirement without receiving their date of birth.</p></article>
+        <article><h3>Control who can make each check</h3><p>You give each connected service permission to ask specific questions. Requests outside those permissions are refused. Your team can review the recorded requests and their outcomes.</p></article>
+        <article><h3>Check who issued each answer</h3><p>The receiving service checks the signature and the validity period. This confirms who issued the answer and whether it was altered. It does not prove that the source record is correct. It does not decide what the answer means for the applicant.</p></article>
       </div>
     </div>
   </section>
   <SolutionFit
     area={area}
-    heading="Connect to the register you already use."
+    heading="Connect Evidence Gateway to the register you already use."
     jobs={{
-      'evidence-gateway': 'Answers a question using information from your register, then digitally signs the result. The answer can be yes or no, or a value from a list your institution defines.',
+      'evidence-gateway': 'It answers a question using information from your register. Then it digitally signs the result. The answer can be yes or no, or a value from a list you define.',
     }}
     extra={[
-      { term: 'Your staff keep using their register', body: 'Your technical team connects Evidence Gateway to the existing system or to a read-only extract. Staff continue to maintain records in that system. Base Registry Engine is optional.' },
+      { term: 'Staff keep using your register', body: 'Your technical team connects Evidence Gateway to your existing system or to a read-only extract. Staff keep maintaining records in that system. Base Registry Engine is optional. It is the product that keeps a register’s records, permissions and history.' },
     ]}
   >
-    <p>Start with a question your team answers often. Agree who may ask it, what information the answer can contain and how recent that information must be.</p>
+    <p>Start with a question your team answers often. Agree who may ask it and what information the answer can contain. Agree how recent that information must be.</p>
   </SolutionFit>
   <SolutionFaq
     muted
     items={[
       {
         q: 'Do we have to move our register?',
-        a: 'No. Your technical team connects Evidence Gateway to your existing register or to an extract from it. Answers reflect the information available through that connection, so the implementation must account for any delay in updating an extract.',
-        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'How it sits beside existing systems' },
+        a: 'No. Your technical team connects Evidence Gateway to your existing register or to an extract from it. Answers reflect the information available through that connection. If you use an extract, the implementation must account for any delay in updating it.',
+        link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'Read how Registry Stack sits beside existing systems' },
       },
       {
         q: 'How does the receiving service know an answer is genuine?',
-        a: 'The receiving service checks the issuer’s digital signature and the answer’s validity period. A valid signature confirms who issued the answer and that it was not altered. The institution receiving it still applies its own rules when making a decision.',
+        a: 'It checks the issuer’s digital signature and the answer’s validity period. A valid signature confirms who issued the answer and that it was not altered. The institution that receives the answer still applies its own rules when it decides.',
         link: { href: evidence.href, label: `About ${evidence.name}` },
       },
       {
         q: 'Does this replace our data-sharing agreements?',
-        a: 'No. Your institution still agrees what each service may know and why. The questions and access permissions must be configured to follow that agreement.',
+        a: 'No. You still agree what each service may know and why. The questions and access permissions must be configured to follow that agreement.',
       },
       {
         q: 'How recent is the information?',
-        a: 'The answer identifies when Evidence Gateway made the check and when the answer expires. Those dates do not show when the source record was last updated. If the connection uses an extract, its publication time and refresh schedule affect freshness. Your institution and the receiving service agree how recent the information must be for that check.',
+        a: 'The answer says when Evidence Gateway made the check and when the answer expires. Those dates do not show when the source record was last updated. If the connection uses an extract, its publication time and refresh schedule affect how recent the information is. You and the receiving service agree how recent the information must be for the check.',
       },
       {
         q: 'Where does our technical team start?',
-        a: `The ${evidence.name} tutorial shows how to answer a yes-or-no question from sample data and verify the result on a laptop.`,
+        a: `The ${evidence.name} tutorial shows how to answer a yes-or-no question from sample data. It also shows how to verify the result on a laptop.`,
         link: { href: evidence.tutorialHref, label: evidence.tutorialLabel },
       },
       {
-        q: 'Can the answer be a status or category?',
-        a: 'Yes. It can be a value from a list your institution defines, such as a registration status or region. Each predefined question specifies the information the register owner agrees to return and which services may ask for it.',
+        q: 'Can the answer be a status or a category?',
+        a: 'Yes. It can be a value from a list you define, for example a registration status or a region. Each predefined question states the information you agree to return. It also states which services may ask for it.',
         link: { href: 'https://docs.registrystack.org/tutorials/return-a-governed-value/', label: 'Run the governed value tutorial' },
       },
     ]}
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Discuss an information check with us."
+    heading="Talk to us about checking information in your register."
     body="Tell us which register holds the information, which service needs it and what that service needs to know. We can help define the first question and connect both systems."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
-    note="The core software is Apache-2.0 open source. Your team, an appointed provider or we can implement and operate it. We quote hosting and operation separately."
+    note="The core software is open source under the Apache-2.0 licence. Your own team or a provider you choose can inspect it, adapt it and run it. Or we can implement, host and run it for you, priced separately in your proposal."
     emphasis="docs"
   />
 </Solution>

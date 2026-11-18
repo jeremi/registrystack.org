@@ -16,7 +16,7 @@ const l = (href: string) => localizedPath(href, locale);
 
   <div class="service-context">
     <div><p class="owner-label">{t('Supplied or adapted in your implementation', 'Fourni ou adapté lors de votre mise en œuvre')}</p><h4>{t('Your licensing service', 'Votre service de délivrance des autorisations')}</h4></div>
-    <p>{t('The applicant submits a renewal and supporting documents. Your service connects the review, register and next steps under your institution’s rules.', 'Le demandeur dépose une demande de renouvellement et ses pièces justificatives. Votre service relie l’examen, le registre et les étapes suivantes selon les règles de votre institution.')}</p>
+    <p>{t('An applicant submits a renewal with supporting documents. Your service connects the review, the register and the next steps under your rules.', 'Le demandeur dépose une demande de renouvellement et ses pièces justificatives. Votre service relie l’examen, le registre et les étapes suivantes selon les règles de votre institution.')}</p>
   </div>
 
   <div class="review-and-record">
@@ -28,13 +28,13 @@ const l = (href: string) => localizedPath(href, locale);
 
     <div class="decision-handoff">
       <svg viewBox="0 0 48 24" fill="none" aria-hidden="true"><path d="M1 12h43M35 3l9 9-9 9" stroke="currentColor" stroke-width="1.5" /></svg>
-      <p>{t('The decision returns to your service.', 'La décision revient à votre service.')}</p>
-      <p>{t('The register separately authorizes the update.', 'Le registre autorise la mise à jour séparément.')}</p>
+      <p>{t('The decision goes back to your service.', 'La décision revient à votre service.')}</p>
+      <p>{t('The register authorises the update separately, not automatically from the decision.', 'Le registre autorise la mise à jour séparément.')}</p>
     </div>
 
     <section class="work-panel record-panel" aria-labelledby="product-journey-record">
       <header><h4 id="product-journey-record">{t('Licence record', 'Fiche de l’autorisation')}</h4><a class="product-owner" href={l('/products/base-registry/')}>Base Registry Engine</a></header>
-      <p>{t('Authorized staff or a connected service record the new licence term.', 'Un agent habilité ou un service connecté enregistre la nouvelle durée de validité de l’autorisation.')}</p>
+      <p>{t('Authorised staff record the new licence term, or an authorised connected service does.', 'Un agent habilité ou un service connecté enregistre la nouvelle durée de validité de l’autorisation.')}</p>
       <dl class="licence-record"><div><dt>{t('Licence', 'Autorisation')}</dt><dd>LIC-2093</dd></div><div><dt>{t('Valid until', 'Valable jusqu’au')}</dt><dd>{t('2029-10-31', '31/10/2029')}</dd></div></dl>
     </section>
   </div>
@@ -47,7 +47,7 @@ const l = (href: string) => localizedPath(href, locale);
         <svg viewBox="0 0 24 30" fill="none" aria-hidden="true"><path d="M3 1h11l7 7v21H3V1Z" stroke="currentColor" stroke-width="1.5" /><path d="M14 1v8h7M7 14h10M7 19h10M7 24h6" stroke="currentColor" stroke-width="1.5" /></svg>
         <div><strong>{t('Licence document', 'Document d’autorisation')}</strong><span>{t('Digitally sealed PDF', 'PDF avec cachet électronique')}</span></div>
       </div>
-      <p>{t('Your service requests the document. Render generates the PDF and applies your institution’s configured digital seal.', 'Votre service demande le document. Render produit le PDF et applique le cachet électronique configuré de votre institution.')}</p>
+      <p>{t('Your service requests the document. Registry Render generates the PDF. It applies your configured digital seal.', 'Votre service demande le document. Render produit le PDF et applique le cachet électronique configuré de votre institution.')}</p>
     </section>
 
     <section class="output-panel" aria-labelledby="product-journey-notice">
@@ -62,10 +62,10 @@ const l = (href: string) => localizedPath(href, locale);
     <section class="output-panel" aria-labelledby="product-journey-check">
       <header><h4 id="product-journey-check">{t('Check the licence status', 'Vérifier le statut de l’autorisation')}</h4><a class="product-owner" href={l('/products/evidence-gateway/')}>Evidence Gateway</a></header>
       <div class="answer-artifact"><p>{t('Licence in good standing?', 'Autorisation en règle ?')}</p><strong>{t('Yes', 'Oui')} <span>{t('· signed answer', '· réponse signée')}</span></strong></div>
-      <p>{t('An authorized employer service asks the agreed question and receives the answer.', 'Un service employeur autorisé pose la question convenue et reçoit la réponse.')}</p>
+      <p>{t('An employer’s service that you authorise asks the agreed question. It receives the answer.', 'Un service employeur autorisé pose la question convenue et reçoit la réponse.')}</p>
     </section>
   </div>
-  <figcaption id="product-journey-caption">{t('A fictional licence renewal showing staff review, an authorized register update, a digitally sealed document, a notice and an employer’s status check. Screens and connections are supplied in the implementation.', 'Un renouvellement d’autorisation fictif : examen par un agent, mise à jour autorisée du registre, document avec cachet électronique, notification et vérification du statut par un employeur. Les écrans et les connexions sont fournis lors de la mise en œuvre.')}</figcaption>
+  <figcaption id="product-journey-caption">{t('A fictional licence renewal. It shows staff review, an authorised register update, a digitally sealed document, a notice and an employer’s status check. The screens and connections are supplied in the implementation. The figure is not a screenshot or a ready-made application.', 'Un renouvellement d’autorisation fictif : examen par un agent, mise à jour autorisée du registre, document avec cachet électronique, notification et vérification du statut par un employeur. Les écrans et les connexions sont fournis lors de la mise en œuvre.')}</figcaption>
 </figure>
 
 <style>

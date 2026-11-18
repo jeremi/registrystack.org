@@ -6,28 +6,29 @@ const product = products.find((p) => p.key === 'base-registry')!;
 ---
 <Product
   product={product}
-  heading="Maintain the records your public services rely on."
-  description="Base Registry Engine maintains the records a government institution is responsible for, such as people, businesses, licences, places, or assets. It applies the institution’s access rules, keeps a history of changes, and lets approved staff applications and online services work with the register."
+  heading="Base Registry Engine keeps the records your public services rely on."
+  description="Use Base Registry Engine to maintain the records you are responsible for, such as records about people, businesses, licences, places or assets. It applies your access rules and keeps a history of changes. Your approved staff applications and online services can work with the register through it."
 >
   <section id="product-example" class="section section-muted" aria-labelledby="registry-lifecycle-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">One example: a population register</p>
-        <h2 id="registry-lifecycle-title">Maintain linked records as circumstances change.</h2>
-        <p>A population registry office could use the engine for a register of residents and households. Staff register people, find existing records, and update details as circumstances change. The engine stores the information and its history; your application provides the screens.</p>
+        <p class="eyebrow">Example: a fictional population register</p>
+        <h2 id="registry-lifecycle-title">Keep linked records up to date as circumstances change.</h2>
+        <p>A population registry office could use Base Registry Engine for a register of residents and households. Staff register people and find existing records. They update details when circumstances change.</p>
+        <p>Base Registry Engine stores the information and its history. It does not provide the screens. The office’s own application provides them.</p>
       </div>
       <figure class="record-example" aria-labelledby="record-example-caption">
         <div class="stored-records">
           <p class="record-owner">Stored in Base Registry Engine</p>
           <PersonHouseholdRecords />
-          <p class="record-storage">Two linked records, each with its own fields and change history.</p>
+          <p class="record-storage">Each of the two linked records has its own fields and its own change history.</p>
         </div>
         <ol class="record-lifecycle">
-          <li><h3>Register and connect</h3><p>Create a person’s record and link it to a household. The engine checks required information, permitted values, and references before saving it.</p></li>
-          <li><h3>Find and use</h3><p>Look up a resident or retrieve the people linked to a household. Each application can access the records and fields its permissions allow.</p></li>
-          <li><h3>Keep up with changes</h3><p>Correct a detail or update a household relationship. The engine stores the current information and preserves earlier revisions so authorized users can follow what changed.</p></li>
+          <li><h3>Register a person</h3><p>Staff create a person’s record and link it to a household. Base Registry Engine checks the required information, the permitted values and the references before it saves the record.</p></li>
+          <li><h3>Look up records</h3><p>Staff look up a resident or the people linked to a household. Each application can reach only the records and fields its permissions allow.</p></li>
+          <li><h3>Update a record</h3><p>Staff correct a detail or change a household relationship. Base Registry Engine stores the current information and keeps earlier revisions. Authorised users can follow what changed.</p></li>
         </ol>
-        <figcaption id="record-example-caption">Illustrative register with fictional records. The same approach can link a business to its establishments, a professional to licences, or an asset to its location.</figcaption>
+        <figcaption id="record-example-caption">The person and household records are fictional. The same approach can link a business to its establishments, a professional to their licences or an asset to its location.</figcaption>
       </figure>
     </div>
   </section>
@@ -35,30 +36,36 @@ const product = products.find((p) => p.key === 'base-registry')!;
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">Practical capabilities</p>
-        <h2 id="breg-records-title">Manage records under the same rules across your services.</h2>
-        <p>Your institution defines the information, relationships, and permissions once. Staff applications, online services, and connected systems then work with the register under those rules.</p>
+        <h2 id="breg-records-title">Define your records and rules once, and every connected service follows them.</h2>
+        <p>You define the information, the relationships and the permissions once. Then each of these works with your register under those rules:</p>
+        <ul class="prose-list">
+          <li>staff applications</li>
+          <li>online services</li>
+          <li>connected systems</li>
+        </ul>
       </div>
       <div class="product-facts">
-        <article><h3>Define connected records</h3><p>Set the kinds of records the register holds, their required information, valid values, and relationships.</p></article>
-        <article><h3>Control who may read and change them</h3><p>Give each staff role or connected service access to the records and fields it needs. Where staff approval is required, connect a review service such as Registry Casework. The register applies approved changes under your institution’s rules.</p></article>
-        <article><h3>Follow each record over time</h3><p>Keep earlier revisions so authorized staff can see what changed, and prevent an older edit from overwriting a newer one. Changes to the register’s structure or rules use reviewed configuration and, where needed, a planned data migration.</p></article>
+        <article><h3>Define each kind of record</h3><p>You set the kinds of record your register holds. For each kind you also set the required information, the valid values and the relationships.</p></article>
+        <article><h3>Control access and approvals</h3><p>You give each staff role or connected service access to the records and fields it needs. Where staff must approve a change, you can connect a review service. One example is our review product, <a href="/products/casework/">Registry Casework</a>. Your register applies approved changes under your own rules.</p></article>
+        <article><h3>Keep earlier revisions</h3><p>Your register keeps earlier revisions so authorised staff can see what changed. It stops an older edit from overwriting a newer one. Changes to your register’s structure or rules use reviewed configuration. Where needed, they also use a planned data migration.</p></article>
       </div>
     </div>
   </section>
   <section id="fit" class="section section-muted" aria-labelledby="breg-fit-title">
     <div class="section-inner product-fit">
       <div class="section-heading compact">
-        <p class="eyebrow">How it fits your organization</p>
-        <h2 id="breg-fit-title">Build a register that works with your existing services.</h2>
-        <p>Base Registry Engine maintains records behind staff applications and online services. Use it to build a new register or move existing records into a defined structure. An implementation combines the engine with the screens, identity service, and system connections the service needs.</p>
-        <p><a href="/data-spaces/">See how to use a register as a source in a data space</a>.</p>
-        <p><a href="/ai/citizen-access/">See how people can prepare a correction with an approved assistant</a>.</p>
+        <p class="eyebrow">How it fits your institution</p>
+        <h2 id="breg-fit-title">Build a register that works with the services you already have.</h2>
+        <p>Base Registry Engine maintains records behind your staff applications and online services. You can use it to build a new register. You can also use it to move existing records into a defined structure.</p>
+        <p>Base Registry Engine does not provide screens. An implementation combines it with the screens, the identity (sign-in) service and the system connections that your service needs.</p>
+        <p><a href="/data-spaces/">See how to use a register as a source in a data space</a></p>
+        <p><a href="/ai/citizen-access/">See how people can prepare a correction with an approved assistant</a></p>
       </div>
       <dl>
-        <dt>Your institution defines the register</dt><dd>Agree what each record means, how records relate, which changes are allowed, and who may read or change the information.</dd>
-        <dt>Choose who delivers the implementation</dt><dd>Aubex, another delivery partner, or your own team can configure the engine, provide the required screens, connect sign-in and other systems, and plan data migration. A written scope should agree hosting, operation, support, and handover.</dd>
-        <dt>Choose who operates the register</dt><dd>Your team or an appointed provider can run the engine and its database, or we host and run them for you. Agree the infrastructure, backups, monitoring, access management and change procedures; our hosting and operation are quoted separately.</dd>
-        <dt>Add information checks and staff reviews</dt><dd>Connect <a href="/products/evidence-gateway/">Evidence Gateway</a> when another service needs to check specific information, or <a href="/products/casework/">Registry Casework</a> when staff must review a request and record a decision.</dd>
+        <dt>You define the register</dt><dd>You agree what each record means and how records relate. You also agree which changes are allowed and who may read or change the information.</dd>
+        <dt>You choose who delivers it</dt><dd>Your own team or another delivery partner can deliver the implementation. Or we can deliver it for you. The work covers configuring Base Registry Engine and providing the screens. It also covers connecting sign-in and other systems, and planning the data migration. You agree hosting, operation, support and handover in a written scope.</dd>
+        <dt>You choose who runs it</dt><dd>Your own team or a provider you appoint can run Base Registry Engine and its database. Or we can host and run them for you. You agree the infrastructure, backups and monitoring. You also agree access management and change procedures. We quote our hosting and operation separately.</dd>
+        <dt>You can add checks and reviews</dt><dd>Add <a href="/products/evidence-gateway/">Evidence Gateway</a> when another service needs to check specific information. Add <a href="/products/casework/">Registry Casework</a> when staff must review a request and record a decision.</dd>
       </dl>
     </div>
   </section>
@@ -67,7 +74,13 @@ const product = products.find((p) => p.key === 'base-registry')!;
       <div class="section-heading compact">
         <p class="eyebrow">For developers and implementers</p>
         <h2 id="breg-developers-title">Build and inspect a small register.</h2>
-        <p>The introductory tutorial creates a local contact register, adds and reads one contact, and checks that another caller cannot list it. Continue with the <a href="https://docs.registrystack.org/explanation/configuration-defined-registry/">configuration explanation</a> and <a href="https://docs.registrystack.org/operate/breg/">operations documentation</a> when planning a real implementation.</p>
+        <p>The introductory tutorial creates a local contact register. It then:</p>
+        <ul class="prose-list">
+          <li>adds one contact</li>
+          <li>reads that contact</li>
+          <li>checks that another caller cannot list that contact</li>
+        </ul>
+        <p>For a real implementation, read the <a href="https://docs.registrystack.org/explanation/configuration-defined-registry/">configuration explanation</a> and the <a href="https://docs.registrystack.org/operate/breg/">operations documentation</a>.</p>
         <p><a class="inline-cta" href={product.tutorialHref}>{product.tutorialLabel} →</a></p>
       </div>
     </div>

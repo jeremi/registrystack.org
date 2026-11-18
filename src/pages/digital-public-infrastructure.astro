@@ -7,31 +7,31 @@ import Illustration from '../components/Illustration.astro';
 import Film from '../components/Film.astro';
 import { describeServiceHref } from '../data/contact';
 ---
-<Base title="Registries for digital public infrastructure | Registry Stack" description="Build reusable registry capabilities for digital public infrastructure with open-source software, documented interfaces and institutional control.">
+<Base title="Registries for digital public infrastructure | Registry Stack" description="Build reusable registry capabilities with open-source software and documented interfaces. Your institution keeps control.">
   <SiteHeader current="dpi" />
   <main id="main-content" tabindex="-1">
     <section class="hero hero-cover" aria-labelledby="dpi-title"><div class="hero-inner"><div class="hero-copy">
       <p class="eyebrow">Digital public infrastructure</p>
       <h1 id="dpi-title">One register can support many public services.</h1>
-      <p class="hero-lead">Connect public services to records maintained by the responsible institution. Use Registry Stack’s open-source components with your team, or work with Aubex to implement and support a service.</p>
-      <div class="hero-actions"><a class="button button-primary" href={describeServiceHref('a DPI programme')} data-journey="service-inquiry">Discuss your programme</a><a class="button button-secondary" href="#shared-capabilities">See how it fits</a></div>
-      <p class="hero-note">For digital-government teams, funders and implementation partners.</p>
+      <p class="hero-lead">Connect public services to records that the responsible institution maintains. You can use Registry Stack’s open-source components with your own team. Or you can work with us to implement and support a service.</p>
+      <div class="hero-actions"><a class="button button-primary" href={describeServiceHref('a DPI programme')} data-journey="service-inquiry">Discuss your programme</a><a class="button button-secondary" href="#shared-capabilities">See how the pieces fit</a></div>
+      <p class="hero-note">This page is for digital-government teams, funders and implementation partners.</p>
     </div>
       <Illustration
         variant="hero"
         name="same-parts-many-services"
-        alt="Four public services, each kept by a different authority: register a farm holding (Ministry of Agriculture), apply for a child grant (Ministry of Social Affairs), apply for a market stall permit (City Council) and renew a licence (Professional Council). The two ministries run on shared infrastructure operated by a national ICT agency; the two councils each run on their own servers. All four are built from the same eleven parts: records, registry, links, services, steps, actions, roles, automations, signed answers, certificates and connectors."
-        caption="Four services from four fictional authorities, built from the same parts. The two ministries share government infrastructure; the two councils run their own servers."
+        alt="Four public services, each kept by a different authority: register a farm holding (Ministry of Agriculture), apply for a child grant (Ministry of Social Affairs), apply for a market stall permit (City Council) and renew a licence (Professional Council). The two ministries run on shared infrastructure operated by a national ICT agency. The two councils each run on their own servers. All four are built from the same eleven parts: records, registry, links, services, steps, actions, roles, automations, signed answers, certificates and connectors."
+        caption="Four services from four fictional authorities, built from the same parts. The two ministries share government infrastructure. The two councils run their own servers."
       />
     </div></section>
 
     <section class="section" id="shared-capabilities" aria-labelledby="reuse-title"><div class="section-inner">
       <div class="section-heading"><p class="eyebrow">Fit with your programme</p><h2 id="reuse-title">Build a register or connect an existing source.</h2></div>
       <div class="value-grid dpi-adoption-grid">
-        <article><h3>Use the records you already maintain</h3><p>Connect an existing register so authorized services can ask defined questions and receive digitally signed answers. The institution responsible for the source controls what it shares.</p><a class="inline-cta" href="/products/evidence-gateway/">Connect an existing register <span aria-hidden="true">→</span></a></article>
-        <article><h3>Establish a register where one is needed</h3><p>Define the records, access rules and permitted changes. Keep the current information and its history, and connect the applications that use it.</p><a class="inline-cta" href="/products/base-registry/">Manage records and history <span aria-hidden="true">→</span></a></article>
+        <article><h3>Use the records you already maintain</h3><p>Connect an existing register so that authorised services can ask it defined questions. These are services that the institution holding the records has allowed to ask. They can receive answers that the institution signs digitally. A signed answer shows who issued it and that it was not altered. It does not show that the source information is true. The institution responsible for the source controls what it shares.</p><a class="inline-cta" href="/products/evidence-gateway/">Connect an existing register <span aria-hidden="true">→</span></a></article>
+        <article><h3>Create a register where one is needed</h3><p>Define the records, access rules and permitted changes. Keep the current information and its history. Connect the applications that use it.</p><a class="inline-cta" href="/products/base-registry/">Manage records and history <span aria-hidden="true">→</span></a></article>
       </div>
-      <p class="dpi-example">For example, a health authority can maintain a facility register while a licensing service checks its recorded status. The health authority controls the information it shares; the licensing service applies its own rules. <a href="/solutions/health-and-safety/">Explore facility and oversight services</a>.</p>
+      <p class="dpi-example">For example, a health authority can maintain a facility register. A licensing service can check a facility’s recorded status. The health authority controls the information it shares. The licensing service applies its own rules. <a href="/solutions/health-and-safety/">Explore facility and oversight services</a>.</p>
       <Film
         name="registry-stack-film"
         title="Many public services, built from the same parts"
@@ -41,13 +41,13 @@ import { describeServiceHref } from '../data/contact';
 
     <section class="section section-muted" aria-labelledby="fit-title"><div class="section-inner">
       <div class="approach-split">
-        <div class="section-heading"><p class="eyebrow">Implementation and support</p><h2 id="fit-title">Work with Aubex on the first service.</h2><p>We adapt and test one defined service with your team. A written pilot scope sets out the records, screens, connections, hosting and handover work, with responsibilities agreed before delivery.</p><a class="inline-cta" href="/customization/">How implementation works <span aria-hidden="true">→</span></a></div>
-        <div class="editorial-callout"><h3>Choose your delivery and operating team</h3><p>The core software is Apache-2.0 open source. Your institution can inspect, adapt and operate it, using its own team or another provider.</p><p>Aubex offers paid implementation and support. <a href="/pricing/">View the delivery and support options</a>.</p></div>
+        <div class="section-heading"><p class="eyebrow">Implementation and support</p><h2 id="fit-title">Work with us on your first service.</h2><p>We adapt and test one defined service with your team. A written scope for your pilot register sets out the work. It covers the records, screens and connections. It also covers hosting and handover work. Before delivery starts, we agree together who is responsible for what.</p><a class="inline-cta" href="/pricing/#process">Read how implementation works <span aria-hidden="true">→</span></a></div>
+        <div class="editorial-callout"><h3>Choose who delivers and who operates</h3><p>The core software is open source under the Apache-2.0 licence. Your institution can inspect it, adapt it and operate it. You can use your own team or another provider. Or we can run it for you. We charge for hosting separately.</p><p>We offer paid implementation and paid support. <a href="/pricing/">View the delivery and support options</a>.</p></div>
       </div>
-      <p class="dpi-technical">For technical teams: <a href="https://docs.registrystack.org/start/adopt/">review the adoption paths</a>.</p>
+      <p class="dpi-technical">If you work in a technical team, <a href="https://docs.registrystack.org/start/adopt/">review the adoption paths</a>.</p>
     </div></section>
 
-    <section class="final-cta" aria-labelledby="programme-title"><div class="section-inner"><p class="eyebrow">From programme to implementation</p><h2 id="programme-title">Discuss your first programme service.</h2><p>Tell us which records your programme needs, which services will use them and who will maintain them.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref('a DPI programme')} data-journey="service-inquiry">Discuss your programme</a><a class="button button-secondary" href="/pricing/">Implementation and support</a></div></div></section>
+    <section class="final-cta" aria-labelledby="programme-title"><div class="section-inner"><p class="eyebrow">From programme to implementation</p><h2 id="programme-title">Discuss the first service in your programme.</h2><p>Tell us which records your programme needs and which services will use them. Tell us who will maintain those records.</p><div class="hero-actions"><a class="button button-primary" href={describeServiceHref('a DPI programme')} data-journey="service-inquiry">Discuss your programme</a><a class="button button-secondary" href="/pricing/">Implementation and pricing</a></div></div></section>
   </main><SiteFooter />
 </Base>
 <style>

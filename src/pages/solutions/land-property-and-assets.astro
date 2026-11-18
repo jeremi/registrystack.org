@@ -29,7 +29,7 @@ const steps: WeekStep[] = [
     when: 'Review and decision',
     ...weekProduct('casework'),
     title: 'A registrar decides',
-    text: 'The transfer enters the review queue. S. Nakamura checks the deed against the survey information and approves the application.',
+    text: 'The transfer enters the review queue. Registrar S. Nakamura checks the deed against the survey information. The registrar approves the application.',
     card: { kind: 'history', items: [
       { state: 'Received', note: 'Routed to Transfers' },
       { state: 'Claimed', note: 'Held by S. Nakamura' },
@@ -40,7 +40,7 @@ const steps: WeekStep[] = [
     when: 'Property record updated',
     ...weekProduct('base-registry'),
     title: 'The parcel’s rights change and keep their history',
-    text: 'The registrar records the new holder, and the register records who made the change. The earlier right stays in the history with the period it applied.',
+    text: 'The registrar records the new holder. The register records who made the change. The earlier right stays in the history, with the period it applied.',
     card: { kind: 'record', recordType: 'Parcel record', recordId: 'P-11-0482', icon: 'data', fields: [
       { label: 'Holder', value: 'New holder recorded' },
       { label: 'Changed by', value: 'S. Nakamura' },
@@ -51,7 +51,7 @@ const steps: WeekStep[] = [
     when: 'Extract requested',
     ...weekProduct('render'),
     title: 'The new holder gets a printed extract',
-    text: 'The service requests an extract from the recorded revision and keeps its fingerprint. When given the same issue details, Registry Render reproduces the extract so a later copy matches the original.',
+    text: 'The service requests an extract made from the recorded revision. It keeps the extract’s fingerprint. When Registry Render is given the same issue details, it reproduces the extract. This means a later copy matches the original.',
     card: { kind: 'document', documentType: 'Title extract', title: 'Parcel P-11-0482, extract of rights', fields: [
       { label: 'Holder', value: 'As recorded in revision 9' },
       { label: 'Revision', value: '9' },
@@ -62,20 +62,20 @@ const steps: WeekStep[] = [
 ---
 <Solution
   area={area}
-  heading="Manage asset records and their changes."
-  description="Registrars review applications and record approved changes to parcels, buildings, vehicles, vessels or public assets. Connected services receive only the information your office allows. Existing maps, deeds and specialist records can stay in their current systems."
+  heading="Manage your asset registers and the changes made to them."
+  description="Your registrars review applications. They record approved changes to parcels, buildings, vehicles, vessels or public assets. Connected services receive only the information your office allows. Your existing maps, deeds and specialist records can stay in their current systems."
 >
   <section class="section" id="example" aria-labelledby="land-example-title">
     <div class="section-inner">
       <div class="section-heading">
-        <p class="eyebrow">One request, start to finish</p>
-        <h2 id="land-example-title">Follow a property transfer.</h2>
+        <p class="eyebrow">One request from start to finish</p>
+        <h2 id="land-example-title">Register a property transfer.</h2>
       </div>
       <RegisterWeek
         id="land-week"
-        kicker="Parcel P-11-0482, one request"
-        heading="Follow the property transfer."
-        caption="A property transfer, from lodging through the registrar's decision to the changed rights and the new holder's printed extract. The records are fictional."
+        kicker="One request: parcel P-11-0482"
+        heading="Follow the property transfer"
+        caption="The example follows a property transfer from lodging to the registrar’s decision. It ends with the changed rights and the new holder’s printed extract. The records are fictional."
         steps={steps}
       />
     </div>
@@ -84,12 +84,12 @@ const steps: WeekStep[] = [
     <div class="section-inner">
       <div class="section-heading">
         <p class="eyebrow">What changes for your office</p>
-        <h2 id="land-change-title">Review current rights and earlier changes.</h2>
+        <h2 id="land-change-title">Let your staff review current rights and earlier changes.</h2>
       </div>
       <div class="product-facts">
-        <article><h3>Record who holds each right</h3><p>Staff record each right or keeper against the relevant parcel, building, vehicle or vessel, including the share and the period it applies. A valuation office reads holder and share as your register holds them.</p><a class="inline-cta" href="/products/base-registry/">How the register serves other services <span aria-hidden="true">→</span></a></article>
-        <article><h3>Your law decides what is public</h3><p>Your office decides which details are public and which require staff or connected-service permission. Access is configured for the register and the responsibilities of each reader.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
-        <article><h3>Reproduce an extract when another copy is needed</h3><p>When given the same issue details, Registry Render reproduces the extract so the later copy matches the original. The institution’s service controls when an extract may be issued and what legal effect it has.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/">How Registry Render reproduces a document <span aria-hidden="true">↗</span></a></article>
+        <article><h3>Record who holds each right</h3><p>Your staff record each right or keeper against the relevant parcel, building, vehicle or vessel. The record includes the share and the period it applies. A valuation office reads the holder and the share as the register holds them.</p><a class="inline-cta" href="/products/base-registry/">How the register serves other services <span aria-hidden="true">→</span></a></article>
+        <article><h3>Your law decides what is public</h3><p>Your office decides which details are public. It also decides which details staff or connected services need permission to see. Access is set up for your register and for each reader’s responsibilities.</p><a class="inline-cta" href="/security/">Who is responsible for what <span aria-hidden="true">→</span></a></article>
+        <article><h3>Reproduce an extract when another copy is needed</h3><p>Give Registry Render the same issue details and it reproduces the extract. The later copy matches the original. Your service controls when an extract may be issued and what legal effect it has.</p><a class="inline-cta" href="https://docs.registrystack.org/explanation/render-determinism/">How Registry Render reproduces a document <span aria-hidden="true">↗</span></a></article>
       </div>
     </div>
   </section>
@@ -98,22 +98,22 @@ const steps: WeekStep[] = [
     items={[
       {
         q: 'Does this replace our cadastre system?',
-        a: 'Your mapping and document systems can stay in place. Use Base Registry Engine for a new register of rights or one you decide to migrate. If the official register stays in its current system, the implementation connects to that system for the information other services need.',
+        a: 'Your mapping and document systems can stay in place. Base Registry Engine fits a new register of rights. It also fits one you decide to migrate. If your official register stays in its current system, the implementation connects to it for the information other services need.',
         link: { href: 'https://docs.registrystack.org/start/concepts/', label: 'How it sits beside existing systems' },
       },
       {
         q: 'Can a valuation office read our register without an account on our system?',
-        a: 'Two cases. A person or notary looking up one parcel uses the public search service your application provides under your law. A connected service, such as a valuation office preparing its roll, receives only the details your office has agreed to share, such as holder and share. Your office decides which services may read each detail.',
+        a: 'There are two cases. A person or a notary who looks up one parcel uses a public search service. Your application provides that service under your law. A connected service receives only the details your office has agreed to share. For example, a valuation office preparing its roll can receive the holder and the share. Your office decides which services may read each detail.',
         link: { href: '/products/base-registry/', label: 'How Base Registry Engine serves other services' },
       },
       {
         q: 'Is a printed extract proof of what the register holds?',
-        a: 'The extract represents the record revision used to render it, and its fingerprint can be retained with that record. Whether an extract proves title or has another legal effect depends on the institution’s law and process; Registry Stack does not make that legal determination.',
+        a: 'The extract represents the record revision used to make it. Its fingerprint can be kept with that record. Your law and process decide whether an extract proves title or has another legal effect. Registry Stack does not make that legal decision.',
         link: { href: 'https://docs.registrystack.org/explanation/render-determinism/', label: 'Why a reprint matches the original' },
       },
       {
         q: 'Who can see who holds a parcel or a vehicle?',
-        a: 'Your office decides who may record a right, who may look up a holder and for what reason. Base Registry Engine keeps a history of changes it handles. The implementation agrees audit coverage across the register and connected applications.',
+        a: 'Your office decides who may record a right. It also decides who may look up a holder and for what reason. Base Registry Engine keeps a history of the changes it handles. The implementation agrees audit coverage across the register and the connected applications.',
         link: { href: '/security/', label: 'Who is responsible for what' },
       },
       ...sharedFamilyFaq,
@@ -121,11 +121,11 @@ const steps: WeekStep[] = [
   />
   <DocsHandoff
     eyebrow="Work with us"
-    heading="Discuss your service with us."
-    body="Describe the assets you need to register, who maintains the official record and any mapping, document or valuation systems to connect. We can show how Registry Stack could fit."
+    heading="Discuss your property or asset register with us."
+    body="Describe the assets you need to register. Say who maintains the official record. Name any mapping, document or valuation systems to connect. We can show how Registry Stack could fit."
     primaryLabel="Discuss your service"
     primaryHref={describeServiceHref(area.name)}
-    note="The core software is Apache-2.0 open source. Your team, an appointed provider or we can implement and operate it. We quote hosting and operation separately."
+    note="The core software is open source under the Apache-2.0 licence. Your own team or a provider you choose can inspect it, adapt it and run it. Or we can implement, host and run it for you, priced separately in your proposal."
     emphasis="docs"
   />
 </Solution>

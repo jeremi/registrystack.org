@@ -18,11 +18,11 @@ const locale = localeForPath(Astro.url.pathname);
 const t = translator(locale);
 const pricingHref = localizedPath('/pricing/', locale);
 const {
-  eyebrow = t('Take the next step', 'Passer à l’étape suivante'),
-  heading = t('Explore it with your team.', 'Explorez le logiciel avec votre équipe.'),
-  primaryLabel = t('Try a developer tutorial', 'Suivez un tutoriel pour développeurs'),
+  eyebrow = t('Next step', 'Passer à l’étape suivante'),
+  heading = t('Explore the software with your own team.', 'Explorez le logiciel avec votre équipe.'),
+  primaryLabel = t('See the developer tutorials', 'Suivez un tutoriel pour développeurs'),
   primaryHref = localizedPath('/#developers', locale),
-  body = t('Evaluate the open-source software with your team, or work with us on implementation and ongoing support.', 'Le logiciel est open source : évaluez-le par vous-mêmes, ou travaillez avec nous sur la mise en œuvre et l’assistance technique dans la durée.'),
+  body = t('The software is open source. Your technical team can evaluate it themselves. Or you can work with us on implementation and ongoing support. Both are paid services.', 'Le logiciel est open source : évaluez-le par vous-mêmes, ou travaillez avec nous sur la mise en œuvre et l’assistance technique dans la durée.'),
   emphasis = 'docs',
   note,
 } = Astro.props;

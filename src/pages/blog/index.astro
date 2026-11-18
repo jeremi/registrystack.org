@@ -20,7 +20,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', {
 
 <Base
   title="Blog | Registry Stack"
-  description="Practical guides to sharing registry information with approved services, limiting what is disclosed, and reviewing access."
+  description="Practical guides on sharing register information with approved services. They cover how to limit what you disclose and how to review access."
   ogImagePath="/blog-field-notes-og.png"
   ogImageAlt="Registry Stack Field Notes: Define the question. Choose the boundary. Preserve the evidence."
 >
@@ -29,11 +29,11 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', {
     <header class="blog-intro">
       <div class="blog-intro-inner">
         <div class="blog-intro-copy">
-          <p class="eyebrow">Guides and notes</p>
+          <p class="eyebrow">Our guides and notes</p>
           <h1 id="blog-title">Blog</h1>
           <p>
-            Practical guides to sharing registry information with approved services,
-            limiting what is disclosed, and reviewing access.
+            Read practical guides on how to share register information with approved services.
+            The guides also cover how to limit what you disclose and how to review access.
           </p>
         </div>
         <a class="blog-rss" href="/rss.xml">RSS feed <span aria-hidden="true">&rarr;</span></a>
@@ -43,8 +43,8 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', {
     <section class="blog-feed" aria-labelledby="articles-title">
       <div class="blog-feed-inner">
         <div class="blog-feed-heading">
-          <h2 id="articles-title">Articles</h2>
-          <p>{posts.length} practical guides</p>
+          <h2 id="articles-title">Choose from the published guides.</h2>
+          <p>Guides published: {posts.length}</p>
         </div>
 
         <div class="blog-grid">
@@ -63,7 +63,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', {
                   </p>
                   <h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
                   <p>{post.data.description}</p>
-                  <p class="blog-card-link"><a href={`/blog/${post.id}/`}>Read article <span aria-hidden="true">&rarr;</span></a></p>
+                  <p class="blog-card-link"><a href={`/blog/${post.id}/`}>Read the guide <span aria-hidden="true">&rarr;</span></a></p>
                 </div>
               </article>
             ))
